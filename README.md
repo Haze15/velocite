@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Arène de canyon, 5 armes, robots d'entraînement animés et multijoueur en pair-à-pair jusqu'à 8 joueurs.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Arène de canyon, 5 armes et un couteau, skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -10,6 +10,7 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Bhop :** saute dans les 0,12 s qui suivent l'atterrissage. La vitesse perdue au sol est rendue et chaque saut enchaîné ajoute environ 0,4 m/s, jusqu'à 17 m/s.
 - **Wall-jump :** en l'air contre un mur, saute pour rebondir en gardant ton élan le long du mur. Trois rebonds avant de retoucher le sol.
 - **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 14,5 m/s, plus si tu arrives lancé.
+- **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
 
 ## Multijoueur
@@ -35,6 +36,8 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Molette ↓ | Avancer (tap-strafe) |
 | Clic gauche / droit | Tirer / viser |
 | 1 à 5 | Carabine, mitraillette, pompe, sniper, pistolet |
+| 6 ou V | Couteau |
+| M | Mini-carte |
 | R | Recharger |
 | Tab | Tableau des scores en ligne |
 | T | Réapparaître |
@@ -49,6 +52,9 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Pompe KS-8 | 8 × 11 | 72 coups/min | 6 |
 | Épervier .50 (sniper, lunette ×4) | 85 (tête ×2,1) | 46 coups/min | 5 |
 | Pistolet HX | 18 (tête ×1,6) | semi-auto | 14 |
+| Couteau | 50 (tête ×1,5), portée 2,7 m | 115 coups/min | — |
+
+Avec le couteau en main, tu cours 10 % plus vite. Six skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique.
 
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 
