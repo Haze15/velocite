@@ -9,7 +9,7 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Glissade :** sprinte puis accroupis-toi. Un boost toutes les 2 s.
 - **Bhop :** saute dans les 0,12 s qui suivent l'atterrissage. La vitesse perdue au sol est rendue et chaque saut enchaîné ajoute environ 0,4 m/s, jusqu'à 17 m/s.
 - **Wall-jump :** en l'air contre un mur, saute pour rebondir en gardant ton élan le long du mur. Trois rebonds avant de retoucher le sol.
-- **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 14,5 m/s, plus si tu arrives lancé.
+- **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 18 m/s, plus si tu arrives lancé.
 - **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
 

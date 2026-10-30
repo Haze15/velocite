@@ -155,7 +155,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #xh .b{width:2px;height:8px;left:-1px;top:var(--g)}
 #xh .l{width:8px;height:2px;top:-1px;left:calc(-8px - var(--g))}
 #xh .r{width:8px;height:2px;top:-1px;left:var(--g)}
-#xh.ads .t,#xh.ads .b,#xh.ads .l,#xh.ads .r{opacity:0}
+#xh.ads i{opacity:0}
 #xh.hide{opacity:0}
 #hm{position:absolute;left:50%;top:50%;opacity:0}
 #hm i{position:absolute;width:2px;height:9px;background:var(--ink);left:-1px;top:-4.5px}
@@ -347,6 +347,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="check"><input type="checkbox" data-x="speed"> Vitesse ×1,5</label>
         <label class="check"><input type="checkbox" data-x="jumps"> Sauts infinis</label>
         <label class="check"><input type="checkbox" data-x="aim"> Aide à la visée</label>
+        <label class="check"><input type="checkbox" data-x="snap"> Snap strafe facile</label>
       </div>
       <p class="hint">Actif seulement dans ce navigateur. Retape le mot de passe dans ce menu pour masquer ce panneau.</p>
     </div>
@@ -435,7 +436,7 @@ const I18N = {
     'tech.bhop': 'Garde {crouch} enfoncé en retombant pour reglisser, et saute quand tu touches le sol. Pas de friction, et chaque saut enchaîné ajoute un peu de vitesse, jusqu’à 17 m/s.',
     'tech.climb': 'Saute face à un mur en avançant pour grimper jusqu’à 6 m. En l’air contre n’importe quel mur, {jump} te fait rebondir en gardant ton élan, trois fois avant de retoucher le sol.',
     'tech.strafe': 'En l’air, tourne la souris du côté de {left} ou {right}. Pour un virage sec juste après un saut, garde la touche, tourne et martèle {forward:1}.',
-    'tech.sg': 'Quand tu te hisses sur un rebord, appuie sur {jump} puis {crouch} presque en même temps. Sortie à 14,5 m/s, plus si tu arrives lancé.',
+    'tech.sg': 'Quand tu te hisses sur un rebord, appuie sur {jump} puis {crouch} presque en même temps. Sortie à 18 m/s, plus si tu arrives lancé.',
     'set.title': 'Réglages', 'set.sens': 'Sensibilité', 'set.fov': 'Champ de vision', 'set.vol': 'Volume', 'set.quality': 'Graphismes',
     'set.autosprint': 'Sprint automatique', 'set.lang': 'Langue',
     'q.auto': 'Auto (adapte la résolution)', 'q.high': 'Élevés', 'q.low': 'Rapides (sans ombres)',
@@ -501,7 +502,7 @@ const I18N = {
     'tech.bhop': 'Hold {crouch} as you land to slide again, and jump as you touch the ground. No friction, and each chained jump adds a little speed, up to 17 m/s.',
     'tech.climb': 'Jump at a wall while moving forward to climb up to 6 m. In the air next to any wall, {jump} bounces you off while keeping your momentum, three times before you touch the ground.',
     'tech.strafe': 'In the air, turn the mouse towards {left} or {right}. For a sharp turn right after a jump, hold the key, turn and spam {forward:1}.',
-    'tech.sg': 'As you pull yourself onto a ledge, press {jump} then {crouch} almost at the same time. You exit at 14.5 m/s, faster if you arrive with speed.',
+    'tech.sg': 'As you pull yourself onto a ledge, press {jump} then {crouch} almost at the same time. You exit at 18 m/s, faster if you arrive with speed.',
     'set.title': 'Settings', 'set.sens': 'Sensitivity', 'set.fov': 'Field of view', 'set.vol': 'Volume', 'set.quality': 'Graphics',
     'set.autosprint': 'Auto sprint', 'set.lang': 'Language',
     'q.auto': 'Auto (adapts resolution)', 'q.high': 'High', 'q.low': 'Fast (no shadows)',
@@ -565,7 +566,7 @@ const I18N = {
     'tech.bhop': 'Hou {crouch} in as jy land om weer te gly, en spring sodra jy die grond raak. Geen wrywing nie, en elke aaneenlopende sprong voeg ’n bietjie spoed by, tot 17 m/s.',
     'tech.climb': 'Spring teen ’n muur terwyl jy vorentoe beweeg om tot 6 m hoog te klim. In die lug langs enige muur laat {jump} jou terugbons terwyl jy jou momentum behou, drie keer voordat jy weer die grond raak.',
     'tech.strafe': 'In die lug, draai die muis na die kant van {left} of {right}. Vir ’n skerp draai net ná ’n sprong, hou die sleutel in, draai en druk herhaaldelik {forward:1}.',
-    'tech.sg': 'Terwyl jy jou op ’n rand optrek, druk {jump} en dan {crouch} amper gelyktydig. Jy kom uit teen 14,5 m/s, vinniger as jy met spoed aankom.',
+    'tech.sg': 'Terwyl jy jou op ’n rand optrek, druk {jump} en dan {crouch} amper gelyktydig. Jy kom uit teen 18 m/s, vinniger as jy met spoed aankom.',
     'set.title': 'Instellings', 'set.sens': 'Sensitiwiteit', 'set.fov': 'Gesigsveld', 'set.vol': 'Volume', 'set.quality': 'Grafika',
     'set.autosprint': 'Outomatiese sprint', 'set.lang': 'Taal',
     'q.auto': 'Outo (pas resolusie aan)', 'q.high': 'Hoog', 'q.low': 'Vinnig (sonder skaduwees)',
@@ -628,7 +629,7 @@ const I18N = {
     'tech.bhop': 'Bamba {crouch} lapho wehla ukuze ushelele futhi, bese ugxuma lapho uthinta phansi. Akukho kungquzulana, futhi ukugxuma ngakunye okulandelanayo kwengeza ijubane elincane, kuze kufike ku-17 m/s.',
     'tech.climb': 'Gxumela odongeni ngenkathi uya phambili ukuze uqwale kuze kufike kumamitha ayi-6. Emoyeni eduze kwanoma yiluphi udonga, cindezela {jump} ukuze ugxume usuke odongeni ugcine umfutho wakho, kathathu ngaphambi kokuthi uthinte phansi.',
     'tech.strafe': 'Emoyeni, jikisa igundane uye ngasohlangothini lwe-{left} noma lwe-{right}. Ukuze ujike kakhulu ngemuva nje kokugxuma, bamba inkinobho, jika bese ucindezela {forward:1} kaninginingi.',
-    'tech.sg': 'Lapho uzidonsela phezu konqenqema, cindezela {jump} bese u-{crouch} cishe ngesikhathi esisodwa. Uphuma ngo-14,5 m/s, ngaphezulu uma ufika ushesha.',
+    'tech.sg': 'Lapho uzidonsela phezu konqenqema, cindezela {jump} bese u-{crouch} cishe ngesikhathi esisodwa. Uphuma ngo-18 m/s, ngaphezulu uma ufika ushesha.',
     'set.title': 'Izilungiselelo', 'set.sens': 'Ukuzwela', 'set.fov': 'Umkhakha wokubona', 'set.vol': 'Ivolumu', 'set.quality': 'Imidwebo',
     'set.autosprint': 'Ukugijima okuzenzakalelayo', 'set.lang': 'Ulimi',
     'q.auto': 'Okuzenzakalelayo (kulungisa ukucaca)', 'q.high': 'Okuphezulu', 'q.low': 'Okusheshayo (akukho mithunzi)',
@@ -663,7 +664,7 @@ const wName = i => t('w' + i), wShort = i => t('w' + i + 's');
 
 /* ================= Mode secret ================= */
 const X_HASH = 'e20280a81b036e15986c488eeb27e598277b81b2f7735631e5824c22f217d34d';
-const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false };
+const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false };
 let xUnlocked = store.get('xu', false) === true;
 if (xUnlocked) Object.assign(X, store.get('xs', {}));
 const xActive = () => xUnlocked && Object.values(X).some(Boolean);
@@ -683,7 +684,7 @@ const SLIDE_G = 22, SLIDE_FRIC = 2.8, SLIDE_FRIC2 = 0.15, SLIDE_STEER = 4.5;
 const CLIMB_TIME = 1.05, CLIMB_V0 = 6.4, CLIMB_V1 = 3.0;
 const WJ_OUT = 6.6 * K, WJ_UP = 7.0, WJ_SIDE = 4.0, WJ_MAX = 3;
 const BHOP_WIN = 0.12, BHOP_CAP = 17.5;
-const SG_WIN = 0.14, SG_SPEED = 12.3 * K;
+const SG_WIN = 0.14, SG_SPEED = 15.5 * K;
 const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15;
 const MAX_SH = 75, MAX_HP = 100;
 
@@ -1105,7 +1106,7 @@ function superglide(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
   P.pos.y = m.top + 0.01;
   const d = mantleExitDir(m, wx, wz, hasWish);
-  const sp = Math.min(19, Math.max(SG_SPEED, m.inSpeed + 3));
+  const sp = Math.min(23, Math.max(SG_SPEED, m.inSpeed + 4.5));
   P.vel.set(d.x * sp, 4.6, d.z * sp);
   P.grounded = false; P.crouch = true; P.climbAvail = false;
   feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide();
@@ -1226,6 +1227,19 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
         if (P.tapAcc > 20) feed('TAP-STRAFE', Math.round(P.tapAcc) + '°', 'gold', 'tap');
       }
     }
+    // snap strafe facile : la trajectoire suit tes touches presque instantanément, sans perte de vitesse
+    const sp2 = Math.hypot(v.x, v.z);
+    if (X.snap && xUnlocked && sp2 > 2) {
+      const a1 = Math.atan2(v.z, v.x), a2 = Math.atan2(wz, wx);
+      let d = a2 - a1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+      const lim = Math.min(Math.abs(d), 900 * DEG * dt);
+      if (lim > 0.002) {
+        const na = a1 + Math.sign(d) * lim;
+        v.x = Math.cos(na) * sp2; v.z = Math.sin(na) * sp2;
+        P.snapAcc = (P.snapAcc || 0) + lim / DEG;
+        if (P.snapAcc > 45) feed('SNAP-STRAFE', Math.round(P.snapAcc) + '°', 'gold', 'snap');
+      }
+    }
   }
   const s3 = Math.hypot(v.x, v.z);
   if (s3 > 16 * K) { const k = 1 - 0.35 * dt; v.x *= k; v.z *= k; }
@@ -1236,7 +1250,7 @@ function onLand(vy) {
   P.landT = simTime; P.landSpeed = Math.hypot(v.x, v.z);
   P.landDir = P.landSpeed > 0.1 ? { x: v.x / P.landSpeed, z: v.z / P.landSpeed } : { x: 0, z: 0 };
   P.wallJumps = 0;
-  P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.doubleJump = false; P.airT = 0;
+  P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.snapAcc = 0; P.doubleJump = false; P.airT = 0;
   const impact = clamp(-vy / 16, 0, 1);
   P.dip = Math.max(P.dip, impact * 0.16);
   sfx.land(impact);
@@ -2396,7 +2410,7 @@ function updateHUD(dt) {
   const Hh = window.innerHeight, Wd = window.innerWidth, sp = currentSpread();
   const gap = Math.tan(sp * DEG) / Math.tan(camera.fov * DEG / 2) * Hh / 2 + 3;
   xhEl.style.setProperty('--g', Math.min(gap, 160).toFixed(1) + 'px');
-  xhEl.classList.toggle('ads', WS.ads > 0.6 && WS.cur !== 2);
+  xhEl.classList.toggle('ads', WS.ads > 0.6);
   xhEl.classList.toggle('hide', P.dead || (W.scope && WS.ads > 0.85));
   hmT -= dt; hmEl.style.opacity = hmT > 0 ? 1 : 0;
   targetT -= dt;
