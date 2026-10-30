@@ -69,6 +69,18 @@ Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. 
 
 Les modèles sont détaillés : tank camouflé avec chenilles qui défilent, tourelle, coupole, mitrailleuse et antenne ; hélico d'attaque avec cockpit en tandem, nacelles de roquettes et feux de position ; avion à hélice avec bandes et cocardes ; chasseur à aile delta ; buggy avec roue de secours, rampe de phares et fanion.
 
+**Véhicules destructibles :** chaque véhicule a son blindage, affiché en bas de l'écran quand tu le conduis.
+
+| Véhicule | Blindage | Balles et lames | Explosions |
+| --- | --- | --- | --- |
+| Buggy | 260 | 80 % | ×2 |
+| Tank | 1000 | 5 % (presque insensible) | ×1,6 |
+| Hélico | 500 | 50 % | ×2 |
+| Avion | 320 | 60 % | ×2 |
+| Chasseur | 380 | 50 % | ×2 |
+
+Grenades, obus du tank, trident, couteaux, armes et mitrailleuses des véhicules les abîment, tout comme les chocs contre les murs, les atterrissages trop durs et les collisions entre véhicules (le tank écrase les buggys). Abîmé, un véhicule fume ; sous 20 %, la fumée devient noire et il crache des étincelles. À zéro, il explose. Le conducteur est éjecté et prend 140 dégâts, et l'élimination revient à celui qui l'a détruit. L'explosion blesse aussi autour, ce qui peut faire sauter d'autres véhicules. L'épave noircie brûle sur place (un appareil touché en vol s'écrase d'abord), puis le véhicule réapparaît à son point de départ 14 s plus tard. En ligne, les dégâts sont partagés entre tous les joueurs.
+
 Un avion qui pique dans le sol ou percute un immeuble explose (tu es éjecté et blessé) et réapparaît à sa place 8 s plus tard. Près du bord de la carte, l'avion fait demi-tour tout seul. Un hélico abandonné en vol redescend doucement en autorotation.
 
 ## Multijoueur

@@ -129,6 +129,9 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #roomBox{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
 #hud.emoting #xh,#hud.emoting #hm{display:none}
 #hud.inveh #usePrompt{top:auto;bottom:122px;font-size:13px;opacity:.85}
+#vhp{position:absolute;left:50%;bottom:158px;transform:translateX(-50%);display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(14,18,22,.66);border:1px solid rgba(244,239,230,.14);font:600 13px/1 var(--f-display);letter-spacing:.08em;color:var(--ink)}
+#vhp[hidden]{display:none}#vhp em{font-style:normal;opacity:.75}#vhp i{display:block;width:180px;height:8px;background:rgba(244,239,230,.12)}#vhp b{display:block;height:100%;background:#9be36a;transition:width .15s}#vhp.low b{background:#ff5a44}#vhp span{min-width:36px;text-align:right}
+#hud.inveh #abil{visibility:hidden}
 #hud.inveh .slots,#hud.inveh .ammo,#hud.inveh #wname{visibility:hidden}
 .xsub{margin:16px 0 8px;font:700 13px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
 #espCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -369,6 +372,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="board" hidden><h3 id="boardTitle">PARTIE</h3><table><thead><tr><th data-i18n="board.player">Joueur</th><th data-i18n="hud.kills">Élim.</th><th data-i18n="board.deaths">Morts</th></tr></thead><tbody id="boardBody"></tbody></table></div>
   <div id="toast"></div>
   <div id="usePrompt" hidden></div>
+  <div id="vhp" hidden><em>BLINDAGE</em><i><b></b></i><span></span></div>
   <div id="editHud" hidden></div>
   <div id="emoteWheel" hidden>
     <p class="ew-title" data-i18n="em.title">Emotes</p>
@@ -982,10 +986,10 @@ Object.assign(I18N.af, { 'dc.driving.tank': 'Bestuur ’n tenk', 'dc.driving.hel
 Object.assign(I18N.zu, { 'dc.driving.tank': 'Ushayela ithangi', 'dc.driving.heli': 'Ushayela indiza-nqundu', 'dc.driving.plane': 'Ushayela indiza' });
 for (const l in I18N_ADD9) Object.assign(I18N[l], I18N_ADD9[l]);
 const I18N_ADD10 = {
-  fr: { 'veh.out': '{key} Descendre', 'set.fpLegs': 'Voir mes jambes (superglide)', 'veh.enterJet': '{key} Piloter le chasseur', 'veh.exitJet': '{key} S’éjecter · Z/S gaz · souris pour diriger · décolle à 40 m/s · clic : canons', 'dc.driving.jet': 'Pilote un chasseur', 'w14s': 'CHASSEUR' },
-  en: { 'veh.out': '{key} Get out', 'set.fpLegs': 'Show my legs (superglide)', 'veh.enterJet': '{key} Fly the jet', 'veh.exitJet': '{key} Eject · W/S throttle · steer with the mouse · takes off at 40 m/s · click: cannons', 'dc.driving.jet': 'Flying a jet', 'w14s': 'JET' },
-  af: { 'veh.out': '{key} Klim uit', 'set.fpLegs': 'Wys my bene (superglide)', 'veh.enterJet': '{key} Vlieg die straalvegter', 'veh.exitJet': '{key} Skiet uit · W/S versneller · stuur met die muis · styg op by 40 m/s · klik: kanonne', 'dc.driving.jet': 'Vlieg ’n straalvegter', 'w14s': 'STRAALVEGTER' },
-  zu: { 'veh.out': '{key} Yehla', 'set.fpLegs': 'Bonisa imilenze yami (superglide)', 'veh.enterJet': '{key} Shayela ijethi', 'veh.exitJet': '{key} Phuma · W/S isivinini · qondisa ngegundane · indiza ngo-40 m/s · qhafaza: izibhamu', 'dc.driving.jet': 'Ushayela ijethi', 'w14s': 'IJETHI' }
+  fr: { 'veh.hp': 'BLINDAGE', 'veh.destroyed': 'VÉHICULE DÉTRUIT', 'w15s': 'EXPLOSION', 'veh.out': '{key} Descendre', 'set.fpLegs': 'Voir mes jambes (superglide)', 'veh.enterJet': '{key} Piloter le chasseur', 'veh.exitJet': '{key} S’éjecter · Z/S gaz · souris pour diriger · décolle à 40 m/s · clic : canons', 'dc.driving.jet': 'Pilote un chasseur', 'w14s': 'CHASSEUR' },
+  en: { 'veh.hp': 'ARMOR', 'veh.destroyed': 'VEHICLE DESTROYED', 'w15s': 'EXPLOSION', 'veh.out': '{key} Get out', 'set.fpLegs': 'Show my legs (superglide)', 'veh.enterJet': '{key} Fly the jet', 'veh.exitJet': '{key} Eject · W/S throttle · steer with the mouse · takes off at 40 m/s · click: cannons', 'dc.driving.jet': 'Flying a jet', 'w14s': 'JET' },
+  af: { 'veh.hp': 'PANTSER', 'veh.destroyed': 'VOERTUIG VERNIETIG', 'w15s': 'ONTPLOFFING', 'veh.out': '{key} Klim uit', 'set.fpLegs': 'Wys my bene (superglide)', 'veh.enterJet': '{key} Vlieg die straalvegter', 'veh.exitJet': '{key} Skiet uit · W/S versneller · stuur met die muis · styg op by 40 m/s · klik: kanonne', 'dc.driving.jet': 'Vlieg ’n straalvegter', 'w14s': 'STRAALVEGTER' },
+  zu: { 'veh.hp': 'ISIVIKELO', 'veh.destroyed': 'IMOTO ICEKELWE PHANSI', 'w15s': 'UKUQHUMA', 'veh.out': '{key} Yehla', 'set.fpLegs': 'Bonisa imilenze yami (superglide)', 'veh.enterJet': '{key} Shayela ijethi', 'veh.exitJet': '{key} Phuma · W/S isivinini · qondisa ngegundane · indiza ngo-40 m/s · qhafaza: izibhamu', 'dc.driving.jet': 'Ushayela ijethi', 'w14s': 'IJETHI' }
 };
 for (const l in I18N_ADD10) Object.assign(I18N[l], I18N_ADD10[l]);
 const LANGS = Object.keys(I18N);
@@ -3978,6 +3982,7 @@ let SHOOTABLE = [];
 function rebuildShootable() {
   SHOOTABLE = WORLD.concat(dummyParts);
   for (const rp of remotes.values()) SHOOTABLE.push(...rp.parts);
+  if (VEH_READY) for (const v of VEHICLES) if (v.hb) SHOOTABLE.push(...v.hb);
 }
 
 function currentSpread() {
@@ -4038,7 +4043,8 @@ function melee() {
       const ud = h.object.userData;
       if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
       if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
-      if (ud && (ud.d || ud.rp) && (!best || h.distance < best.distance)) best = h;
+      if (ud && ud.veh && ud.veh.dead) continue;
+      if (ud && (ud.d || ud.rp || ud.veh) && (!best || h.distance < best.distance)) best = h;
       break;
     }
   }
@@ -4048,9 +4054,9 @@ function melee() {
     stats.hits++;
     const ud = best.object.userData;
     const dmg = Math.round(W.dmg * (ud.part === 'head' ? W.head : 1)) * (X.oneshot ? 10 : 1);
-    result = ud.d ? damageDummy(ud.d, dmg, ud.part) : damageRemote(ud.rp, dmg, ud.part);
-    spawnSpark(best.point, false);
-    if (ud.d && result === 'kill') {
+    if (ud.veh) hitVehicle(ud.veh, dmg, 'bullet', best.point);
+    else { result = ud.d ? damageDummy(ud.d, dmg, ud.part) : damageRemote(ud.rp, dmg, ud.part); spawnSpark(best.point, false); }
+    if (ud.d && result === 'kill' && !ud.veh) {
       if (S.knife === 'morgane') { ud.d.mgT = 90; feed('MORGANE', t('mg.feed'), 'gold'); sfx.outfit(); } else ud.d.mgT = 0;
     }
   }
@@ -4159,6 +4165,7 @@ function fire() {
       const ud = h.object.userData;
       if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
       if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
+      if (ud && ud.veh && (ud.veh.dead || ud.veh === P.veh)) continue;
       hit = h; break;
     }
     stats.shots++;
@@ -4180,7 +4187,8 @@ function fire() {
         const r = ud.d ? damageDummy(ud.d, dmg, ud.part) : damageRemote(ud.rp, dmg, ud.part);
         if (r === 'kill' || (r === 'head' && result !== 'kill') || !result) result = r;
         spawnSpark(hit.point, false);
-      } else spawnSpark(hit.point, true);
+      } else if (ud && ud.veh) { stats.hits++; hitVehicle(ud.veh, W.dmg * (X.oneshot ? 10 : 1), 'bullet', hit.point); }
+      else spawnSpark(hit.point, true);
     } else _end.copy(_o).addScaledVector(_d, 250);
     if (i < 3) { spawnTracer(_m, _end); ends.push([r2(_end.x), r2(_end.y), r2(_end.z)]); }
   }
@@ -4464,6 +4472,7 @@ function hostRecv(from, m) {
   else if (m.k === 'lpad' && Array.isArray(m.p)) broadcast({ k: 'lpad', p: m.p.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'blink' && Array.isArray(m.a)) broadcast({ k: 'blink', a: m.a.slice(0, 3).map(Number), b: Array.isArray(m.b) ? m.b.slice(0, 3).map(Number) : undefined }, from);
   else if (m.k === 'trid' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'trid', p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
+  else if (m.k === 'vdmg') broadcast({ k: 'vdmg', i: m.i | 0, d: +m.d || 0, by: from }, from);
   else if (m.k === 'gren' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'gren', t: String(m.t), p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'push' && Array.isArray(m.v)) { if (NET.players.has(m.to)) sendTo(m.to, { k: 'push', v: m.v.slice(0, 3).map(v => clamp(+v || 0, -30, 30)) }); }
   else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number), o: from }, from);
@@ -4524,6 +4533,7 @@ function clientRecv(m) {
   if (m.k === 'lpad') { spawnLaunchpad(m.p); return; }
   if (m.k === 'blink') { if (m.b) spawnBlinkTrail(m.a, m.b); else spawnGhost(m.a); return; }
   if (m.k === 'trid') { spawnOtherTrident(m.o, m.p, m.v); return; }
+  if (m.k === 'vdmg') { const v = VEHICLES[m.i | 0]; if (v) vehDamage(v, Math.min(5000, +m.d || 0), m.by, false); return; }
   if (m.k === 'gren') { if (GREN_TYPES.includes(m.t) || m.t === 'shell') spawnGrenade(m.t, m.p, m.v, m.o, false); return; }
   if (m.k === 'push') { if (!P.dead && !P.veh) { P.vel.x += m.v[0]; P.vel.y += m.v[1]; P.vel.z += m.v[2]; P.grounded = false; P.zip = null; } return; }
   if (m.k === 'portal') { SND_OWNER = m.o || null; spawnPortal(m.a, m.b); SND_OWNER = null; return; }
@@ -4560,7 +4570,7 @@ function applyHit(m) {
   }
 }
 // 8 = lave, 9 = buggy (dégâts qui ne viennent pas d'une arme)
-function wLabel(i) { return WEAPONS[i] || (i >= 8 && i <= 14) ? wShort(i) : ''; }
+function wLabel(i) { return WEAPONS[i] || (i >= 8 && i <= 15) ? wShort(i) : ''; }
 // dégâts de l'environnement (lave) : marche aussi hors ligne
 function hurtSelf(dmg, w) {
   if (P.dead || X.god) return;
@@ -5411,6 +5421,7 @@ function tridentSweep(o, mine, hits, from, to) {
     const ud = h.object.userData;
     if (ud && ud.d) { if (!ud.d.alive || !RULES.bots || hits.has(ud.d)) continue; hits.add(ud.d); if (mine) { const r = damageDummy(ud.d, Math.round(95 * (ud.part === 'head' ? 1.4 : 1)) * (X.oneshot && xUnlocked ? 10 : 1), ud.part); sfx.hit(r === 'head'); if (r === 'kill') { hmEl.className = 'kill'; hmT = 0.35; } } spawnSpark(h.point, true); continue; }
     if (ud && ud.rp) { if (!ud.rp.st || ud.rp.st.dead || hits.has(ud.rp)) continue; hits.add(ud.rp); if (mine) { ud.rp.flash = 1; netSend({ k: 'hit', to: ud.rp.id, dmg: Math.round(95 * (ud.part === 'head' ? 1.4 : 1)) * (X.oneshot && xUnlocked ? 10 : 1), head: ud.part === 'head', w: 5, kt: 'trident' }); sfx.hit(ud.part === 'head'); } spawnSpark(h.point, true); continue; }
+    if (ud && ud.veh) { if (ud.veh.dead || ud.veh === P.veh || hits.has(ud.veh)) continue; hits.add(ud.veh); if (mine) hitVehicle(ud.veh, 95, 'bullet', h.point); else spawnSpark(h.point, true); continue; }
     return h; // mur
   }
   return null;
@@ -5585,6 +5596,12 @@ function grenDamage(c, radius, dmgMax, mine, flat, w = 10) {
     const dmg = amount(dist);
     if (dmg > 0) { rp.flash = 1; netSend({ k: 'hit', to: rp.id, dmg, head: false, w }); }
   }
+  for (const v of VEHICLES) {
+    if (v.dead) continue;
+    _gt.copy(v === P.veh ? rPos : v.pos); _gt.y += 1;
+    const dist = _gt.distanceTo(_gp), rr = radius + (VEHP[v.type] || VEH).R * 0.6; if (dist > rr) continue;
+    vehDamage(v, vehDmgOf(v, flat ? dmgMax : dmgMax * Math.pow(1 - dist / rr, 0.7), 'boom'), NET.selfId || 'me');
+  }
   _gt.set(P.pos.x, P.pos.y + 1, P.pos.z);
   const dist = _gt.distanceTo(_gp);
   if (dist < radius && losClear(_gp, _gt)) hurtSelf((flat ? dmgMax : dmgMax * Math.pow(1 - dist / radius, 0.7)) * (P.veh && P.veh.type === 'tank' ? 0.15 : 0.7), w);
@@ -5653,7 +5670,7 @@ function shellHitsBody(g) {
   for (const d of dummies) if (d.alive && RULES.bots && Math.hypot(d.g.position.x - g.pos.x, d.g.position.z - g.pos.z) < 0.8 && g.pos.y > d.g.position.y - 0.2 && g.pos.y < d.g.position.y + 2) return true;
   for (const rp of remotes.values()) if (rp.st && !rp.st.dead && rp.id !== g.owner && Math.hypot(rp.pos.x - g.pos.x, rp.pos.z - g.pos.z) < 0.9 && g.pos.y > rp.pos.y - 0.2 && g.pos.y < rp.pos.y + 2.2) return true;
   if (!g.mine && !P.dead && Math.hypot(P.pos.x - g.pos.x, P.pos.z - g.pos.z) < (P.veh ? (VEHP[P.veh.type] || VEH).R : 0.8) && g.pos.y > P.pos.y - 0.2 && g.pos.y < P.pos.y + 2.4) return true;
-  for (const v of VEHICLES) if (v.driver && v.driver !== 'me' && v.driver !== g.owner && Math.hypot(v.pos.x - g.pos.x, v.pos.z - g.pos.z) < (VEHP[v.type] || VEH).R && g.pos.y > v.pos.y && g.pos.y < v.pos.y + 3) return true;
+  for (const v of VEHICLES) { if (v.dead || (g.mine && v === P.veh) || (!g.mine && v.driver && v.driver === g.owner)) continue; if (Math.hypot(v.pos.x - g.pos.x, v.pos.z - g.pos.z) < (VEHP[v.type] || VEH).R + 0.3 && g.pos.y > v.pos.y - 0.2 && g.pos.y < v.pos.y + 3.2) return true; }
   return false;
 }
 function clearGrenades() {
@@ -5932,12 +5949,12 @@ function heliStep(v, dt) {
   v.roll += (clamp(lat / 70, -0.35, 0.35) - v.roll) * (1 - Math.exp(-4 * dt));
   v.pos.x += v.vel.x * dt; v.pos.z += v.vel.z * dt;
   const hit = vehPushOut(v, VEHP.heli.R, v.pos.y + 0.3, v.pos.y + 3);
-  if (hit > 8) { sfx.land(Math.min(1, hit / 20)); camShake(0.3); }
+  if (hit > 8) { sfx.land(Math.min(1, hit / 20)); camShake(0.3); vehDamage(v, (hit - 6) * 10); }
   v.pos.y = Math.min(160, v.pos.y + v.vel.y * dt);
   const gh = groundAtPoint(v.pos.x, v.pos.z, v.pos.y + 0.6);
-  if (v.pos.y <= gh) { if (v.vel.y < -9) { sfx.land(1); camShake(0.5); } v.pos.y = gh; v.vel.y = Math.max(0, v.vel.y); v.grounded = true; } else v.grounded = false;
+  if (v.pos.y <= gh) { if (v.vel.y < -9) { sfx.land(1); camShake(0.5); vehDamage(v, (-v.vel.y - 8) * 14); } v.pos.y = gh; v.vel.y = Math.max(0, v.vel.y); v.grounded = true; } else v.grounded = false;
   v.spin += dt;
-  P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded;
+  if (P.veh === v) { P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded; }
 }
 // avion : Z/S règlent les gaz, la souris donne la direction, Q/D penchent ; décolle à plus de 30 m/s
 function planeStep(v, dt) {
@@ -5983,24 +6000,22 @@ function planeStep(v, dt) {
   }
   if (v.grounded && v.thr < 0.05) v.speed = Math.max(0, v.speed - 10 * dt);
   v.spin += dt * (2 + v.thr * 30);
-  P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded;
+  if (P.veh === v) { P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded; }
 }
 function planeCrash(v) {
-  blastFx(v.pos.clone(), 0xffa040, 12); sfx.boom(1);
-  const wasMe = P.veh === v;
-  v.speed = 0; v.thr = 0; v.vel.set(0, 0, 0);
-  if (wasMe) { exitVehicle(true); P.vel.set(0, 6, 0); hurtSelf(70, 12); }
-  v.g.visible = false; v.wreck = 8;
+  v.grounded = true; v.vel.set(0, 0, 0);
+  vehDamage(v, 99999, NET.selfId || 'me', P.veh === v);
 }
 // tir des véhicules armés : obus du tank, mitrailleuses de l'hélico, de l'avion et du chasseur
 // comme dans Battlefield : le réticule montre où partent vraiment les balles (nez de l'avion, canon du tank), il suit la souris avec du retard
 const _vm = new V3(), _vt = new V3(), _va = new V3(), _vg = new V3(), _vd = new V3();
 let VAIM = new V3();
+const firstHit = list => list.find(h => { const ud = h.object.userData; return !(ud && ((ud.veh && (ud.veh === P.veh || ud.veh.dead)) || (ud.d && (!ud.d.alive || !RULES.bots)) || (ud.rp && (!ud.rp.st || ud.rp.st.dead)))); });
 function vehAimPoint() {
   camera.updateMatrixWorld(); camera.getWorldPosition(_o);
   const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]);
   raycaster.set(_o, _f); raycaster.far = 600;
-  const h = raycaster.intersectObjects(SHOOTABLE, false)[0];
+  const h = firstHit(raycaster.intersectObjects(SHOOTABLE, false));
   return h ? h.point.clone() : _o.clone().addScaledVector(_f, 600);
 }
 // bouche et direction de l'arme
@@ -6042,7 +6057,7 @@ function vehImpact(v) {
       _va.copy(_vg).addScaledVector(_vt, 0.15); _vt.y -= G * 0.3 * 0.15; _va.y -= 0;
       _f.copy(_va).sub(_vg); const len = _f.length(); _f.divideScalar(len);
       raycaster.set(_vg, _f); raycaster.far = len;
-      const h = raycaster.intersectObjects(SHOOTABLE, false)[0];
+      const h = firstHit(raycaster.intersectObjects(SHOOTABLE, false));
       if (h) return h.point;
       if (_va.y < (TERRAIN ? -50 : 0)) return _va.clone();
       _vg.copy(_va);
@@ -6050,7 +6065,7 @@ function vehImpact(v) {
     return _vg.clone();
   }
   raycaster.set(_vm, _vd); raycaster.far = 600;
-  const h = raycaster.intersectObjects(SHOOTABLE, false)[0];
+  const h = firstHit(raycaster.intersectObjects(SHOOTABLE, false));
   return h ? h.point : _vm.clone().addScaledVector(_vd, 600);
 }
 const vretEl = $('vret'), vaimEl = $('vaim');
@@ -6092,27 +6107,137 @@ function vehFire(v, dt) {
     const ud = h.object.userData;
     if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
     if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
+    if (ud && ud.veh && (ud.veh.dead || ud.veh === v)) continue;
     end = h.point.clone();
     const dmg = mg.dmg * (ud && ud.part === 'head' ? 1.4 : 1) * (X.oneshot && xUnlocked ? 10 : 1);
     if (ud && ud.d) { const r = damageDummy(ud.d, Math.round(dmg), ud.part); sfx.hit(r === 'head'); if (r === 'kill') { hmEl.className = 'kill'; hmT = 0.35; } }
     else if (ud && ud.rp) { ud.rp.flash = 1; netSend({ k: 'hit', to: ud.rp.id, dmg: Math.round(dmg), head: ud.part === 'head', w: mg.w }); sfx.hit(false); }
+    else if (ud && ud.veh) hitVehicle(ud.veh, dmg, 'bullet', null);
     spawnSpark(h.point, false);
     break;
   }
   spawnTracer(_vm, end, 0xffe08a); sfx.shot(1, 0.7); camShake(0.06);
   netSend({ k: 'shot', w: 1, a: [r2(_vm.x), r2(_vm.y), r2(_vm.z)], e: [[r2(end.x), r2(end.y), r2(end.z)]] });
 }
+/* ---------- véhicules destructibles : points de vie, fumée, feu, explosion, épave puis réapparition ---------- */
+// hp : points de vie · arm : part des dégâts des balles et des lames · boom : part des dégâts des explosions
+const VEH_HP = { buggy: { hp: 260, arm: 0.8, boom: 2 }, tank: { hp: 1000, arm: 0.05, boom: 1.6 }, heli: { hp: 500, arm: 0.5, boom: 2 }, plane: { hp: 320, arm: 0.6, boom: 2 }, jet: { hp: 380, arm: 0.5, boom: 2 } };
+const VEH_HB = {
+  buggy: [[2.0, 1.5, 4.0, 0, 0.95, 0]],
+  tank: [[3.5, 1.6, 6.0, 0, 1.0, 0], [2.6, 0.9, 3.2, 0, 2.2, 0.3]],
+  heli: [[1.8, 1.9, 5.2, 0, 1.75, -0.4], [0.8, 0.9, 5.4, 0, 2.2, 4.6]],
+  plane: [[1.4, 1.5, 8.2, 0, 1.5, 0.4], [9.5, 0.45, 1.9, 0, 1.15, -0.5]],
+  jet: [[1.9, 1.7, 11.5, 0, 1.75, 0.3], [9.0, 0.45, 3.6, 0, 1.5, 1.4]]
+};
+const vehCharMat = new THREE.MeshLambertMaterial({ color: 0x1d1a17 });
+function vehHitboxes(v) {
+  v.hb = (VEH_HB[v.type] || VEH_HB.buggy).map(([w, h, d, x, y, z]) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), hitMat); m.position.set(x, y, z); m.userData = { veh: v }; v.g.add(m); return m; });
+  const H = VEH_HP[v.type] || VEH_HP.buggy; v.hp = v.hpMax = H.hp; v.dead = false;
+}
+// part des dégâts selon l'arme : 'bullet' (balles, lames, mitrailleuses), 'boom' (explosions), 'raw' (chocs)
+function vehDmgOf(v, d, kind) { const H = VEH_HP[v.type] || VEH_HP.buggy; return d * (kind === 'boom' ? H.boom : kind === 'raw' ? 1 : H.arm); }
+function vehDamage(v, d, by, send = true) {
+  if (!v || v.dead || !(d > 0)) return false;
+  v.hp -= d; v.hitFlash = 1;
+  if (send && NET.mode !== 'off') netSend({ k: 'vdmg', i: v.i, d: r2(d) });
+  if (v.hp <= 0) destroyVehicle(v, by || (send ? NET.selfId || 'me' : null));
+  return true;
+}
+// touché par un tir du joueur local : marqueur de touche, étincelles
+function hitVehicle(v, d, kind, point) {
+  const dd = vehDmgOf(v, d, kind);
+  if (!vehDamage(v, dd, NET.selfId || 'me')) return null;
+  if (point) spawnSpark(point, true);
+  sfx.hit(false); hmEl.className = v.dead ? 'kill' : ''; hmT = v.dead ? 0.35 : 0.12;
+  return v.dead ? 'kill' : 'hit';
+}
+function destroyVehicle(v, by) {
+  if (v.dead) return;
+  v.dead = true; v.hp = 0;
+  const c = (v === P.veh ? rPos : v.pos).clone(); c.y += 1;
+  const dist = camera.position.distanceTo(c);
+  blastFx(c, 0xff8a30, 13, 0.7); sfx.boom(clamp(1.8 / (1 + dist * 0.04), 0.15, 1));
+  const mine = by === (NET.selfId || 'me');
+  if (P.veh === v) {
+    exitVehicle(true); P.vel.set((Math.random() - 0.5) * 6, 8, (Math.random() - 0.5) * 6); P.grounded = false;
+    if (by && !mine && NET.mode !== 'off' && remotes.has(by)) applyHit({ from: by, dmg: 140, head: false, w: 15 }); else hurtSelf(140, 15);
+  }
+  if (mine) { grenDamage(c, 6, 80, true, false, 15); feed(t('veh.destroyed'), '', 'gold'); }
+  // épave noircie à la place du véhicule
+  for (const m of v.hb) v.g.remove(m);
+  const w = v.g.clone(true), drop = [];
+  for (const m of v.hb) v.g.add(m);
+  w.traverse(o => { if (o.isSprite || (o.userData && o.userData.veh)) drop.push(o); else if (o.isMesh) { if (o.material && o.material.isMeshBasicMaterial) o.visible = false; else o.material = vehCharMat; } });
+  drop.forEach(o => o.parent && o.parent.remove(o));
+  w.position.copy(v === P.veh ? rPos : v.pos); w.rotation.z += (Math.random() - 0.5) * 0.4; w.rotation.x += (Math.random() - 0.5) * 0.2;
+  const fires = [];
+  for (let i = 0; i < 4; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: i % 2 ? 0xff7a20 : 0xffb040, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); sp.position.set((Math.random() - 0.5) * 1.6, 1.4 + Math.random() * 0.6, (Math.random() - 0.5) * 2.2); sp.userData.h = 1.6 + Math.random(); w.add(sp); fires.push(sp); }
+  scene.add(w);
+  v.wreckG = w; v.wreckFires = fires; v.wreckVel = v.vel.clone(); v.wreckGrounded = !VEHP[v.type].air || v.grounded;
+  v.g.visible = false; v.wreck = 14; v.driver = v.driver === 'me' ? null : v.driver; v.vel.set(0, 0, 0); v.speed = 0; v.thr = 0;
+}
+// fumée qui s'échappe des véhicules abîmés et des épaves
+const PUFFS = [];
+const puffMat = new THREE.SpriteMaterial({ map: glowTex, color: 0x3a3836, transparent: true, opacity: 0, depthWrite: false });
+for (let i = 0; i < 70; i++) { const sp = new THREE.Sprite(puffMat.clone()); sp.visible = false; scene.add(sp); PUFFS.push({ sp, t: 0, life: 1 }); }
+let puffI = 0;
+function puff(p, dark, big = 1) {
+  const q = PUFFS[puffI++ % PUFFS.length]; q.sp.position.copy(p); q.sp.position.x += (Math.random() - 0.5) * 0.6; q.sp.position.z += (Math.random() - 0.5) * 0.6;
+  q.t = 0; q.life = 2.2 + Math.random(); q.big = big; q.sp.visible = true; q.sp.material.color.setHex(dark ? 0x1e1c1b : 0x6a6662);
+}
+function updateVehDamageFx(dt) {
+  for (const q of PUFFS) {
+    if (!q.sp.visible) continue;
+    q.t += dt; const k = q.t / q.life; if (k >= 1) { q.sp.visible = false; continue; }
+    q.sp.position.y += dt * 2.4; q.sp.scale.setScalar((1 + k * 4) * q.big); q.sp.material.opacity = 0.55 * Math.min(1, k * 6) * (1 - k);
+  }
+  const tt = performance.now() / 1000;
+  for (const v of VEHICLES) {
+    if (v.dead && v.wreckG) {
+      // une épave en l'air retombe
+      if (!v.wreckGrounded) {
+        v.wreckVel.y -= G * dt; v.wreckG.position.addScaledVector(v.wreckVel, dt); v.wreckG.rotation.x += dt * 0.6;
+        const gh = groundAtPoint(v.wreckG.position.x, v.wreckG.position.z, v.wreckG.position.y + 1);
+        if (v.wreckG.position.y <= gh) { v.wreckG.position.y = gh; v.wreckGrounded = true; blastFx(v.wreckG.position.clone(), 0xff8a30, 8, 0.4); sfx.boom(0.5); }
+      }
+      for (const sp of v.wreckFires) { const f = Math.min(1, v.wreck / 4); sp.material.opacity = f * (0.6 + 0.3 * Math.sin(tt * 13 + sp.id)); sp.scale.set(1.4, sp.userData.h * (0.8 + 0.3 * Math.sin(tt * 9 + sp.id * 2)), 1); }
+      v.smokeT = (v.smokeT || 0) - dt; if (v.smokeT <= 0) { v.smokeT = 0.18; _vg.copy(v.wreckG.position); _vg.y += 2; puff(_vg, true, 1.4); }
+      continue;
+    }
+    if (!v.hpMax || v.hp > v.hpMax * 0.45 || !v.g.visible) continue;
+    // abîmé : fumée grise, puis noire avec du feu en dessous de 20 %
+    const crit = v.hp < v.hpMax * 0.2;
+    v.smokeT = (v.smokeT || 0) - dt;
+    if (v.smokeT <= 0) { v.smokeT = crit ? 0.1 : 0.25; _vg.copy(v.g.position); _vg.y += VEHP[v.type].air ? 2.6 : 1.8; puff(_vg, crit, crit ? 1.2 : 0.8); if (crit && Math.random() < 0.5) spawnSpark(_vg, true); }
+  }
+}
+function respawnWreck(v) {
+  if (v.wreckG) { scene.remove(v.wreckG); v.wreckG = null; }
+  v.dead = false; v.hp = v.hpMax;
+}
+// barre de blindage du véhicule conduit
+const vhpEl = $('vhp');
+function updateVehHud() {
+  const v = P.veh; vhpEl.hidden = !v || !playing;
+  if (vhpEl.hidden) return;
+  const k = clamp(v.hp / v.hpMax, 0, 1);
+  vhpEl.querySelector('b').style.width = (k * 100).toFixed(1) + '%';
+  vhpEl.querySelector('span').textContent = Math.ceil(v.hp);
+  vhpEl.classList.toggle('low', k < 0.3);
+  if (vhpEl.dataset.l !== LANG) { vhpEl.dataset.l = LANG; vhpEl.querySelector('em').textContent = t('veh.hp'); }
+}
 function resetVehicles() {
   if (!VEH_READY) return;
   if (P.veh) exitVehicle(true);
-  for (const v of VEHICLES) scene.remove(v.g);
+  for (const v of VEHICLES) { scene.remove(v.g); if (v.wreckG) scene.remove(v.wreckG); }
   VEHICLES.length = 0;
   VEH_SPAWNS.forEach((sp, i) => {
     const type = VEHP[sp[4]] ? sp[4] : 'buggy', col = VEH_COLORS[i % VEH_COLORS.length];
     const m = type === 'tank' ? buildTank([0x66753f, 0x8a7a52, 0x56685e][i % 3]) : type === 'heli' ? buildHeli([0x4f5a46, 0x2e3a4a, 0x5a5048][i % 3]) : type === 'plane' ? buildPlane(col) : type === 'jet' ? buildJet([0x6f7880, 0x4a5560][i % 2]) : buggyExtras(buildBuggy(col), col);
     const v = { i, type, ...m, pos: new V3(sp[0], sp[1], sp[2]), vel: new V3(), yaw: sp[3] || 0, grounded: true, pitch: 0, roll: 0, spin: 0, steerV: 0, driver: null, ramCd: new Map(), home: sp.slice(), thr: 0, speed: 0, fireCd: 0, wreck: 0, tYaw: 0, tPitch: 0 };
-    scene.add(v.g); VEHICLES.push(v); placeVehicleMesh(v, v.pos, v.yaw, 1);
+    scene.add(v.g); VEHICLES.push(v); vehHitboxes(v); placeVehicleMesh(v, v.pos, v.yaw, 1);
   });
+  rebuildShootable();
 }
 function vehGround(x, z, y, step = VEH.step) {
   let h = rampAt(x, z).h;
@@ -6179,7 +6304,7 @@ function vehStep(v, dt) {
     if (Math.abs(v.pos.x) > L) { v.pos.x = clamp(v.pos.x, -L, L); v.vel.x *= -0.3; }
     if (Math.abs(v.pos.z) > L) { v.pos.z = clamp(v.pos.z, -L, L); v.vel.z *= -0.3; }
   }
-  if (hitWall > 6) { sfx.land(Math.min(1, hitWall / 20)); P.dip = Math.min(0.2, hitWall * 0.01); }
+  if (hitWall > 6) { sfx.land(Math.min(1, hitWall / 20)); P.dip = Math.min(0.2, hitWall * 0.01); if (hitWall > 11 && !tank) vehDamage(v, (hitWall - 11) * 9); }
   // vertical : suit le sol, décolle au sommet des tremplins
   const gh = vehGround(v.pos.x, v.pos.z, v.pos.y, PR.step);
   if (v.grounded) {
@@ -6193,6 +6318,14 @@ function vehStep(v, dt) {
   v.spin += vf * dt / 0.48;
   // percuter un robot ou un joueur
   if (sp > PR.ram) {
+    for (const o of VEHICLES) {
+      if (o === v || o.dead) continue;
+      if (Math.hypot(o.pos.x - v.pos.x, o.pos.z - v.pos.z) < PR.R + (VEHP[o.type] || VEH).R && Math.abs(o.pos.y - v.pos.y) < 2.5 && !(v.ramCd.get(o) > simTime)) {
+        v.ramCd.set(o, simTime + 0.8); sfx.land(1); camShake(0.4);
+        vehDamage(o, sp * (tank ? 30 : 9)); if (!tank) vehDamage(v, sp * 4);
+        if (P.veh !== v) return;
+      }
+    }
     for (const d of dummies) {
       if (!d.alive || !RULES.bots) continue;
       const p = d.g.position;
@@ -6209,12 +6342,12 @@ function vehStep(v, dt) {
       }
     }
   }
-  P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded;
+  if (P.veh === v) { P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded; }
 }
 function nearVehicle() {
   let best = null, bd = 99;
   for (const v of VEHICLES) {
-    if (v.driver || v.wreck > 0) continue;
+    if (v.driver || v.wreck > 0 || v.dead) continue;
     const d = Math.hypot(v.pos.x - P.pos.x, v.pos.z - P.pos.z) - (VEHP[v.type] || VEH).R;
     if (d < 2.05 && d < bd && Math.abs(v.pos.y - P.pos.y) < 3) { bd = d; best = v; }
   }
@@ -6265,7 +6398,7 @@ function updateVehicles(dt) {
   const me = P.veh;
   for (const v of VEHICLES) {
     const air = !!(VEHP[v.type] && VEHP[v.type].air);
-    if (v.wreck > 0) { v.wreck -= dt; if (v.wreck <= 0) { v.wreck = 0; v.pos.set(v.home[0], v.home[1], v.home[2]); v.yaw = v.home[3] || 0; v.vel.set(0, 0, 0); v.pitch = v.roll = 0; v.grounded = true; v.g.visible = true; placeVehicleMesh(v, v.pos, v.yaw, 1); } continue; }
+    if (v.wreck > 0) { v.wreck -= dt; if (v.wreck <= 0) { v.wreck = 0; respawnWreck(v); v.pos.set(v.home[0], v.home[1], v.home[2]); v.yaw = v.home[3] || 0; v.vel.set(0, 0, 0); v.pitch = v.roll = 0; v.grounded = true; v.g.visible = true; placeVehicleMesh(v, v.pos, v.yaw, 1); } continue; }
     if (v === me) placeVehicleMesh(v, rPos, v.yaw, 1 - Math.exp(-10 * dt));
     else if (v.driver && v.driver !== 'me') {
       const rp = remotes.get(v.driver);
@@ -6283,7 +6416,7 @@ function updateVehicles(dt) {
       v.pos.addScaledVector(v.vel, dt); v.vel.x *= Math.exp(-0.5 * dt); v.vel.z *= Math.exp(-0.5 * dt);
       v.pitch *= Math.exp(-dt); v.roll *= Math.exp(-dt);
       const gh = groundAtPoint(v.pos.x, v.pos.z, v.pos.y + 1);
-      if (v.pos.y <= gh) { v.pos.y = gh; if (v.vel.y < -16) { blastFx(v.pos.clone(), 0xffa040, 10); sfx.boom(clamp(1.6 / (1 + camera.position.distanceTo(v.pos) * 0.05), 0.1, 1)); v.g.visible = false; v.wreck = 8; } v.vel.set(0, 0, 0); v.grounded = true; }
+      if (v.pos.y <= gh) { v.pos.y = gh; const crash = v.vel.y < -16; v.vel.set(0, 0, 0); v.grounded = true; if (crash) { placeVehicleMesh(v, v.pos, v.yaw, 1); destroyVehicle(v, null); continue; } }
       if (v.pos.y < -30) { v.g.visible = false; v.wreck = 1; }
       placeVehicleMesh(v, v.pos, v.yaw, 1);
     }
@@ -7552,6 +7685,7 @@ function frame(now) {
   updateSelfAvatar(dt);
   updateFpLegs(dt);
   updateVehicles(dt);
+  updateVehDamageFx(dt); updateVehHud();
   grenStep(dt);
   updateTrident(dt);
   updateEditor();
