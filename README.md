@@ -26,9 +26,9 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
 
 
-Soldat, X-Bot ou Robot, avec dix-huit couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+Soldat, X-Bot, Robot ou Spectre, avec dix-huit couleurs. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
-Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (jambes tendues vers l'avant). Pendant un superglide, tu vois aussi tes jambes tendues à la première personne.
+Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (jambes tendues vers l'avant). Pendant un superglide, tu vois aussi tes jambes tendues à la première personne (case « Voir mes jambes » dans les réglages pour les enlever).
 
 **Emotes :** appuie sur **J** puis sur **1 à 6** : salut, danse, pouce levé, bravo, assis, muscles. La caméra passe à la troisième personne pendant l'emote (la souris tourne autour du perso), et bouger, sauter ou tirer l'arrête. Les autres joueurs voient l'emote en ligne.
 
@@ -46,6 +46,8 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 
 L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondule au vent.
 
+Chaque carte a son décor : tonneaux, caisses, pneus, cactus et rochers sur le Canyon ; palettes, cônes, glissières en béton, tuyaux et lampadaires à la Raffinerie ; troncs couchés, souches, champignons, buissons et fleurs en Forêt ; bottes de foin, charrettes, torches, bannières et fleurs au Château ; rochers de basalte, cristaux brûlants et arbres calcinés sur le Volcan ; lampadaires, feux tricolores, bouches d'incendie, poubelles, bennes, gravats et barricades dans la Ville fantôme. Les gros objets bloquent le passage et arrêtent les balles : ils servent de couverture.
+
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
 
 ## Tyroliennes
@@ -61,6 +63,11 @@ Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. 
 | Tank | Ville fantôme (2), Volcan, Fusion | Z/S avance et recule, Q/D pivote sur place ; la tourelle et le canon suivent la souris | Obus au clic gauche (130 dégâts en zone, rechargement 2,2 s). Le blindage divise par 2,5 les dégâts reçus |
 | Hélico | Ville fantôme (2), Volcan (2), Fusion | Il se tourne vers où tu regardes ; Z/Q/S/D le déplacent, **Espace** monte, **C** descend, **Maj** accélère | Mitrailleuse au clic gauche |
 | Avion | Ville fantôme (2, sur la piste), Volcan | Z/S règlent les gaz, la souris donne la direction, Q/D penchent ; il décolle en tirant vers le haut au-dessus de 30 m/s | Mitrailleuse au clic gauche |
+| Chasseur | Ville fantôme (sur la piste), Volcan | Comme l'avion, mais bien plus rapide (jusqu'à 112 m/s avec Maj), décolle au-dessus de 40 m/s, postcombustion visible | Deux canons qui tirent en alternance |
+
+**Réticule :** comme dans Battlefield, le petit rond au centre de l'écran montre où tu regardes et le grand réticule montre où partent vraiment tes tirs. Celui de l'hélico, de l'avion et du chasseur est devant le nez de l'appareil. Celui du tank est au bout du canon : il tient compte de la chute de l'obus et se remplit pendant le rechargement. Quand tu tournes la souris, le réticule rattrape la visée avec un temps de retard : la tourelle, le canon de l'hélico et le nez de l'avion pivotent moins vite que la caméra.
+
+Les modèles sont détaillés : tank camouflé avec chenilles qui défilent, tourelle, coupole, mitrailleuse et antenne ; hélico d'attaque avec cockpit en tandem, nacelles de roquettes et feux de position ; avion à hélice avec bandes et cocardes ; chasseur à aile delta ; buggy avec roue de secours, rampe de phares et fanion.
 
 Un avion qui pique dans le sol ou percute un immeuble explose (tu es éjecté et blessé) et réapparaît à sa place 8 s plus tard. Près du bord de la carte, l'avion fait demi-tour tout seul. Un hélico abandonné en vol redescend doucement en autorotation.
 
