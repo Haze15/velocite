@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Trois cartes (Canyon, Raffinerie, Forêt), 5 armes et 5 couteaux, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Trois cartes (Canyon, Raffinerie, Forêt), 5 armes et 6 couteaux, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -51,6 +51,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | 1 à 5 | Carabine, mitraillette, pompe, sniper, pistolet |
 | 6 ou V | Couteau |
 | Q / A en AZERTY | Stim : +35 % de vitesse pendant 6 s (recharge 9 s) |
+| X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
 | G | Dôme-bouclier : bulle de 5 m qui arrête les balles pendant 12 s (recharge 25 s) |
 | F | Portail : pose l'entrée, va à au moins 6 m, réappuie pour ouvrir la sortie (40 s) |
 | M | Mini-carte |
@@ -73,6 +74,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Machette | 65, portée 3,3 m | 85 coups/min | — |
 | Dague | 55, portée 2,6 m | 110 coups/min | — |
 | Papillon | 46, portée 2,5 m | 135 coups/min | — |
+| Katana | 70, portée 3,6 m | 80 coups/min | — |
 
 Avec le couteau en main, tu cours 10 % plus vite. Treize skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon.
 
