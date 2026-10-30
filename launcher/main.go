@@ -43,6 +43,8 @@ func main() {
 		lastPing.Store(time.Now().Unix())
 		w.WriteHeader(http.StatusNoContent)
 	})
+	mux.HandleFunc("/__presence", presenceHandler)
+	go rp.run()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" || r.URL.Path == "/index.html" {
 			w.Header().Set("Content-Type", "text/html; charset=utf-8")
@@ -86,6 +88,8 @@ func patchPage(html string) string {
 	)
 	html = r.Replace(html)
 	beat := "<script>(function(){function b(){fetch('/__alive',{cache:'no-store'}).catch(function(){})}b();setInterval(b,5000)})();</script>\n</body>"
+	// signale à la page qu'elle tourne dans l'appli (statut Discord disponible)
+	html = strings.Replace(html, "<script>\n(() => {", "<script>window.__VELOCITE_APP=1;</script>\n<script>\n(() => {", 1)
 	return strings.Replace(html, "</body>", beat, 1)
 }
 

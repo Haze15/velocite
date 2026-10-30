@@ -133,6 +133,10 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .field select{font:500 14px var(--f-body);background:rgba(244,239,230,.06);color:var(--ink);border:1px solid rgba(244,239,230,.25);border-radius:3px;padding:6px 8px}
 .field select option{background:var(--night)}
 .check{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
+#dcId{font:600 14px/1 var(--f-body);letter-spacing:.04em;color:var(--ink);background:rgba(10,13,16,.7);border:1px solid rgba(244,239,230,.25);border-radius:3px;padding:8px 9px 7px;width:100%;box-sizing:border-box}
+#dcId:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.dcmsg{font-size:12.5px;line-height:1.35;color:var(--ink-dim)}
+.dcmsg.ok{color:var(--shield)}.dcmsg.err{color:var(--hostile)}
 .check input{accent-color:var(--amber);width:17px;height:17px}
 .xgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 26px;margin-bottom:10px}
 .xlock h2::before{background:var(--hostile)}
@@ -409,6 +413,10 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
+        <div class="field dcfield"><span class="lab" data-i18n="dc.title">Statut Discord</span>
+          <label class="check"><input type="checkbox" id="dcOn"> <span data-i18n="dc.on">Afficher mon jeu sur Discord</span></label>
+          <input id="dcId" inputmode="numeric" maxlength="22" autocomplete="off" spellcheck="false" data-i18n-ph="dc.idPh" placeholder="ID d’application Discord">
+          <span class="dcmsg" id="dcMsg"></span></div>
       </div>
     </div>
 
@@ -767,6 +775,17 @@ const I18N_ADD2 = {
   zu: { 'map.volcano': 'Intaba-mlilo (enkulu kakhulu)', 'map.mega': 'Inhlanganisela (wonke amamephu)', 'veh.enter': '{key} Shayela i-buggy', 'veh.exit': '{key} Yehla · Space: ibhuleki lesandla · Shift: ijubane', 'act.use': 'Imoto', 'w8s': 'I-LAVA', 'w9s': 'I-BUGGY' }
 };
 for (const l in I18N_ADD2) Object.assign(I18N[l], I18N_ADD2[l]);
+const I18N_ADD3 = {
+  fr: { 'dc.title': 'Statut Discord', 'dc.on': 'Afficher mon jeu sur Discord', 'dc.idPh': 'ID d’application Discord', 'dc.webOnly': 'Disponible dans l’appli Windows (Velocite.exe) : un site web ne peut pas parler à Discord.', 'dc.off': 'Statut Discord désactivé.', 'dc.needId': 'Colle l’ID de ton application Discord (voir le README).', 'dc.ok': 'Connecté : ton statut s’affiche sur Discord.', 'dc.closed': 'Discord n’est pas ouvert sur ce PC. Le statut apparaîtra dès qu’il le sera.', 'dc.err': 'Discord a répondu : {e}', 'dc.wait': 'Connexion à Discord…',
+    'dc.online': 'En ligne ({n}/{max})', 'dc.solo': 'Entraînement solo', 'dc.driving': 'Au volant d’un buggy', 'dc.emote': 'Fait une emote', 'dc.dead': 'Éliminé', 'dc.kills': '{k} élim.', 'dc.lobby': 'Dans le salon · {map}', 'dc.menu': 'Dans le menu', 'dc.menuState': 'Choisit sa carte', 'dc.play': 'Jouer à Vélocité', 'dc.join': 'Rejoindre la partie' },
+  en: { 'dc.title': 'Discord status', 'dc.on': 'Show my game on Discord', 'dc.idPh': 'Discord application ID', 'dc.webOnly': 'Available in the Windows app (Velocite.exe): a website can’t talk to Discord.', 'dc.off': 'Discord status turned off.', 'dc.needId': 'Paste your Discord application ID (see the README).', 'dc.ok': 'Connected: your status shows on Discord.', 'dc.closed': 'Discord isn’t open on this PC. Your status will show as soon as it is.', 'dc.err': 'Discord replied: {e}', 'dc.wait': 'Connecting to Discord…',
+    'dc.online': 'Online ({n}/{max})', 'dc.solo': 'Solo training', 'dc.driving': 'Driving a buggy', 'dc.emote': 'Doing an emote', 'dc.dead': 'Eliminated', 'dc.kills': '{k} kills', 'dc.lobby': 'In the lobby · {map}', 'dc.menu': 'In the menu', 'dc.menuState': 'Picking a map', 'dc.play': 'Play Vélocité', 'dc.join': 'Join the match' },
+  af: { 'dc.title': 'Discord-status', 'dc.on': 'Wys my speletjie op Discord', 'dc.idPh': 'Discord-toepassing-ID', 'dc.webOnly': 'Beskikbaar in die Windows-toep (Velocite.exe): ’n webwerf kan nie met Discord praat nie.', 'dc.off': 'Discord-status afgeskakel.', 'dc.needId': 'Plak jou Discord-toepassing-ID (sien die README).', 'dc.ok': 'Gekoppel: jou status wys op Discord.', 'dc.closed': 'Discord is nie oop op hierdie rekenaar nie. Jou status sal wys sodra dit is.', 'dc.err': 'Discord het geantwoord: {e}', 'dc.wait': 'Koppel aan Discord…',
+    'dc.online': 'Aanlyn ({n}/{max})', 'dc.solo': 'Solo-oefening', 'dc.driving': 'Bestuur ’n besie', 'dc.emote': 'Doen ’n emote', 'dc.dead': 'Uitgeskakel', 'dc.kills': '{k} uitskakelings', 'dc.lobby': 'In die voorportaal · {map}', 'dc.menu': 'In die kieslys', 'dc.menuState': 'Kies ’n kaart', 'dc.play': 'Speel Vélocité', 'dc.join': 'Sluit by die wedstryd aan' },
+  zu: { 'dc.title': 'Isimo se-Discord', 'dc.on': 'Bonisa umdlalo wami ku-Discord', 'dc.idPh': 'I-ID yohlelo lwe-Discord', 'dc.webOnly': 'Iyatholakala ohlelweni lwe-Windows (Velocite.exe): iwebhusayithi ayikwazi ukukhuluma ne-Discord.', 'dc.off': 'Isimo se-Discord sivaliwe.', 'dc.needId': 'Namathisela i-ID yohlelo lwakho lwe-Discord (bheka i-README).', 'dc.ok': 'Kuxhunyiwe: isimo sakho siyabonakala ku-Discord.', 'dc.closed': 'I-Discord ayivuliwe kule PC. Isimo sizovela uma isivuliwe.', 'dc.err': 'I-Discord iphendule: {e}', 'dc.wait': 'Kuxhunywa ne-Discord…',
+    'dc.online': 'Ku-inthanethi ({n}/{max})', 'dc.solo': 'Ukuzilolonga wedwa', 'dc.driving': 'Ushayela i-buggy', 'dc.emote': 'Wenza i-emote', 'dc.dead': 'Ukhishiwe', 'dc.kills': 'abangu-{k} abakhishiwe', 'dc.lobby': 'Endaweni yokulinda · {map}', 'dc.menu': 'Kumenyu', 'dc.menuState': 'Ukhetha imephu', 'dc.play': 'Dlala i-Vélocité', 'dc.join': 'Joyina umdlalo' }
+};
+for (const l in I18N_ADD3) Object.assign(I18N[l], I18N_ADD3[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -4016,7 +4035,7 @@ function leaveNet() {
   setPlayLbl(playing || everPlayed ? 'play.resume' : 'play.solo');
 }
 function onlineReady(code) {
-  NET.code = code;
+  NET.code = code; DC.start = Date.now();
   $('netBadge').hidden = false; $('netBadge').textContent = t('net.badge', { code });
   $('me').hidden = false;
   setPlayLbl('play.enter');
@@ -4220,6 +4239,47 @@ function renderLobbies() {
     el.append(b, m, n, c, j); return el;
   }));
 }
+/* ---------- statut Discord : seulement dans l'appli Windows, qui relaie vers Discord ---------- */
+const DC = { app: !!window.__VELOCITE_APP, last: '', lastT: 0, start: Date.now(), state: '', err: '' };
+S.dcOn = store.get('dcOn', true) !== false; S.dcId = String(store.get('dcId', '') || '');
+const SITE_URL = 'https://haze15.github.io/velocite/';
+function dcPayload() {
+  const online = NET.mode !== 'off', n = online ? (NET.mode === 'host' ? NET.players.size : (NET.board ? NET.board.length : 1)) : 1;
+  const kills = online ? (NET.meScore ? NET.meScore.kills : 0) : stats.kills;
+  const mode = online ? t('dc.online', { n, max: 8 }) : t('dc.solo');
+  const what = P.veh ? t('dc.driving') : EMOTE.on ? t('dc.emote') : wName(WS.cur).toLowerCase().replace(/(^|[\s-])\S/g, c => c.toUpperCase());
+  const p = {
+    on: S.dcOn && /^[0-9]{15,22}$/.test(S.dcId), cid: S.dcId, start: DC.start,
+    details: playing ? t('map.' + S.map) + ' · ' + mode : online ? t('dc.lobby', { map: t('map.' + S.map) }) : t('dc.menu'),
+    state: playing ? (P.dead ? t('dc.dead') : what) + ' · ' + t('dc.kills', { k: kills }) : t('dc.menuState'),
+    buttons: [{ label: t('dc.play'), url: SITE_URL }]
+  };
+  if (online && NET.code) { p.party = 'velocite-' + NET.code; p.size = n; p.max = 8; p.buttons.push({ label: t('dc.join'), url: SITE_URL + '#' + NET.code }); }
+  return p;
+}
+function dcRender() {
+  const el = $('dcMsg'); if (!el) return;
+  const okId = /^[0-9]{15,22}$/.test(S.dcId);
+  let msg = '', cls = '';
+  if (!DC.app) msg = t('dc.webOnly');
+  else if (!S.dcOn) msg = t('dc.off');
+  else if (!okId) msg = t('dc.needId');
+  else if (DC.state === 'ok') { msg = t('dc.ok'); cls = 'ok'; }
+  else if (DC.err) { msg = /fermé|introuvable/.test(DC.err) ? t('dc.closed') : t('dc.err', { e: DC.err }); cls = 'err'; }
+  else msg = t('dc.wait');
+  el.textContent = msg; el.className = 'dcmsg ' + cls;
+  $('dcOn').disabled = $('dcId').disabled = !DC.app;
+}
+function dcTick(force) {
+  if (!DC.app) return;
+  const p = dcPayload(), key = JSON.stringify(Object.assign({}, p, { start: 0 }));
+  const now = performance.now();
+  if (!force && key === DC.last && now - DC.lastT < 30000) return;
+  DC.last = key; DC.lastT = now;
+  fetch('/__presence', { method: 'POST', body: JSON.stringify(p), headers: { 'Content-Type': 'application/json' } })
+    .then(r => r.json()).then(j => { DC.state = j.connected ? 'ok' : ''; DC.err = j.error || ''; dcRender(); }, () => {});
+}
+setInterval(() => dcTick(false), 3000);
 // fermer l'onglet ou la fenêtre fait quitter la partie proprement
 addEventListener('pagehide', () => { if (NET.mode !== 'off') leaveNet(); else lobbyHide(); });
 function saveName() {
@@ -4813,6 +4873,13 @@ S.lobPublic = store.get('lobPublic', true) !== false;
 $('lobPublic').checked = S.lobPublic;
 $('lobPublic').addEventListener('change', e => { S.lobPublic = e.target.checked; store.set('lobPublic', S.lobPublic); if (S.lobPublic) lobbyShow(); else lobbyHide(); });
 lobbyStart();
+{
+  const on = $('dcOn'), id = $('dcId');
+  on.checked = S.dcOn; id.value = S.dcId;
+  on.addEventListener('change', () => { S.dcOn = on.checked; store.set('dcOn', S.dcOn); dcRender(); dcTick(true); });
+  id.addEventListener('input', () => { S.dcId = id.value.replace(/[^0-9]/g, '').slice(0, 22); if (id.value !== S.dcId) id.value = S.dcId; store.set('dcId', S.dcId); DC.err = ''; DC.state = ''; dcRender(); if (/^[0-9]{15,22}$/.test(S.dcId)) dcTick(true); });
+  dcRender(); setTimeout(() => dcTick(true), 1500);
+}
 $('copyBtn').addEventListener('click', () => {
   const link = $('roomLink').textContent;
   const done = () => { $('copyBtn').firstChild.textContent = t('net.copied'); setTimeout(() => { $('copyBtn').firstChild.textContent = t('net.copy'); }, 1600); };
@@ -4830,6 +4897,8 @@ function setPlayLbl(k) { playKey = k; $('playLbl').textContent = t(k); }
 function applyI18n() {
   document.documentElement.lang = LANG;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  try { dcRender(); } catch (e) {}
   document.querySelectorAll('[data-i18n-html]').forEach(el => {
     // {action} ou {action:slot} devient une touche affichée selon les réglages
     el.innerHTML = t(el.dataset.i18nHtml).replace(/\{(\w+)(?::(\d))?\}/g, (m, a, slot) => `<kbd data-act="${a}"${slot ? ` data-slot="${slot}"` : ''}></kbd>`);
