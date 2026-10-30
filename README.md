@@ -9,6 +9,7 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Glissade :** sprinte puis accroupis-toi. Un boost toutes les 2 s.
 - **Bhop :** saute dans les 0,12 s qui suivent l'atterrissage. La vitesse perdue au sol est rendue et chaque saut enchaîné ajoute environ 0,4 m/s, jusqu'à 17 m/s.
 - **Wall-jump :** en l'air contre un mur, saute pour rebondir en gardant ton élan le long du mur. Trois rebonds avant de retoucher le sol.
+- **Mantle jump :** en te hissant sur un rebord, appuie seulement sur saut : tu es propulsé environ 4 m au-dessus du rebord.
 - **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 18 m/s, plus si tu arrives lancé.
 - **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
@@ -33,6 +34,10 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 - **Fusion** : les quatre cartes collées en carré, sans murs entre elles, avec un carrefour et un pad au centre.
 
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
+
+## Tyroliennes
+
+Des câbles relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
 
 ## Buggys
 
@@ -69,7 +74,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Q / A en AZERTY | Stim : +35 % de vitesse pendant 6 s (recharge 9 s) |
 | X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
 | J | Emotes (puis 1 à 6) |
-| E | Monter dans un buggy / en descendre |
+| E | S'accrocher à une tyrolienne, monter dans un buggy / en descendre |
 | G | Dôme-bouclier : bulle de 5 m qui arrête les balles pendant 12 s (recharge 25 s) |
 | F | Portail : pose l'entrée, va à au moins 6 m, réappuie pour ouvrir la sortie (40 s) |
 | M | Mini-carte |

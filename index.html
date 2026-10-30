@@ -786,6 +786,13 @@ const I18N_ADD3 = {
     'dc.online': 'Ku-inthanethi ({n}/{max})', 'dc.solo': 'Ukuzilolonga wedwa', 'dc.driving': 'Ushayela i-buggy', 'dc.emote': 'Wenza i-emote', 'dc.dead': 'Ukhishiwe', 'dc.kills': 'abangu-{k} abakhishiwe', 'dc.lobby': 'Endaweni yokulinda · {map}', 'dc.menu': 'Kumenyu', 'dc.menuState': 'Ukhetha imephu', 'dc.play': 'Dlala i-Vélocité', 'dc.join': 'Joyina umdlalo' }
 };
 for (const l in I18N_ADD3) Object.assign(I18N[l], I18N_ADD3[l]);
+const I18N_ADD4 = {
+  fr: { 'zip.grab': '{key} S’accrocher à la tyrolienne', 'zip.ride': 'Espace : sauter · C : lâcher · S : demi-tour', 'zip.jump': 'saut de tyrolienne' },
+  en: { 'zip.grab': '{key} Grab the zipline', 'zip.ride': 'Space: jump · C: let go · S: reverse', 'zip.jump': 'zipline jump' },
+  af: { 'zip.grab': '{key} Gryp die sweefkabel', 'zip.ride': 'Spasie: spring · C: los · S: draai om', 'zip.jump': 'sweefkabelsprong' },
+  zu: { 'zip.grab': '{key} Bamba intambo yokushelela', 'zip.ride': 'Space: gxuma · C: yeka · S: buyela emuva', 'zip.jump': 'ukugxuma entanjeni' }
+};
+for (const l in I18N_ADD4) Object.assign(I18N[l], I18N_ADD4[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -834,7 +841,7 @@ const CLIMB_TIME = 1.05, CLIMB_V0 = 6.4, CLIMB_V1 = 3.0;
 const WJ_OUT = 6.6 * K, WJ_UP = 7.0, WJ_SIDE = 4.0, WJ_MAX = 3;
 const BHOP_WIN = 0.12, BHOP_CAP = 17.5;
 const SG_WIN = 0.14, SG_SPEED = 15.5 * K;
-const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15;
+const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15, MANTLE_JUMP_V = 12.2;
 const MAX_SH = 75, MAX_HP = 100;
 
 /* ================= Rendu ================= */
@@ -961,6 +968,28 @@ function boxGeo(sx, sy, sz) {
   return g;
 }
 let SKIP_PERIM = false, FAR_CLIP = 0;
+/* ---------- tyroliennes : câble entre deux points (les mains du joueur s'y accrochent) ---------- */
+const ZIPS = [];
+const zipCableMat = new THREE.MeshLambertMaterial({ color: 0x2a2d31 });
+const zipPostMat = new THREE.MeshLambertMaterial({ color: 0x5b636b });
+const zipLightMat = new THREE.MeshBasicMaterial({ color: 0xffb020 });
+function zipline(ax, ay, az, bx, by, bz) {
+  const a = new V3(ax, ay, az), b = new V3(bx, by, bz), d = b.clone().sub(a), len = d.length();
+  d.divideScalar(len);
+  ZIPS.push({ a, b, dir: d, len });
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, len, 6), zipCableMat);
+  cable.position.copy(a).add(b).multiplyScalar(0.5);
+  cable.quaternion.setFromUnitVectors(UP, d); mapRoot.add(cable);
+  for (const e of [a, b]) {
+    // poteau jusqu'à la surface en dessous, bras, voyant ambre
+    let g = 0; for (const bx2 of BOXES) if (!bx2.ground && e.x > bx2.min.x && e.x < bx2.max.x && e.z > bx2.min.z && e.z < bx2.max.z && bx2.max.y <= e.y && bx2.max.y > g) g = bx2.max.y;
+    if (TERRAIN) g = Math.max(g, terrainH(e.x, e.z));
+    const h = e.y + 0.5 - g;
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, h, 8), zipPostMat); post.position.set(e.x, g + h / 2, e.z); post.castShadow = true; mapRoot.add(post);
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.22, 0.34), zipPostMat); cap.position.set(e.x, e.y + 0.4, e.z); mapRoot.add(cap);
+    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), zipLightMat); lamp.position.set(e.x, e.y + 0.62, e.z); mapRoot.add(lamp);
+  }
+}
 function box(cx, cz, sx, sz, y0, h, key) {
   // carte Fusion : les murs d'enceinte de chaque carte disparaissent pour relier les zones
   if (SKIP_PERIM && y0 === 0 && h === 20 && ((sx === 132 && sz === 4 && cx === 0 && Math.abs(cz) === 64) || (sx === 4 && sz === 124 && cz === 0 && Math.abs(cx) === 64))) return;
@@ -1088,6 +1117,10 @@ function buildCanyon() {
   ramp(8, 12, 30, 34, 'z', -1, 0, 1.3); ramp(-8, -4, 30, 34, 'z', -1, 0, 1.3);
   pad(-22, 0, -47); pad(15, 0, -20); pad(20, 0, 45);
   VEH_SPAWNS.push([-8, 0, 54, 1.57], [-32, 0, -20, 0]);
+  // tyroliennes : du grand bâtiment à la tour centrale, et une verticale contre le bâtiment est
+  zipline(-38, 12.3, -44, -2, 10.8, -6.5);
+  zipline(35, 2.3, -34.4, 35, 8.4, -37.2);
+  zipline(52, 5.8, 5, 18, 2.3, 30);
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const mesas = [];
   for (let i = 0; i < 28; i++) {
@@ -1107,6 +1140,8 @@ function buildRefinery() {
   box(0, -64, 132, 4, 0, 20, 'navy'); box(0, 64, 132, 4, 0, 20, 'navy');
   box(-64, 0, 4, 124, 0, 20, 'navy'); box(64, 0, 4, 124, 0, 20, 'navy');
   // tour centrale : socle, pad, sommet
+  zipline(-24, 8.3, -34, 24, 8.3, -34);
+  zipline(2, 10.3, 2, 0, 2.3, 50);
   box(0, 0, 16, 16, 0, 3, 'deck'); box(0, 0, 8, 8, 3, 5, 'steel');
   ramp(-3, 3, 8, 16, 'z', -1, 0, 3);
   pad(0, 3, 6);
@@ -1160,6 +1195,7 @@ function buildForest() {
   // mirador sur pilotis, plateforme intermédiaire et pad
   for (const [x, z] of [[28, 28], [32, 28], [28, 32], [32, 32]]) box(x, z, 0.4, 0.4, 0, 9, 'bark');
   box(30, 30, 5, 5, 9, 0.5, 'wood');
+  zipline(-28.5, 6.8, -28.5, 29, 11.8, 29); zipline(28.5, 11.8, 31.5, -42, 11.3, 52);
   box(24, 30, 4, 4, 0, 5, 'wood');
   pad(18, 0, 30);
   // colline de glisse et plateau
@@ -1236,6 +1272,7 @@ function buildCastle() {
   for (const x of [-7.5, 7.5]) for (let z = -27; z <= -13; z += 2.8) box(x, z, 1, 0.8, 10, 0.9, 'keep');
   ramp(-4, 4, -12, 6, 'z', -1, 0, 10);
   pad(5.5, 10, -14);
+  zipline(-28, 16.3, -36, -5, 12.3, -23); zipline(29, 16.3, 21, 55, 6.6, 45); zipline(-2, 2.3, 34, -2, 10.3, 21);
   // rampes vers le chemin de ronde le long des murs est et ouest
   ramp(-28, -24, -30, -10, 'z', -1, 0, 8); ramp(24, 28, -30, -10, 'z', -1, 0, 8);
   // cour : puits, étals, bottes de foin
@@ -1348,6 +1385,12 @@ function buildVolcano() {
     spawns.push([x, top, z, yaw]); dums.push([x - Math.sign(x) * 3, top, z - Math.sign(z) * 3, 'static']);
     VEH_SPAWNS.push([x * 0.78, th(x * 0.78, z * 0.92), z * 0.92, yaw]);
   }
+  // tyroliennes géantes : du camp et des avant-postes jusqu'au bord du cratère
+  zipline(6, th(6, 134) + 2.3, 134, 6, th(6, VOL.rim + 5) + 2.3, VOL.rim + 5);
+  for (const [x, z] of [[118, 118], [-118, 118], [118, -118], [-118, -118]]) {
+    const top = th(x, z) + 3, sx = Math.sign(x), sz = Math.sign(z), k = (VOL.rim + 5) / Math.hypot(x, z);
+    zipline(x - sx * 4.5, Math.max(top, th(x - sx * 4.5, z - sz * 4.5)) + 2.6, z - sz * 4.5, x * k, th(x * k, z * k) + 2.3, z * k);
+  }
   // ponts au-dessus des coulées (est, ouest : le long de x ; nord : le long de z)
   for (const c of VOL.chans) for (const r of [55, 92]) {
     const x = Math.cos(c) * r, z = Math.sin(c) * r, along = Math.abs(Math.cos(c)) > 0.5;
@@ -1425,12 +1468,13 @@ function buildMega() {
   SKIP_PERIM = true; FAR_CLIP = 66;
   try {
     for (const [id, ox, oz] of MEGA_PARTS) {
-      const nb = BOXES.length, nr = RAMPS.length, np = PADS.length, nc = mapRoot.children.length, nv = VEH_SPAWNS.length;
+      const nb = BOXES.length, nr = RAMPS.length, np = PADS.length, nc = mapRoot.children.length, nv = VEH_SPAWNS.length, nzp = ZIPS.length;
       MAPS[id].build();
       for (let i = nb; i < BOXES.length; i++) { const b = BOXES[i]; b.min.x += ox; b.max.x += ox; b.min.z += oz; b.max.z += oz; }
       for (let i = nr; i < RAMPS.length; i++) { const r = RAMPS[i]; r.x0 += ox; r.x1 += ox; r.z0 += oz; r.z1 += oz; }
       for (let i = np; i < PADS.length; i++) { PADS[i].x += ox; PADS[i].z += oz; }
       for (let i = nv; i < VEH_SPAWNS.length; i++) { VEH_SPAWNS[i][0] += ox; VEH_SPAWNS[i][2] += oz; }
+      for (let i = nzp; i < ZIPS.length; i++) { const zp = ZIPS[i]; zp.a.x += ox; zp.a.z += oz; zp.b.x += ox; zp.b.z += oz; }
       for (let i = nc; i < mapRoot.children.length; i++) { const c = mapRoot.children[i]; c.position.x += ox; c.position.z += oz; }
       for (const sp of MAPS[id].spawns) spawns.push([sp[0] + ox, sp[1], sp[2] + oz, sp[3]]);
       MAPS[id].dummies.slice(0, 3).forEach(d => dums.push([d[0] + ox, d[1], d[2] + oz].concat(d.slice(3))));
@@ -1522,7 +1566,8 @@ function buildMap(id) {
   mapRoot.clear();
   BOXES.length = 1; RAMPS.length = 0; PADS.length = 0; WORLD.length = 1;
   S.map = id;
-  TERRAIN = null; TERRAIN_MESHES = []; MAP_TICK = null; VEH_SPAWNS.length = 0;
+  TERRAIN = null; TERRAIN_MESHES = []; MAP_TICK = null; VEH_SPAWNS.length = 0; ZIPS.length = 0;
+  if (P.zip) P.zip = null;
   MAP_LIM = MAPS[id].lim || 61.6;
   MAPS[id].build();
   mergeStatic();
@@ -1603,7 +1648,7 @@ const P = {
   climbing: false, climbT: 0, climbAvail: true, climbN: null, mantle: null,
   doubleJump: false, padCd: 0, jumpBuf: 0, tapPulse: false, tapBudget: TAP_BUDGET, tapAcc: 0,
   landT: -9, landSpeed: 0, landDir: { x: 0, z: -1 }, bhop: 0, wallJumps: 0, wjCd: 0, airT: 0, eye: 1.62, dip: 0, roll: 0, stepDist: 0, bob: 0,
-  hp: MAX_HP, sh: MAX_SH, dead: false, respawnT: 0, hurtT: 9, lastHit: 0, sgT: 0, mgT: 0, veh: null
+  hp: MAX_HP, sh: MAX_SH, dead: false, respawnT: 0, hurtT: 9, lastHit: 0, sgT: 0, mgT: 0, veh: null, zip: null
 };
 let simTime = 0, lastCrouchT = -9, crouchEdge = false;
 function spawnPlayer(random) {
@@ -1761,8 +1806,9 @@ function mantleJump(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
   P.pos.y = m.top + 0.01;
   const d = mantleExitDir(m, wx, wz, hasWish);
-  P.vel.set(d.x * 5 * K, 6.0, d.z * 5 * K); P.grounded = false;
-  feed('MANTLE JUMP', (5 * K).toFixed(1) + ' m/s'); sfx.jump();
+  // saut depuis le rebord : propulsion verticale forte (environ 4 m au-dessus du rebord)
+  P.vel.set(d.x * 5.5 * K, MANTLE_JUMP_V, d.z * 5.5 * K); P.grounded = false; P.doubleJump = false;
+  feed('MANTLE JUMP', '+' + (MANTLE_JUMP_V * MANTLE_JUMP_V / (2 * G)).toFixed(1) + ' m'); sfx.jump(); sfx.pad(0.5);
 }
 function mantleStep(dt, wx, wz, hasWish) {
   const m = P.mantle; m.t += dt;
@@ -2033,8 +2079,9 @@ function step(dt) {
   simTime += dt; P.prev.copy(P.pos);
   P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
   abilityStep(dt);
-  if (P.dead) { if (P.veh) exitVehicle(true); P.vel.set(0, 0, 0); return; }
+  if (P.dead) { if (P.veh) exitVehicle(true); if (P.zip) { P.zip = null; zipSound(false); } P.vel.set(0, 0, 0); return; }
   if (P.veh) { vehStep(P.veh, dt); return; }
+  if (P.zip) { zipStep(dt); return; }
   const fwdHeld = act('forward');
   const iz = (fwdHeld ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
   const sy = Math.sin(P.yaw), cy = Math.cos(P.yaw);
@@ -2219,6 +2266,7 @@ const sfx = {
   unsheathe: snd((t, heavy) => { if (heavy) { nz(t, { dur: .35, f: 500, q: 1, gain: .2, f2: 2600 }); tn(t + .05, { f: 220, f2: 520, dur: .3, type: 'triangle', gain: .06 }); return; }
     nz(t, { dur: .32, f: 2600, q: 6, gain: .14, f2: 6800 }); tn(t + .26, { f: 2960, dur: .7, gain: .03 }); tn(t + .26, { f: 4410, dur: .5, gain: .015 }); }),
   sizzle: snd(t => { nz(t, { dur: .3, f: 3200, q: .8, gain: .12, f2: 1400 }); tn(t, { f: 90, f2: 60, dur: .2, type: 'triangle', gain: .08 }); }),
+  zipGrab: snd(t => { nz(t, { dur: .12, f: 2600, q: 5, gain: .12 }); tn(t, { f: 900, f2: 1400, dur: .1, type: 'triangle', gain: .05 }); }),
   outfit: snd(t => { [1320, 1660, 1980, 2640].forEach((f, i) => tn(t + i * .07, { f, dur: .18, gain: .06 })); nz(t, { dur: .4, f: 6000, q: 2, gain: .05 }); })
 };
 
@@ -3247,7 +3295,7 @@ function makeCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; 
 function peerSupported() { return typeof window.Peer === 'function' && typeof window.RTCPeerConnection === 'function'; }
 function myState() {
   const air = !P.grounded && !P.climbing;
-  const a = P.dead ? 'dead' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
+  const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
   const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint };
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (P.veh) { st.vh = P.veh.i + 1; st.vy = r2(P.veh.yaw); st.y = st.vy; st.a = P.veh.grounded ? 'ground' : 'air'; }
@@ -3539,6 +3587,7 @@ function rigOf(vis) {
 // Arm z− (droit) / z+ (gauche) : bras levé sur le côté, puis Arm y+ (droit) / y− (gauche) : bras ramené devant · ForeArm z : avant-bras vers le haut
 const POSES = {
   jump: () => ({ lUp: [-0.95, 0, 0], lLeg: [1.35, 0, 0], rUp: [-0.35, 0, 0], rLeg: [0.75, 0, 0], rArm: [0, 0, -0.65], lArm: [0, 0, 0.65], spine: [0.12, 0, 0] }),
+  zip: () => ({ rArm: [0, 0.25, -2.75], lArm: [0, -0.25, 2.75], rFore: [0, 0, -0.2], lFore: [0, 0, 0.2], lUp: [-0.45, 0, 0], rUp: [-0.2, 0, 0], lLeg: [0.5, 0, 0], rLeg: [0.3, 0, 0] }),
   sg: () => ({ lUp: [-1.5, 0, 0.08], rUp: [-1.42, 0, -0.08], lLeg: [0.04, 0, 0], rLeg: [0.08, 0, 0], spine: [-0.38, 0, 0], rArm: [0, -0.5, -1.05], lArm: [0, 0.5, 1.05] }),
   wave: t => ({ rArm: [0, 0, -2.35], rFore: [0, 0, -0.5 + Math.sin(t * 9) * 0.45], spine: [0, 0, 0.08], head: [0, 0, 0.1] }),
   dance: t => {
@@ -3562,6 +3611,7 @@ function animateAvatar(vis, dt, o) {
   let base = o.loco, pose = null, ts = 1;
   if (o.em) { pose = o.em; base = 'idle'; }
   else if (o.state === 'sg') { pose = 'sg'; base = 'idle'; }
+  else if (o.state === 'zip') { pose = 'zip'; base = 'idle'; }
   else if (o.state === 'air') { pose = 'jump'; base = 'idle'; }
   else if (o.state === 'slide') ts = 0.1;
   if (pose !== vis.lastPose) { vis.lastPose = pose; vis.emT = 0; }
@@ -3725,6 +3775,71 @@ function updateFpLegs(dt) {
   fpLegs.position.set(0, lerp(-1.1, -0.62, e) - P.pitch * 0.3, lerp(0.3, 0.05, e));
   fpLegs.rotation.set(lerp(-0.6, 0.3, e) - P.pitch * 0.4, 0, 0);
   for (const l of fpLegs.children) l.rotation.set(0, l.userData.sx * 0.06, l.userData.sx * 0.05);
+}
+/* ================= Tyroliennes : E pour s'accrocher, Espace pour sauter, C pour lâcher, S pour faire demi-tour ================= */
+const ZIP_MAX = 17, ZIP_HANG = 1.95;
+const _zg = new V3(), _zc = new V3();
+function zipNear() {
+  let best = null, bd = 1.6;
+  _zg.set(P.pos.x, P.pos.y + ZIP_HANG, P.pos.z);
+  for (const z of ZIPS) {
+    const t = clamp(_zc.copy(_zg).sub(z.a).dot(z.dir), 0, z.len);
+    _zc.copy(z.a).addScaledVector(z.dir, t);
+    const d = _zc.distanceTo(_zg);
+    if (d < bd) { bd = d; best = { z, s: t }; }
+  }
+  return best;
+}
+function grabZip(hit) {
+  if (!hit || P.dead || P.veh) return;
+  const z = hit.z, cp = Math.cos(P.pitch);
+  const look = _zc.set(-Math.sin(P.yaw) * cp, Math.sin(P.pitch), -Math.cos(P.yaw) * cp);
+  // câble presque vertical : on monte ; sinon dans le sens du regard
+  let d = Math.abs(z.dir.y) > 0.8 ? Math.sign(z.dir.y) : Math.sign(look.dot(z.dir) || 1);
+  if (hit.s < 0.6) d = 1; else if (hit.s > z.len - 0.6) d = -1;
+  const u = Math.max(7, P.vel.dot(z.dir) * d) * d;
+  P.zip = { z, s: clamp(hit.s, 0.3, z.len - 0.3), u, d };
+  P.mantle = null; P.climbing = false; P.sliding = false; P.crouch = false; P.height = STAND_H; P.grounded = false;
+  endEmote(); sfx.zipGrab(); zipSound(true);
+}
+function zipLeave(vel, up) {
+  const z = P.zip; if (!z) return;
+  P.zip = null; zipSound(false);
+  P.vel.copy(z.z.dir).multiplyScalar(z.u * vel); P.vel.y = Math.max(P.vel.y, 0) + up;
+  P.grounded = false; P.climbAvail = true; P.doubleJump = true; P.wallJumps = 0;
+}
+function zipStep(dt) {
+  const zp = P.zip, z = zp.z;
+  zp.u += clamp(zp.d * ZIP_MAX - zp.u, -16 * dt, 16 * dt);
+  zp.s += zp.u * dt;
+  const end = zp.s <= 0 || zp.s >= z.len;
+  zp.s = clamp(zp.s, 0, z.len);
+  P.pos.copy(z.a).addScaledVector(z.dir, zp.s); P.pos.y -= ZIP_HANG;
+  P.vel.copy(z.dir).multiplyScalar(zp.u);
+  if (P.jumpBuf > 0) { P.jumpBuf = 0; zipLeave(1, JUMP_V * 1.15); sfx.jump(); feed('ZIPLINE', t('zip.jump')); return; }
+  if (crouchEdge) { crouchEdge = false; zipLeave(0.8, 0); return; }
+  if (end) {
+    // au bout : petit élan vers l'avant pour poser les pieds sur la plateforme
+    const vertical = Math.abs(z.dir.y) > 0.8, hx = vertical ? -Math.sin(P.yaw) : z.dir.x * zp.d, hz = vertical ? -Math.cos(P.yaw) : z.dir.z * zp.d;
+    zipLeave(vertical ? 0 : 0.3, vertical ? 6 : 2.5);
+    P.vel.x += hx * (vertical ? 4 : 1.5); P.vel.z += hz * (vertical ? 4 : 1.5);
+  }
+}
+let zipVoice = null;
+function zipSound(on) {
+  if (!AC) return;
+  if (!on) { if (zipVoice) { const v = zipVoice; zipVoice = null; v.g.gain.setTargetAtTime(0, AC.currentTime, 0.05); setTimeout(() => { try { v.s.stop(); } catch (e) {} }, 300); } return; }
+  if (zipVoice) return;
+  const s = AC.createBufferSource(); s.buffer = noiseBuf; s.loop = true;
+  const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 1600; f.Q.value = 3;
+  const g = AC.createGain(); g.gain.value = 0; s.connect(f); f.connect(g); g.connect(master); s.start();
+  zipVoice = { s, f, g };
+}
+function updateZipFx() {
+  if (!zipVoice || !P.zip) return;
+  const sp = Math.abs(P.zip.u);
+  zipVoice.g.gain.setTargetAtTime(0.04 + sp * 0.012, AC.currentTime, 0.05);
+  zipVoice.f.frequency.setTargetAtTime(900 + sp * 120, AC.currentTime, 0.05);
 }
 /* ================= Véhicules : buggys (E pour monter / descendre) ================= */
 var VEH_READY = false;
@@ -3943,9 +4058,12 @@ function updateVehicles(dt) {
     if (sp > 4 && !mouse.right) P.yaw += angDiff(me.yaw, P.yaw) * (1 - Math.exp(-1.2 * dt));
     if (engine) { const f = 40 + sp * 3.4 + (act('forward') ? 12 : 0); engine.o1.frequency.setTargetAtTime(f, AC.currentTime, 0.05); engine.o2.frequency.setTargetAtTime(f * 0.502, AC.currentTime, 0.05); engine.f.frequency.setTargetAtTime(300 + sp * 28, AC.currentTime, 0.05); }
   }
-  const near = !me && !P.dead && playing ? nearVehicle() : null;
-  usePrompt.hidden = !(near || me);
-  if (near || me) usePrompt.innerHTML = t(me ? 'veh.exit' : 'veh.enter').replace('{key}', '<kbd>' + codeLabel(BINDS.use[0] || BINDS.use[1] || 'KeyE') + '</kbd>');
+  const near = !me && !P.dead && !P.zip && playing ? nearVehicle() : null;
+  const zipHit = !me && !P.dead && !P.zip && playing ? zipNear() : null;
+  const key = P.zip ? 'zip.ride' : zipHit ? 'zip.grab' : me ? 'veh.exit' : near ? 'veh.enter' : '';
+  usePrompt.hidden = !key;
+  if (key && usePrompt.dataset.k !== key + LANG) { usePrompt.dataset.k = key + LANG; usePrompt.innerHTML = t(key).replace('{key}', '<kbd>' + codeLabel(BINDS.use[0] || BINDS.use[1] || 'KeyE') + '</kbd>'); }
+  updateZipFx();
 }
 const usePrompt = $('usePrompt');
 VEH_READY = true;
@@ -4558,7 +4676,12 @@ function onAction(id) {
   }
   else if (id === 'inspect') inspect();
   else if (id === 'emote') { if (EMOTE.on) endEmote(); else if (!P.veh) openEmoteMenu(!EMOTE.menu); }
-  else if (id === 'use') { if (P.veh) exitVehicle(); else enterVehicle(nearVehicle()); }
+  else if (id === 'use') {
+    if (P.veh) exitVehicle();
+    else if (P.zip) zipLeave(0.8, 0);
+    else { const zh = zipNear(), v = nearVehicle(); if (zh && (!v || zh.z)) grabZip(zh); else enterVehicle(v); }
+  }
+  else if (id === 'back' && P.zip) { P.zip.d *= -1; }
   else if (id === 'stim') useStim();
   else if (id === 'dome') useDome();
   else if (id === 'portal') usePortal();
