@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Deux cartes (Canyon et Raffinerie), 5 armes et un couteau, skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Trois cartes (Canyon, Raffinerie, Forêt), 5 armes et 5 couteaux, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -13,10 +13,16 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
 
+## Personnages
+
+Soldat, X-Bot ou Robot, avec dix couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+
 ## Cartes
 
 - **Canyon** : désert au coucher du soleil, grande pente de glisse, tour centrale, arène de robots.
 - **Raffinerie** : zone industrielle au crépuscule, half-pipe, passerelles en hauteur reliées par un pont, couloir étroit pour enchaîner les wall-jumps, réservoirs à escalader.
+
+- **Forêt** : pins, ruisseau, cabane avec toit accessible, mirador sur pilotis, colline de glisse de 9 m.
 
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
 
@@ -44,6 +50,9 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Clic gauche / droit | Tirer / viser |
 | 1 à 5 | Carabine, mitraillette, pompe, sniper, pistolet |
 | 6 ou V | Couteau |
+| Q / A en AZERTY | Stim : +35 % de vitesse pendant 6 s (recharge 9 s) |
+| G | Dôme-bouclier : bulle de 5 m qui arrête les balles pendant 12 s (recharge 25 s) |
+| F | Portail : pose l'entrée, va à au moins 6 m, réappuie pour ouvrir la sortie (40 s) |
 | M | Mini-carte |
 | R | Recharger |
 | Tab | Tableau des scores en ligne |
@@ -59,7 +68,11 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Pompe KS-8 | 8 × 11 | 72 coups/min | 6 |
 | Épervier .50 (sniper, lunette ×4) | 85 (tête ×2,1) | 46 coups/min | 5 |
 | Pistolet HX | 18 (tête ×1,6) | semi-auto | 14 |
-| Couteau | 50 (tête ×1,5), portée 2,7 m | 115 coups/min | — |
+| Couteau de combat | 50, portée 2,7 m | 115 coups/min | — |
+| Karambit | 42, portée 2,4 m | 145 coups/min | — |
+| Machette | 65, portée 3,3 m | 85 coups/min | — |
+| Dague | 55, portée 2,6 m | 110 coups/min | — |
+| Papillon | 46, portée 2,5 m | 135 coups/min | — |
 
 Avec le couteau en main, tu cours 10 % plus vite. Treize skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon.
 
@@ -82,5 +95,5 @@ python3 -m http.server 8000
 ## Crédits
 
 - Robot : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
-- Soldat : modèle et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js.
+- Soldat et X-Bot : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js.
 - Moteur : [three.js](https://threejs.org/) r128 (MIT). Réseau : [PeerJS](https://peerjs.com/) (MIT).

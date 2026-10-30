@@ -56,6 +56,9 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .btn2 span{display:inline-block;transform:skewX(12deg)}
 .btn2:hover{border-color:var(--amber);color:var(--amber)}
 .btn2:disabled{opacity:.4;cursor:default}
+.charbox{display:flex;flex-wrap:wrap;gap:18px;align-items:center;max-width:760px}
+#charPrev{width:150px;height:200px;background:radial-gradient(ellipse at 50% 80%,rgba(255,176,32,.14),rgba(244,239,230,.03) 70%);border:1px solid var(--ink-faint)}
+.charopts{display:grid;gap:12px;flex:1 1 220px;min-width:0}
 .mapsel{display:grid;gap:5px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
 .mapsel select{font:600 16px/1 var(--f-display);letter-spacing:.06em;text-transform:none;background:rgba(10,13,16,.7);color:var(--ink);border:1px solid rgba(244,239,230,.3);border-radius:3px;padding:8px 10px}
 .mapsel select:disabled{opacity:.55}
@@ -114,6 +117,11 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .check input{accent-color:var(--amber);width:17px;height:17px}
 .xgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 26px;margin-bottom:10px}
 .xlock h2::before{background:var(--hostile)}
+.admin h2::before{background:var(--shield)}
+.admtab{border-collapse:collapse;margin-top:12px;min-width:min(420px,100%);font-size:14px}
+.admtab td{padding:6px 10px 6px 0;border-top:1px solid var(--ink-faint)}
+.admtab td:first-child{font:700 16px/1 var(--f-display);letter-spacing:.04em}
+.admtab .btn3{padding:5px 8px;font-size:12px}
 .credits{font-size:12.5px;color:var(--ink-dim);line-height:1.5;max-width:80ch}
 .credits a{color:var(--ink-dim)}
 .touch-note{display:none;font-size:14px;color:var(--amber);margin:12px 0 0}
@@ -148,6 +156,18 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .bar.sh i{background:var(--shield)}
 .bar.hp i{background:var(--ink)}
 .bar.sh::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(33.333% - 2px),rgba(10,12,14,.8) calc(33.333% - 2px) 33.333%)}
+#abil{position:absolute;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:6px}
+.ab{position:relative;display:flex;align-items:center;gap:6px;padding:6px 10px 5px 6px;background:rgba(14,18,22,.62);overflow:hidden;min-width:96px}
+.ab kbd{font-size:11px;min-width:18px;padding:2px 4px 1px;position:relative;z-index:1}
+.ab b{font:700 13px/1 var(--f-display);letter-spacing:.1em;color:var(--ink-dim);position:relative;z-index:1}
+.ab em{font:600 12px/1 var(--f-display);font-style:normal;color:var(--ink-dim);margin-left:auto;position:relative;z-index:1;font-variant-numeric:tabular-nums}
+.ab i{position:absolute;left:0;bottom:0;height:3px;width:0;background:var(--amber)}
+.ab.ready b{color:var(--amber)}
+.ab.ready i{width:100%}
+.ab.active{box-shadow:inset 0 0 0 1px var(--shield)}
+.ab.active b{color:var(--shield)}
+@media (max-width:1500px){#abil{bottom:calc(150px + env(safe-area-inset-bottom,0px))}}
+#stimFx{position:absolute;inset:0;background:radial-gradient(ellipse at center,transparent 50%,rgba(120,255,160,.22) 100%);opacity:0;transition:opacity .2s}
 #me{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));width:min(300px,44vw);transform:translateX(-50%)}
 #me .bar{height:9px}
 #me .tname{font-size:13px;color:var(--ink-dim)}
@@ -255,6 +275,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="xh"><i class="d"></i><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
   <div id="hm"><i></i><i></i><i></i><i></i></div>
   <div id="feed"></div>
+  <div id="abil">
+    <div class="ab" id="abStim"><kbd data-act="stim">Q</kbd><b data-i18n="ab.stim">STIM</b><em></em><i></i></div>
+    <div class="ab" id="abDome"><kbd data-act="dome">G</kbd><b data-i18n="ab.dome">DÔME</b><em></em><i></i></div>
+    <div class="ab" id="abPortal"><kbd data-act="portal">F</kbd><b data-i18n="ab.portal">PORTAIL</b><em></em><i></i></div>
+  </div>
+  <div id="stimFx"></div>
   <div id="me" hidden><div class="tname"><span data-i18n="hud.you">TOI</span><span id="meVal">175</span></div><div class="bar sh"><i id="meSh"></i></div><div class="bar hp"><i id="meHp"></i></div></div>
   <div id="speed">
     <div class="srow"><b id="spd">0.0</b><span class="unit">m/s</span><span id="kmh">0 km/h</span></div>
@@ -284,10 +310,22 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <p class="touch-note" data-i18n="menu.touch">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
-        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option></select></label>
+        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option></select></label>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
       </div>
     </header>
+
+    <div class="block">
+      <h2 data-i18n="char.title">Personnage</h2>
+      <div class="charbox">
+        <canvas id="charPrev" width="150" height="200" aria-hidden="true"></canvas>
+        <div class="charopts">
+          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="robot" data-i18n="char.robot">Robot</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option></select></label>
+          <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
+        </div>
+      </div>
+    </div>
 
     <div class="block">
       <h2 data-i18n="net.title">Multijoueur</h2>
@@ -335,11 +373,24 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
+        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
       </div>
     </div>
 
+    <div class="block admin" id="adminBlock" hidden>
+      <h2>Panneau admin</h2>
+      <div class="grid xgrid">
+        <label class="field"><span class="lab">Gravité <output id="oAdmG"></output></span><input type="range" id="admG" min="0.3" max="2" step="0.05" value="1"></label>
+        <label class="field"><span class="lab">Vitesse de tous <output id="oAdmS"></output></span><input type="range" id="admS" min="0.5" max="2" step="0.05" value="1"></label>
+        <label class="check"><input type="checkbox" id="admBots" checked> Robots d’entraînement</label>
+        <button class="btn3" id="admReset" type="button">Remettre les scores à zéro</button>
+      </div>
+      <div class="netrow" style="margin-top:12px"><label for="admMsg">Message à tous<input id="admMsg" maxlength="80" autocomplete="off" style="width:280px"></label><button class="btn3" id="admSay" type="button">Envoyer</button></div>
+      <table class="admtab"><tbody id="admPlayers"></tbody></table>
+      <p class="hint" id="admNote">Les règles s’appliquent à toute la partie quand tu l’héberges.</p>
+    </div>
     <div class="block xlock" id="xlockBlock" hidden>
       <h2>Mode xlock</h2>
       <div class="grid xgrid">
@@ -352,6 +403,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="check"><input type="checkbox" data-x="jumps"> Sauts infinis</label>
         <label class="check"><input type="checkbox" data-x="aim"> Aide à la visée</label>
         <label class="check"><input type="checkbox" data-x="snap"> Snap strafe facile</label>
+        <label class="check"><input type="checkbox" data-x="nocd"> Capacités sans recharge</label>
       </div>
       <p class="hint">Actif seulement dans ce navigateur. Retape le mot de passe dans ce menu pour masquer ce panneau.</p>
     </div>
@@ -453,7 +505,7 @@ const I18N = {
     'feed.respawn': 'RÉAPPARITION', 'feed.newPoint': 'nouveau point',
     'w0': 'CARABINE K-31', 'w1': 'MITRAILLETTE VX', 'w2': 'POMPE KS-8', 'w3': 'ÉPERVIER .50', 'w4': 'PISTOLET HX',
     'w0s': 'CARABINE', 'w1s': 'MITRAILL.', 'w2s': 'POMPE', 'w3s': 'SNIPER', 'w4s': 'PISTOLET',
-    'w5': 'COUTEAU', 'w5s': 'COUTEAU', 'act.w6': 'Couteau', 'act.map': 'Mini-carte', 'set.minimap': 'Mini-carte', 'set.skin': 'Skin d’arme', 'skin.std': 'Standard', 'skin.gold': 'Or', 'skin.desert': 'Camo désert', 'skin.neon': 'Néon', 'skin.carbon': 'Carbone', 'skin.arctic': 'Arctique', 'skin.crimson': 'Rouge sang', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lave', 'skin.galaxy': 'Galaxie', 'skin.tiger': 'Tigre', 'skin.candy': 'Bonbon', 'map.label': 'Carte', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinerie', 'map.hostOnly': 'Seul l’hôte choisit la carte.', 'set.slideSnd': 'Son de glissade', 'snd.gravel': 'Gravier', 'snd.metal': 'Métal', 'snd.wind': 'Souffle', 'snd.electric': 'Électrique', 'snd.off': 'Aucun', 'snd.custom': 'Mon fichier', 'snd.import': 'Importer un son', 'snd.test': 'Écouter', 'snd.loaded': 'Son « {name} » chargé et mémorisé.', 'snd.tooBig': 'Son chargé pour cette session seulement : trop lourd pour être mémorisé (2 Mo max).', 'snd.bad': 'Ce fichier n’est pas un son lisible.', 'snd.need': 'Importe d’abord un fichier son.'
+    'w5': 'COUTEAU', 'w5s': 'COUTEAU', 'act.w6': 'Couteau', 'act.map': 'Mini-carte', 'set.minimap': 'Mini-carte', 'set.skin': 'Skin d’arme', 'skin.std': 'Standard', 'skin.gold': 'Or', 'skin.desert': 'Camo désert', 'skin.neon': 'Néon', 'skin.carbon': 'Carbone', 'skin.arctic': 'Arctique', 'skin.crimson': 'Rouge sang', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lave', 'skin.galaxy': 'Galaxie', 'skin.tiger': 'Tigre', 'skin.candy': 'Bonbon', 'map.label': 'Carte', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinerie', 'map.hostOnly': 'Seul l’hôte choisit la carte.', 'char.title': 'Personnage', 'set.char': 'Personnage', 'char.soldier': 'Soldat', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Couleur', 'tint.auto': 'Auto (couleur de partie)', 'tint.amber': 'Ambre', 'tint.cyan': 'Cyan', 'tint.red': 'Rouge', 'tint.green': 'Vert', 'tint.violet': 'Violet', 'tint.pink': 'Rose', 'tint.white': 'Blanc', 'tint.blue': 'Bleu', 'tint.black': 'Noir', 'char.hint': 'C’est le personnage que les autres joueurs voient en ligne.', 'act.stim': 'Stim', 'act.dome': 'Dôme-bouclier', 'act.portal': 'Portail', 'ab.stim': 'STIM', 'ab.dome': 'DÔME', 'ab.portal': 'PORTAIL', 'ab.portalA': 'entrée posée, va plus loin et réappuie', 'ab.portalOpen': 'ouvert 40 s', 'ab.tooClose': 'Éloigne-toi d’au moins 6 m pour poser la sortie.', 'set.knife': 'Couteau', 'knife.combat': 'Couteau de combat', 'knife.karambit': 'Karambit', 'knife.machete': 'Machette', 'knife.dagger': 'Dague', 'knife.butterfly': 'Papillon', 'map.forest': 'Forêt', 'net.kicked': 'L’hôte t’a expulsé de la partie.', 'set.slideSnd': 'Son de glissade', 'snd.gravel': 'Gravier', 'snd.metal': 'Métal', 'snd.wind': 'Souffle', 'snd.electric': 'Électrique', 'snd.off': 'Aucun', 'snd.custom': 'Mon fichier', 'snd.import': 'Importer un son', 'snd.test': 'Écouter', 'snd.loaded': 'Son « {name} » chargé et mémorisé.', 'snd.tooBig': 'Son chargé pour cette session seulement : trop lourd pour être mémorisé (2 Mo max).', 'snd.bad': 'Ce fichier n’est pas un son lisible.', 'snd.need': 'Importe d’abord un fichier son.'
   },
   en: {
     'menu.kicker': 'Movement lab · Browser FPS',
@@ -519,7 +571,7 @@ const I18N = {
     'feed.respawn': 'RESPAWN', 'feed.newPoint': 'new spawn',
     'w0': 'CARBINE K-31', 'w1': 'SMG VX', 'w2': 'SHOTGUN KS-8', 'w3': 'SPARROWHAWK .50', 'w4': 'PISTOL HX',
     'w0s': 'CARBINE', 'w1s': 'SMG', 'w2s': 'SHOTGUN', 'w3s': 'SNIPER', 'w4s': 'PISTOL',
-    'w5': 'KNIFE', 'w5s': 'KNIFE', 'act.w6': 'Knife', 'act.map': 'Minimap', 'set.minimap': 'Minimap', 'set.skin': 'Weapon skin', 'skin.std': 'Standard', 'skin.gold': 'Gold', 'skin.desert': 'Desert camo', 'skin.neon': 'Neon', 'skin.carbon': 'Carbon', 'skin.arctic': 'Arctic', 'skin.crimson': 'Crimson', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lava', 'skin.galaxy': 'Galaxy', 'skin.tiger': 'Tiger', 'skin.candy': 'Candy', 'map.label': 'Map', 'map.canyon': 'Canyon', 'map.refinery': 'Refinery', 'map.hostOnly': 'Only the host picks the map.', 'set.slideSnd': 'Slide sound', 'snd.gravel': 'Gravel', 'snd.metal': 'Metal', 'snd.wind': 'Whoosh', 'snd.electric': 'Electric', 'snd.off': 'None', 'snd.custom': 'My file', 'snd.import': 'Import a sound', 'snd.test': 'Listen', 'snd.loaded': 'Sound “{name}” loaded and saved.', 'snd.tooBig': 'Sound loaded for this session only: too large to save (2 MB max).', 'snd.bad': 'This file isn’t a playable sound.', 'snd.need': 'Import a sound file first.'
+    'w5': 'KNIFE', 'w5s': 'KNIFE', 'act.w6': 'Knife', 'act.map': 'Minimap', 'set.minimap': 'Minimap', 'set.skin': 'Weapon skin', 'skin.std': 'Standard', 'skin.gold': 'Gold', 'skin.desert': 'Desert camo', 'skin.neon': 'Neon', 'skin.carbon': 'Carbon', 'skin.arctic': 'Arctic', 'skin.crimson': 'Crimson', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lava', 'skin.galaxy': 'Galaxy', 'skin.tiger': 'Tiger', 'skin.candy': 'Candy', 'map.label': 'Map', 'map.canyon': 'Canyon', 'map.refinery': 'Refinery', 'map.hostOnly': 'Only the host picks the map.', 'char.title': 'Character', 'set.char': 'Character', 'char.soldier': 'Soldier', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Color', 'tint.auto': 'Auto (match color)', 'tint.amber': 'Amber', 'tint.cyan': 'Cyan', 'tint.red': 'Red', 'tint.green': 'Green', 'tint.violet': 'Purple', 'tint.pink': 'Pink', 'tint.white': 'White', 'tint.blue': 'Blue', 'tint.black': 'Black', 'char.hint': 'This is the character other players see online.', 'act.stim': 'Stim', 'act.dome': 'Dome shield', 'act.portal': 'Portal', 'ab.stim': 'STIM', 'ab.dome': 'DOME', 'ab.portal': 'PORTAL', 'ab.portalA': 'entrance placed, move away and press again', 'ab.portalOpen': 'open for 40 s', 'ab.tooClose': 'Move at least 6 m away to place the exit.', 'set.knife': 'Knife', 'knife.combat': 'Combat knife', 'knife.karambit': 'Karambit', 'knife.machete': 'Machete', 'knife.dagger': 'Dagger', 'knife.butterfly': 'Butterfly', 'map.forest': 'Forest', 'net.kicked': 'The host removed you from the match.', 'set.slideSnd': 'Slide sound', 'snd.gravel': 'Gravel', 'snd.metal': 'Metal', 'snd.wind': 'Whoosh', 'snd.electric': 'Electric', 'snd.off': 'None', 'snd.custom': 'My file', 'snd.import': 'Import a sound', 'snd.test': 'Listen', 'snd.loaded': 'Sound “{name}” loaded and saved.', 'snd.tooBig': 'Sound loaded for this session only: too large to save (2 MB max).', 'snd.bad': 'This file isn’t a playable sound.', 'snd.need': 'Import a sound file first.'
   },
   af: {
     'menu.kicker': 'Bewegingslab · Blaaier-FPS',
@@ -583,7 +635,7 @@ const I18N = {
     'feed.respawn': 'HERVERSKYN', 'feed.newPoint': 'nuwe punt',
     'w0': 'KARABYN K-31', 'w1': 'MASJIENPISTOOL VX', 'w2': 'HAELGEWEER KS-8', 'w3': 'SPERWER .50', 'w4': 'PISTOOL HX',
     'w0s': 'KARABYN', 'w1s': 'MASJIENP.', 'w2s': 'HAELGEW.', 'w3s': 'SKERPSKUT.', 'w4s': 'PISTOOL',
-    'w5': 'MES', 'w5s': 'MES', 'act.w6': 'Mes', 'act.map': 'Minikaart', 'set.minimap': 'Minikaart', 'set.skin': 'Wapenvel', 'skin.std': 'Standaard', 'skin.gold': 'Goud', 'skin.desert': 'Woestynkamoeflering', 'skin.neon': 'Neon', 'skin.carbon': 'Koolstof', 'skin.arctic': 'Arkties', 'skin.crimson': 'Bloedrooi', 'skin.jungle': 'Oerwoud', 'skin.chrome': 'Chroom', 'skin.lava': 'Lawa', 'skin.galaxy': 'Sterrestelsel', 'skin.tiger': 'Tier', 'skin.candy': 'Lekkergoed', 'map.label': 'Kaart', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinadery', 'map.hostOnly': 'Net die gasheer kies die kaart.', 'set.slideSnd': 'Glyklank', 'snd.gravel': 'Gruis', 'snd.metal': 'Metaal', 'snd.wind': 'Wind', 'snd.electric': 'Elektries', 'snd.off': 'Geen', 'snd.custom': 'My lêer', 'snd.import': 'Voer ’n klank in', 'snd.test': 'Luister', 'snd.loaded': 'Klank “{name}” gelaai en gestoor.', 'snd.tooBig': 'Klank net vir hierdie sessie gelaai: te groot om te stoor (maks. 2 MB).', 'snd.bad': 'Hierdie lêer is nie ’n speelbare klank nie.', 'snd.need': 'Voer eers ’n klanklêer in.'
+    'w5': 'MES', 'w5s': 'MES', 'act.w6': 'Mes', 'act.map': 'Minikaart', 'set.minimap': 'Minikaart', 'set.skin': 'Wapenvel', 'skin.std': 'Standaard', 'skin.gold': 'Goud', 'skin.desert': 'Woestynkamoeflering', 'skin.neon': 'Neon', 'skin.carbon': 'Koolstof', 'skin.arctic': 'Arkties', 'skin.crimson': 'Bloedrooi', 'skin.jungle': 'Oerwoud', 'skin.chrome': 'Chroom', 'skin.lava': 'Lawa', 'skin.galaxy': 'Sterrestelsel', 'skin.tiger': 'Tier', 'skin.candy': 'Lekkergoed', 'map.label': 'Kaart', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinadery', 'map.hostOnly': 'Net die gasheer kies die kaart.', 'char.title': 'Karakter', 'set.char': 'Karakter', 'char.soldier': 'Soldaat', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Kleur', 'tint.auto': 'Outo (wedstrydkleur)', 'tint.amber': 'Amber', 'tint.cyan': 'Siaan', 'tint.red': 'Rooi', 'tint.green': 'Groen', 'tint.violet': 'Pers', 'tint.pink': 'Pienk', 'tint.white': 'Wit', 'tint.blue': 'Blou', 'tint.black': 'Swart', 'char.hint': 'Dit is die karakter wat ander spelers aanlyn sien.', 'act.stim': 'Stim', 'act.dome': 'Koepelskild', 'act.portal': 'Portaal', 'ab.stim': 'STIM', 'ab.dome': 'KOEPEL', 'ab.portal': 'PORTAAL', 'ab.portalA': 'ingang geplaas, beweeg weg en druk weer', 'ab.portalOpen': '40 s oop', 'ab.tooClose': 'Beweeg minstens 6 m weg om die uitgang te plaas.', 'set.knife': 'Mes', 'knife.combat': 'Gevegsmes', 'knife.karambit': 'Karambit', 'knife.machete': 'Kapmes', 'knife.dagger': 'Dolk', 'knife.butterfly': 'Skoenlapper', 'map.forest': 'Woud', 'net.kicked': 'Die gasheer het jou uit die wedstryd verwyder.', 'set.slideSnd': 'Glyklank', 'snd.gravel': 'Gruis', 'snd.metal': 'Metaal', 'snd.wind': 'Wind', 'snd.electric': 'Elektries', 'snd.off': 'Geen', 'snd.custom': 'My lêer', 'snd.import': 'Voer ’n klank in', 'snd.test': 'Luister', 'snd.loaded': 'Klank “{name}” gelaai en gestoor.', 'snd.tooBig': 'Klank net vir hierdie sessie gelaai: te groot om te stoor (maks. 2 MB).', 'snd.bad': 'Hierdie lêer is nie ’n speelbare klank nie.', 'snd.need': 'Voer eers ’n klanklêer in.'
   },
   zu: {
     'menu.kicker': 'Ilabhu yokunyakaza · I-FPS yesiphequluli',
@@ -644,7 +696,7 @@ const I18N = {
     'state.sprint': 'UKUGIJIMA', 'state.crouch': 'UGOBILE', 'state.ground': 'PHANSI',
     'feed.kill': 'UKUKHISHWA', 'feed.djReady': 'ukweqa kabili kulungile', 'feed.back': 'BUYELA', 'feed.start': 'lapho uqale khona',
     'feed.respawn': 'VELA KABUSHA', 'feed.newPoint': 'indawo entsha',
-    'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'skin.crimson': 'Okubomvu klebhu', 'skin.jungle': 'Ihlathi', 'skin.chrome': 'I-chrome', 'skin.lava': 'I-lava', 'skin.galaxy': 'Umthala', 'skin.tiger': 'Ingwe', 'skin.candy': 'Uswidi', 'map.label': 'Imephu', 'map.canyon': 'Umhosha', 'map.refinery': 'Ifekthri kawoyela', 'map.hostOnly': 'Umsingathi kuphela okhetha imephu.', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
+    'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'skin.crimson': 'Okubomvu klebhu', 'skin.jungle': 'Ihlathi', 'skin.chrome': 'I-chrome', 'skin.lava': 'I-lava', 'skin.galaxy': 'Umthala', 'skin.tiger': 'Ingwe', 'skin.candy': 'Uswidi', 'map.label': 'Imephu', 'map.canyon': 'Umhosha', 'map.refinery': 'Ifekthri kawoyela', 'map.hostOnly': 'Umsingathi kuphela okhetha imephu.', 'char.title': 'Umlingiswa', 'set.char': 'Umlingiswa', 'char.soldier': 'Isosha', 'char.xbot': 'X-Bot', 'char.robot': 'Irobhothi', 'set.tint': 'Umbala', 'tint.auto': 'Okuzenzakalelayo (umbala womdlalo)', 'tint.amber': 'Ompofu', 'tint.cyan': 'Okwesibhakabhaka okukhanyayo', 'tint.red': 'Okubomvu', 'tint.green': 'Okuluhlaza', 'tint.violet': 'Okunsomi', 'tint.pink': 'Okubomvana', 'tint.white': 'Okumhlophe', 'tint.blue': 'Okwesibhakabhaka', 'tint.black': 'Okumnyama', 'char.hint': 'Lona ngumlingiswa abanye abadlali abambona ku-inthanethi.', 'act.stim': 'I-stim', 'act.dome': 'Isihlangu sedome', 'act.portal': 'Isango', 'ab.stim': 'I-STIM', 'ab.dome': 'IDOME', 'ab.portal': 'ISANGO', 'ab.portalA': 'umnyango ubekiwe, suka bese ucindezela futhi', 'ab.portalOpen': 'livuliwe imizuzwana engama-40', 'ab.tooClose': 'Suka okungenani amamitha ayi-6 ukuze ubeke indawo yokuphuma.', 'set.knife': 'Ummese', 'knife.combat': 'Ummese wempi', 'knife.karambit': 'I-karambit', 'knife.machete': 'Ipanga', 'knife.dagger': 'Inkemba encane', 'knife.butterfly': 'Uvemvane', 'map.forest': 'Ihlathi', 'net.kicked': 'Umsingathi ukukhiphile emdlalweni.', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
   }
 };
 const LANGS = Object.keys(I18N);
@@ -664,11 +716,14 @@ function t(key, vars) {
   if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
   return s;
 }
-const wName = i => t('w' + i), wShort = i => t('w' + i + 's');
+const wName = i => i === 5 ? t('knife.' + (S.knife || 'combat')).toUpperCase() : t('w' + i), wShort = i => t('w' + i + 's');
 
 /* ================= Mode secret ================= */
 const X_HASH = '52a515b30b2a484cfa5de4a841b74b5386a9170f647be3fad100eea59ca21574';
-const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false };
+const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false };
+const RULES = { g: 1, s: 1, bots: true };
+const LOCAL_RULES = Object.assign({}, RULES, store.get('rules', {}));
+Object.assign(RULES, LOCAL_RULES);
 let xUnlocked = store.get('xu', false) === true;
 if (xUnlocked) Object.assign(X, store.get('xs', {}));
 const xActive = () => xUnlocked && Object.values(X).some(Boolean);
@@ -677,6 +732,8 @@ S.skin = store.get('skin', 'std');
 S.slideSnd = store.get('slideSnd', 'gravel');
 S.minimap = store.get('minimap', true);
 S.map = store.get('map', 'canyon');
+S.char = store.get('char', 'soldier');
+S.tint = store.get('tint', 'auto');
 
 /* ================= Constantes de mouvement (mètres, secondes) ================= */
 const STEP = 1 / 120;
@@ -794,7 +851,8 @@ const flashTex = canvasTex((g, s) => {
 
 /* ================= Monde ================= */
 const PAL = { concrete: 0xc8c1b2, teal: 0x4f8a8c, wall: 0x9a9081, ramp: 0xd4c8b3, ground: 0xd9c29b, rust: 0xbd5b34, cream: 0xe5d8bb,
-  navy: 0x3d4b60, deck: 0x9aa3ad, steel: 0x66737f, hazard: 0xe0b23a, tank: 0xc9ced4, red: 0xb23a2e, blue: 0x2f5f9e, white: 0xdfe3e6 };
+  navy: 0x3d4b60, deck: 0x9aa3ad, steel: 0x66737f, hazard: 0xe0b23a, tank: 0xc9ced4, red: 0xb23a2e, blue: 0x2f5f9e, white: 0xdfe3e6,
+  rock: 0x8d8f88, wood: 0x9a6a3f, bark: 0x5e4129, moss: 0x6b8a45 };
 const matCache = {};
 function M(key) {
   if (matCache[key]) return matCache[key];
@@ -866,8 +924,8 @@ function farDecor(list, mat, shadow) {
 
 /* ---------- Carte 1 : Canyon ---------- */
 function buildCanyon() {
-  box(0, -64, 132, 4, 0, 10, 'wall'); box(0, 64, 132, 4, 0, 10, 'wall');
-  box(-64, 0, 4, 124, 0, 10, 'wall'); box(64, 0, 4, 124, 0, 10, 'wall');
+  box(0, -64, 132, 4, 0, 20, 'wall'); box(0, 64, 132, 4, 0, 20, 'wall');
+  box(-64, 0, 4, 124, 0, 20, 'wall'); box(64, 0, 4, 124, 0, 20, 'wall');
   box(0, -5, 14, 14, 0, 4.5, 'concrete'); box(0, -5, 7, 7, 4.5, 4, 'teal');
   ramp(-3, 3, 2, 12, 'z', -1, 0, 4.5);
   box(-42, -47, 16, 14, 0, 10, 'concrete');
@@ -899,8 +957,8 @@ function buildCanyon() {
 
 /* ---------- Carte 2 : Raffinerie (crépuscule, couloirs de wall-jump, half-pipe, passerelles) ---------- */
 function buildRefinery() {
-  box(0, -64, 132, 4, 0, 12, 'navy'); box(0, 64, 132, 4, 0, 12, 'navy');
-  box(-64, 0, 4, 124, 0, 12, 'navy'); box(64, 0, 4, 124, 0, 12, 'navy');
+  box(0, -64, 132, 4, 0, 20, 'navy'); box(0, 64, 132, 4, 0, 20, 'navy');
+  box(-64, 0, 4, 124, 0, 20, 'navy'); box(64, 0, 4, 124, 0, 20, 'navy');
   // tour centrale : socle, pad, sommet
   box(0, 0, 16, 16, 0, 3, 'deck'); box(0, 0, 8, 8, 3, 5, 'steel');
   ramp(-3, 3, 8, 16, 'z', -1, 0, 3);
@@ -939,6 +997,70 @@ function buildRefinery() {
   farDecor(tanks, new THREE.MeshLambertMaterial({ color: 0x8c96a3 }), true);
 }
 
+/* ---------- Carte 3 : Forêt (pins, cabane, mirador, colline de glisse, ruisseau) ---------- */
+const FOREST_SPAWNS = [[0, 0, 52, 0], [-50, 0, -50, -2.36], [50, 0, -50, 2.36], [52, 0, 20, 1.57], [-20, 0, 40, 0.4], [10, 0, -52, 3.14], [-46, 9, 56, 3.14], [24, 5, 30, 1.57], [-30, 4.5, -30, 0.8], [-52, 0, 0, -1.57]];
+const FOREST_DUMMIES = [
+  [0, 0, -12, 'static'], [8, 0, -22, 'strafe', 'x'], [-10, 0, 22, 'strafe', 'z'], [20, 0, 0, 'jump'],
+  [-30, 4.5, -30, 'static'], [30, 9.5, 30, 'static'], [-46, 9, 55, 'strafe', 'x'], [40, 0, -35, 'circle'],
+  [-45, 0, -10, 'strafe', 'x'], [10, 0, 40, 'jump'], [45, 0, 10, 'strafe', 'z'], [24, 5, 30, 'static']
+];
+function buildForest() {
+  box(0, -64, 132, 4, 0, 20, 'rock'); box(0, 64, 132, 4, 0, 20, 'rock');
+  box(-64, 0, 4, 124, 0, 20, 'rock'); box(64, 0, 4, 124, 0, 20, 'rock');
+  // cabane et rampe vers le toit
+  box(-30, -30, 12, 9, 0, 4, 'wood'); box(-30, -30, 12, 9, 4, 0.5, 'bark');
+  ramp(-34, -26, -25.5, -17.5, 'z', -1, 0, 4.5);
+  // mirador sur pilotis, plateforme intermédiaire et pad
+  for (const [x, z] of [[28, 28], [32, 28], [28, 32], [32, 32]]) box(x, z, 0.4, 0.4, 0, 9, 'bark');
+  box(30, 30, 5, 5, 9, 0.5, 'wood');
+  box(24, 30, 4, 4, 0, 5, 'wood');
+  pad(18, 0, 30);
+  // colline de glisse et plateau
+  ramp(-55, -38, 15, 50, 'z', 1, 0, 9);
+  box(-46.5, 55.5, 17, 11, 0, 9, 'rock');
+  // troncs couchés (tremplins) et rochers
+  ramp(-6, 6, 26, 30, 'z', -1, 0, 1.2); box(0, 25.5, 12, 1, 0, 1.2, 'bark');
+  ramp(30, 34, -8, 4, 'x', -1, 0, 1.2);
+  for (const [x, z, w, d, h] of [[-12, -40, 6, 5, 3], [-16, -44, 3, 3, 5], [45, -48, 7, 6, 2.5], [48, -45, 3, 3, 4.5], [-50, 30, 4, 6, 2], [12, -2, 3, 3, 1.6], [-22, 0, 5, 3, 2.2], [38, 45, 6, 5, 3.5]])
+    box(x, z, w, d, 0, h, 'rock');
+  pad(-20, 0, -45); pad(40, 0, -15);
+  // ruisseau (décor) et pierres de gué
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(124, 5), new THREE.MeshPhongMaterial({ color: 0x3f7480, shininess: 90, specular: 0x88aacc, transparent: true, opacity: 0.85 }));
+  water.rotation.x = -Math.PI / 2; water.position.set(0, 0.03, 7); water.receiveShadow = true; mapRoot.add(water);
+  for (const x of [-40, -18, 4, 26, 48]) box(x, 7, 1.6, 1.6, 0, 0.3, 'rock');
+  // pins : troncs solides, feuillage décoratif
+  let seed = 17; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const keep = FOREST_SPAWNS.map(s => [s[0], s[2], 5]).concat(FOREST_DUMMIES.map(d => [d[0], d[2], 5.5]), [[18, 30, 4], [-20, -45, 4], [40, -15, 4]]);
+  const rects = [[-37, -36, -23, -16], [21, 26, 34, 34], [-56, 14, -37, 61], [-7, 24, 7, 31], [29, -9, 35, 5]];
+  const leaves = [];
+  let placed = 0;
+  for (let i = 0; i < 400 && placed < 64; i++) {
+    const x = -58 + rnd() * 116, z = -58 + rnd() * 116;
+    if (Math.abs(z - 7) < 4) continue;
+    if (keep.some(([kx, kz, r]) => Math.hypot(x - kx, z - kz) < r)) continue;
+    if (rects.some(([x0, z0, x1, z1]) => x > x0 - 2 && x < x1 + 2 && z > z0 - 2 && z < z1 + 2)) continue;
+    if (BOXES.some(b => !b.ground && x + 1.5 > b.min.x && x - 1.5 < b.max.x && z + 1.5 > b.min.z && z - 1.5 < b.max.z)) continue;
+    const h = 6 + rnd() * 3;
+    box(x, z, 1, 1, 0, h, 'bark');
+    const r = 2.6 + rnd() * 1.2;
+    leaves.push([new THREE.ConeGeometry(r, 4.5, 8), x, h + 0.4, z, rnd() * 3]);
+    leaves.push([new THREE.ConeGeometry(r * 0.75, 3.8, 8), x, h + 2.8, z, rnd() * 3]);
+    leaves.push([new THREE.ConeGeometry(r * 0.48, 3, 8), x, h + 4.8, z, rnd() * 3]);
+    placed++;
+  }
+  farDecor(leaves, new THREE.MeshPhongMaterial({ color: 0x2f5a2a, flatShading: true, shininess: 0 }), true);
+  // forêt et collines au loin
+  const far = [];
+  for (let i = 0; i < 70; i++) {
+    const a = rnd() * Math.PI * 2, d = 85 + rnd() * 120, h = 12 + rnd() * 16;
+    far.push([new THREE.ConeGeometry(3 + rnd() * 3, h, 7), Math.cos(a) * d, h / 2, Math.sin(a) * d]);
+  }
+  farDecor(far, new THREE.MeshPhongMaterial({ color: 0x29482a, flatShading: true, shininess: 0 }));
+  const hills = [];
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, d = 230 + rnd() * 60, r = 50 + rnd() * 40; hills.push([new THREE.SphereGeometry(r, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), Math.cos(a) * d, -4, Math.sin(a) * d]); }
+  farDecor(hills, new THREE.MeshPhongMaterial({ color: 0x4d6b48, flatShading: true, shininess: 0 }));
+}
+
 const MAPS = {
   canyon: {
     build: buildCanyon,
@@ -959,6 +1081,12 @@ const MAPS = {
       [28, 6, -34, 'jump'], [-20, 4.4, 0, 'strafe', 'z'], [20, 4.4, 10, 'strafe', 'z'], [0, 4.4, -14, 'strafe', 'x'],
       [-35, 0, 15, 'circle'], [35, 0, 15, 'jump'], [-45, 9, 45, 'static'], [30, 0, 52, 'strafe', 'x']
     ]
+  },
+  forest: {
+    build: buildForest,
+    theme: { top: 0x5f8fc7, mid: 0xb9d1e0, hor: 0xdfe8d4, fog: 0xb4c4ad, fogFar: 230, hemiSky: 0xd6e8ff, hemiGround: 0x4a5a32, hemiI: 0.85, sun: 0xfff2d6, sunI: 0.95, sunDir: [0.35, 0.72, 0.42], ground: 0x6a8a44 },
+    spawns: FOREST_SPAWNS,
+    dummies: FOREST_DUMMIES
   }
 };
 const mapRoot = new THREE.Group(); scene.add(mapRoot);
@@ -1250,7 +1378,7 @@ function groundMove(dt, wx, wz, hasWish, iz) {
   }
   P.sprinting = hasWish && iz > 0 && !P.crouch && !mouse.right && !mouse.left && (act('sprint') || S.autoSprint);
   if (hasWish) {
-    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1) * (WEAPONS[WS.cur].melee ? 1.1 : 1);
+    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1) * (WEAPONS[WS.cur].melee ? 1.1 : 1) * (AB.stimT > 0 ? STIM_MUL : 1) * RULES.s;
     if (iz < 0) target = Math.min(target, WALK * 0.9);
     if (mouse.right) target = Math.min(target, WALK * 0.75);
     accelerate(wx, wz, target, GACCEL, dt);
@@ -1297,7 +1425,7 @@ function doJump(hs) {
 }
 function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
   const v = P.vel; P.sliding = false; P.airT += dt;
-  v.y -= G * dt;
+  v.y -= G * RULES.g * dt;
   if (P.jumpBuf > 0 && P.airT > 0.08 && P.wjCd <= 0 && (P.wallJumps < WJ_MAX || X.jumps)) {
     const n = wallNear();
     if (n) wallKick(n, wx, wz, hasWish);
@@ -1353,9 +1481,130 @@ function onLand(vy) {
   sfx.land(impact);
   if (act('crouch') && P.landSpeed > SLIDE_MIN - 0.8) startSlide();
 }
+/* ================= Capacités : stim, dôme, portail ================= */
+const STIM_MUL = 1.35;
+const AB = { stimT: 0, stimCd: 0, domeCd: 0, portalCd: 0, portalA: null, portalAT: 0, portT: 0, marker: null };
+const AB_CD = { stim: 9, dome: 25, portal: 30 };
+const DOMES = [], PORTALS = [];
+const domeGeo = new THREE.SphereGeometry(5, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2);
+const domeWire = new THREE.IcosahedronGeometry(5.02, 2);
+const portalTex = canvasTex((g, s) => {
+  const gr = g.createRadialGradient(s / 2, s / 2, s * 0.08, s / 2, s / 2, s / 2);
+  gr.addColorStop(0, 'rgba(20,0,40,1)'); gr.addColorStop(0.55, 'rgba(90,30,200,.95)'); gr.addColorStop(0.8, 'rgba(200,140,255,.9)'); gr.addColorStop(1, 'rgba(160,80,255,0)');
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  g.strokeStyle = 'rgba(255,255,255,.5)'; g.lineWidth = 2;
+  for (let i = 0; i < 6; i++) { g.beginPath(); g.arc(s / 2, s / 2, s * (0.18 + i * 0.05), i, i + 2.2); g.stroke(); }
+}, 128);
+function abReady(k) { return X.nocd && xUnlocked ? true : AB[k + 'Cd'] <= 0; }
+function setCd(k) { AB[k + 'Cd'] = X.nocd && xUnlocked ? 0.3 : AB_CD[k]; }
+function useStim() {
+  if (P.dead || !abReady('stim')) { sfx.empty(); return; }
+  AB.stimT = 6; setCd('stim');
+  if (NET.mode !== 'off' && P.hp > 11) { P.hp -= 10; P.lastHit = performance.now(); }
+  feed(t('ab.stim'), '+35 %', 'cyan'); sfx.stim();
+}
+function spawnDome(p) {
+  const g = new THREE.Group(); g.position.set(p[0], p[1], p[2]);
+  const shell = new THREE.Mesh(domeGeo, new THREE.MeshBasicMaterial({ color: 0x66d4e2, transparent: true, opacity: 0.16, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
+  const wire = new THREE.Mesh(domeWire, new THREE.MeshBasicMaterial({ color: 0x9feaff, wireframe: true, transparent: true, opacity: 0.22, depthWrite: false }));
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.32, 0.4, 10), new THREE.MeshLambertMaterial({ color: 0x2b3035, emissive: 0x0a3a44 }));
+  core.position.y = 0.2; wire.scale.y = 1;
+  g.add(shell, wire, core); scene.add(g);
+  DOMES.push({ c: new V3(p[0], p[1], p[2]), r: 5, t: 12, g, shell, wire, flash: 0 });
+  sfx.dome();
+}
+function useDome() {
+  if (P.dead || !abReady('dome')) { sfx.empty(); return; }
+  const g = groundBelow();
+  const p = [r2(P.pos.x), r2(Number.isFinite(g.h) ? g.h : P.pos.y), r2(P.pos.z)];
+  spawnDome(p); setCd('dome'); feed(t('ab.dome'), '12 s', 'cyan');
+  netSend({ k: 'dome', p });
+}
+// Distance jusqu'à la paroi d'un dôme le long d'un tir, Infinity si aucune
+function domeBlock(o, d, maxT) {
+  let best = Infinity;
+  for (const dm of DOMES) {
+    const ox = o.x - dm.c.x, oy = o.y - dm.c.y, oz = o.z - dm.c.z;
+    const b = ox * d.x + oy * d.y + oz * d.z, c = ox * ox + oy * oy + oz * oz - dm.r * dm.r, disc = b * b - c;
+    if (disc < 0) continue;
+    const sq = Math.sqrt(disc), t1 = -b - sq, t2 = -b + sq;
+    const tt = c < 0 ? t2 : t1;
+    if (tt > 0.05 && tt < maxT && tt < best && o.y + d.y * tt >= dm.c.y - 0.05) { best = tt; dm.hit = dm; }
+  }
+  return best;
+}
+function spawnPortal(a, b) {
+  const mk = p => {
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: portalTex, transparent: true, depthWrite: false }));
+    sp.position.set(p[0], p[1] + 1.1, p[2]); sp.scale.set(1.9, 2.5, 1); scene.add(sp); return sp;
+  };
+  PORTALS.push({ a: new V3(a[0], a[1], a[2]), b: new V3(b[0], b[1], b[2]), t: 40, sa: mk(a), sb: mk(b) });
+  sfx.portal();
+}
+function usePortal() {
+  if (P.dead) return;
+  if (!AB.portalA) {
+    if (!abReady('portal')) { sfx.empty(); return; }
+    AB.portalA = [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)]; AB.portalAT = 25;
+    const m = new THREE.Sprite(new THREE.SpriteMaterial({ map: portalTex, transparent: true, depthWrite: false, opacity: 0.55 }));
+    m.position.set(AB.portalA[0], AB.portalA[1] + 0.6, AB.portalA[2]); m.scale.set(0.8, 1.1, 1); scene.add(m); AB.marker = m;
+    feed(t('ab.portal'), t('ab.portalA'), 'gold'); sfx.portal();
+    return;
+  }
+  const a = AB.portalA, b = [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)];
+  if (Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) < 6) { toast(t('ab.tooClose'), 1.8); return; }
+  scene.remove(AB.marker); AB.marker = null; AB.portalA = null;
+  spawnPortal(a, b); setCd('portal'); feed(t('ab.portal'), t('ab.portalOpen'), 'gold');
+  netSend({ k: 'portal', a, b });
+}
+function abilityStep(dt) {
+  AB.stimT = Math.max(0, AB.stimT - dt);
+  for (const k of ['stim', 'dome', 'portal']) AB[k + 'Cd'] = Math.max(0, AB[k + 'Cd'] - dt);
+  AB.portT = Math.max(0, AB.portT - dt);
+  if (AB.portalA && (AB.portalAT -= dt) <= 0) { scene.remove(AB.marker); AB.marker = null; AB.portalA = null; AB.portalCd = Math.max(AB.portalCd, 5); }
+  // traverser un portail : téléportation en gardant l'élan
+  if (!P.dead && AB.portT <= 0) for (const pt of PORTALS) {
+    for (const [from, to] of [[pt.a, pt.b], [pt.b, pt.a]]) {
+      const dy = P.pos.y - from.y;
+      if (Math.hypot(P.pos.x - from.x, P.pos.z - from.z) < 0.95 && dy > -0.6 && dy < 1.6) {
+        const v = P.vel, hs = Math.hypot(v.x, v.z);
+        const dx = hs > 0.5 ? v.x / hs : -Math.sin(P.yaw), dz = hs > 0.5 ? v.z / hs : -Math.cos(P.yaw);
+        let nx = to.x + dx * 1.4, nz = to.z + dz * 1.4;
+        if (!freeAt(nx, to.y + 0.02, nz, P.height)) { nx = to.x; nz = to.z; }
+        P.pos.set(nx, to.y + 0.02, nz); P.prev.copy(P.pos); AB.portT = 1.0;
+        feed(t('ab.portal'), hs.toFixed(1) + ' m/s', 'gold'); sfx.portal();
+        return;
+      }
+    }
+  }
+}
+function updateAbilityFx(dt) {
+  for (let i = DOMES.length - 1; i >= 0; i--) {
+    const dm = DOMES[i]; dm.t -= dt;
+    const k = Math.min(1, (12 - dm.t) * 3, dm.t * 1.5);
+    dm.g.scale.setScalar(Math.max(0.01, easeOut(clamp(k, 0, 1))));
+    dm.flash = Math.max(0, dm.flash - dt * 4);
+    dm.shell.material.opacity = 0.14 + dm.flash * 0.25; dm.wire.material.opacity = 0.18 + dm.flash * 0.4;
+    dm.wire.rotation.y += dt * 0.2;
+    if (dm.t <= 0) { scene.remove(dm.g); DOMES.splice(i, 1); }
+  }
+  for (let i = PORTALS.length - 1; i >= 0; i--) {
+    const pt = PORTALS[i]; pt.t -= dt;
+    pt.sa.material.rotation += dt * 1.5; pt.sb.material.rotation -= dt * 1.5;
+    const o = Math.min(1, pt.t / 2); pt.sa.material.opacity = pt.sb.material.opacity = o;
+    if (pt.t <= 0) { scene.remove(pt.sa); scene.remove(pt.sb); PORTALS.splice(i, 1); }
+  }
+  if (AB.marker) AB.marker.material.rotation += dt * 2;
+}
+function clearAbilityFx() {
+  for (const dm of DOMES) scene.remove(dm.g); DOMES.length = 0;
+  for (const pt of PORTALS) { scene.remove(pt.sa); scene.remove(pt.sb); } PORTALS.length = 0;
+  if (AB.marker) scene.remove(AB.marker); AB.marker = null; AB.portalA = null;
+}
 function step(dt) {
   simTime += dt; P.prev.copy(P.pos);
   P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
+  abilityStep(dt);
   if (P.dead) { P.vel.set(0, 0, 0); return; }
   const fwdHeld = act('forward');
   const iz = (fwdHeld ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
@@ -1388,6 +1637,9 @@ function step(dt) {
 
   const vy = v.y;
   moveAndCollide(dt);
+  const LIM = 61.6;
+  if (P.pos.x > LIM || P.pos.x < -LIM) { P.pos.x = clamp(P.pos.x, -LIM, LIM); v.x = 0; }
+  if (P.pos.z > LIM || P.pos.z < -LIM) { P.pos.z = clamp(P.pos.z, -LIM, LIM); v.z = 0; }
   if (!wasG && P.grounded) onLand(vy);
   if (P.grounded && !wasG && P.climbing) P.climbing = false;
 
@@ -1513,11 +1765,32 @@ const sfx = {
   reload: snd((t, dur) => { nz(t + dur * .15, { dur: .05, f: 2200, q: 4, gain: .12 }); nz(t + dur * .55, { dur: .06, f: 1500, q: 4, gain: .14 }); nz(t + dur * .85, { dur: .05, f: 2600, q: 5, gain: .14 }); }),
   empty: snd(t => tn(t, { f: 900, dur: .03, type: 'square', gain: .05 })),
   swap: snd(t => nz(t, { dur: .06, f: 1800, q: 3, gain: .1 })),
+  stim: snd(t => { nz(t, { dur: .12, f: 3000, q: 2, gain: .2 }); tn(t + .05, { f: 300, f2: 900, dur: .35, type: 'sawtooth', gain: .06 }); tn(t + .1, { f: 1200, f2: 2400, dur: .2, gain: .06 }); }),
+  dome: snd(t => { tn(t, { f: 180, f2: 520, dur: .6, type: 'triangle', gain: .14 }); nz(t, { dur: .7, f: 1200, q: 1, gain: .12, f2: 4000 }); }),
+  portal: snd(t => { tn(t, { f: 900, f2: 220, dur: .45, type: 'sine', gain: .14 }); nz(t, { dur: .4, f: 600, q: 3, gain: .12, f2: 2600 }); }),
   join: snd(t => { tn(t, { f: 660, dur: .1, gain: .1 }); tn(t + .1, { f: 990, dur: .14, gain: .1 }); })
 };
 
 /* ================= Modèles 3D ================= */
-const MODELS = { robot: null, soldier: null };
+const MODELS = { robot: null, soldier: null, chars: {} };
+// Persos jouables : fichier, animations de déplacement, matériau teintable
+const CHARS = {
+  soldier: { file: 'Soldier.glb', h: 1.8, anim: { idle: 'Idle', walk: 'Walk', run: 'Run' }, hand: /RightHand$/ },
+  xbot: { file: 'Xbot.glb', h: 1.8, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i },
+  robot: { file: 'RobotExpressive.glb', h: 1.85, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2\.R$/, tintMat: /^Main$/ }
+};
+const TINTS = { amber: 0xffb020, cyan: 0x66d4e2, red: 0xff5a44, green: 0x9be36a, violet: 0xc78cff, pink: 0xff8fc7, white: 0xf4efe6, blue: 0x5f8cff, black: 0x2a2a2e };
+function tintChar(vis, ch, col) {
+  const c = CHARS[ch] || CHARS.soldier, white = new THREE.Color(1, 1, 1);
+  vis.obj.traverse(o => {
+    if (!o.isMesh) return;
+    const m = o.material;
+    if (ch === 'soldier') {
+      if (/visor/i.test(o.name)) { m.emissive.setHex(col); m.emissiveIntensity = 0.8; m.userData.keep = true; }
+      else m.color.setHex(col).lerp(white, 0.7);
+    } else if (c.tintMat && c.tintMat.test(m.name)) m.color.setHex(col);
+  });
+}
 const modelWaiters = [];
 function prepModel(gltf, height) {
   const root = gltf.scene;
@@ -1554,8 +1827,10 @@ function playAnim(av, name, fade = 0.2, once = false) {
 }
 if (THREE.GLTFLoader) {
   const loader = new THREE.GLTFLoader();
-  loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); dummies.forEach(attachRobot); }, undefined, () => {});
-  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = prepModel(g, 1.8); for (const rp of remotes.values()) attachSoldier(rp); }, undefined, () => {});
+  const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
+  loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); charLoaded(); }, undefined, () => {});
 }
 
 /* ================= Mannequins (robots) ================= */
@@ -1618,6 +1893,8 @@ function setEmissive(vis, v, col) {
   for (const m of vis.mats) if (m.emissive && !m.userData.keep) { if (col) m.emissive.setHex(col); else m.emissive.setRGB(1, 1, 1); m.emissive.multiplyScalar(v); }
 }
 function updateDummy(d, dt) {
+  if (!RULES.bots) { d.g.visible = false; return; }
+  if (d.alive && !d.g.visible) d.g.visible = true;
   const g = d.g, vis = d.vis;
   if (vis.mixer) vis.mixer.update(dt);
   if (!d.alive) {
@@ -1677,65 +1954,160 @@ const WEAPONS = [
 ];
 const WS = { cur: 0, ammo: WEAPONS.map(w => w.mag), swingT: 0, cool: 0, reloading: false, reloadT: 0, reloadDur: 1, swapT: 0, ads: 0, kick: 0, kickRot: 0, flashT: 0, trigger: false, swayX: 0, swayY: 0, bloom: 0, sprintK: 0, slideK: 0 };
 
-function buildViewmodel(kind) {
+function buildViewmodel(kind, knifeType) {
   const g = new THREE.Group();
-  const L = () => new THREE.MeshLambertMaterial();
-  const mats = { dark: L(), mid: L(), blk: L(), amb: L(), tan: L(), teal: L(), steel: new THREE.MeshPhongMaterial({ color: 0xc9d0d6, shininess: 90, specular: 0x666666 }) };
+  const L = (sh = 40) => new THREE.MeshPhongMaterial({ shininess: sh, specular: 0x2a2a2a });
+  const mats = { dark: L(55), mid: L(30), blk: L(18), amb: L(60), tan: L(12), teal: L(40), steel: new THREE.MeshPhongMaterial({ color: 0xc9d0d6, shininess: 110, specular: 0x777777 }) };
   const { dark, mid, blk, amb, tan, teal, steel } = mats;
-  const add = (geo, mat, x, y, z, rx = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.x = rx; g.add(m); return m; };
-  const B = (a, b, c) => new THREE.BoxGeometry(a, b, c), C = (r, l, s = 12) => new THREE.CylinderGeometry(r, r, l, s);
+  const glass = new THREE.MeshBasicMaterial({ color: 0x9fd8ff, transparent: true, opacity: 0.1, depthWrite: false });
+  const add = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); g.add(m); return m; };
+  const B = (a, b, c) => new THREE.BoxGeometry(a, b, c);
+  const C = (r, l, n = 14, r2) => new THREE.CylinderGeometry(r2 === undefined ? r : r2, r, l, n);
+  const ZC = (geo, mat, x, y, z) => add(geo, mat, x, y, z, Math.PI / 2); // cylindre couché dans l'axe du canon
+  // rail à crans sur le dessus
+  const rail = (y, z0, z1) => {
+    add(B(.03, .008, z1 - z0), blk, 0, y, (z0 + z1) / 2);
+    for (let z = z0 + .008; z < z1 - .004; z += .016) add(B(.032, .006, .007), blk, 0, y + .006, z);
+  };
+  // viseur holographique : cadre, vitre, réticule en anneau fin (pas de point plein)
   const holo = (y, z) => {
-    add(B(.05, .012, .07), blk, 0, y - .03, z + .02);
-    add(B(.006, .056, .012), blk, -.026, y, z); add(B(.006, .056, .012), blk, .026, y, z);
-    add(B(.058, .007, .012), blk, 0, y + .03, z);
-    const dot = new THREE.Mesh(new THREE.CircleGeometry(.0028, 12), new THREE.MeshBasicMaterial({ color: 0xffb020 }));
-    dot.position.set(0, y, z); g.add(dot);
+    add(B(.046, .014, .066), blk, 0, y - .032, z + .016);
+    add(B(.007, .06, .016), blk, -.027, y, z); add(B(.007, .06, .016), blk, .027, y, z);
+    add(B(.061, .008, .016), blk, 0, y + .031, z); add(B(.061, .008, .05), blk, 0, y + .031, z + .02);
+    add(B(.007, .03, .05), blk, -.027, y - .012, z + .025); add(B(.007, .03, .05), blk, .027, y - .012, z + .025);
+    const pane = new THREE.Mesh(new THREE.PlaneGeometry(.048, .052), glass); pane.position.set(0, y, z - .002); g.add(pane);
+    const ring = new THREE.Mesh(new THREE.RingGeometry(.0042, .0049, 32), new THREE.MeshBasicMaterial({ color: 0xff6a3a, transparent: true, opacity: 0.9 }));
+    ring.position.set(0, y, z); g.add(ring);
+  };
+  // poignée pistolet avec pontet et détente
+  const grip = (y, z, mat = blk) => {
+    add(B(.04, .105, .052), mat, 0, y - .045, z + .02, .28);
+    for (let i = 0; i < 4; i++) add(B(.042, .006, .04), blk, 0, y - .02 - i * .022, z + .024 + i * .006, .28);
+    add(B(.006, .006, .05), dark, 0, y + .005 - .045, z - .045);
+    add(B(.006, .03, .006), dark, 0, y + .005 - .03, z - .068);
+    add(B(.004, .022, .006), steel, 0, y - .015, z - .04, .3);
   };
   let muzzle, sightY, adsZ, hip = [0.17, -0.18, -0.42];
   if (kind === 0) {
-    add(B(.07, .085, .40), dark, 0, 0, 0); add(B(.06, .022, .34), blk, 0, .053, -.01);
-    add(B(.074, .07, .22), mid, 0, -.004, -.30); add(B(.077, .012, .18), amb, 0, .018, -.30);
-    add(C(.013, .2), dark, 0, 0, -.50, Math.PI / 2); add(C(.021, .06), blk, 0, 0, -.62, Math.PI / 2);
-    add(B(.044, .15, .075), blk, 0, -.11, -.06, -.18); add(B(.047, .022, .078), amb, 0, -.18, -.075, -.18);
-    add(B(.042, .11, .055), blk, 0, -.09, .11, .3); add(B(.05, .075, .17), mid, 0, -.01, .28);
-    holo(.1, -.05); sightY = .1; adsZ = .21; muzzle = new V3(0, 0, -.66);
+    // carabine : corps supérieur/inférieur, garde-main ajourée, chargeur courbe, crosse réglable
+    add(B(.066, .068, .34), dark, 0, .012, 0);
+    add(B(.06, .05, .2), mid, 0, -.045, .03);
+    add(B(.008, .03, .07), blk, .034, .018, -.02);
+    add(B(.02, .012, .03), dark, 0, .052, .17);
+    add(B(.052, .05, .06), mid, 0, -.085, -.06);
+    for (let i = 0; i < 3; i++) add(B(.046, .055, .05), blk, 0, -.125 - i * .045, -.064 - i * .014, -.16 - i * .1);
+    add(B(.05, .014, .056), amb, 0, -.236, -.112, -.42);
+    grip(-.05, .07);
+    ZC(C(.04, .27, 8), mid, 0, .008, -.3);
+    for (let i = 0; i < 5; i++) { add(B(.006, .012, .028), blk, .04, .008, -.21 - i * .042); add(B(.006, .012, .028), blk, -.04, .008, -.21 - i * .042); }
+    add(B(.082, .01, .24), amb, 0, -.026, -.3);
+    ZC(C(.012, .17), dark, 0, .008, -.52);
+    add(B(.026, .03, .03), dark, 0, .02, -.47);
+    ZC(C(.02, .075, 10), blk, 0, .008, -.635);
+    add(B(.044, .006, .02), dark, 0, .008, -.62); add(B(.044, .006, .02), dark, 0, .008, -.65);
+    rail(.05, -.44, .16);
+    ZC(C(.017, .13), blk, 0, .0, .23);
+    add(B(.05, .082, .15), mid, 0, -.02, .3); add(B(.054, .092, .016), blk, 0, -.022, .382);
+    add(B(.012, .03, .1), blk, 0, .03, .29);
+    holo(.1, -.05); sightY = .1; adsZ = .21; muzzle = new V3(0, .008, -.68);
   } else if (kind === 1) {
-    add(B(.066, .09, .30), teal, 0, 0, 0); add(B(.05, .02, .26), blk, 0, .055, 0);
-    add(C(.016, .14), dark, 0, .005, -.22, Math.PI / 2); add(C(.024, .05), blk, 0, .005, -.31, Math.PI / 2);
-    add(B(.04, .2, .05), blk, 0, -.14, -.07, .05); add(B(.042, .018, .052), amb, 0, -.24, -.075, .05);
-    add(B(.04, .1, .05), blk, 0, -.09, .08, .3);
-    add(B(.012, .012, .2), dark, -.02, -.01, .2); add(B(.012, .012, .2), dark, .02, -.01, .2); add(B(.05, .05, .015), dark, 0, -.01, .3);
-    holo(.1, -.04); sightY = .1; adsZ = .2; muzzle = new V3(0, .005, -.34); hip = [0.16, -0.17, -0.38];
+    // mitraillette : boîtier carré, poignée avant, chargeur droit, crosse filaire, cache-flamme
+    add(B(.064, .086, .29), teal, 0, 0, 0);
+    add(B(.068, .02, .29), dark, 0, -.05, 0);
+    add(B(.008, .026, .06), blk, .034, .016, -.02);
+    rail(.048, -.14, .13);
+    add(B(.038, .21, .048), blk, 0, -.15, -.07, .04);
+    for (let i = 0; i < 6; i++) add(B(.04, .004, .05), dark, 0, -.07 - i * .03, -.069, .04);
+    add(B(.042, .018, .052), amb, 0, -.258, -.075, .04);
+    grip(-.05, .085);
+    add(B(.032, .085, .034), blk, 0, -.09, -.17, -.1);
+    ZC(C(.026, .1, 12), dark, 0, .004, -.19);
+    ZC(C(.018, .06, 10), blk, 0, .004, -.27);
+    for (let i = 0; i < 4; i++) add(B(.04, .004, .008), blk, 0, .004, -.25 - i * .012);
+    add(B(.01, .01, .21), dark, -.022, -.01, .21); add(B(.01, .01, .21), dark, .022, -.01, .21); add(B(.06, .06, .014), dark, 0, -.012, .315);
+    add(B(.06, .012, .1), amb, 0, .035, .05);
+    holo(.1, -.04); sightY = .1; adsZ = .2; muzzle = new V3(0, .004, -.31); hip = [0.16, -0.17, -0.38];
   } else if (kind === 2) {
-    add(B(.08, .095, .32), dark, 0, 0, 0); add(C(.02, .52), dark, 0, .022, -.40, Math.PI / 2);
-    add(C(.016, .42), blk, 0, -.026, -.34, Math.PI / 2); add(B(.072, .062, .15), tan, 0, -.026, -.38);
-    add(B(.046, .12, .06), blk, 0, -.1, .1, .3); add(B(.056, .085, .22), mid, 0, -.015, .27);
-    add(B(.082, .012, .2), amb, 0, .02, 0); add(B(.008, .014, .01), amb, 0, .05, -.63); add(B(.03, .012, .02), blk, 0, .052, -.05);
-    sightY = .056; adsZ = .25; muzzle = new V3(0, .022, -.67);
+    // pompe : canon et tube magasin, pompe striée, éjection, crosse avec busc, hausse en anneau
+    add(B(.078, .09, .3), dark, 0, 0, 0);
+    add(B(.008, .03, .08), blk, .04, .015, -.02);
+    ZC(C(.02, .55, 16), dark, 0, .024, -.42);
+    ZC(C(.016, .46, 14), blk, 0, -.025, -.36);
+    add(B(.072, .062, .16), tan, 0, -.028, -.38);
+    for (let i = 0; i < 6; i++) add(B(.076, .066, .008), blk, 0, -.028, -.315 - i * .026);
+    ZC(C(.024, .02, 16), blk, 0, .024, -.69);
+    grip(-.045, .095);
+    add(B(.058, .09, .24), tan, 0, -.02, .27, .05);
+    add(B(.05, .025, .14), tan, 0, .035, .28);
+    add(B(.062, .1, .018), blk, 0, -.025, .395);
+    add(B(.084, .01, .2), amb, 0, .02, 0);
+    add(B(.007, .016, .01), steel, 0, .05, -.665);
+    const gr = new THREE.Mesh(new THREE.TorusGeometry(.009, .0025, 6, 16), blk); gr.position.set(0, .056, -.06); g.add(gr);
+    add(B(.004, .014, .01), blk, -.01, .044, -.06); add(B(.004, .014, .01), blk, .01, .044, -.06);
+    sightY = .056; adsZ = .25; muzzle = new V3(0, .024, -.71);
   } else if (kind === 3) {
-    add(B(.072, .09, .42), mid, 0, 0, 0); add(C(.018, .62), dark, 0, .015, -.52, Math.PI / 2); add(C(.03, .09), blk, 0, .015, -.86, Math.PI / 2);
-    add(B(.08, .07, .3), tan, 0, -.03, -.28); add(B(.04, .1, .07), blk, 0, -.09, -.02);
-    add(B(.044, .12, .06), blk, 0, -.09, .14, .3); add(B(.06, .11, .26), tan, 0, -.02, .34);
-    add(C(.026, .3, 16), blk, 0, .085, -.02, Math.PI / 2); add(C(.034, .06, 16), blk, 0, .085, -.19, Math.PI / 2); add(C(.03, .05, 16), blk, 0, .085, .14, Math.PI / 2);
-    add(B(.02, .04, .03), blk, 0, .055, -.08); add(B(.02, .04, .03), blk, 0, .055, .06);
-    add(B(.074, .012, .2), amb, 0, .03, .0);
-    add(C(.007, .05), dark, .05, .02, .08, 0);
+    // sniper : canon cannelé, gros frein de bouche, culasse à levier, lunette à tourelles, bipied replié
+    add(B(.07, .086, .38), mid, 0, 0, 0);
+    ZC(C(.019, .6, 14), dark, 0, .015, -.5);
+    for (let a = 0; a < 6; a++) { const m = add(B(.004, .004, .44), blk, Math.cos(a) * .019, .015 + Math.sin(a) * .019, -.48); }
+    ZC(C(.03, .1, 10), blk, 0, .015, -.85);
+    add(B(.064, .01, .03), dark, 0, .015, -.83); add(B(.064, .01, .03), dark, 0, .015, -.87);
+    add(B(.078, .072, .3), tan, 0, -.03, -.28);
+    add(B(.036, .1, .07), blk, 0, -.09, -.02);
+    grip(-.045, .13, tan);
+    add(B(.062, .11, .26), tan, 0, -.02, .34); add(B(.05, .03, .16), tan, 0, .045, .32); add(B(.066, .12, .02), blk, 0, -.022, .475);
+    ZC(C(.006, .05), steel, .045, .02, .1); const knob = add(new THREE.SphereGeometry(.011, 10, 8), steel, .068, .02, .1);
+    ZC(C(.025, .32, 18), blk, 0, .085, -.02); ZC(C(.034, .07, 18, .025), blk, 0, .085, -.21); ZC(C(.03, .06, 18, .025), blk, 0, .085, .16);
+    add(C(.011, .03, 10), blk, 0, .118, -.02); add(C(.011, .03, 10), blk, .038, .085, -.02, 0, 0, Math.PI / 2);
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(.03, 20), new THREE.MeshPhongMaterial({ color: 0x1a3550, shininess: 120, specular: 0x88aaff })); lens.position.set(0, .085, -.246); lens.rotation.y = Math.PI; g.add(lens);
+    add(B(.02, .036, .03), blk, 0, .055, -.08); add(B(.02, .036, .03), blk, 0, .055, .06);
+    add(B(.08, .012, .22), amb, 0, .01, -.28);
+    add(B(.006, .006, .2), dark, -.02, -.07, -.4); add(B(.006, .006, .2), dark, .02, -.07, -.4);
     sightY = .085; adsZ = .3; muzzle = new V3(0, .015, -.92); hip = [0.18, -0.19, -0.46];
   } else if (kind === 5) {
-    // couteau : lame, garde, manche, pommeau
-    add(B(.008, .034, .19), steel, 0, .004, -.13);
-    const tip = add(B(.008, .024, .024), steel, 0, .011, -.226); tip.rotation.x = Math.PI / 4;
-    add(B(.009, .006, .19), mid, 0, -.016, -.13);
-    add(B(.05, .014, .016), blk, 0, 0, -.03);
-    add(B(.026, .032, .11), tan, 0, -.002, .035); add(B(.028, .006, .1), amb, 0, .015, .035);
-    add(B(.03, .036, .018), blk, 0, -.002, .095);
+    const kt = knifeType || 'combat';
+    if (kt === 'karambit') {
+      // lame en griffe, anneau de pouce
+      for (let i = 0; i < 7; i++) { const a = -0.15 - i * 0.2; add(B(.006, .026 - i * .002, .03), steel, 0, .005 + Math.sin(-a) * .03 - .02 + i * .006, -.03 - i * .026, a); }
+      add(B(.026, .03, .1), tan, 0, -.01, .045); add(B(.028, .006, .09), amb, 0, .007, .045);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(.022, .006, 8, 20), blk); ring.position.set(0, -.01, .115); ring.rotation.y = Math.PI / 2; g.add(ring);
+    } else if (kt === 'machete') {
+      add(B(.006, .05, .3), steel, 0, .012, -.2); add(B(.006, .03, .05), steel, 0, .02, -.36, Math.PI / 6);
+      add(B(.007, .006, .3), mid, 0, -.012, -.2);
+      add(B(.03, .034, .13), tan, 0, -.002, .04); for (let i = 0; i < 3; i++) add(B(.032, .036, .006), blk, 0, -.002, -.005 + i * .045);
+    } else if (kt === 'dagger') {
+      add(B(.007, .03, .2), steel, 0, 0, -.13); const tp = add(B(.007, .021, .021), steel, 0, 0, -.232); tp.rotation.x = Math.PI / 4;
+      add(B(.008, .004, .19), mid, 0, 0, -.13);
+      add(B(.08, .012, .014), amb, 0, 0, -.025);
+      add(C(.013, .1, 10), blk, 0, 0, .035, Math.PI / 2); add(new THREE.SphereGeometry(.017, 12, 10), amb, 0, 0, .09);
+    } else if (kt === 'butterfly') {
+      add(B(.006, .026, .17), steel, 0, .004, -.115); const tp = add(B(.006, .018, .018), steel, 0, .009, -.2); tp.rotation.x = Math.PI / 4;
+      add(B(.01, .03, .12), tan, -.011, -.002, .04); add(B(.01, .03, .12), mid, .011, -.002, .04);
+      for (let i = 0; i < 3; i++) { add(B(.012, .012, .014), blk, -.011, -.002, .01 + i * .03); add(B(.012, .012, .014), blk, .011, -.002, .01 + i * .03); }
+      add(B(.03, .008, .012), amb, 0, .012, .1);
+    } else {
+      // couteau de combat : gorge, dos cranté, garde, manche strié, pommeau
+      add(B(.008, .034, .19), steel, 0, .004, -.13); const tp = add(B(.008, .024, .024), steel, 0, .011, -.226); tp.rotation.x = Math.PI / 4;
+      add(B(.009, .006, .14), mid, 0, .006, -.11);
+      for (let i = 0; i < 6; i++) add(B(.009, .006, .006), steel, 0, .023, -.07 - i * .016);
+      add(B(.05, .014, .016), blk, 0, 0, -.03);
+      add(B(.026, .032, .11), tan, 0, -.002, .035); for (let i = 0; i < 4; i++) add(B(.028, .034, .005), blk, 0, -.002, -.008 + i * .028);
+      add(B(.03, .036, .018), blk, 0, -.002, .095);
+    }
     sightY = .03; adsZ = .3; muzzle = new V3(0, 0, -.24); hip = [0.15, -0.16, -0.33];
   } else {
-    add(B(.04, .045, .2), dark, 0, 0, -.03); add(B(.038, .03, .19), mid, 0, -.035, -.03);
-    add(B(.036, .12, .055), blk, 0, -.1, .045, .22); add(B(.038, .012, .05), amb, 0, -.165, .06, .22);
-    add(B(.006, .012, .008), amb, 0, .029, -.12); add(B(.022, .012, .008), blk, 0, .029, .06);
-    add(C(.008, .02), dark, 0, 0, -.14, Math.PI / 2);
-    sightY = .03; adsZ = .3; muzzle = new V3(0, 0, -.15); hip = [0.14, -0.15, -0.34];
+    // pistolet : culasse striée, carcasse, rail, guidon et hausse sans point
+    add(B(.036, .036, .2), dark, 0, .012, -.03);
+    for (let i = 0; i < 6; i++) { add(B(.038, .026, .004), blk, 0, .012, .04 + i * .009); }
+    add(B(.008, .016, .04), blk, .019, .016, -.04);
+    add(B(.032, .028, .17), mid, 0, -.02, -.035);
+    add(B(.026, .008, .07), blk, 0, -.038, -.08);
+    ZC(C(.008, .02), dark, 0, .008, -.135);
+    grip(-.03, .03, blk);
+    add(B(.036, .012, .05), amb, 0, -.155, .065, .22);
+    add(B(.005, .012, .008), steel, 0, .036, -.12);
+    add(B(.007, .011, .008), blk, -.009, .035, .06); add(B(.007, .011, .008), blk, .009, .035, .06);
+    sightY = .036; adsZ = .3; muzzle = new V3(0, .008, -.15); hip = [0.14, -0.15, -0.34];
   }
   const fl = new THREE.Mesh(new THREE.PlaneGeometry(.22, .22), new THREE.MeshBasicMaterial({ map: flashTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
   fl.position.copy(muzzle); fl.visible = false; g.add(fl);
@@ -1743,7 +2115,14 @@ function buildViewmodel(kind) {
   g.visible = false; wScene.add(g);
   return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind };
 }
-const VM = WEAPONS.map((w, i) => buildViewmodel(i));
+S.knife = store.get('knife', 'combat');
+const KNIVES = {
+  combat: { dmg: 50, rpm: 115, range: 2.7 }, karambit: { dmg: 42, rpm: 145, range: 2.4 },
+  machete: { dmg: 65, rpm: 85, range: 3.3 }, dagger: { dmg: 55, rpm: 110, range: 2.6 }, butterfly: { dmg: 46, rpm: 135, range: 2.5 }
+};
+function applyKnifeStats() { Object.assign(WEAPONS[5], KNIVES[S.knife] || KNIVES.combat); }
+applyKnifeStats();
+const VM = WEAPONS.map((w, i) => buildViewmodel(i, S.knife));
 VM[0].g.visible = true;
 /* ---------- skins d'arme : couleurs par rôle de matériau ---------- */
 const camoTex = canvasTex((g, s) => {
@@ -1898,7 +2277,7 @@ function melee() {
     raycaster.set(_o, _d); raycaster.far = W.range;
     for (const h of raycaster.intersectObjects(SHOOTABLE, false)) {
       const ud = h.object.userData;
-      if (ud && ud.d && !ud.d.alive) continue;
+      if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
       if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
       if (ud && (ud.d || ud.rp) && (!best || h.distance < best.distance)) best = h;
       break;
@@ -1945,11 +2324,19 @@ function fire() {
     let hit = null;
     for (const h of hits) {
       const ud = h.object.userData;
-      if (ud && ud.d && !ud.d.alive) continue;
+      if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
       if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
       hit = h; break;
     }
     stats.shots++;
+    const bt = domeBlock(_o, _d, hit ? hit.distance : 250);
+    if (bt < Infinity) {
+      _end.copy(_o).addScaledVector(_d, bt); spawnSpark(_end, true);
+      for (const dm of DOMES) if (dm.hit) { dm.flash = 1; dm.hit = null; }
+      hit = null;
+      if (i < 3) { spawnTracer(_m, _end); ends.push([r2(_end.x), r2(_end.y), r2(_end.z)]); }
+      continue;
+    }
     if (hit) {
       _end.copy(hit.point);
       const ud = hit.object.userData;
@@ -2028,7 +2415,7 @@ function updateCamera(dt, alpha) {
   P.roll = lerp(P.roll, rollT, 1 - Math.exp(-8 * dt));
   camera.position.set(rPos.x, rPos.y + P.eye - P.dip + bobY, rPos.z);
   camera.rotation.set(P.pitch + WS.kickRot * 0.06, P.yaw, P.roll);
-  const speedFov = clamp((hs - 7.5) / 8, 0, 1) * 8;
+  const speedFov = clamp((hs - 7.5) / 8, 0, 1) * 8 + (AB.stimT > 0 ? 5 : 0);
   baseVfov = hToV(S.fov);
   const target = hToV(S.fov + speedFov) * lerp(1, WEAPONS[WS.cur].zoom, easeOut(WS.ads));
   curVfov = lerp(curVfov, target, 1 - Math.exp(-14 * dt));
@@ -2095,7 +2482,7 @@ function peerSupported() { return typeof window.Peer === 'function' && typeof wi
 function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  return { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(P.yaw), pi: r2(P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead };
+  return { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(P.yaw), pi: r2(P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint };
 }
 // -- envoi : le client parle à l'hôte ; l'hôte se traite lui-même comme un client local
 function netSend(m) {
@@ -2121,6 +2508,8 @@ function hostRecv(from, m) {
   if (!pl) return;
   if (m.k === 'st') pl.st = m.s;
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, a: m.a, e: m.e }, from);
+  else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number) }, from);
+  else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number) }, from);
   else if (m.k === 'hit') { if (NET.players.has(m.to)) sendTo(m.to, { k: 'hit', from, dmg: m.dmg, head: m.head, w: m.w }); }
   else if (m.k === 'dead') {
     pl.deaths++;
@@ -2132,7 +2521,7 @@ function hostRecv(from, m) {
 function snapshot() {
   const pl = [];
   for (const [id, p] of NET.players) pl.push([id, p.name, p.color, p.kills, p.deaths, p.st]);
-  return { k: 'snap', pl, map: S.map };
+  return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
   if (m.k === 'welcome') { NET.selfId = m.id; if (m.map && m.map !== S.map) switchMap(m.map, true); return; }
@@ -2140,6 +2529,7 @@ function clientRecv(m) {
   if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
   if (m.k === 'snap') {
     if (NET.mode === 'client' && m.map && m.map !== S.map) switchMap(m.map, true);
+    if (NET.mode === 'client' && m.rules) { RULES.g = clamp(+m.rules.g || 1, 0.3, 2); RULES.s = clamp(+m.rules.s || 1, 0.5, 2); RULES.bots = m.rules.bots !== false; }
     const seen = new Set();
     for (const [id, name, color, kills, deaths, st] of m.pl) {
       seen.add(id);
@@ -2150,6 +2540,7 @@ function clientRecv(m) {
       if (st) {
         const wasDead = rp.st && rp.st.dead;
         rp.st = st; rp.lastT = performance.now();
+        if ((st.ch || 'soldier') !== rp.ch || (st.tc || 'auto') !== rp.tc) { rp.ch = st.ch || 'soldier'; rp.tc = st.tc || 'auto'; attachChar(rp); }
         if (!rp.hasPos) { rp.pos.set(st.p[0], st.p[1], st.p[2]); rp.yaw = st.y; rp.hasPos = true; }
         if (wasDead && !st.dead) { rp.pos.set(st.p[0], st.p[1], st.p[2]); }
         if (st.dead || !rp.pending) { rp.pSh = st.sh; rp.pHp = st.hp; }
@@ -2170,6 +2561,9 @@ function clientRecv(m) {
     return;
   }
   if (m.k === 'hit') { applyHit(m); return; }
+  if (m.k === 'dome') { spawnDome(m.p); return; }
+  if (m.k === 'portal') { spawnPortal(m.a, m.b); return; }
+  if (m.k === 'kick') { leaveNet(); setNetStatus(t('net.kicked'), 'err'); toast(t('net.kicked'), 4); if (playing) pause(); return; }
   if (m.k === 'kf') {
     const nameOf = id => id === NET.selfId ? S.name : (remotes.get(id) ? remotes.get(id).name : '?');
     killfeed(nameOf(m.by), WEAPONS[m.w | 0] ? wShort(m.w | 0) : '', nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
@@ -2221,19 +2615,22 @@ function addRemote(id, name, color) {
   [legs, body, head].forEach((m, i) => { m.userData = { rp, part: ['legs', 'body', 'head'][i] }; });
   tag.firstChild.textContent = name; tag.lastChild.style.background = '#' + color.toString(16).padStart(6, '0');
   scene.add(g); remotes.set(id, rp);
-  if (MODELS.soldier) attachSoldier(rp); else { rp.vis = makeProcDummy(); g.add(rp.vis.obj); }
+  rp.vis = makeProcDummy(); g.add(rp.vis.obj);
+  attachChar(rp);
   rebuildShootable();
   return rp;
 }
-function attachSoldier(rp) {
-  if (!MODELS.soldier) return;
+function attachChar(rp) {
+  const ch = CHARS[rp.ch] ? rp.ch : 'soldier';
+  const model = MODELS.chars[ch] || MODELS.chars.soldier;
+  if (!model) return;
+  const used = MODELS.chars[ch] ? ch : 'soldier';
   if (rp.vis) g_remove(rp.g, rp.vis.obj);
-  rp.vis = cloneModel(MODELS.soldier);
+  rp.vis = cloneModel(model); rp.vis.ch = used; rp.vis.base = model.scale;
   rp.g.add(rp.vis.obj);
-  // visière teintée à la couleur du joueur
-  rp.vis.obj.traverse(o => { if (o.isMesh && /visor/i.test(o.name)) { o.material.emissive.setHex(rp.color); o.material.emissiveIntensity = 0.8; o.material.userData.keep = true; } });
+  tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
   // arme dans la main droite
-  let hand = null; rp.vis.obj.traverse(o => { if (!hand && /RightHand$/.test(o.name)) hand = o; });
+  let hand = null; rp.vis.obj.traverse(o => { if (!hand && CHARS[used].hand.test(o.name)) hand = o; });
   if (hand) {
     const gun = new THREE.Group();
     const gm = new THREE.MeshLambertMaterial({ color: 0x2b3035 });
@@ -2245,7 +2642,7 @@ function attachSoldier(rp) {
     gun.position.set(0, 9, 4); gun.rotation.set(Math.PI / 2, 0, 0);
     hand.add(gun);
   }
-  playAnim(rp.vis, 'Idle', 0);
+  playAnim(rp.vis, CHARS[used].anim.idle, 0);
 }
 function removeRemote(id) {
   const rp = remotes.get(id); if (!rp) return;
@@ -2267,7 +2664,7 @@ function aimAssist(dt) {
     if (raycaster.intersectObjects(WORLD, false).length) return;
     bestAng = ang; best = { dx, dy, dz };
   };
-  for (const d of dummies) if (d.alive) consider(d.g.position.x, d.g.position.y + 1.15, d.g.position.z);
+  for (const d of dummies) if (d.alive && RULES.bots) consider(d.g.position.x, d.g.position.y + 1.15, d.g.position.z);
   for (const rp of remotes.values()) if (rp.st && !rp.st.dead) consider(rp.pos.x, rp.pos.y + (rp.crouchK > 0.5 ? 0.85 : 1.25), rp.pos.z);
   if (!best) return;
   const ty = Math.atan2(-best.dx, -best.dz), tp = Math.atan2(best.dy, Math.hypot(best.dx, best.dz));
@@ -2302,7 +2699,7 @@ function drawMinimap() {
   c.fillStyle = '#FFB020';
   for (const pd of PADS) { c.beginPath(); c.arc(pd.x, pd.z, 1.4, 0, Math.PI * 2); c.fill(); }
   c.fillStyle = '#E88A4A';
-  for (const d of dummies) if (d.alive) { c.beginPath(); c.arc(d.g.position.x, d.g.position.z, 1.1, 0, Math.PI * 2); c.fill(); }
+  for (const d of dummies) if (d.alive && RULES.bots) { c.beginPath(); c.arc(d.g.position.x, d.g.position.z, 1.1, 0, Math.PI * 2); c.fill(); }
   for (const rp of remotes.values()) {
     if (!rp.st || rp.st.dead || !(rp.pingT > 0 || (X.wall && xUnlocked))) continue;
     c.fillStyle = '#FF5A44'; c.beginPath(); c.arc(rp.pos.x, rp.pos.z, 1.6, 0, Math.PI * 2); c.fill();
@@ -2338,11 +2735,12 @@ function updateRemotes(dt) {
     if (rp.vis) {
       if (rp.vis.mixer) {
         rp.vis.mixer.update(dt);
-        const anim = st.a === 'air' ? 'Run' : hs > 4.6 * K ? 'Run' : hs > 0.6 ? 'Walk' : 'Idle';
+        const an = (CHARS[rp.vis.ch] || CHARS.soldier).anim;
+        const anim = st.a === 'air' ? an.run : hs > 4.6 * K ? an.run : hs > 0.6 ? an.walk : an.idle;
         playAnim(rp.vis, anim, 0.2);
         const act = rp.vis.actions[rp.vis.cur]; if (act) act.timeScale = st.a === 'air' ? 0.3 : st.a === 'slide' ? 0.1 : 1;
       }
-      rp.vis.obj.scale.y = (rp.vis.mixer ? MODELS.soldier.scale : 1) * (1 - rp.crouchK * 0.33);
+      rp.vis.obj.scale.y = (rp.vis.mixer ? rp.vis.base : 1) * (1 - rp.crouchK * 0.33);
       rp.vis.obj.rotation.x = st.a === 'slide' ? -0.35 * rp.crouchK : 0;
       rp.flash = Math.max(0, rp.flash - dt * 8);
       rp.pingT = Math.max(0, rp.pingT - dt);
@@ -2380,6 +2778,7 @@ function updateNet(dt) {
 function leaveNet() {
   try { if (NET.peer) NET.peer.destroy(); } catch (e) {}
   mapSel.disabled = false;
+  Object.assign(RULES, LOCAL_RULES); clearAbilityFx();
   NET.mode = 'off'; NET.peer = null; NET.conns.clear(); NET.hostConn = null; NET.players.clear(); NET.selfId = ''; NET.board = null;
   for (const id of [...remotes.keys()]) removeRemote(id);
   $('netBadge').hidden = true; $('me').hidden = true; $('roomBox').hidden = true;
@@ -2586,6 +2985,14 @@ function updateHUD(dt) {
   let sparkNew = false;
   while (sparkAcc > 1 / 30) { sparkAcc -= 1 / 30; sparkData.copyWithin(0, 1); sparkData[SPARK_N - 1] = hs; sparkNew = true; }
   if (sparkNew) drawSpark();
+  const abs = [['abStim', 'stim', AB.stimT > 0], ['abDome', 'dome', false], ['abPortal', 'portal', !!AB.portalA]];
+  for (const [elId, k, active] of abs) {
+    const el = abEls[elId], cd = AB[k + 'Cd'], ready = abReady(k);
+    el.classList.toggle('ready', ready && !active); el.classList.toggle('active', active);
+    el.lastChild.style.width = ready ? '100%' : ((1 - cd / AB_CD[k]) * 100).toFixed(1) + '%';
+    setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active ? Math.ceil(AB.portalAT) + ' s' : ready ? '' : Math.ceil(cd) + ' s');
+  }
+  stimFxEl.style.opacity = AB.stimT > 0 ? Math.min(1, AB.stimT).toFixed(2) : '0';
   mmAcc += dt;
   if (S.minimap && mmAcc > 1 / 30) { mmAcc = 0; drawMinimap(); }
   fpsAcc += dt; fpsN++;
@@ -2635,6 +3042,7 @@ addEventListener('keydown', e => {
 });
 function renderX() {
   $('xlockBlock').hidden = !xUnlocked;
+  try { syncAdmin(); } catch (e) { /* panneau pas encore initialisé */ }
   document.querySelectorAll('[data-x]').forEach(el => { el.checked = !!X[el.dataset.x]; });
 }
 document.querySelectorAll('[data-x]').forEach(el => el.addEventListener('change', () => {
@@ -2647,6 +3055,7 @@ function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.cl
 /* ================= Entrées ================= */
 let playing = false, everLocked = false, unlockedMode = false, everPlayed = false;
 function clearInput() { for (const k in keys) keys[k] = false; for (const k in wheelT) wheelT[k] = 0; mouse.left = mouse.right = false; }
+const abEls = { abStim: $('abStim'), abDome: $('abDome'), abPortal: $('abPortal') }, stimFxEl = $('stimFx');
 function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
   $('hint').classList.remove('warn'); hintKey = 'hint.default'; $('hint').textContent = t(hintKey);
@@ -2691,7 +3100,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['mute', 'Couper le son', ['KeyP', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['stim', 'Stim', ['KeyQ', null]], ['dome', 'Dôme', ['KeyG', null]], ['portal', 'Portail', ['KeyF', null]], ['mute', 'Couper le son', ['KeyP', null]]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -2721,6 +3130,9 @@ function onAction(id) {
     else if (P.hp >= MAX_HP && P.sh >= MAX_SH) { spawnPlayer(true); feed(t('feed.respawn'), t('feed.newPoint')); }
     else toast(t('toast.respawnFull'), 2);
   }
+  else if (id === 'stim') useStim();
+  else if (id === 'dome') useDome();
+  else if (id === 'portal') usePortal();
   else if (id === 'map') { S.minimap = !S.minimap; store.set('minimap', S.minimap); syncMinimap(); }
   else if (id === 'mute') { muted = !muted; if (master) master.gain.value = muted ? 0 : S.vol; toast(muted ? t('toast.muted') : t('toast.unmuted'), 1.5); }
 }
@@ -2877,10 +3289,95 @@ function switchMap(id, fromNet) {
   if (fromNet || NET.mode !== 'off') spawnPlayer(true); else spawnPlayer(false);
   stats.vmax = 0;
 }
+/* ---------- panneau admin (zlock) ---------- */
+const admEls = { g: $('admG'), s: $('admS'), bots: $('admBots'), oG: $('oAdmG'), oS: $('oAdmS'), list: $('admPlayers'), note: $('admNote') };
+function admCanRule() { return NET.mode !== 'client'; }
+function syncAdmin() {
+  $('adminBlock').hidden = !xUnlocked;
+  if (!xUnlocked) return;
+  admEls.g.value = RULES.g; admEls.s.value = RULES.s; admEls.bots.checked = RULES.bots;
+  admEls.oG.textContent = '×' + (+RULES.g).toFixed(2); admEls.oS.textContent = '×' + (+RULES.s).toFixed(2);
+  const lock = !admCanRule();
+  [admEls.g, admEls.s, admEls.bots, $('admReset'), $('admSay'), $('admMsg')].forEach(el => { el.disabled = lock; });
+  admEls.note.textContent = lock ? 'Tu es invité : seul l’hôte de la partie peut utiliser ce panneau.' : NET.mode === 'host' ? 'Les règles s’appliquent à tous les joueurs de la partie.' : 'Hors ligne : les règles s’appliquent à ta partie solo. Héberge une partie pour gérer des joueurs.';
+  const rows = NET.mode === 'host' ? [...NET.players.entries()].filter(([id]) => id !== NET.selfId) : [];
+  admEls.list.replaceChildren(...rows.map(([id, pl]) => {
+    const tr = document.createElement('tr');
+    const n = document.createElement('td'); n.textContent = pl.name; tr.appendChild(n);
+    const sc = document.createElement('td'); sc.textContent = pl.kills + ' / ' + pl.deaths; tr.appendChild(sc);
+    const act = document.createElement('td');
+    const slay = document.createElement('button'); slay.type = 'button'; slay.className = 'btn3'; slay.textContent = 'Éliminer';
+    slay.addEventListener('click', () => { sendTo(id, { k: 'hit', from: NET.selfId, dmg: 400, head: false, w: 0 }); });
+    const kick = document.createElement('button'); kick.type = 'button'; kick.className = 'btn3'; kick.textContent = 'Expulser'; kick.style.marginLeft = '6px';
+    kick.addEventListener('click', () => {
+      sendTo(id, { k: 'kick' });
+      setTimeout(() => { const c = NET.conns.get(id); try { c && c.close(); } catch (e) {} }, 300);
+      NET.players.delete(id); broadcast({ k: 'sys', t: 'leave', name: pl.name }); syncAdmin();
+    });
+    act.append(slay, kick); tr.appendChild(act);
+    return tr;
+  }));
+}
+function setRule(k, v) {
+  if (!admCanRule()) return;
+  RULES[k] = v; Object.assign(LOCAL_RULES, RULES); store.set('rules', LOCAL_RULES); syncAdmin();
+}
+admEls.g.addEventListener('input', () => setRule('g', +admEls.g.value));
+admEls.s.addEventListener('input', () => setRule('s', +admEls.s.value));
+admEls.bots.addEventListener('change', () => setRule('bots', admEls.bots.checked));
+$('admReset').addEventListener('click', () => {
+  if (!admCanRule()) return;
+  for (const pl of NET.players.values()) { pl.kills = 0; pl.deaths = 0; }
+  stats.kills = 0; stats.dmg = 0; stats.shots = 0; stats.hits = 0; stats.vmax = 0; stats.time = 0;
+  if (NET.mode === 'host') broadcast({ k: 'sys', msg: '[ADMIN] Scores remis à zéro' }); else toast('Scores remis à zéro', 2);
+  syncAdmin();
+});
+$('admSay').addEventListener('click', () => {
+  const msg = $('admMsg').value.trim().slice(0, 80); if (!msg) return;
+  if (NET.mode === 'host') broadcast({ k: 'sys', msg: '[ADMIN] ' + msg }); else toast('[ADMIN] ' + msg, 3);
+  $('admMsg').value = '';
+});
+setInterval(() => { if (!menu.hidden && xUnlocked) syncAdmin(); }, 1000);
+syncAdmin();
 const mapSel = $('mapSel'); mapSel.value = S.map;
 mapSel.addEventListener('change', () => {
   if (NET.mode === 'client') { mapSel.value = S.map; setNetStatus(t('map.hostOnly'), 'err'); return; }
   switchMap(mapSel.value, false);
+});
+/* ---------- aperçu 3D du perso dans le menu ---------- */
+const prevCanvas = $('charPrev');
+let prevR = null, prevScene = null, prevCam = null, prevVis = null;
+function refreshPreview() {
+  if (!prevR) {
+    try { prevR = new THREE.WebGLRenderer({ canvas: prevCanvas, alpha: true, antialias: true }); } catch (e) { return; }
+    prevR.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); prevR.setSize(150, 200, false);
+    prevScene = new THREE.Scene();
+    prevScene.add(new THREE.HemisphereLight(0xe8eef2, 0x5a4a3a, 1.0));
+    const dl = new THREE.DirectionalLight(0xffe6c2, 0.9); dl.position.set(1.5, 3, 2.5); prevScene.add(dl);
+    prevCam = new THREE.PerspectiveCamera(30, 150 / 200, 0.1, 20); prevCam.position.set(0, 1.05, 4.4); prevCam.lookAt(0, 0.95, 0);
+  }
+  const model = MODELS.chars[S.char];
+  if (prevVis) { prevScene.remove(prevVis.obj); prevVis = null; }
+  if (!model) return;
+  prevVis = cloneModel(model); prevVis.ch = S.char;
+  tintChar(prevVis, S.char, TINTS[S.tint] || COLORS[0]);
+  prevScene.add(prevVis.obj);
+  playAnim(prevVis, CHARS[S.char].anim.idle, 0);
+}
+function renderPreview(dt) {
+  if (!prevR || !prevVis) return;
+  prevVis.mixer.update(dt); prevVis.obj.rotation.y += dt * 0.6;
+  prevR.render(prevScene, prevCam);
+}
+const charSel = $('charSel'), tintSel = $('tintSel');
+charSel.value = S.char; tintSel.value = S.tint;
+charSel.addEventListener('change', () => { S.char = charSel.value; store.set('char', S.char); refreshPreview(); });
+tintSel.addEventListener('change', () => { S.tint = tintSel.value; store.set('tint', S.tint); refreshPreview(); });
+const knifeSel = $('knifeSel'); knifeSel.value = S.knife;
+knifeSel.addEventListener('change', () => {
+  S.knife = knifeSel.value; store.set('knife', S.knife); applyKnifeStats();
+  wScene.remove(VM[5].g); VM[5] = buildViewmodel(5, S.knife); applySkin(S.skin);
+  VM[5].g.visible = WS.cur === 5; renderSlots();
 });
 const skinSel = $('skin'); skinSel.value = S.skin;
 skinSel.addEventListener('change', () => { S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
@@ -3002,6 +3499,7 @@ function frame(now) {
   aimAssist(dt);
   updateCamera(dt, playing || NET.mode !== 'off' ? acc / STEP : 1);
   updateRemotes(dt);
+  updateAbilityFx(dt);
   if (playing) updateWeapon(dt);
   updateViewmodel(dt);
   updateNet(dt);
@@ -3014,6 +3512,7 @@ function frame(now) {
   }
   if (playing || NET.mode !== 'off') updateHUD(dt);
   if (toastT > 0) { toastT -= dt; if (toastT <= 0) $('toast').classList.remove('on'); }
+  if (!menu.hidden) renderPreview(dt);
   renderer.clear(); renderer.render(scene, camera);
   renderer.clearDepth(); renderer.render(wScene, wCam);
 }
