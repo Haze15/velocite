@@ -440,6 +440,9 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field"><span class="lab"><span data-i18n="set.sens">Sensibilité</span> <output id="oSens"></output></span><input type="range" id="sens" min="0.4" max="6" step="0.1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
+        <div class="field"><span class="lab"><label for="music" data-i18n="set.music">Musique</label> <output id="oMusic"></output></span><input type="range" id="music" min="0" max="1" step="0.05">
+          <div class="sndrow"><button class="btn3" id="musImport" type="button" data-i18n="mus.import">Importer ma musique</button><button class="btn3" id="musReset" type="button" data-i18n="mus.reset">Musique d’origine</button><input type="file" id="musFile" accept="audio/*" hidden></div>
+          <span class="hint" id="musMsg"></span></div>
         <label class="field"><span class="lab" data-i18n="set.quality">Graphismes</span><select id="quality"><option value="auto" data-i18n="q.auto">Auto (adapte la résolution)</option><option value="high" data-i18n="q.high">Élevés</option><option value="low" data-i18n="q.low">Rapides (sans ombres)</option></select></label>
         <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option><option value="crimson" data-i18n="skin.crimson">Rouge sang</option><option value="jungle" data-i18n="skin.jungle">Jungle</option><option value="chrome" data-i18n="skin.chrome">Chrome</option><option value="lava" data-i18n="skin.lava">Lave</option><option value="galaxy" data-i18n="skin.galaxy">Galaxie</option><option value="tiger" data-i18n="skin.tiger">Tigre</option><option value="candy" data-i18n="skin.candy">Bonbon</option><option value="sakura" data-i18n="skin.sakura">Sakura</option><option value="ocean" data-i18n="skin.ocean">Océan</option><option value="toxic" data-i18n="skin.toxic">Toxique</option><option value="royal" data-i18n="skin.royal">Royal</option><option value="urban" data-i18n="skin.urban">Camo urbain</option><option value="sunset" data-i18n="skin.sunset">Coucher de soleil</option><option value="plasma" data-i18n="skin.plasma">Plasma (animé)</option><option value="rainbow" data-i18n="skin.rainbow">Arc-en-ciel (animé)</option><option value="pulse" data-i18n="skin.pulse">Pulsation (animé)</option><option value="circuit" data-i18n="skin.circuit">Circuit (animé)</option><option value="flames" data-i18n="skin.flames">Flammes (animé)</option></select></label>
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
@@ -917,6 +920,13 @@ const I18N_ADD6 = {
     'pad.help': 'Induku yesobunxele: hamba · induku yesokudla: qondisa · A: gxuma · B: shelela · X: layisha kabusha noma sebenzisa · Y: isikhali esilandelayo · LB/RB: amakhono · LT/RT: qondisa/dubula · L3: gijima · R3: ummese · izinkinobho zezinkomba: ama-emote, hlola, isikhali sangaphambili, imephu · Start: misa.' }
 };
 for (const l in I18N_ADD6) Object.assign(I18N[l], I18N_ADD6[l]);
+const I18N_ADD7 = {
+  fr: { 'set.music': 'Musique', 'mus.import': 'Importer ma musique', 'mus.reset': 'Musique d’origine', 'mus.default': 'En cours : « Celestial Butterfly ».', 'mus.custom': 'En cours : {name} (seulement chez toi).', 'mus.tooBig': 'Fichier trop lourd (40 Mo maximum).' },
+  en: { 'set.music': 'Music', 'mus.import': 'Import my music', 'mus.reset': 'Original music', 'mus.default': 'Now playing: “Celestial Butterfly”.', 'mus.custom': 'Now playing: {name} (only on your device).', 'mus.tooBig': 'File too large (40 MB max).' },
+  af: { 'set.music': 'Musiek', 'mus.import': 'Voer my musiek in', 'mus.reset': 'Oorspronklike musiek', 'mus.default': 'Speel nou: “Celestial Butterfly”.', 'mus.custom': 'Speel nou: {name} (net op jou toestel).', 'mus.tooBig': 'Lêer te groot (maks. 40 MB).' },
+  zu: { 'set.music': 'Umculo', 'mus.import': 'Ngenisa umculo wami', 'mus.reset': 'Umculo wokuqala', 'mus.default': 'Okudlalayo manje: “Celestial Butterfly”.', 'mus.custom': 'Okudlalayo manje: {name} (kudivayisi yakho kuphela).', 'mus.tooBig': 'Ifayela likhulu kakhulu (40 MB ubuningi).' }
+};
+for (const l in I18N_ADD7) Object.assign(I18N[l], I18N_ADD7[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -2413,6 +2423,7 @@ function step(dt) {
 /* ================= Audio ================= */
 let AC = null, master = null, noiseBuf = null, slideGain = null, muted = false;
 function audioInit() {
+  musicStart();
   if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
   try { AC = new C(); } catch (e) { return; }
@@ -5733,6 +5744,54 @@ renderBinds();
 try {
   if (navigator.keyboard && navigator.keyboard.getLayoutMap) navigator.keyboard.getLayoutMap().then(m => { layoutMap = m; renderBinds(); }).catch(() => {});
 } catch (e) {}
+/* ================= Musique de fond (« Celestial Butterfly », Pixabay) ================= */
+const MUSIC_SRC = 'assets/music/celestial-butterfly.mp3';
+S.music = clamp(+store.get('music', 0.35), 0, 1);
+const MUSIC = { el: new Audio(), started: false, vol: 0, url: null, name: '' };
+MUSIC.el.loop = true; MUSIC.el.preload = 'auto'; MUSIC.el.src = MUSIC_SRC;
+// lancée au premier clic (les navigateurs bloquent le son avant une action du joueur)
+function musicStart() {
+  if (MUSIC.started || S.music <= 0) return;
+  MUSIC.started = true; MUSIC.el.volume = 0;
+  const p = MUSIC.el.play(); if (p && p.catch) p.catch(() => { MUSIC.started = false; });
+}
+// un peu plus basse en jeu que dans le menu, coupée avec la touche muet
+function musicTick(dt) {
+  const target = muted || document.hidden ? 0 : S.music * (playing ? 0.55 : 1);
+  MUSIC.vol += (target - MUSIC.vol) * (1 - Math.exp(-3 * dt));
+  try { MUSIC.el.volume = clamp(MUSIC.vol, 0, 1); } catch (e) {}
+  if (S.music <= 0 && !MUSIC.el.paused && MUSIC.vol < 0.01) MUSIC.el.pause();
+  else if (S.music > 0 && MUSIC.started && MUSIC.el.paused && !document.hidden) MUSIC.el.play().catch(() => {});
+}
+// musique importée : gardée dans le navigateur (IndexedDB), jamais envoyée en ligne
+function musicDb(fn) {
+  try { const rq = indexedDB.open('velocite', 1); rq.onupgradeneeded = () => rq.result.createObjectStore('files'); rq.onsuccess = () => { try { fn(rq.result); } catch (e) {} }; } catch (e) {}
+}
+function musMsg(m) { const el = $('musMsg'); if (el) el.textContent = m; }
+function musicUse(blob, name) {
+  if (MUSIC.url) URL.revokeObjectURL(MUSIC.url);
+  MUSIC.url = blob ? URL.createObjectURL(blob) : null; MUSIC.name = name || '';
+  const playingNow = MUSIC.started && !MUSIC.el.paused;
+  MUSIC.el.src = MUSIC.url || MUSIC_SRC;
+  if (playingNow) MUSIC.el.play().catch(() => {});
+  musMsg(blob ? t('mus.custom', { name: MUSIC.name }) : t('mus.default'));
+}
+musicDb(db => { const rq = db.transaction('files').objectStore('files').get('music'); rq.onsuccess = () => { const r = rq.result; if (r && r.blob instanceof Blob) musicUse(r.blob, r.name); }; });
+{
+  const el = $('music'), out = $('oMusic');
+  const sync = () => { out.textContent = S.music <= 0 ? t('set.off') : Math.round(S.music * 100) + '%'; };
+  el.value = S.music; sync(); musMsg(t('mus.default'));
+  el.addEventListener('input', () => { S.music = +el.value; store.set('music', S.music); sync(); if (S.music > 0) musicStart(); });
+  $('musImport').addEventListener('click', () => $('musFile').click());
+  $('musReset').addEventListener('click', () => { musicDb(db => db.transaction('files', 'readwrite').objectStore('files').delete('music')); musicUse(null); });
+  $('musFile').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    if (f.size > 40 * 1024 * 1024) { musMsg(t('mus.tooBig')); return; }
+    musicUse(f, f.name.slice(0, 50)); musicStart();
+    musicDb(db => db.transaction('files', 'readwrite').objectStore('files').put({ blob: f, name: f.name.slice(0, 50) }, 'music'));
+  });
+}
 function bindRange(id, key, fmt) {
   const el = $(id), out = $('o' + id[0].toUpperCase() + id.slice(1));
   el.value = S[key]; out.textContent = fmt(S[key]);
@@ -6094,6 +6153,7 @@ function frame(now) {
   updateEditor();
   drawEsp();
   if (MAP_TICK) MAP_TICK(dt);
+  musicTick(dt);
   if (playing) updateHazards(dt);
   updateAbilityFx(dt);
   if (playing) updateWeapon(dt);

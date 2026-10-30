@@ -124,6 +124,8 @@ Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au c
 
 **Bras et armes :** tu vois tes bras (gants et manches à ta couleur) tenir chaque arme à deux mains quand c'est possible. Les autres joueurs portent leur vraie arme en main, avec leur skin. Quand un joueur vise au sniper dans ta direction, le reflet de sa lunette brille, même de loin.
 
+**Musique :** « Celestial Butterfly » tourne en fond dans le menu et un peu plus bas en jeu. Curseur « Musique » dans les réglages (0 pour la couper, P coupe tout le son). Le bouton « Importer ma musique » remplace la musique par ton propre fichier, gardé seulement dans ton navigateur.
+
 **Effets de caméra :** légère secousse au tir et aux atterrissages lourds, coup de champ de vision au superglide et sur les pads, balancement de la marche. Un curseur dans les réglages les règle de 0 (aucun) à 150 %. L'arme en main bouge beaucoup moins qu'avant.
 
 Les bruitages des armes ont été refaits pour être moins agressifs : un coup grave, un claquement court, une légère réverbération et une petite variation de hauteur à chaque tir.
@@ -167,5 +169,6 @@ python3 -m http.server 8000
 
 - Robot : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
 - Soldat et X-Bot : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js.
+- Musique de fond : « Celestial Butterfly », téléchargée sur [Pixabay](https://pixabay.com/music/) (licence de contenu Pixabay, utilisation libre dans un jeu).
 - Moteur : [three.js](https://threejs.org/) r128 (MIT), copié dans `launcher/vendor/` pour l'appli Windows. Réseau : [PeerJS](https://peerjs.com/) (MIT).
 - Fenêtre de l'appli : [go-webview2](https://github.com/jchv/go-webview2) (MIT) et [go-winloader](https://github.com/jchv/go-winloader) (ISC) de John Chadwick, [golang.org/x/sys](https://pkg.go.dev/golang.org/x/sys) (BSD), copiés dans `launcher/third_party/`.
