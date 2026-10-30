@@ -104,6 +104,23 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #netStatus.ok{color:var(--shield)}
 #netStatus.err{color:var(--hostile)}
 #roomBox{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+#hud.emoting #xh,#hud.emoting #hm{display:none}
+#emoteWheel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:330px;padding:16px 18px 12px;background:rgba(14,18,22,.82);border:1px solid rgba(255,176,32,.45);backdrop-filter:blur(4px)}
+.ew-title{margin:0 0 10px;font:700 15px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:var(--amber);text-align:center}
+.ew-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ew-grid div{display:flex;align-items:center;gap:8px;padding:9px 10px;background:rgba(244,239,230,.06);border:1px solid var(--ink-faint);font:600 15px/1.1 var(--f-display);letter-spacing:.04em;color:var(--ink)}
+.ew-hint{margin:10px 0 0;font-size:12.5px;color:var(--ink-dim);text-align:center}
+.lobbies{display:grid;gap:8px;border-top:1px solid var(--ink-faint);padding-top:12px}
+.lobhead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px 16px}
+.lobhead h3{margin:0;font:700 15px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink)}
+#lobList{display:grid;gap:6px}
+#lobList .empty{font-size:13.5px;color:var(--ink-dim)}
+.lob{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto auto auto;gap:6px 14px;align-items:center;padding:8px 10px;background:rgba(244,239,230,.04);border:1px solid var(--ink-faint)}
+.lob b{font:700 16px/1.1 var(--f-display);letter-spacing:.04em;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.lob span{font-size:13.5px;color:var(--ink-dim)}
+.lob code{font:700 15px/1 var(--f-display);letter-spacing:.14em;color:var(--amber)}
+.lob .full{color:var(--hostile)}
+@media (max-width:560px){.lob{grid-template-columns:minmax(0,1fr) auto auto}.lob span.map{display:none}}
 #roomCode{font:800 34px/1 var(--f-display);letter-spacing:.16em;color:var(--amber)}
 #roomLink{font:500 13px/1.3 var(--f-body);color:var(--ink-dim);user-select:text;-webkit-user-select:text;word-break:break-all}
 .settings .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:16px 26px;align-items:start}
@@ -296,6 +313,14 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="death" hidden><b data-i18n="state.dead">ÉLIMINÉ</b><span id="deathBy"></span></div>
   <div id="board" hidden><h3 id="boardTitle">PARTIE</h3><table><thead><tr><th data-i18n="board.player">Joueur</th><th data-i18n="hud.kills">Élim.</th><th data-i18n="board.deaths">Morts</th></tr></thead><tbody id="boardBody"></tbody></table></div>
   <div id="toast"></div>
+  <div id="emoteWheel" hidden>
+    <p class="ew-title" data-i18n="em.title">Emotes</p>
+    <div class="ew-grid">
+      <div><kbd>1</kbd><span data-i18n="em.wave">Salut</span></div><div><kbd>2</kbd><span data-i18n="em.dance">Danse</span></div><div><kbd>3</kbd><span data-i18n="em.thumbs">Pouce levé</span></div>
+      <div><kbd>4</kbd><span data-i18n="em.clap">Bravo</span></div><div><kbd>5</kbd><span data-i18n="em.sit">Assis</span></div><div><kbd>6</kbd><span data-i18n="em.flex">Muscles</span></div>
+    </div>
+    <p class="ew-hint" data-i18n-html="em.hint">Choisis avec <kbd>1</kbd>–<kbd>6</kbd>. Bouger ou tirer arrête l’emote.</p>
+  </div>
 </div>
 
 <section id="menu">
@@ -337,8 +362,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
           <label for="code"><span data-i18n="net.code">Code</span><input id="code" maxlength="5" autocomplete="off" spellcheck="false" placeholder="ABCDE"></label>
           <button class="btn2" id="joinBtn" type="button"><span data-i18n="net.join">Rejoindre</span></button>
         </div>
-        <div id="roomBox" hidden><span id="roomCode"></span><button class="btn2" id="copyBtn" type="button"><span data-i18n="net.copy">Copier le lien</span></button><span id="roomLink"></span></div>
+        <div id="roomBox" hidden><span id="roomCode"></span><button class="btn2" id="copyBtn" type="button"><span data-i18n="net.copy">Copier le lien</span></button><span id="roomLink"></span><button class="btn3" id="leaveBtn" type="button" data-i18n="net.leave">Quitter la partie</button></div>
         <div id="netStatus">Partie en pair-à-pair : celui qui crée la partie l'héberge, les autres entrent son code.</div>
+        <div class="lobbies">
+          <div class="lobhead"><h3 data-i18n="lob.title">Parties en cours</h3><label class="check"><input type="checkbox" id="lobPublic"> <span data-i18n="lob.public">Afficher ma partie dans la liste</span></label></div>
+          <div id="lobList" aria-live="polite"></div>
+        </div>
       </div>
     </div>
 
@@ -369,11 +398,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
         <label class="field"><span class="lab" data-i18n="set.quality">Graphismes</span><select id="quality"><option value="auto" data-i18n="q.auto">Auto (adapte la résolution)</option><option value="high" data-i18n="q.high">Élevés</option><option value="low" data-i18n="q.low">Rapides (sans ombres)</option></select></label>
-        <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option><option value="crimson" data-i18n="skin.crimson">Rouge sang</option><option value="jungle" data-i18n="skin.jungle">Jungle</option><option value="chrome" data-i18n="skin.chrome">Chrome</option><option value="lava" data-i18n="skin.lava">Lave</option><option value="galaxy" data-i18n="skin.galaxy">Galaxie</option><option value="tiger" data-i18n="skin.tiger">Tigre</option><option value="candy" data-i18n="skin.candy">Bonbon</option><option value="sakura" data-i18n="skin.sakura">Sakura</option><option value="ocean" data-i18n="skin.ocean">Océan</option><option value="toxic" data-i18n="skin.toxic">Toxique</option><option value="royal" data-i18n="skin.royal">Royal</option><option value="urban" data-i18n="skin.urban">Camo urbain</option><option value="sunset" data-i18n="skin.sunset">Coucher de soleil</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option><option value="crimson" data-i18n="skin.crimson">Rouge sang</option><option value="jungle" data-i18n="skin.jungle">Jungle</option><option value="chrome" data-i18n="skin.chrome">Chrome</option><option value="lava" data-i18n="skin.lava">Lave</option><option value="galaxy" data-i18n="skin.galaxy">Galaxie</option><option value="tiger" data-i18n="skin.tiger">Tigre</option><option value="candy" data-i18n="skin.candy">Bonbon</option><option value="sakura" data-i18n="skin.sakura">Sakura</option><option value="ocean" data-i18n="skin.ocean">Océan</option><option value="toxic" data-i18n="skin.toxic">Toxique</option><option value="royal" data-i18n="skin.royal">Royal</option><option value="urban" data-i18n="skin.urban">Camo urbain</option><option value="sunset" data-i18n="skin.sunset">Coucher de soleil</option><option value="plasma" data-i18n="skin.plasma">Plasma (animé)</option><option value="rainbow" data-i18n="skin.rainbow">Arc-en-ciel (animé)</option><option value="pulse" data-i18n="skin.pulse">Pulsation (animé)</option><option value="circuit" data-i18n="skin.circuit">Circuit (animé)</option><option value="flames" data-i18n="skin.flames">Flammes (animé)</option></select></label>
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
-        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option></select></label>
+        <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
       </div>
@@ -699,6 +729,34 @@ const I18N = {
     'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'skin.crimson': 'Okubomvu klebhu', 'skin.jungle': 'Ihlathi', 'skin.chrome': 'I-chrome', 'skin.lava': 'I-lava', 'skin.galaxy': 'Umthala', 'skin.tiger': 'Ingwe', 'skin.candy': 'Uswidi', 'map.label': 'Imephu', 'map.canyon': 'Umhosha', 'map.refinery': 'Ifekthri kawoyela', 'map.hostOnly': 'Umsingathi kuphela okhetha imephu.', 'char.title': 'Umlingiswa', 'set.char': 'Umlingiswa', 'char.soldier': 'Isosha', 'char.xbot': 'X-Bot', 'char.robot': 'Irobhothi', 'set.tint': 'Umbala', 'tint.auto': 'Okuzenzakalelayo (umbala womdlalo)', 'tint.amber': 'Ompofu', 'tint.cyan': 'Okwesibhakabhaka okukhanyayo', 'tint.red': 'Okubomvu', 'tint.green': 'Okuluhlaza', 'tint.violet': 'Okunsomi', 'tint.pink': 'Okubomvana', 'tint.white': 'Okumhlophe', 'tint.blue': 'Okwesibhakabhaka', 'tint.black': 'Okumnyama', 'char.hint': 'Lona ngumlingiswa abanye abadlali abambona ku-inthanethi.', 'act.stim': 'I-stim', 'act.dome': 'Isihlangu sedome', 'act.portal': 'Isango', 'ab.stim': 'I-STIM', 'ab.dome': 'IDOME', 'ab.portal': 'ISANGO', 'ab.portalA': 'umnyango ubekiwe, suka bese ucindezela futhi', 'ab.portalOpen': 'livuliwe imizuzwana engama-40', 'ab.tooClose': 'Suka okungenani amamitha ayi-6 ukuze ubeke indawo yokuphuma.', 'set.knife': 'Ummese', 'knife.combat': 'Ummese wempi', 'knife.karambit': 'I-karambit', 'knife.machete': 'Ipanga', 'knife.dagger': 'Inkemba encane', 'knife.butterfly': 'Uvemvane', 'knife.katana': 'I-katana', 'act.inspect': 'Hlola', 'map.forest': 'Ihlathi', 'map.castle': 'Inqaba', 'tint.orange': 'Owolintshi', 'tint.yellow': 'Ophuzi', 'tint.mint': 'Oluhlaza okukhanyayo', 'tint.crimson': 'Okubomvu okujulile', 'tint.gold': 'Igolide', 'tint.navy': 'Okwesibhakabhaka okumnyama', 'tint.lime': 'Okuluhlaza okukhazimulayo', 'tint.silver': 'Isiliva', 'skin.sakura': 'I-sakura', 'skin.ocean': 'Ulwandle', 'skin.toxic': 'Ubuthi', 'skin.royal': 'Kobukhosi', 'skin.urban': 'Ukufihla kwasedolobheni', 'skin.sunset': 'Ukushona kwelanga', 'net.kicked': 'Umsingathi ukukhiphile emdlalweni.', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
   }
 };
+// textes ajoutés avec la liste des parties, les emotes, Morgane et les skins animés
+const I18N_ADD = {
+  fr: { 'lob.title': 'Parties en cours', 'lob.public': 'Afficher ma partie dans la liste', 'lob.none': 'Aucune partie publique pour l’instant. Crée la tienne !', 'lob.loading': 'Recherche des parties…', 'lob.down': 'Liste des parties indisponible sur ce réseau. Le code de partie marche toujours.', 'lob.off': 'Liste des parties indisponible dans ce navigateur.',
+    'net.leave': 'Quitter la partie', 'net.left': 'Tu as quitté la partie.', 'knife.morgane': 'Morgane (hache double)', 'set.kskin': 'Skin du katana',
+    'ks.follow': 'Comme les armes', 'ks.tamahagane': 'Tamahagane', 'ks.damascus': 'Damas', 'ks.blood': 'Lame de sang', 'ks.dragon': 'Dragon (animé)', 'ks.energy': 'Énergie (animé)', 'ks.sakura': 'Sakura', 'ks.obsidian': 'Obsidienne', 'ks.thunder': 'Éclair (animé)', 'ks.void': 'Néant (animé)',
+    'skin.plasma': 'Plasma (animé)', 'skin.rainbow': 'Arc-en-ciel (animé)', 'skin.pulse': 'Pulsation (animé)', 'skin.circuit': 'Circuit (animé)', 'skin.flames': 'Flammes (animé)',
+    'em.title': 'Emotes', 'em.wave': 'Salut', 'em.dance': 'Danse', 'em.thumbs': 'Pouce levé', 'em.clap': 'Bravo', 'em.sit': 'Assis', 'em.flex': 'Muscles', 'em.hint': 'Choisis avec <kbd>1</kbd>–<kbd>6</kbd>. Bouger ou tirer arrête l’emote.', 'em.loading': 'Modèle du personnage encore en chargement.',
+    'mg.feed': 'tenue Morgane !', 'mg.you': 'Morgane t’a eu : te voilà en tenue Morgane jusqu’à ta prochaine mort.', 'act.emote': 'Emotes' },
+  en: { 'lob.title': 'Open matches', 'lob.public': 'List my match publicly', 'lob.none': 'No public matches right now. Host one!', 'lob.loading': 'Looking for matches…', 'lob.down': 'Match list unavailable on this network. Match codes still work.', 'lob.off': 'Match list unavailable in this browser.',
+    'net.leave': 'Leave match', 'net.left': 'You left the match.', 'knife.morgane': 'Morgane (double axe)', 'set.kskin': 'Katana skin',
+    'ks.follow': 'Same as weapons', 'ks.tamahagane': 'Tamahagane', 'ks.damascus': 'Damascus', 'ks.blood': 'Blood blade', 'ks.dragon': 'Dragon (animated)', 'ks.energy': 'Energy (animated)', 'ks.sakura': 'Sakura', 'ks.obsidian': 'Obsidian', 'ks.thunder': 'Thunder (animated)', 'ks.void': 'Void (animated)',
+    'skin.plasma': 'Plasma (animated)', 'skin.rainbow': 'Rainbow (animated)', 'skin.pulse': 'Pulse (animated)', 'skin.circuit': 'Circuit (animated)', 'skin.flames': 'Flames (animated)',
+    'em.title': 'Emotes', 'em.wave': 'Wave', 'em.dance': 'Dance', 'em.thumbs': 'Thumbs up', 'em.clap': 'Clap', 'em.sit': 'Sit', 'em.flex': 'Flex', 'em.hint': 'Pick with <kbd>1</kbd>–<kbd>6</kbd>. Moving or shooting stops the emote.', 'em.loading': 'Character model still loading.',
+    'mg.feed': 'Morgane outfit!', 'mg.you': 'Morgane got you: you’re wearing the Morgane outfit until your next death.', 'act.emote': 'Emotes' },
+  af: { 'lob.title': 'Oop wedstryde', 'lob.public': 'Wys my wedstryd in die lys', 'lob.none': 'Geen openbare wedstryde nie. Begin jou eie!', 'lob.loading': 'Soek wedstryde…', 'lob.down': 'Wedstrydlys nie beskikbaar op hierdie netwerk nie. Wedstrydkodes werk steeds.', 'lob.off': 'Wedstrydlys nie beskikbaar in hierdie blaaier nie.',
+    'net.leave': 'Verlaat wedstryd', 'net.left': 'Jy het die wedstryd verlaat.', 'knife.morgane': 'Morgane (dubbele byl)', 'set.kskin': 'Katana-vel',
+    'ks.follow': 'Soos die wapens', 'ks.tamahagane': 'Tamahagane', 'ks.damascus': 'Damaskus', 'ks.blood': 'Bloedlem', 'ks.dragon': 'Draak (geanimeer)', 'ks.energy': 'Energie (geanimeer)', 'ks.sakura': 'Sakura', 'ks.obsidian': 'Obsidiaan', 'ks.thunder': 'Weerlig (geanimeer)', 'ks.void': 'Leegte (geanimeer)',
+    'skin.plasma': 'Plasma (geanimeer)', 'skin.rainbow': 'Reënboog (geanimeer)', 'skin.pulse': 'Polsslag (geanimeer)', 'skin.circuit': 'Stroombaan (geanimeer)', 'skin.flames': 'Vlamme (geanimeer)',
+    'em.title': 'Emotes', 'em.wave': 'Waai', 'em.dance': 'Dans', 'em.thumbs': 'Duim op', 'em.clap': 'Klap', 'em.sit': 'Sit', 'em.flex': 'Spiere', 'em.hint': 'Kies met <kbd>1</kbd>–<kbd>6</kbd>. Beweeg of skiet stop die emote.', 'em.loading': 'Karaktermodel laai nog.',
+    'mg.feed': 'Morgane-uitrusting!', 'mg.you': 'Morgane het jou gekry: jy dra die Morgane-uitrusting tot jy weer doodgaan.', 'act.emote': 'Emotes' },
+  zu: { 'lob.title': 'Imidlalo evulekile', 'lob.public': 'Bonisa umdlalo wami ohlwini', 'lob.none': 'Awukho umdlalo osobala okwamanje. Qala owakho!', 'lob.loading': 'Kufunwa imidlalo…', 'lob.down': 'Uhlu lwemidlalo alutholakali kule nethiwekhi. Amakhodi omdlalo asasebenza.', 'lob.off': 'Uhlu lwemidlalo alutholakali kulesi siphequluli.',
+    'net.leave': 'Phuma emdlalweni', 'net.left': 'Uphumile emdlalweni.', 'knife.morgane': 'I-Morgane (izembe elikabili)', 'set.kskin': 'Isikhumba se-katana',
+    'ks.follow': 'Njengezikhali', 'ks.tamahagane': 'I-Tamahagane', 'ks.damascus': 'I-Damascus', 'ks.blood': 'Insingo yegazi', 'ks.dragon': 'Udrako (onyakazayo)', 'ks.energy': 'Amandla (anyakazayo)', 'ks.sakura': 'I-sakura', 'ks.obsidian': 'I-obsidian', 'ks.thunder': 'Umbani (onyakazayo)', 'ks.void': 'Ize (elinyakazayo)',
+    'skin.plasma': 'I-plasma (enyakazayo)', 'skin.rainbow': 'Uthingo lwenkosazana (olunyakazayo)', 'skin.pulse': 'Ukushaya (okunyakazayo)', 'skin.circuit': 'Isekethe (enyakazayo)', 'skin.flames': 'Amalangabi (anyakazayo)',
+    'em.title': 'Ama-emote', 'em.wave': 'Valelisa', 'em.dance': 'Gida', 'em.thumbs': 'Isithupha phezulu', 'em.clap': 'Shaya izandla', 'em.sit': 'Hlala', 'em.flex': 'Imisipha', 'em.hint': 'Khetha ngo-<kbd>1</kbd>–<kbd>6</kbd>. Ukunyakaza noma ukudubula kumisa i-emote.', 'em.loading': 'Imodeli yomlingiswa isalayisha.',
+    'mg.feed': 'izingubo zika-Morgane!', 'mg.you': 'U-Morgane ukubambile: ugqoke izingubo zika-Morgane uze ufe futhi.', 'act.emote': 'Ama-emote' }
+};
+for (const l in I18N_ADD) Object.assign(I18N[l], I18N_ADD[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1250,7 +1308,7 @@ const P = {
   climbing: false, climbT: 0, climbAvail: true, climbN: null, mantle: null,
   doubleJump: false, padCd: 0, jumpBuf: 0, tapPulse: false, tapBudget: TAP_BUDGET, tapAcc: 0,
   landT: -9, landSpeed: 0, landDir: { x: 0, z: -1 }, bhop: 0, wallJumps: 0, wjCd: 0, airT: 0, eye: 1.62, dip: 0, roll: 0, stepDist: 0, bob: 0,
-  hp: MAX_HP, sh: MAX_SH, dead: false, respawnT: 0, hurtT: 9, lastHit: 0
+  hp: MAX_HP, sh: MAX_SH, dead: false, respawnT: 0, hurtT: 9, lastHit: 0, sgT: 0, mgT: 0
 };
 let simTime = 0, lastCrouchT = -9, crouchEdge = false;
 function spawnPlayer(random) {
@@ -1267,7 +1325,7 @@ function spawnPlayer(random) {
   P.pos.set(s[0], s[1], s[2]); P.prev.copy(P.pos); P.vel.set(0, 0, 0);
   P.yaw = s[3]; P.pitch = -0.03; P.grounded = true; P.sliding = false; P.climbing = false; P.mantle = null;
   P.crouch = false; P.height = STAND_H; P.doubleJump = false; P.climbAvail = true;
-  P.hp = MAX_HP; P.sh = MAX_SH; P.dead = false;
+  P.hp = MAX_HP; P.sh = MAX_SH; P.dead = false; P.sgT = 0;
   for (let i = 0; i < WEAPONS.length; i++) WS.ammo[i] = WEAPONS[i].mag;
   WS.reloading = false;
 }
@@ -1402,7 +1460,7 @@ function superglide(wx, wz, hasWish) {
   const sp = Math.min(23, Math.max(SG_SPEED, m.inSpeed + 4.5));
   P.vel.set(d.x * sp, 4.6, d.z * sp);
   P.grounded = false; P.crouch = true; P.climbAvail = false;
-  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide();
+  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide(); P.sgT = 0.75;
 }
 function mantleJump(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
@@ -1842,7 +1900,12 @@ const sfx = {
   stim: snd(t => { nz(t, { dur: .12, f: 3000, q: 2, gain: .2 }); tn(t + .05, { f: 300, f2: 900, dur: .35, type: 'sawtooth', gain: .06 }); tn(t + .1, { f: 1200, f2: 2400, dur: .2, gain: .06 }); }),
   dome: snd(t => { tn(t, { f: 180, f2: 520, dur: .6, type: 'triangle', gain: .14 }); nz(t, { dur: .7, f: 1200, q: 1, gain: .12, f2: 4000 }); }),
   portal: snd(t => { tn(t, { f: 900, f2: 220, dur: .45, type: 'sine', gain: .14 }); nz(t, { dur: .4, f: 600, q: 3, gain: .12, f2: 2600 }); }),
-  join: snd(t => { tn(t, { f: 660, dur: .1, gain: .1 }); tn(t + .1, { f: 990, dur: .14, gain: .1 }); })
+  join: snd(t => { tn(t, { f: 660, dur: .1, gain: .1 }); tn(t + .1, { f: 990, dur: .14, gain: .1 }); }),
+  katana: snd(t => { const f = 0.9 + Math.random() * 0.2; nz(t + .04, { dur: .22, f: 900 * f, q: 1.1, gain: .26, f2: 5400 * f }); tn(t + .1, { f: 3150 * f, dur: .32, gain: .018 }); tn(t + .1, { f: 4720 * f, dur: .22, gain: .01 }); }),
+  axe: snd(t => { nz(t + .12, { dur: .3, f: 300, q: .7, gain: .34, f2: 1800 }); tn(t + .2, { f: 120, f2: 60, dur: .2, type: 'triangle', gain: .2 }); }),
+  unsheathe: snd((t, heavy) => { if (heavy) { nz(t, { dur: .35, f: 500, q: 1, gain: .2, f2: 2600 }); tn(t + .05, { f: 220, f2: 520, dur: .3, type: 'triangle', gain: .06 }); return; }
+    nz(t, { dur: .32, f: 2600, q: 6, gain: .14, f2: 6800 }); tn(t + .26, { f: 2960, dur: .7, gain: .03 }); tn(t + .26, { f: 4410, dur: .5, gain: .015 }); }),
+  outfit: snd(t => { [1320, 1660, 1980, 2640].forEach((f, i) => tn(t + i * .07, { f, dur: .18, gain: .06 })); nz(t, { dur: .4, f: 6000, q: 2, gain: .05 }); })
 };
 
 /* ================= Modèles 3D ================= */
@@ -1851,7 +1914,7 @@ const MODELS = { robot: null, soldier: null, chars: {} };
 const CHARS = {
   soldier: { file: 'Soldier.glb', h: 1.8, yaw: 0, anim: { idle: 'Idle', walk: 'Walk', run: 'Run' }, hand: /RightHand$/ },
   xbot: { file: 'Xbot.glb', h: 1.8, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i },
-  robot: { file: 'RobotExpressive.glb', h: 1.85, yaw: Math.PI, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2\.R$/, tintMat: /^Main$/ }
+  robot: { file: 'RobotExpressive.glb', h: 1.85, yaw: Math.PI, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2R$/, tintMat: /^Main$/ }
 };
 const TINTS = { amber: 0xffb020, cyan: 0x66d4e2, red: 0xff5a44, green: 0x9be36a, violet: 0xc78cff, pink: 0xff8fc7, white: 0xf4efe6, blue: 0x5f8cff, black: 0x2a2a2e,
   orange: 0xff7a1a, yellow: 0xffe14d, mint: 0x7ef0c8, crimson: 0x9e1b2c, gold: 0xd4a62a, navy: 0x1f3a6e, lime: 0xb6ff3a, silver: 0xb8c0c8 };
@@ -1964,7 +2027,8 @@ function placeDummies(defs) {
 function attachRobot(d) {
   if (!MODELS.robot) return;
   g_remove(d.g, d.vis.obj);
-  d.vis = cloneModel(MODELS.robot);
+  if (d.vis.outfit) { d.g.remove(d.vis.outfit.head, d.vis.outfit.hip); }
+  d.vis = cloneModel(MODELS.robot); d.vis.ch = 'robot';
   d.g.add(d.vis.obj);
   playAnim(d.vis, d.alive ? 'Idle' : 'Death', 0, !d.alive);
 }
@@ -1977,6 +2041,8 @@ function updateDummy(d, dt) {
   if (d.alive && !d.g.visible) d.g.visible = true;
   const g = d.g, vis = d.vis;
   if (vis.mixer) vis.mixer.update(dt);
+  if (d.mgT > 0) d.mgT -= dt;
+  if (vis.mixer) { setOutfit(vis, g, d.mgT > 0); updateOutfit(vis, g, 2.0 / CHARS.robot.h); }
   if (!d.alive) {
     d.dieT += dt;
     if (!vis.mixer) {
@@ -2032,7 +2098,7 @@ const WEAPONS = [
   { name: 'PISTOLET HX', short: 'PISTOLET', auto: false, rpm: 420, mag: 14, reload: 1.2, dmg: 18, head: 1.6, legs: 0.85, pellets: 1, hip: 0.8, ads: 0.12, bloom: 0.25, rv: 0.9, rh: 0.15, zoom: 0.85, kick: 0.03, kickRot: 0.12, move: 0.7 },
   { name: 'COUTEAU', short: 'COUTEAU', melee: true, auto: true, rpm: 115, mag: 1, reload: 0, dmg: 50, head: 1.5, legs: 1, pellets: 1, hip: 0, ads: 0, bloom: 0, rv: 0, rh: 0, zoom: 1, kick: 0, kickRot: 0, move: 0, range: 2.7 }
 ];
-const WS = { cur: 0, ammo: WEAPONS.map(w => w.mag), swingT: 0, swingDur: 0.32, inspT: 0, cool: 0, reloading: false, reloadT: 0, reloadDur: 1, swapT: 0, ads: 0, kick: 0, kickRot: 0, flashT: 0, trigger: false, swayX: 0, swayY: 0, bloom: 0, sprintK: 0, slideK: 0 };
+const WS = { cur: 0, ammo: WEAPONS.map(w => w.mag), swingT: 0, swingDur: 0.32, swingKind: 0, combo: 0, flourT: 0, inspT: 0, cool: 0, reloading: false, reloadT: 0, reloadDur: 1, swapT: 0, ads: 0, kick: 0, kickRot: 0, flashT: 0, trigger: false, swayX: 0, swayY: 0, bloom: 0, sprintK: 0, slideK: 0 };
 
 function buildViewmodel(kind, knifeType) {
   const g = new THREE.Group();
@@ -2193,6 +2259,19 @@ function buildViewmodel(kind, knifeType) {
       const tsuba = add(C(.042, .008, 24), blk, 0, 0, -.014, Math.PI / 2);
       add(B(.026, .03, .24), blk, 0, 0, .11); wrap(.0, .23, .014, 10);
       add(B(.028, .032, .014), amb, 0, 0, .235);
+    } else if (kt === 'morgane') {
+      // Morgane : long manche, deux lames en croissant opposées, pointe au sommet, runes lumineuses
+      add(C(.013, .74, 12), tan, 0, 0, -.2, Math.PI / 2);
+      for (let i = 0; i < 7; i++) add(B(.031, .031, .016), i % 2 ? blk : amb, 0, 0, .1 - i * .028, 0, 0, Math.PI / 4);
+      add(new THREE.SphereGeometry(.022, 14, 10), mid, 0, 0, .18);
+      add(B(.034, .07, .1), mid, 0, 0, -.46);
+      add(C(.0, .07, 10, .016), steel, 0, 0, -.545, -Math.PI / 2);
+      for (const sg of [1, -1]) {
+        const pts = [[.39, .02], [.35, .07], [.3, .13], [.29, .19], [.33, .205], [.38, .212], [.44, .214], [.5, .21], [.56, .2], [.58, .15], [.54, .08], [.5, .02]].map(([u, v]) => [u, v * sg]);
+        blade(pts, .008, steel, -.02);
+        add(B(.012, .006, .05), amb, 0, sg * .12, -.46); add(B(.012, .03, .006), amb, 0, sg * .1, -.46);
+      }
+      add(B(.01, .19, .01), amb, 0, 0, -.42);
     } else {
       // couteau de combat : pointe en clip, gorge, dos cranté, garde, manche strié, pommeau
       blade([[0, -.013], [.15, -.016], [.2, -.006], [.218, .006], [.17, .015], [.12, .017], [0, .017]], .006);
@@ -2227,7 +2306,8 @@ function buildViewmodel(kind, knifeType) {
 S.knife = store.get('knife', 'combat');
 const KNIVES = {
   combat: { dmg: 50, rpm: 115, range: 2.7 }, karambit: { dmg: 42, rpm: 145, range: 2.4 }, katana: { dmg: 70, rpm: 80, range: 3.6 },
-  machete: { dmg: 65, rpm: 85, range: 3.3 }, dagger: { dmg: 55, rpm: 110, range: 2.6 }, butterfly: { dmg: 46, rpm: 135, range: 2.5 }
+  machete: { dmg: 65, rpm: 85, range: 3.3 }, dagger: { dmg: 55, rpm: 110, range: 2.6 }, butterfly: { dmg: 46, rpm: 135, range: 2.5 },
+  morgane: { dmg: 85, rpm: 62, range: 3.4 }
 };
 function applyKnifeStats() { Object.assign(WEAPONS[5], KNIVES[S.knife] || KNIVES.combat); }
 applyKnifeStats();
@@ -2315,17 +2395,133 @@ const SKINS = {
   urban: { dark: 0xffffff, mid: 0x5c6066, blk: 0x1f2124, amb: [0xe6e8ea, 0x000000], tan: 0x44484d, teal: 0xffffff, steel: 0xc0c4c8, map: urbanTex, mapRoles: ['dark', 'mid', 'teal'] },
   sunset: { dark: 0xffffff, mid: 0x3a1f3a, blk: 0x1a0e1a, amb: [0xffd27a, 0x5a2000], tan: 0xff7a4a, teal: 0xffffff, steel: 0xffe0c8, map: sunsetTex }
 };
-function applySkin(id) {
-  const sk = SKINS[id] || SKINS.std;
-  for (const vm of VM) for (const role in vm.mats) {
-    const m = vm.mats[role], v = sk[role];
+// skins animés : textures qui défilent (plasma, circuit, flammes), teinte qui tourne (arc-en-ciel), lueur qui pulse
+const plasmaTex = canvasTex((g, s) => {
+  g.fillStyle = '#12082a'; g.fillRect(0, 0, s, s);
+  let seed = 31; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 18; i++) for (const dx of [-s, 0, s]) for (const dy of [-s, 0, s]) {
+    const x = rnd() * s, y = rnd() * s, r = 18 + rnd() * 34, c = rnd() < 0.5 ? '255,70,220' : '60,220,255';
+    seed -= 2;
+    const gr = g.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, r); gr.addColorStop(0, `rgba(${c},.75)`); gr.addColorStop(1, `rgba(${c},0)`);
+    g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  }
+}, 128);
+const circuitTex = canvasTex((g, s) => {
+  g.fillStyle = '#060c10'; g.fillRect(0, 0, s, s);
+  let seed = 41; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  g.strokeStyle = '#40f0ff'; g.fillStyle = '#40f0ff'; g.lineWidth = 2;
+  for (let i = 0; i < 22; i++) {
+    let x = Math.round(rnd() * 16) * 8, y = Math.round(rnd() * 16) * 8;
+    g.beginPath(); g.moveTo(x, y);
+    for (let k = 0; k < 3; k++) { if (rnd() < 0.5) x += (rnd() < 0.5 ? -1 : 1) * 8 * (1 + Math.floor(rnd() * 4)); else y += 8 * (1 + Math.floor(rnd() * 4)); g.lineTo(x, y); }
+    g.stroke(); g.beginPath(); g.arc(x, y, 3, 0, Math.PI * 2); g.fill();
+  }
+}, 128);
+const flameTex = canvasTex((g, s) => {
+  g.fillStyle = '#000'; g.fillRect(0, 0, s, s);
+  let seed = 51; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 16; i++) {
+    const x = rnd() * s, w = 10 + rnd() * 16, h = s * (0.45 + rnd() * 0.5);
+    for (const dx of [-s, 0, s]) {
+      const gr = g.createLinearGradient(0, s, 0, s - h); gr.addColorStop(0, '#ff3a00'); gr.addColorStop(0.5, '#ffb000'); gr.addColorStop(1, 'rgba(255,240,150,0)');
+      g.fillStyle = gr; g.beginPath(); g.moveTo(x + dx - w, s); g.quadraticCurveTo(x + dx - w * 0.2, s - h * 0.6, x + dx + w * 0.3, s - h);
+      g.quadraticCurveTo(x + dx + w * 0.4, s - h * 0.4, x + dx + w, s); g.fill();
+    }
+  }
+  // repli vertical pour que le défilement boucle sans couture
+  g.globalCompositeOperation = 'lighter'; g.globalAlpha = 0.5; g.drawImage(g.canvas, 0, -s); g.drawImage(g.canvas, 0, s);
+}, 128);
+Object.assign(SKINS, {
+  plasma: { dark: 0xffffff, mid: 0x1a1030, blk: 0x0a0614, amb: [0xff4fd8, 0x8a1070], tan: 0xffffff, teal: 0xffffff, steel: [0xe0c8ff, 0x301050], map: plasmaTex, emap: plasmaTex, emapCol: 0x6a4a8a, mapRoles: ['dark', 'teal', 'tan'], anim: 'scroll', spd: [0.07, 0.04] },
+  rainbow: { dark: 0xff4040, mid: 0x40ff40, blk: 0x15151a, amb: [0xffffff, 0x303030], tan: 0x4040ff, teal: 0xffff40, steel: 0xffffff, anim: 'hue' },
+  pulse: { dark: 0x1a0a0c, mid: 0x2a1014, blk: 0x0a0405, amb: [0xff2a3a, 0xff0018], tan: [0xff2a3a, 0xb00018], teal: [0x3a1018, 0x500008], steel: [0xffc0c8, 0x600010], anim: 'pulse', pulseRoles: ['amb', 'tan', 'teal', 'steel'] },
+  circuit: { dark: 0xffffff, mid: 0x0e1a20, blk: 0x050a0d, amb: [0x30f0ff, 0x00a0c0], tan: 0xffffff, teal: 0xffffff, steel: [0x9feaff, 0x104050], map: circuitTex, emap: circuitTex, emapCol: 0xffffff, mapRoles: ['dark', 'teal', 'tan'], anim: 'scroll', spd: [0, 0.22] },
+  flames: { dark: 0xffffff, mid: 0x1a0e0a, blk: 0x0a0605, amb: [0xffb020, 0xff5a00], tan: 0xffffff, teal: 0xffffff, steel: [0xffd0a0, 0x401000], map: flameTex, emap: flameTex, emapCol: 0xffffff, mapRoles: ['dark', 'teal', 'tan'], anim: 'scroll', spd: [0, -0.45] }
+});
+/* ---------- skins du katana (prioritaires sur le skin d'arme quand le katana est équipé) ---------- */
+const bladeTex = (draw, rep) => { const tx = canvasTex(draw, 128); tx.repeat.set(rep, rep); return tx; };
+const kDamascusTex = bladeTex((g, s) => {
+  g.fillStyle = '#9aa2aa'; g.fillRect(0, 0, s, s);
+  for (let y = -10; y < s + 10; y += 5) {
+    g.strokeStyle = (y / 5) % 2 ? 'rgba(40,46,52,.75)' : 'rgba(235,240,245,.8)'; g.lineWidth = 2.2; g.beginPath();
+    for (let x = 0; x <= s; x += 4) { const yy = y + Math.sin(x / 11 + y * 0.3) * 4 + Math.sin(x / 5.3) * 1.2; x ? g.lineTo(x, yy) : g.moveTo(x, yy); }
+    g.stroke();
+  }
+}, 6);
+const kDragonTex = bladeTex((g, s) => {
+  g.fillStyle = '#000'; g.fillRect(0, 0, s, s);
+  let seed = 61; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  g.lineCap = 'round';
+  for (let i = 0; i < 14; i++) {
+    let x = rnd() * s, y = rnd() * s; g.beginPath(); g.moveTo(x, y);
+    for (let k = 0; k < 6; k++) { x += (rnd() - 0.5) * 26; y += (rnd() - 0.3) * 22; g.lineTo(x, y); }
+    g.strokeStyle = 'rgba(255,90,0,.9)'; g.lineWidth = 4; g.stroke(); g.strokeStyle = 'rgba(255,220,120,.9)'; g.lineWidth = 1.4; g.stroke();
+  }
+}, 5);
+const kSakuraTex = bladeTex((g, s) => {
+  g.fillStyle = '#f7e4ea'; g.fillRect(0, 0, s, s);
+  let seed = 71; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 18; i++) {
+    const x = rnd() * s, y = rnd() * s, r = 3 + rnd() * 4;
+    g.fillStyle = rnd() < 0.5 ? '#ff8fb1' : '#ffb8cc';
+    for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2; g.beginPath(); g.ellipse(x + Math.cos(a) * r, y + Math.sin(a) * r, r * 0.8, r * 0.45, a, 0, Math.PI * 2); g.fill(); }
+  }
+}, 6);
+const kVoidTex = bladeTex((g, s) => {
+  const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#0a0420'); gr.addColorStop(0.5, '#3a1470'); gr.addColorStop(1, '#081438');
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  let seed = 81; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 70; i++) { g.fillStyle = `rgba(255,255,255,${0.4 + rnd() * 0.6})`; g.beginPath(); g.arc(rnd() * s, rnd() * s, rnd() < 0.12 ? 1.5 : 0.6, 0, Math.PI * 2); g.fill(); }
+}, 4);
+const KSKINS = {
+  follow: null,
+  tamahagane: { steel: 0xe4eaef, mid: 0xffffff, blk: 0x15151a, amb: 0xc9a040, trail: 0xd8ecff },
+  damascus: { steel: 0xffffff, mid: 0xdfe4e8, blk: 0x2a1a10, amb: 0x8a8f96, map: kDamascusTex, mapRoles: ['steel'], trail: 0xc8d2dc },
+  blood: { steel: [0x8a0a12, 0x3a0004], mid: [0xff3040, 0x800010], blk: 0x120406, amb: 0x5a0a10, trail: 0xff2030, anim: 'pulse', pulseRoles: ['steel', 'mid'] },
+  dragon: { steel: 0x2a1a14, mid: [0xffa030, 0xff6000], blk: 0x2a0a04, amb: [0xffb020, 0x502000], map: kDragonTex, emap: kDragonTex, emapCol: 0xffffff, mapRoles: ['steel'], trail: 0xff7a1a, anim: 'scroll', spd: [0.04, 0.25] },
+  energy: { steel: [0x60f0ff, 0x10a8c8], mid: [0xffffff, 0x80ffff], blk: 0x0a1a24, amb: [0x30d8ff, 0x0070a0], trail: 0x40e8ff, anim: 'flicker' },
+  sakura: { steel: 0xffffff, mid: 0xffd0dc, blk: 0xf4ece8, amb: 0xff7aa0, map: kSakuraTex, mapRoles: ['steel'], trail: 0xff9ec0 },
+  obsidian: { steel: [0x141018, 0x1a0630], mid: [0xb070ff, 0x7030d0], blk: 0x08060a, amb: 0x5a2a9e, trail: 0xa060ff, anim: 'pulse', pulseRoles: ['mid', 'steel'] },
+  thunder: { steel: [0xfff6c0, 0x403000], mid: [0xffffff, 0xffe040], blk: 0x1a1a22, amb: [0xffd030, 0x403000], trail: 0xfff070, anim: 'flicker' },
+  void: { steel: 0xffffff, mid: [0xe0c0ff, 0x6030c0], blk: 0x0a0614, amb: 0x8a5ad0, map: kVoidTex, emap: kVoidTex, emapCol: 0x302050, mapRoles: ['steel'], trail: 0xc890ff, anim: 'scroll', spd: [0.06, 0.015] }
+};
+// Morgane : hache double à lames argent-violet et runes roses qui pulsent
+const MORGANE_SKIN = { steel: [0xeedcff, 0x24082e], mid: 0x3a1a4a, tan: 0x4a1e30, blk: 0x1a0a14, amb: [0xff7ad0, 0xff2aa0], dark: 0x2a1020, teal: 0x3a1a4a, trail: 0xff6ad0, anim: 'pulse', pulseRoles: ['amb'] };
+S.kskin = KSKINS[store.get('kskin', 'follow')] !== undefined ? store.get('kskin', 'follow') : 'follow';
+function vmSkin(i) {
+  if (i === 5 && S.knife === 'katana' && KSKINS[S.kskin]) return KSKINS[S.kskin];
+  if (i === 5 && S.knife === 'morgane') return MORGANE_SKIN;
+  return SKINS[S.skin] || SKINS.std;
+}
+function applySkinVM(vm, sk) {
+  for (const role in vm.mats) {
+    const m = vm.mats[role], v = sk[role] !== undefined ? sk[role] : SKINS.std[role];
     const [col, em] = Array.isArray(v) ? v : [v, sk.glow || 0];
-    m.color.setHex(col); if (m.emissive) m.emissive.setHex(em);
     const textured = !!sk.map && (sk.mapRoles || ['dark', 'teal']).includes(role);
-    if (m.map !== (textured ? sk.map : null)) { m.map = textured ? sk.map : null; m.needsUpdate = true; }
+    const emap = textured && sk.emap ? sk.emap : null;
+    m.color.setHex(col); if (m.emissive) m.emissive.setHex(emap ? sk.emapCol || 0xffffff : em);
+    m.userData.em = emap ? sk.emapCol || 0xffffff : em;
+    if (m.map !== (textured ? sk.map : null) || m.emissiveMap !== emap) { m.map = textured ? sk.map : null; m.emissiveMap = emap; m.needsUpdate = true; }
   }
 }
+function applySkin(id) {
+  if (id && SKINS[id]) S.skin = id;
+  VM.forEach((vm, i) => applySkinVM(vm, vmSkin(i)));
+}
 applySkin(S.skin);
+const _hsl = new THREE.Color();
+function animSkin(vm, sk, t) {
+  if (!sk || !sk.anim) return;
+  if (sk.anim === 'scroll') { const tx = sk.map || sk.emap; tx.offset.set((t * sk.spd[0]) % 1, (t * sk.spd[1]) % 1); return; }
+  if (sk.anim === 'hue') {
+    ['dark', 'mid', 'teal', 'tan', 'amb'].forEach((role, i) => { const m = vm.mats[role]; m.color.setHSL((t * 0.12 + i * 0.17) % 1, 0.85, role === 'mid' ? 0.38 : 0.55); });
+    vm.mats.amb.emissive.copy(_hsl.setHSL((t * 0.12 + 0.68) % 1, 0.9, 0.18));
+    return;
+  }
+  const k = sk.anim === 'pulse' ? 0.3 + 0.7 * (0.5 + 0.5 * Math.sin(t * 4.2))
+    : clamp(0.62 + 0.2 * Math.sin(t * 31) + 0.15 * Math.sin(t * 17.3) + (Math.sin(t * 2.7) > 0.96 ? 0.9 : 0), 0.2, 1.8);
+  for (const role of sk.pulseRoles || Object.keys(vm.mats)) { const m = vm.mats[role]; if (m.emissive) m.emissive.setHex(m.userData.em || 0).multiplyScalar(k); }
+}
 const slotsEl = $('slots');
 WEAPONS.forEach((w, i) => { const s = document.createElement('span'); s.className = 'slot' + (i === 0 ? ' on' : ''); s.innerHTML = `<kbd>${i + 1}</kbd><span></span>`; slotsEl.appendChild(s); });
 function renderSlots() { Array.from(slotsEl.children).forEach((s, i) => { s.lastChild.textContent = wShort(i); }); $('wname').textContent = wName(WS.cur); }
@@ -2400,12 +2596,13 @@ function damageRemote(rp, amount, part) {
   showStack(rp, toSh + toHp, part === 'head' ? 'crit' : toHp > 0 ? '' : 'shield');
   lastTarget = { name: rp.name.toUpperCase(), sh: rp.pSh, hp: rp.pHp }; targetT = 2.6;
   rp.flash = 1;
-  netSend({ k: 'hit', to: rp.id, dmg: amount, head: part === 'head', w: WS.cur });
+  netSend({ k: 'hit', to: rp.id, dmg: amount, head: part === 'head', w: WS.cur, kt: WS.cur === 5 ? S.knife : undefined });
   return part === 'head' ? 'head' : 'hit';
 }
 function melee() {
   const W = WEAPONS[WS.cur];
-  WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm; WS.swingDur = S.knife === 'katana' ? 0.42 : S.knife === 'machete' ? 0.38 : 0.32; WS.swingT = WS.swingDur; WS.inspT = 0;
+  WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm; WS.swingDur = SWING_DUR[S.knife] || 0.32; WS.swingT = WS.swingDur; WS.inspT = 0; WS.flourT = 0;
+  WS.combo = (WS.combo + 1) % 3; WS.swingKind = S.knife === 'morgane' ? WS.combo % 2 : WS.combo;
   camera.updateMatrixWorld(); camera.getWorldPosition(_o);
   const e = camera.matrixWorld.elements;
   _r.set(e[0], e[1], e[2]); _u.set(e[4], e[5], e[6]); _f.set(-e[8], -e[9], -e[10]);
@@ -2430,8 +2627,11 @@ function melee() {
     const dmg = Math.round(W.dmg * (ud.part === 'head' ? W.head : 1)) * (X.oneshot ? 10 : 1);
     result = ud.d ? damageDummy(ud.d, dmg, ud.part) : damageRemote(ud.rp, dmg, ud.part);
     spawnSpark(best.point, false);
+    if (ud.d && result === 'kill') {
+      if (S.knife === 'morgane') { ud.d.mgT = 90; feed('MORGANE', t('mg.feed'), 'gold'); sfx.outfit(); } else ud.d.mgT = 0;
+    }
   }
-  sfx.shot(5);
+  if (S.knife === 'katana') sfx.katana(); else if (S.knife === 'morgane') sfx.axe(); else sfx.shot(5);
   netSend({ k: 'shot', w: 5, a: [r2(_o.x), r2(_o.y), r2(_o.z)], e: [] });
   if (result) {
     sfx.hit(result === 'head');
@@ -2440,6 +2640,68 @@ function melee() {
   }
 }
 const INSPECT_DUR = 2.4;
+const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38 };
+/* ---------- poses de frappe : [dx, dy, dz, rx, ry, rz] ; préparation → frappe rapide → retour ----------
+   rx incline la lame vers le haut, ry la tourne vers la gauche, rz la fait rouler sur son axe */
+const SWINGS = {
+  katana: [
+    { a: 0.24, b: 0.52, W: [0.05, 0.04, 0.05, 0.8, -1.0, -0.35], E: [-0.2, -0.08, -0.1, -0.75, 0.6, 0.55] },
+    { a: 0.24, b: 0.52, W: [-0.12, -0.1, 0.04, -0.75, 0.5, 0.5], E: [0.16, 0.13, -0.1, 0.9, -1.3, -0.45] },
+    { a: 0.26, b: 0.54, W: [0.12, 0.11, 0.06, 0.12, -1.6, -1.2], E: [-0.2, 0.1, -0.12, 0.02, 0.85, -1.2] }
+  ],
+  morgane: [
+    { a: 0.38, b: 0.6, W: [-0.08, 0.14, 0.08, 1.45, -1.0, 0.2], E: [-0.16, -0.04, -0.2, -0.55, -0.35, -0.2] },
+    { a: 0.36, b: 0.6, W: [0.12, 0.12, 0.06, 1.05, -1.3, -0.3], E: [-0.2, -0.15, -0.12, -0.9, 0.5, 0.3] }
+  ]
+};
+const smooth = q => q * q * (3 - 2 * q), easeO3 = q => 1 - Math.pow(1 - q, 3);
+function swingPose(kt, kind, p, out) {
+  const set = SWINGS[kt];
+  if (!set) {
+    const k = Math.sin(Math.PI * p), big = kt === 'machete' ? 1.15 : 1;
+    out[0] = lerp(0.06, -0.14, p) * k * 1.6 * big; out[1] = 0.05 * k; out[2] = -0.12 * k;
+    out[3] = -0.3 * k; out[4] = lerp(0.6, -0.5, p) * k * big; out[5] = lerp(0.9, -1.1, p) * k * big;
+    return out;
+  }
+  const sw = set[kind % set.length];
+  for (let i = 0; i < 6; i++) {
+    const w = sw.W[i], e = sw.E[i];
+    out[i] = p < sw.a ? w * smooth(p / sw.a) : p < sw.b ? lerp(w, e, easeO3((p - sw.a) / (sw.b - sw.a))) : e * (1 - smooth((p - sw.b) / (1 - sw.b)));
+  }
+  return out;
+}
+/* ---------- traînée de lame (katana, Morgane) : ruban additif calculé à partir des poses passées ---------- */
+const TRAIL_N = 20;
+const trailGeo = new THREE.BufferGeometry();
+trailGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(TRAIL_N * 2 * 3), 3));
+trailGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(TRAIL_N * 2 * 3), 3));
+{ const idx = []; for (let i = 0; i < TRAIL_N - 1; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } trailGeo.setIndex(idx); }
+const trailMesh = new THREE.Mesh(trailGeo, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false }));
+trailMesh.frustumCulled = false; trailMesh.visible = false; wScene.add(trailMesh);
+const TRAIL_PTS = { katana: [new V3(0, 0.02, -0.68), new V3(0, 0, -0.3)], morgane: [new V3(0, 0.21, -0.5), new V3(0, 0.1, -0.46)] };
+const _trObj = new THREE.Object3D(), _trA = new V3(), _trB = new V3(), _trC = new THREE.Color(), _pose = [0, 0, 0, 0, 0, 0];
+function updateTrail(vm, p, fin, pose0) {
+  const pts = TRAIL_PTS[S.knife];
+  if (!pts || p < 0 || vm.kind !== 5) { trailMesh.visible = false; return; }
+  const sw = SWINGS[S.knife][WS.swingKind % SWINGS[S.knife].length];
+  const env = smooth(clamp((p - sw.a + 0.06) / 0.1, 0, 1)) * (1 - smooth(clamp((p - sw.b - 0.04) / 0.22, 0, 1)));
+  if (env <= 0.001) { trailMesh.visible = false; return; }
+  const pos = trailGeo.attributes.position, col = trailGeo.attributes.color;
+  const sk = vmSkin(5); _trC.setHex((sk && sk.trail) || 0xd8ecff);
+  const span = 0.3, VSc = vm.g.scale.x;
+  for (let i = 0; i < TRAIL_N; i++) {
+    const f = i / (TRAIL_N - 1), sp = Math.max(0, p - span * (1 - f));
+    swingPose(S.knife, WS.swingKind, sp, _pose);
+    _trObj.position.set(fin[0] - pose0[0] + _pose[0], fin[1] - pose0[1] + _pose[1], fin[2] - pose0[2] + _pose[2]);
+    _trObj.rotation.set(fin[3] - pose0[3] + _pose[3], fin[4] - pose0[4] + _pose[4], fin[5] - pose0[5] + _pose[5]);
+    _trObj.scale.setScalar(VSc); _trObj.updateMatrix();
+    _trA.copy(pts[0]).applyMatrix4(_trObj.matrix); _trB.copy(pts[1]).applyMatrix4(_trObj.matrix);
+    pos.setXYZ(i * 2, _trA.x, _trA.y, _trA.z); pos.setXYZ(i * 2 + 1, _trB.x, _trB.y, _trB.z);
+    const a = Math.pow(f, 1.6) * env * 0.9;
+    col.setXYZ(i * 2, _trC.r * a, _trC.g * a, _trC.b * a); col.setXYZ(i * 2 + 1, _trC.r * a * 0.15, _trC.g * a * 0.15, _trC.b * a * 0.15);
+  }
+  pos.needsUpdate = true; col.needsUpdate = true; trailMesh.visible = true;
+}
 function inspect() { if (!WS.reloading && WS.swapT <= 0 && WS.inspT <= 0 && !P.dead) WS.inspT = INSPECT_DUR; }
 function fire() {
   const W = WEAPONS[WS.cur];
@@ -2514,7 +2776,9 @@ function startReload() {
 }
 function swapTo(i) {
   if (i === WS.cur || i < 0 || i >= WEAPONS.length) return;
-  WS.reloading = false; WS.cur = i; WS.swapT = 0.32; WS.bloom = 0; WS.inspT = 0;
+  WS.reloading = false; WS.cur = i; WS.swapT = 0.32; WS.bloom = 0; WS.inspT = 0; WS.swingT = 0;
+  WS.flourT = i === 5 && (S.knife === 'katana' || S.knife === 'morgane') ? FLOUR_DUR : 0;
+  if (WS.flourT) { WS.swapT = 0; sfx.unsheathe(S.knife === 'morgane'); }
   VM.forEach((vm, k) => { vm.g.visible = k === i; });
   Array.from(slotsEl.children).forEach((s, k) => s.classList.toggle('on', k === i));
   $('wname').textContent = wName(i); sfx.swap();
@@ -2563,14 +2827,17 @@ function updateCamera(dt, alpha) {
   const target = hToV(S.fov + speedFov) * lerp(1, WEAPONS[WS.cur].zoom, easeOut(WS.ads));
   curVfov = lerp(curVfov, target, 1 - Math.exp(-14 * dt));
   if (Math.abs(camera.fov - curVfov) > 0.01) { camera.fov = curVfov; camera.updateProjectionMatrix(); }
+  emoteCamera();
   sky.position.copy(camera.position);
   sun.target.position.set(Math.round(rPos.x / 2) * 2, 0, Math.round(rPos.z / 2) * 2);
   sun.position.copy(sun.target.position).addScaledVector(sunDir, 150);
 }
+const swPose = [0, 0, 0, 0, 0, 0], swFin = [0, 0, 0, 0, 0, 0], _vq = new THREE.Quaternion(), _zAxis = new V3(0, 0, 1), FLOUR_DUR = 0.62;
 function updateViewmodel(dt) {
   const vm = VM[WS.cur], g = vm.g, a = easeOut(WS.ads), hs = Math.hypot(P.vel.x, P.vel.z);
+  let swingP = -1, viewSpin = 0;
   const scoped = WEAPONS[WS.cur].scope && WS.ads > 0.85;
-  g.visible = !scoped && !P.dead;
+  g.visible = !scoped && !P.dead && !EMOTE.on;
   WS.sprintK = approach(WS.sprintK, P.sprinting && P.grounded && !mouse.left && !WS.reloading ? 1 : 0, dt * 6);
   WS.slideK = approach(WS.slideK, P.sliding ? 1 : 0, dt * 6);
   WS.swayX *= Math.exp(-10 * dt); WS.swayY *= Math.exp(-10 * dt);
@@ -2596,10 +2863,17 @@ function updateViewmodel(dt) {
   if (vm.kind === 5) {
     // lame tenue en diagonale, côté plat visible
     rx += 0.3; ry += 0.85; rz += 0.2; x += 0.02; y += 0.02;
+    if (S.knife === 'morgane') { rx += 0.15; ry -= 0.25; y -= 0.03; z += 0.06; }
     if (WS.swingT > 0) {
-      const p = 1 - WS.swingT / (WS.swingDur || 0.32), k = Math.sin(Math.PI * p), big = S.knife === 'katana' ? 1.35 : 1;
-      x += lerp(0.06, -0.14, p) * k * 1.6 * big; y += 0.05 * k; z -= 0.12 * k;
-      rz += lerp(0.9, -1.1, p) * k * big; ry += lerp(0.6, -0.5, p) * k * big; rx -= 0.3 * k;
+      swingP = clamp(1 - WS.swingT / (WS.swingDur || 0.32), 0, 1);
+      swingPose(S.knife, WS.swingKind, swingP, swPose);
+      x += swPose[0]; y += swPose[1]; z += swPose[2]; rx += swPose[3]; ry += swPose[4]; rz += swPose[5];
+    }
+    // sortie du fourreau : la lame tourne autour de la main puis se pose
+    if (WS.flourT > 0) {
+      WS.flourT -= dt;
+      const q = 1 - clamp(WS.flourT / FLOUR_DUR, 0, 1), r = 1 - easeO3(q);
+      viewSpin = r * Math.PI * 2 * (S.knife === 'morgane' ? -1 : 1); y -= 0.12 * r * r; x += 0.04 * r;
     }
   }
   // inspection : chaque couteau a sa manipulation, les armes se tournent pour montrer le profil
@@ -2613,7 +2887,19 @@ function updateViewmodel(dt) {
       x -= 0.05 * up; y += 0.04 * up;
       if (kt === 'karambit') { rz += sm(e(0.15, 0.8)) * Math.PI * 4; ry += 0.5 * up; }
       else if (kt === 'butterfly') { const f = Math.sin(e(0.15, 0.85) * Math.PI * 3); if (parts.h1) { parts.h1.rotation.y = f * 2.7; parts.h2.rotation.y = -f * 2.7; } rx += 0.3 * up; ry += 0.8 * up; }
-      else if (kt === 'katana' || kt === 'machete') { ry += 1.15 * up; rx -= 0.25 * up + Math.sin(e(0.2, 0.8) * Math.PI) * 0.3; rz += 0.35 * up; }
+      else if (kt === 'katana') {
+        // lève la lame à la verticale, la fait pivoter pour montrer les deux faces, puis un moulinet
+        const lift = sm(e(0.04, 0.22)) * (1 - sm(e(0.7, 0.84)));
+        x -= 0.1 * lift; y += 0.05 * lift; z -= 0.04 * lift; rx += 0.85 * lift; ry -= 0.75 * lift;
+        rz += Math.sin(e(0.24, 0.68) * Math.PI * 2) * 1.4 * lift;
+        viewSpin = -sm(e(0.8, 1)) * Math.PI * 2;
+      }
+      else if (kt === 'morgane') {
+        // fait rouler la hache dans la main, puis la pose sur l'épaule un instant
+        rz += sm(e(0.1, 0.45)) * Math.PI * 2; rx += 0.5 * up; ry -= 0.3 * up;
+        const sh = sm(e(0.5, 0.62)) * (1 - sm(e(0.82, 0.95))); y += 0.08 * sh; x += 0.04 * sh; rx += 0.8 * sh; ry += 0.6 * sh;
+      }
+      else if (kt === 'machete') { ry += 1.15 * up; rx -= 0.25 * up + Math.sin(e(0.2, 0.8) * Math.PI) * 0.3; rz += 0.35 * up; }
       else if (kt === 'dagger') { const toss = e(0.3, 0.7); y += Math.sin(toss * Math.PI) * 0.14; rx += sm(toss) * Math.PI * 2; ry += 0.7 * up; }
       else { ry += 0.95 * up; rz += -1.3 * sm(e(0.15, 0.4)) + 1.3 * sm(e(0.55, 0.8)); }
     } else {
@@ -2622,6 +2908,10 @@ function updateViewmodel(dt) {
   }
   z += WS.kick; rx += WS.kickRot;
   g.position.set(x, y, z); g.rotation.set(rx, ry, rz);
+  if (viewSpin) g.quaternion.premultiply(_vq.setFromAxisAngle(_zAxis, viewSpin));
+  swFin[0] = x; swFin[1] = y; swFin[2] = z; swFin[3] = rx; swFin[4] = ry; swFin[5] = rz;
+  if (viewSpin) trailMesh.visible = false; else updateTrail(vm, g.visible ? swingP : -1, swFin, swPose);
+  animSkin(vm, vmSkin(WS.cur), performance.now() / 1000);
   WS.flashT -= dt;
   vm.flash.visible = WS.flashT > 0;
   if (vm.flash.visible) { vm.flash.rotation.z = Math.random() * 6; const s = 0.8 + Math.random() * 0.6; vm.flash.scale.set(s, s, s); }
@@ -2643,8 +2933,11 @@ function makeCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; 
 function peerSupported() { return typeof window.Peer === 'function' && typeof window.RTCPeerConnection === 'function'; }
 function myState() {
   const air = !P.grounded && !P.climbing;
-  const a = P.dead ? 'dead' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  return { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(P.yaw), pi: r2(P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint };
+  const a = P.dead ? 'dead' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
+  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint };
+  if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
+  if (P.mgT > 0) st.mg = 1;
+  return st;
 }
 // -- envoi : le client parle à l'hôte ; l'hôte se traite lui-même comme un client local
 function netSend(m) {
@@ -2665,19 +2958,29 @@ function hostRecv(from, m) {
     NET.players.set(from, { name: String(m.name || 'Joueur').slice(0, 14), color, kills: 0, deaths: 0, st: null });
     sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map });
     broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
+    lobbyShow();
     return;
   }
   if (!pl) return;
+  if (m.k === 'bye') {
+    if (from === NET.selfId) return;
+    const c = NET.conns.get(from);
+    NET.players.delete(from); NET.conns.delete(from);
+    broadcast({ k: 'sys', t: 'leave', name: pl.name });
+    try { if (c) c.close(); } catch (e) {}
+    lobbyShow();
+    return;
+  }
   if (m.k === 'st') pl.st = m.s;
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, a: m.a, e: m.e }, from);
   else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number) }, from);
   else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number) }, from);
-  else if (m.k === 'hit') { if (NET.players.has(m.to)) sendTo(m.to, { k: 'hit', from, dmg: m.dmg, head: m.head, w: m.w }); }
+  else if (m.k === 'hit') { if (NET.players.has(m.to)) sendTo(m.to, { k: 'hit', from, dmg: m.dmg, head: m.head, w: m.w, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
   else if (m.k === 'dead') {
     pl.deaths++;
     const killer = NET.players.get(m.by);
     if (killer && m.by !== from) killer.kills++;
-    broadcast({ k: 'kf', by: m.by, victim: from, w: m.w });
+    broadcast({ k: 'kf', by: m.by, victim: from, w: m.w, mg: m.kt === 'morgane' ? 1 : undefined });
   }
 }
 function snapshot() {
@@ -2731,6 +3034,7 @@ function clientRecv(m) {
     killfeed(nameOf(m.by), WEAPONS[m.w | 0] ? wShort(m.w | 0) : '', nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
     if (m.by === NET.selfId && m.victim !== NET.selfId) {
       stats.kills++; feed(t('feed.kill'), nameOf(m.victim), 'kill'); sfx.kill();
+      if (m.mg) { feed('MORGANE', t('mg.feed'), 'gold'); sfx.outfit(); }
       hmEl.className = 'kill'; hmT = 0.4;
     }
     return;
@@ -2750,7 +3054,10 @@ function applyHit(m) {
     P.dead = true; P.respawnT = 3.5;
     $('deathBy').textContent = t('hud.by', { name: rp ? rp.name : '?', w: WEAPONS[m.w | 0] ? wShort(m.w | 0).toLowerCase() : '' });
     $('death').hidden = false;
-    netSend({ k: 'dead', by: m.from, w: m.w | 0 });
+    netSend({ k: 'dead', by: m.from, w: m.w | 0, kt: m.kt });
+    // tuée à la hache Morgane : tenue Morgane jusqu'à la prochaine mort (3 min max)
+    P.mgT = m.kt === 'morgane' ? 180 : 0;
+    if (P.mgT) { toast(t('mg.you'), 4); sfx.outfit(); }
   }
 }
 function killfeed(a, w, b, me) {
@@ -2876,6 +3183,210 @@ function drawMinimap() {
   c.font = '700 11px "Saira Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
   c.fillStyle = '#FFB020'; c.fillText('N', nx, ny);
 }
+/* ================= Avatars : poses procédurales, emotes, tenue Morgane ================= */
+const RIGS = {
+  mixamo: { hips: /Hips$/, spine: /Spine$/, head: /mixamorigHead$/, top: /HeadTop_End$/, lUp: /LeftUpLeg$/, lLeg: /LeftLeg$/, rUp: /RightUpLeg$/, rLeg: /RightLeg$/, lArm: /LeftArm$/, rArm: /RightArm$/, lFore: /LeftForeArm$/, rFore: /RightForeArm$/ },
+  robot: { hips: /^Hips$/, head: /^Head(_1)?$/ }
+};
+function rigOf(vis) {
+  if (!vis._rig) {
+    const R = vis.ch === 'robot' ? RIGS.robot : RIGS.mixamo; vis._rig = {};
+    vis.obj.traverse(o => { if (!o.isBone) return; for (const k in R) if (!vis._rig[k] && R[k].test(o.name)) vis._rig[k] = o; });
+  }
+  return vis._rig;
+}
+// rotations locales ajoutées par-dessus l'animation en cours (squelette Mixamo, mesurées à partir de la pose de repos)
+// appliquées dans l'ordre z, y, x · UpLeg x− : jambe vers l'avant · Leg x+ : genou plié
+// Arm z− (droit) / z+ (gauche) : bras levé sur le côté, puis Arm y+ (droit) / y− (gauche) : bras ramené devant · ForeArm z : avant-bras vers le haut
+const POSES = {
+  jump: () => ({ lUp: [-0.95, 0, 0], lLeg: [1.35, 0, 0], rUp: [-0.35, 0, 0], rLeg: [0.75, 0, 0], rArm: [0, 0, -0.65], lArm: [0, 0, 0.65], spine: [0.12, 0, 0] }),
+  sg: () => ({ lUp: [-1.5, 0, 0.08], rUp: [-1.42, 0, -0.08], lLeg: [0.04, 0, 0], rLeg: [0.08, 0, 0], spine: [-0.38, 0, 0], rArm: [0, -0.5, -1.05], lArm: [0, 0.5, 1.05] }),
+  wave: t => ({ rArm: [0, 0, -2.35], rFore: [0, 0, -0.5 + Math.sin(t * 9) * 0.45], spine: [0, 0, 0.08], head: [0, 0, 0.1] }),
+  dance: t => {
+    const a = Math.sin(t * 5.2), b = Math.max(0, Math.sin(t * 5.2)), c = Math.max(0, -Math.sin(t * 5.2));
+    return { spine: [0, 0, a * 0.22], head: [0, 0, -a * 0.18], rArm: [0, 0, -1.5 - a * 0.7], lArm: [0, 0, 1.5 - a * 0.7], rFore: [0, 0, -0.9], lFore: [0, 0, 0.9],
+      lUp: [-0.55 * b, 0, 0], lLeg: [0.9 * b, 0, 0], rUp: [-0.55 * c, 0, 0], rLeg: [0.9 * c, 0, 0] };
+  },
+  thumbs: t => ({ rArm: [0, 1.05, -1.2], rFore: [0, 0, -1.3], head: [0.12 * Math.sin(t * 6), 0, 0], spine: [-0.06, 0, 0] }),
+  clap: t => { const k = 0.5 + 0.5 * Math.sin(t * 13); return { rArm: [0, 0.85, -1.25], lArm: [0, -0.85, 1.25], rFore: [0, 0.15 + 0.45 * k, 0], lFore: [0, -0.15 - 0.45 * k, 0], spine: [0.05, 0, 0] }; },
+  sit: () => ({ lUp: [-1.55, 0, 0.12], rUp: [-1.55, 0, -0.12], lLeg: [1.6, 0, 0], rLeg: [1.6, 0, 0], rArm: [0, 0.35, -0.15], lArm: [0, -0.35, 0.15], spine: [0.15, 0, 0] }),
+  flex: t => { const k = 0.12 * Math.sin(t * 6); return { rArm: [0, 0, -1.5], lArm: [0, 0, 1.5], rFore: [0, 0, -1.75 - k], lFore: [0, 0, 1.75 + k], spine: [-0.1, 0, 0] }; }
+};
+const EMOTES = ['wave', 'dance', 'thumbs', 'clap', 'sit', 'flex'];
+const ROBOT_EMOTE = { wave: ['Wave'], dance: ['Dance'], thumbs: ['ThumbsUp', true], clap: ['Yes'], sit: ['Sitting', true], flex: ['Punch'] };
+const _pq = new THREE.Quaternion(), _axes = [new V3(1, 0, 0), new V3(0, 1, 0), new V3(0, 0, 1)];
+// état d'animation d'un avatar : 'idle' | 'walk' | 'run' plus une pose (saut, superglide, emote)
+function animateAvatar(vis, dt, o) {
+  if (!vis || !vis.mixer) return;
+  const C = CHARS[vis.ch] || CHARS.soldier, robot = vis.ch === 'robot';
+  vis.poseW = vis.poseW || {}; vis.emT = (vis.emT || 0) + dt;
+  let base = o.loco, pose = null, ts = 1;
+  if (o.em) { pose = o.em; base = 'idle'; }
+  else if (o.state === 'sg') { pose = 'sg'; base = 'idle'; }
+  else if (o.state === 'air') { pose = 'jump'; base = 'idle'; }
+  else if (o.state === 'slide') ts = 0.1;
+  if (pose !== vis.lastPose) { vis.lastPose = pose; vis.emT = 0; }
+  if (robot) {
+    // le robot a ses propres clips : saut, danse, salut…
+    const em = o.em && ROBOT_EMOTE[o.em];
+    const clip = em ? em[0] : pose ? 'Jump' : C.anim[base] || C.anim.idle;
+    playAnim(vis, clip, 0.2, em ? !!em[1] : pose === 'sg');
+    const act = vis.actions[vis.cur]; if (act) act.timeScale = pose === 'jump' ? 0.8 : ts;
+    vis.mixer.update(dt);
+    vis.obj.rotation.x = pose === 'sg' ? -0.45 : 0;
+    return;
+  }
+  playAnim(vis, C.anim[base] || C.anim.idle, 0.2);
+  const act = vis.actions[vis.cur]; if (act) act.timeScale = ts;
+  vis.mixer.update(dt);
+  for (const k in POSES) vis.poseW[k] = approach(vis.poseW[k] || 0, k === pose ? 1 : 0, dt * (k === 'sg' ? 9 : 6));
+  const rig = rigOf(vis);
+  let lower = 0;
+  for (const k in vis.poseW) {
+    const w = vis.poseW[k]; if (w <= 0.001) continue;
+    const P2 = POSES[k](vis.emT);
+    for (const b in P2) { const bone = rig[b]; if (!bone) continue; const v = P2[b]; for (let i = 2; i >= 0; i--) if (v[i]) bone.quaternion.multiply(_pq.setFromAxisAngle(_axes[i], v[i] * w)); }
+    if (k === 'sit') lower += 0.48 * w;
+    if (k === 'dance') lower += -0.04 * Math.abs(Math.sin(vis.emT * 5.2)) * w;
+  }
+  vis.lower = lower;
+}
+/* ---------- tenue Morgane : oreilles de chat, nœud, jupe plissée et couleur rose ---------- */
+const MG_PINK = 0xff9ad5;
+const mgMats = { pink: new THREE.MeshPhongMaterial({ color: 0xff8fcf, shininess: 30 }), white: new THREE.MeshPhongMaterial({ color: 0xfff4fa, shininess: 20 }), inner: new THREE.MeshPhongMaterial({ color: 0xffd0ea }), dark: new THREE.MeshPhongMaterial({ color: 0x3a1a2a }) };
+function makeOutfit() {
+  const head = new THREE.Group(), hip = new THREE.Group();
+  const band = new THREE.Mesh(new THREE.TorusGeometry(1, 0.06, 6, 20, Math.PI), mgMats.dark); band.rotation.y = Math.PI / 2; band.position.y = -0.25; head.add(band);
+  for (const sx of [-1, 1]) {
+    const ear = new THREE.Mesh(new THREE.ConeGeometry(0.34, 0.62, 4), mgMats.pink); ear.position.set(sx * 0.55, 0.28, 0); ear.rotation.z = -sx * 0.32; ear.rotation.y = Math.PI / 4; head.add(ear);
+    const inn = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.4, 4), mgMats.inner); inn.position.set(sx * 0.53, 0.24, 0.12); inn.rotation.copy(ear.rotation); head.add(inn);
+    const bw = new THREE.Mesh(new THREE.ConeGeometry(0.2, 0.42, 8), mgMats.white); bw.rotation.z = sx * Math.PI / 2; bw.position.set(sx * 0.2, 0.05, -0.9); head.add(bw);
+  }
+  const knot = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 8), mgMats.pink); knot.position.set(0, 0.05, -0.92); head.add(knot);
+  // jupe : cône ouvert à 16 pans en ombrage plat pour l'effet plissé, bande blanche en bas
+  const skirtMat = new THREE.MeshPhongMaterial({ color: 0xff8fcf, flatShading: true, side: THREE.DoubleSide, shininess: 10 });
+  const skirt = new THREE.Mesh(new THREE.CylinderGeometry(0.62, 1, 0.75, 16, 1, true), skirtMat); skirt.position.y = -0.38; hip.add(skirt);
+  const hem = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.02, 0.1, 16, 1, true), new THREE.MeshPhongMaterial({ color: 0xfff4fa, flatShading: true, side: THREE.DoubleSide })); hem.position.y = -0.72; hip.add(hem);
+  const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.63, 0.63, 0.1, 16, 1, true), mgMats.dark); belt.position.y = -0.02; hip.add(belt);
+  [head, hip].forEach(g => g.traverse(m => { if (m.isMesh) m.castShadow = true; }));
+  return { head, hip };
+}
+// tailles par perso (mètres) : largeur de tête, hanches, décalage de la jupe sous l'os du bassin
+const MG_FIT = { soldier: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.05 }, xbot: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.02 }, robot: { hr: 0.36, hipR: 0.22, hipY: 0.1, earY: -0.1 } };
+function setOutfit(vis, root, on, tint) {
+  if (!vis || !vis.mixer) return;
+  if (on && !vis.outfit) {
+    vis.outfit = makeOutfit(); root.add(vis.outfit.head, vis.outfit.hip);
+    for (const m of vis.mats) if (!m.userData.mgOrig) m.userData.mgOrig = m.color.getHex();
+    tintChar(vis, vis.ch, MG_PINK);
+    if (vis.ch === 'soldier') for (const m of vis.mats) if (!m.userData.keep) m.color.setHex(0xffa8dc);
+  } else if (!on && vis.outfit) {
+    root.remove(vis.outfit.head, vis.outfit.hip); vis.outfit = null;
+    for (const m of vis.mats) if (m.userData.mgOrig !== undefined) { m.color.setHex(m.userData.mgOrig); delete m.userData.mgOrig; }
+    if (tint !== undefined) tintChar(vis, vis.ch, tint);
+  }
+}
+const _ow = new V3();
+function updateOutfit(vis, root, k = 1) {
+  const o = vis && vis.outfit; if (!o) return;
+  const rig = rigOf(vis), fit = MG_FIT[vis.ch] || MG_FIT.soldier;
+  root.updateMatrixWorld(true);
+  const top = rig.top || rig.head;
+  if (top) {
+    top.getWorldPosition(_ow); root.worldToLocal(_ow);
+    // sans os au sommet du crâne : hauteur du perso (abaissée si accroupi ou assis)
+    const y = rig.top ? _ow.y : (CHARS[vis.ch] || CHARS.soldier).h * k - (vis.lower || 0);
+    o.head.position.set(_ow.x, y + fit.earY * k, _ow.z); o.head.scale.setScalar(fit.hr * k);
+    // la tête suit l'orientation du corps (les os du crâne sont orientés différemment selon le modèle)
+    o.head.rotation.set(vis.obj.rotation.x, Math.PI, 0);
+  }
+  if (rig.hips) {
+    rig.hips.getWorldPosition(_ow); root.worldToLocal(_ow);
+    o.hip.position.set(_ow.x, _ow.y + fit.hipY * k, _ow.z); o.hip.scale.set(fit.hipR * k, fit.hipR * k * 0.9, fit.hipR * k);
+    o.hip.rotation.set(vis.obj.rotation.x, 0, 0);
+  }
+}
+/* ---------- avatar du joueur local (visible pendant les emotes, en vue à la troisième personne) ---------- */
+const SELF = { g: new THREE.Group(), vis: null, key: '' };
+SELF.g.visible = false; scene.add(SELF.g);
+function myColor() { const me = NET.players.get(NET.selfId); return TINTS[S.tint] || (me ? me.color : COLORS[0]); }
+function ensureSelfAvatar() {
+  const ch = MODELS.chars[S.char] ? S.char : 'soldier', model = MODELS.chars[ch];
+  if (!model) return null;
+  const key = ch + '|' + myColor();
+  if (SELF.key !== key) {
+    if (SELF.vis) { setOutfit(SELF.vis, SELF.g, false); SELF.g.remove(SELF.vis.obj); }
+    SELF.vis = cloneModel(model); SELF.vis.ch = ch; SELF.vis.base = model.scale; SELF.vis.obj.rotation.y = CHARS[ch].yaw;
+    SELF.g.add(SELF.vis.obj); tintChar(SELF.vis, ch, myColor()); playAnim(SELF.vis, CHARS[ch].anim.idle, 0);
+    SELF.key = key;
+  }
+  return SELF.vis;
+}
+const EMOTE = { on: false, menu: false, id: 0, yaw: 0, pitch: 0, dist: 2.7 };
+const emoteWheel = $('emoteWheel');
+function openEmoteMenu(v) { EMOTE.menu = v; emoteWheel.hidden = !v; }
+function startEmote(i) {
+  openEmoteMenu(false);
+  if (P.dead || !P.grounded || P.sliding || !EMOTES[i]) return;
+  if (!ensureSelfAvatar()) { toast(t('em.loading'), 2); return; }
+  if (!EMOTE.on) { EMOTE.yaw = P.yaw; EMOTE.pitch = P.pitch; P.yaw = EMOTE.yaw + Math.PI; P.pitch = -0.12; }
+  EMOTE.on = true; EMOTE.id = i; SELF.vis.emT = 0; SELF.vis.lastPose = null; WS.inspT = 0;
+}
+function endEmote() {
+  if (!EMOTE.on) return;
+  EMOTE.on = false; P.yaw = EMOTE.yaw; P.pitch = EMOTE.pitch; SELF.g.visible = false;
+}
+function updateSelfAvatar(dt) {
+  if (EMOTE.on && (P.dead || !P.grounded || act('forward') || act('back') || act('left') || act('right') || act('jump') || act('crouch') || mouse.left || !playing)) endEmote();
+  if (P.mgT > 0) P.mgT -= dt;
+  hud.classList.toggle('emoting', EMOTE.on);
+  if (!EMOTE.on) return;
+  const vis = ensureSelfAvatar(); if (!vis) { endEmote(); return; }
+  SELF.g.visible = true;
+  SELF.g.position.copy(rPos); SELF.g.rotation.y = EMOTE.yaw;
+  setOutfit(vis, SELF.g, P.mgT > 0, myColor());
+  animateAvatar(vis, dt, { loco: 'idle', state: 'ground', em: EMOTES[EMOTE.id] });
+  vis.obj.position.y = -MODELS.chars[vis.ch].minY * vis.base - (vis.lower || 0);
+  updateOutfit(vis, SELF.g);
+}
+// caméra à la troisième personne qui tourne autour de l'avatar ; recule moins si un mur gêne
+function emoteCamera() {
+  if (!EMOTE.on) return;
+  const cp = Math.cos(P.pitch);
+  _d.set(Math.sin(P.yaw) * cp, -Math.sin(P.pitch), Math.cos(P.yaw) * cp);
+  _p.set(rPos.x, rPos.y + 1.05, rPos.z);
+  raycaster.set(_p, _d); raycaster.far = EMOTE.dist;
+  const hit = raycaster.intersectObjects(WORLD, false)[0];
+  const dist = hit ? Math.max(0.6, hit.distance - 0.25) : EMOTE.dist;
+  camera.position.copy(_p).addScaledVector(_d, dist);
+}
+/* ---------- jambes tendues à la première personne pendant le superglide ---------- */
+const fpLegs = new THREE.Group();
+{
+  const pants = new THREE.MeshPhongMaterial({ color: 0x3a3f46, shininess: 10 }), boot = new THREE.MeshPhongMaterial({ color: 0x1c1e22, shininess: 30 });
+  const stripe = new THREE.MeshPhongMaterial({ color: 0xffb020, emissive: 0x2a1800 });
+  for (const sx of [-1, 1]) {
+    const leg = new THREE.Group(); leg.position.set(sx * 0.1, 0, 0);
+    const thigh = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.12, 0.55), pants); thigh.position.z = -0.27; leg.add(thigh);
+    const knee = new THREE.Mesh(new THREE.BoxGeometry(0.115, 0.03, 0.09), boot); knee.position.set(0, 0.06, -0.55); leg.add(knee);
+    const shin = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.5), pants); shin.position.z = -0.8; leg.add(shin);
+    const st = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.102, 0.48), stripe); st.position.set(sx * 0.047, 0, -0.8); leg.add(st);
+    const b = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.17, 0.22), boot); b.position.set(0, 0.03, -1.12); leg.add(b);
+    const sole = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.04, 0.24), boot); sole.position.set(0, -0.06, -1.13); leg.add(sole);
+    leg.userData.sx = sx; fpLegs.add(leg);
+  }
+  fpLegs.visible = false; wScene.add(fpLegs);
+}
+function updateFpLegs(dt) {
+  if (P.sgT > 0) P.sgT -= dt;
+  const k = P.sgT > 0 && !P.dead && !EMOTE.on ? Math.min(1, (0.75 - P.sgT) / 0.1, P.sgT / 0.18) : 0;
+  fpLegs.visible = k > 0.01;
+  if (!fpLegs.visible) return;
+  const e = easeOut(clamp(k, 0, 1));
+  fpLegs.position.set(0, lerp(-1.1, -0.62, e) - P.pitch * 0.3, lerp(0.3, 0.05, e));
+  fpLegs.rotation.set(lerp(-0.6, 0.3, e) - P.pitch * 0.4, 0, 0);
+  for (const l of fpLegs.children) l.rotation.set(0, l.userData.sx * 0.06, l.userData.sx * 0.05);
+}
 function updateRemotes(dt) {
   const W = window.innerWidth, H = window.innerHeight;
   for (const rp of remotes.values()) {
@@ -2897,14 +3408,14 @@ function updateRemotes(dt) {
     const hs = Math.hypot(st.v[0], st.v[2]);
     if (rp.vis) {
       if (rp.vis.mixer) {
-        rp.vis.mixer.update(dt);
-        const an = (CHARS[rp.vis.ch] || CHARS.soldier).anim;
-        const anim = st.a === 'air' ? an.run : hs > 4.6 * K ? an.run : hs > 0.6 ? an.walk : an.idle;
-        playAnim(rp.vis, anim, 0.2);
-        const act = rp.vis.actions[rp.vis.cur]; if (act) act.timeScale = st.a === 'air' ? 0.3 : st.a === 'slide' ? 0.1 : 1;
+        const em = st.em && EMOTES[st.em - 1];
+        if (em) rp.g.rotation.y = typeof st.ey === 'number' ? st.ey : rp.yaw;
+        animateAvatar(rp.vis, dt, { loco: hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: st.a, em });
+        setOutfit(rp.vis, rp.g, !!st.mg, TINTS[rp.tc] || rp.color);
       }
       rp.vis.obj.scale.y = (rp.vis.mixer ? rp.vis.base : 1) * (1 - rp.crouchK * 0.33);
-      rp.vis.obj.rotation.x = st.a === 'slide' ? -0.35 * rp.crouchK : 0;
+      if (st.a === 'slide') rp.vis.obj.rotation.x = -0.35 * rp.crouchK; else if (st.a !== 'sg' || rp.vis.ch !== 'robot') rp.vis.obj.rotation.x = 0;
+      if (rp.vis.mixer) { rp.vis.obj.position.y = -MODELS.chars[rp.vis.ch].minY * rp.vis.base - (rp.vis.lower || 0); updateOutfit(rp.vis, rp.g, 1 - rp.crouchK * 0.33); }
       rp.flash = Math.max(0, rp.flash - dt * 8);
       rp.pingT = Math.max(0, rp.pingT - dt);
       setEmissive(rp.vis, rp.flash * 0.5);
@@ -2934,11 +3445,16 @@ function updateNet(dt) {
   NET.sendAcc += dt;
   if (NET.sendAcc >= 0.05) { NET.sendAcc = 0; netSend({ k: 'st', s: myState() }); }
   if (NET.mode === 'host') {
+    NET.lobAcc = (NET.lobAcc || 0) + dt;
+    if (NET.lobAcc >= 20) { NET.lobAcc = 0; lobbyShow(); }
     NET.snapAcc += dt;
     if (NET.snapAcc >= 0.05) { NET.snapAcc = 0; broadcast(snapshot()); }
   }
 }
 function leaveNet() {
+  // prévient l'hôte tout de suite (sinon il attend la coupure WebRTC) et retire la partie de la liste
+  if (NET.mode === 'client' && NET.hostConn && NET.hostConn.open) { try { NET.hostConn.send({ k: 'bye' }); } catch (e) {} }
+  if (NET.mode === 'host') lobbyHide();
   try { if (NET.peer) NET.peer.destroy(); } catch (e) {}
   mapSel.disabled = false;
   Object.assign(RULES, LOCAL_RULES); clearAbilityFx();
@@ -2972,6 +3488,7 @@ function hostGame() {
     NET.players.set(NET.selfId, { name: S.name, color: COLORS[0], kills: 0, deaths: 0, st: null });
     onlineReady(code);
     setNetStatus(t('net.created'), 'ok');
+    lobbyShow();
   });
   peer.on('connection', conn => {
     conn.on('open', () => { NET.conns.set(conn.peer, conn); });
@@ -2979,7 +3496,7 @@ function hostGame() {
     const bye = () => {
       NET.conns.delete(conn.peer);
       const p = NET.players.get(conn.peer);
-      if (p) { NET.players.delete(conn.peer); broadcast({ k: 'sys', t: 'leave', name: p.name }); }
+      if (p) { NET.players.delete(conn.peer); broadcast({ k: 'sys', t: 'leave', name: p.name }); lobbyShow(); }
     };
     conn.on('close', bye); conn.on('error', bye);
   });
@@ -3019,6 +3536,141 @@ function joinGame(code) {
     setNetStatus(msg, 'err'); leaveNet();
   });
 }
+/* ---------- liste des parties : annonces sur un broker MQTT public (WebSocket), client MQTT 3.1.1 minimal ----------
+   L'hôte publie un message « retenu » par partie ; à la fermeture (ou si sa connexion tombe, via le testament MQTT)
+   le message est effacé. Deux brokers en parallèle pour survivre à la panne de l'un d'eux. */
+const LOBBY_BROKERS = ['wss://broker.emqx.io:8084/mqtt', 'wss://broker.hivemq.com:8884/mqtt'];
+const LOBBY_TOPIC = 'velocite/v2/lobbies/';
+const LOBBY = { watch: [], ann: [], list: new Map(), started: 0, annCode: '' };
+function mqttClient(url, opts = {}) {
+  const te = new TextEncoder(), td = new TextDecoder();
+  const str = s => { const b = te.encode(s); return [b.length >> 8, b.length & 255, ...b]; };
+  const pkt = (h, body) => { const out = [h]; let n = body.length; do { let d = n & 127; n >>= 7; if (n) d |= 128; out.push(d); } while (n); return new Uint8Array([...out, ...body]); };
+  const c = { url, ok: false, closed: false, ws: null, subs: [], onmsg: opts.onmsg || (() => {}), onstate: opts.onstate || (() => {}), pid: 1 };
+  let buf = new Uint8Array(0), ping = 0, retry = 0;
+  const send = u8 => { try { if (c.ws && c.ws.readyState === 1) c.ws.send(u8); } catch (e) {} };
+  c.publish = (topic, payload, retain) => { if (c.ok) send(pkt(0x30 | (retain ? 1 : 0), [...str(topic), ...te.encode(payload)])); };
+  c.subscribe = filter => { c.subs.push(filter); if (c.ok) { const id = c.pid++ & 0xffff || 1; send(pkt(0x82, [id >> 8, id & 255, ...str(filter), 0])); } };
+  c.close = () => { c.closed = true; clearInterval(ping); clearTimeout(retry); if (c.ws) { try { send(new Uint8Array([0xe0, 0])); c.ws.close(); } catch (e) {} } c.ok = false; };
+  const parse = () => {
+    for (;;) {
+      if (buf.length < 2) return;
+      let len = 0, mul = 1, i = 1, b;
+      do { if (i >= buf.length) return; b = buf[i++]; len += (b & 127) * mul; mul *= 128; } while (b & 128 && i < 5);
+      if (buf.length < i + len) return;
+      const type = buf[0] >> 4, body = buf.subarray(i, i + len);
+      if (type === 2) {
+        if (body[1] === 0) { c.ok = true; c.onstate(true); for (const f of c.subs.splice(0)) c.subscribe(f); }
+      } else if (type === 3) {
+        const tl = (body[0] << 8) | body[1], topic = td.decode(body.subarray(2, 2 + tl));
+        const qos = (buf[0] >> 1) & 3, off = 2 + tl + (qos ? 2 : 0);
+        try { c.onmsg(topic, td.decode(body.subarray(off))); } catch (e) {}
+      }
+      buf = buf.slice(i + len);
+    }
+  };
+  const open = () => {
+    if (c.closed) return;
+    let ws;
+    try { ws = new WebSocket(url, ['mqtt']); } catch (e) { retry = setTimeout(open, 15000); return; }
+    c.ws = ws; ws.binaryType = 'arraybuffer';
+    ws.onopen = () => {
+      const w = opts.will, id = 'vel' + Math.random().toString(36).slice(2, 12);
+      let flags = 0x02; const pl = [...str(id)];
+      // testament retenu (vide) : le broker efface l'annonce si la connexion tombe sans prévenir
+      if (w) { flags |= 0x04 | 0x20; pl.push(...str(w.topic), ...str(w.payload || '')); }
+      send(pkt(0x10, [...str('MQTT'), 4, flags, 0, 45, ...pl]));
+      clearInterval(ping); ping = setInterval(() => send(new Uint8Array([0xc0, 0])), 25000);
+    };
+    ws.onmessage = e => { const d = new Uint8Array(e.data); const nb = new Uint8Array(buf.length + d.length); nb.set(buf); nb.set(d, buf.length); buf = nb; parse(); };
+    ws.onclose = () => {
+      const was = c.ok; c.ok = false; clearInterval(ping); buf = new Uint8Array(0);
+      if (was) { c.onstate(false); c.subs = [...new Set(c.subs.concat(opts.resub || []))]; }
+      if (!c.closed) retry = setTimeout(open, 8000 + Math.random() * 6000);
+    };
+    ws.onerror = () => {};
+  };
+  open();
+  return c;
+}
+function lobbyStart() {
+  if (LOBBY.started || typeof WebSocket !== 'function' || typeof TextEncoder !== 'function') return;
+  LOBBY.started = performance.now();
+  const filter = LOBBY_TOPIC + '+';
+  for (const url of LOBBY_BROKERS) {
+    const c = mqttClient(url, { onmsg: lobbyMsg, onstate: renderLobbies, resub: [filter] });
+    c.subscribe(filter);
+    LOBBY.watch.push(c);
+  }
+  setInterval(() => { if (!menu.hidden) renderLobbies(); }, 3000);
+  renderLobbies();
+}
+function lobbyMsg(topic, payload) {
+  const code = topic.slice(LOBBY_TOPIC.length);
+  if (!/^[A-Z0-9]{5}$/.test(code)) return;
+  if (!payload) { LOBBY.list.delete(code); renderLobbies(); return; }
+  let d; try { d = JSON.parse(payload); } catch (e) { return; }
+  if (!d || typeof d !== 'object') return;
+  LOBBY.list.set(code, {
+    code, host: String(d.h || '?').slice(0, 14), map: MAPS[d.m] ? d.m : 'canyon',
+    n: clamp(d.n | 0, 1, 8), t: +d.t || 0, seen: Date.now()
+  });
+  renderLobbies();
+}
+function lobbyPayload() { return JSON.stringify({ v: 1, h: S.name, m: S.map, n: NET.players.size || 1, t: Date.now() }); }
+// annonce (ou met à jour) la partie hébergée ; rien si la case « publique » est décochée
+function lobbyShow() {
+  if (NET.mode !== 'host' || !NET.code) return;
+  if (!S.lobPublic) { lobbyHide(); return; }
+  lobbyStart();
+  const topic = LOBBY_TOPIC + NET.code;
+  if (LOBBY.annCode !== NET.code) {
+    lobbyHide();
+    LOBBY.annCode = NET.code;
+    LOBBY.ann = LOBBY_BROKERS.map(url => {
+      const c = mqttClient(url, { will: { topic, payload: '' }, onstate: on => { if (on && LOBBY.annCode) c.publish(topic, lobbyPayload(), true); } });
+      return c;
+    });
+  }
+  for (const c of LOBBY.ann) c.publish(topic, lobbyPayload(), true);
+}
+function lobbyHide() {
+  if (!LOBBY.annCode) return;
+  const topic = LOBBY_TOPIC + LOBBY.annCode;
+  LOBBY.annCode = '';
+  for (const c of LOBBY.ann) { c.publish(topic, '', true); c.close(); }
+  LOBBY.ann = [];
+  LOBBY.list.delete(topic.slice(LOBBY_TOPIC.length));
+}
+function renderLobbies() {
+  const box = $('lobList'); if (!box) return;
+  const now = Date.now();
+  // une annonce non rafraîchie depuis 70 s est considérée comme abandonnée (l'hôte republie toutes les 20 s)
+  const rows = [...LOBBY.list.values()].filter(l => now - l.seen < 70000 && Math.abs(now - l.t) < 600000 && l.code !== NET.code).sort((a, b) => b.t - a.t).slice(0, 12);
+  const live = LOBBY.watch.some(c => c.ok);
+  // ne reconstruit la liste que si elle change (sinon un clic sur « Rejoindre » pourrait se perdre)
+  const sig = [LANG, NET.mode, live, performance.now() - LOBBY.started < 9000, ...rows.map(l => l.code + l.n + l.map + l.host)].join('|');
+  if (sig === LOBBY.sig && box.firstChild) return;
+  LOBBY.sig = sig;
+  if (!rows.length) {
+    const p = document.createElement('p'); p.className = 'empty';
+    p.textContent = !LOBBY.started ? t('lob.off') : live ? t('lob.none') : performance.now() - LOBBY.started < 9000 ? t('lob.loading') : t('lob.down');
+    box.replaceChildren(p); return;
+  }
+  box.replaceChildren(...rows.map(l => {
+    const el = document.createElement('div'); el.className = 'lob';
+    const b = document.createElement('b'); b.textContent = l.host;
+    const m = document.createElement('span'); m.className = 'map'; m.textContent = t('map.' + l.map);
+    const n = document.createElement('span'); n.textContent = l.n + '/8'; if (l.n >= 8) n.className = 'full';
+    const c = document.createElement('code'); c.textContent = l.code;
+    const j = document.createElement('button'); j.className = 'btn3'; j.type = 'button'; j.textContent = t('net.join');
+    j.disabled = l.n >= 8 || NET.mode !== 'off';
+    j.addEventListener('click', () => { audioInit(); $('code').value = l.code; joinGame(l.code); });
+    el.append(b, m, n, c, j); return el;
+  }));
+}
+// fermer l'onglet ou la fenêtre fait quitter la partie proprement
+addEventListener('pagehide', () => { if (NET.mode !== 'off') leaveNet(); else lobbyHide(); });
 function saveName() {
   const v = $('pseudo').value.trim().slice(0, 14);
   if (v) { S.name = v; store.set('name', v); }
@@ -3225,7 +3877,7 @@ function startPlaying() {
   lastFrame = performance.now(); acc = 0;
 }
 function pause() {
-  playing = false; clearInput(); menu.hidden = false; hud.hidden = true;
+  playing = false; clearInput(); menu.hidden = false; hud.hidden = true; openEmoteMenu(false); endEmote();
   setPlayLbl(NET.mode !== 'off' ? 'play.back' : 'play.resume');
   if (AC && slideGain) { slideGain.gain.value = 0; }
 }
@@ -3263,7 +3915,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['stim', 'Stim', ['KeyQ', null]], ['dome', 'Dôme', ['KeyG', null]], ['portal', 'Portail', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['mute', 'Couper le son', ['KeyP', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['stim', 'Stim', ['KeyQ', null]], ['dome', 'Dôme', ['KeyG', null]], ['portal', 'Portail', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['mute', 'Couper le son', ['KeyP', null]]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -3285,7 +3937,7 @@ function onAction(id) {
   else if (id === 'crouch') { lastCrouchT = simTime; crouchEdge = true; }
   else if (id === 'forward') P.tapPulse = true;
   else if (id === 'reload') startReload();
-  else if (id[0] === 'w' && id.length === 2) swapTo(parseInt(id[1], 10) - 1);
+  else if (id[0] === 'w' && id.length === 2) { endEmote(); swapTo(parseInt(id[1], 10) - 1); }
   else if (id === 'next') swapTo((WS.cur + 1) % WEAPONS.length);
   else if (id === 'prev') swapTo((WS.cur + WEAPONS.length - 1) % WEAPONS.length);
   else if (id === 'respawn' && !P.dead) {
@@ -3294,6 +3946,7 @@ function onAction(id) {
     else toast(t('toast.respawnFull'), 2);
   }
   else if (id === 'inspect') inspect();
+  else if (id === 'emote') { if (EMOTE.on) endEmote(); else openEmoteMenu(!EMOTE.menu); }
   else if (id === 'stim') useStim();
   else if (id === 'dome') useDome();
   else if (id === 'portal') usePortal();
@@ -3304,7 +3957,11 @@ addEventListener('keydown', e => {
   if (capture) return;
   if (!playing) return;
   const c = e.code;
-  if (c === 'Escape') { if (unlockedMode) pause(); return; }
+  if (c === 'Escape') { if (EMOTE.menu) { openEmoteMenu(false); return; } if (unlockedMode) pause(); return; }
+  if (EMOTE.menu) {
+    const m = /^(?:Digit|Numpad)([1-6])$/.exec(c);
+    if (m) { e.preventDefault(); keys[c] = true; startEmote(+m[1] - 1); return; }
+  }
   if (boundCodes().has(c) || c === 'Space' || c === 'Tab') e.preventDefault();
   if (!keys[c]) pressCode(c);
   keys[c] = true;
@@ -3540,9 +4197,13 @@ tintSel.addEventListener('change', () => { S.tint = tintSel.value; store.set('ti
 const knifeSel = $('knifeSel'); knifeSel.value = S.knife;
 knifeSel.addEventListener('change', () => {
   S.knife = knifeSel.value; store.set('knife', S.knife); applyKnifeStats();
-  wScene.remove(VM[5].g); VM[5] = buildViewmodel(5, S.knife); applySkin(S.skin);
+  wScene.remove(VM[5].g); VM[5] = buildViewmodel(5, S.knife); applySkin(S.skin); syncKskin();
   VM[5].g.visible = WS.cur === 5; renderSlots();
 });
+const kskinSel = $('kskinSel'); kskinSel.value = S.kskin;
+function syncKskin() { $('kskinField').hidden = S.knife !== 'katana'; }
+syncKskin();
+kskinSel.addEventListener('change', () => { S.kskin = kskinSel.value; store.set('kskin', S.kskin); applySkin(S.skin); });
 const skinSel = $('skin'); skinSel.value = S.skin;
 skinSel.addEventListener('change', () => { S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
 const sndSel = $('slideSnd'); sndSel.value = S.slideSnd;
@@ -3595,6 +4256,11 @@ $('pseudo').addEventListener('change', saveName);
 $('hostBtn').addEventListener('click', () => { audioInit(); hostGame(); });
 $('joinBtn').addEventListener('click', () => { audioInit(); joinGame($('code').value); });
 $('code').addEventListener('keydown', e => { if (e.key === 'Enter') { audioInit(); joinGame($('code').value); } });
+$('leaveBtn').addEventListener('click', () => { leaveNet(); setNetStatus(t('net.left')); });
+S.lobPublic = store.get('lobPublic', true) !== false;
+$('lobPublic').checked = S.lobPublic;
+$('lobPublic').addEventListener('change', e => { S.lobPublic = e.target.checked; store.set('lobPublic', S.lobPublic); if (S.lobPublic) lobbyShow(); else lobbyHide(); });
+lobbyStart();
 $('copyBtn').addEventListener('click', () => {
   const link = $('roomLink').textContent;
   const done = () => { $('copyBtn').firstChild.textContent = t('net.copied'); setTimeout(() => { $('copyBtn').firstChild.textContent = t('net.copy'); }, 1600); };
@@ -3663,6 +4329,8 @@ function frame(now) {
   aimAssist(dt);
   updateCamera(dt, playing || NET.mode !== 'off' ? acc / STEP : 1);
   updateRemotes(dt);
+  updateSelfAvatar(dt);
+  updateFpLegs(dt);
   updateAbilityFx(dt);
   if (playing) updateWeapon(dt);
   updateViewmodel(dt);

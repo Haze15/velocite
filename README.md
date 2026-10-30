@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Quatre cartes (Canyon, Raffinerie, Forêt, Château), 5 armes et 6 couteaux, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Quatre cartes (Canyon, Raffinerie, Forêt, Château), 5 armes, 6 couteaux et la hache double Morgane, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -17,6 +17,10 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 
 Soldat, X-Bot ou Robot, avec dix-huit couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
+Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (jambes tendues vers l'avant). Pendant un superglide, tu vois aussi tes jambes tendues à la première personne.
+
+**Emotes :** appuie sur **J** puis sur **1 à 6** : salut, danse, pouce levé, bravo, assis, muscles. La caméra passe à la troisième personne pendant l'emote (la souris tourne autour du perso), et bouger, sauter ou tirer l'arrête. Les autres joueurs voient l'emote en ligne.
+
 ## Cartes
 
 - **Canyon** : désert au coucher du soleil, grande pente de glisse, tour centrale, arène de robots.
@@ -32,6 +36,10 @@ La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui chois
 1. Un joueur clique sur **Créer une partie** : il héberge la partie et reçoit un code de 5 caractères.
 2. Les autres entrent ce code et cliquent sur **Rejoindre**, ou ouvrent directement le lien partagé (`…/velocite/#CODE`).
 3. Tout le monde clique sur **Entrer dans l'arène**.
+
+La liste **Parties en cours** du menu affiche les parties publiques avec leur hôte, leur carte et le nombre de joueurs : un clic sur **Rejoindre** suffit. Une partie y apparaît tant que la case « Afficher ma partie dans la liste » est cochée chez l'hôte. L'annonce passe par un broker MQTT public (EMQX et HiveMQ) ; si ton réseau le bloque, la liste reste vide mais les codes marchent toujours.
+
+Fermer l'onglet ou la fenêtre fait quitter la partie tout de suite (les autres voient ton départ), et le bouton **Quitter la partie** fait pareil sans fermer le jeu.
 
 La connexion passe par WebRTC avec [PeerJS](https://peerjs.com/) et son serveur de mise en relation public. Il n'y a pas de serveur de jeu : l'hôte relaie positions, tirs et éliminations. Si l'hôte quitte, la partie se ferme.
 
@@ -53,6 +61,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | 6 ou V | Couteau |
 | Q / A en AZERTY | Stim : +35 % de vitesse pendant 6 s (recharge 9 s) |
 | X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
+| J | Emotes (puis 1 à 6) |
 | G | Dôme-bouclier : bulle de 5 m qui arrête les balles pendant 12 s (recharge 25 s) |
 | F | Portail : pose l'entrée, va à au moins 6 m, réappuie pour ouvrir la sortie (40 s) |
 | M | Mini-carte |
@@ -76,8 +85,13 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Dague | 55, portée 2,6 m | 110 coups/min | — |
 | Papillon | 46, portée 2,5 m | 135 coups/min | — |
 | Katana | 70, portée 3,6 m | 80 coups/min | — |
+| Morgane (hache double) | 85, portée 3,4 m | 62 coups/min | — |
 
-Avec le couteau en main, tu cours 10 % plus vite. Dix-neuf skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon, sakura, océan, toxique, royal, camo urbain, coucher de soleil.
+Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon, sakura, océan, toxique, royal, camo urbain, coucher de soleil, et cinq skins animés (plasma, arc-en-ciel, pulsation, circuit, flammes).
+
+**Katana :** combo de trois coups (diagonale, remontée, horizontal) avec une traînée lumineuse, moulinet en sortant la lame et inspection dédiée. Il a ses propres skins : tamahagane, Damas, lame de sang, dragon, énergie, sakura, obsidienne, éclair et néant (dragon, énergie, éclair et néant sont animés). La traînée prend la couleur du skin.
+
+**Morgane :** hache double à lames argent-violet et runes roses. Coup vertical puis diagonal, lents mais lourds. Un joueur éliminé à la Morgane réapparaît en tenue Morgane (rose, oreilles de chat, nœud et jupe plissée) jusqu'à sa prochaine mort ; les robots d'entraînement la gardent 90 s.
 
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 
