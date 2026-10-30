@@ -92,6 +92,8 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .field select option{background:var(--night)}
 .check{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
 .check input{accent-color:var(--amber);width:17px;height:17px}
+.xgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px 26px;margin-bottom:10px}
+.xlock h2::before{background:var(--hostile)}
 .credits{font-size:12.5px;color:var(--ink-dim);line-height:1.5;max-width:80ch}
 .credits a{color:var(--ink-dim)}
 .touch-note{display:none;font-size:14px;color:var(--amber);margin:12px 0 0}
@@ -294,7 +296,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
           <li><span class="tag mid">Inter</span><div><strong>Bhop</strong><p>Garde <kbd data-code="KeyC">C</kbd> enfoncé en retombant pour reglisser, et saute au moment où tu touches le sol. Pas de friction, aucune perte.</p></div></li>
           <li><span class="tag mid">Inter</span><div><strong>Escalade et wall-jump</strong><p>Saute face à un mur en avançant pour grimper jusqu'à 6 m. <kbd>Espace</kbd> pendant la montée pour rebondir dans une autre direction.</p></div></li>
           <li><span class="tag adv">Avancé</span><div><strong>Air-strafe et tap-strafe</strong><p>En l'air, tourne la souris du côté de <kbd data-code="KeyA">Q</kbd> ou <kbd data-code="KeyD">D</kbd>. Pour un virage sec juste après un saut, garde la touche, tourne et fais rouler la molette.</p></div></li>
-          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd>Espace</kbd> puis <kbd data-code="KeyC">C</kbd> presque en même temps. Sortie à près de 10 m/s.</p></div></li>
+          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd>Espace</kbd> puis <kbd data-code="KeyC">C</kbd> presque en même temps. Sortie à près de 12 m/s.</p></div></li>
         </ul>
       </div>
     </div>
@@ -306,8 +308,23 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field"><span class="lab">Champ de vision <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab">Volume <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
         <label class="field"><span class="lab">Molette</span><select id="wheel"><option value="forward">Avancer (tap-strafe)</option><option value="jump">Sauter (bhop)</option></select></label>
+        <label class="field"><span class="lab">Graphismes</span><select id="quality"><option value="auto">Auto (adapte la résolution)</option><option value="high">Élevés</option><option value="low">Rapides (sans ombres)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> Sprint automatique</label>
       </div>
+    </div>
+
+    <div class="block xlock" id="xlockBlock" hidden>
+      <h2>Mode xlock</h2>
+      <div class="grid xgrid">
+        <label class="check"><input type="checkbox" data-x="god"> Invincible</label>
+        <label class="check"><input type="checkbox" data-x="oneshot"> Un tir, un mort</label>
+        <label class="check"><input type="checkbox" data-x="norecoil"> Sans recul ni dispersion</label>
+        <label class="check"><input type="checkbox" data-x="ammo"> Munitions infinies</label>
+        <label class="check"><input type="checkbox" data-x="wall"> Pseudos à travers les murs</label>
+        <label class="check"><input type="checkbox" data-x="speed"> Vitesse ×1,5</label>
+        <label class="check"><input type="checkbox" data-x="jumps"> Sauts infinis</label>
+      </div>
+      <p class="hint">Actif seulement dans ce navigateur. Retape le mot de passe dans ce menu pour masquer ce panneau.</p>
     </div>
     <p class="credits">Modèles 3D : robot de Tomás Laulhé (Quaternius, CC0) et soldat Mixamo, tous deux issus des exemples de three.js. Moteur : three.js r128. Réseau : PeerJS.</p>
   </div>
@@ -340,25 +357,36 @@ const S = {
   name: store.get('name', 'Joueur' + Math.floor(100 + Math.random() * 900))
 };
 
+/* ================= Mode secret ================= */
+const X_HASH = 'e20280a81b036e15986c488eeb27e598277b81b2f7735631e5824c22f217d34d';
+const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false };
+let xUnlocked = store.get('xu', false) === true;
+if (xUnlocked) Object.assign(X, store.get('xs', {}));
+const xActive = () => xUnlocked && Object.values(X).some(Boolean);
+S.quality = store.get('quality', 'auto');
+
 /* ================= Constantes de mouvement (mètres, secondes) ================= */
 const STEP = 1 / 120;
 const G = 18, JUMP_V = 6.4, R = 0.38, STAND_H = 1.8, CROUCH_H = 1.15, STEP_H = 0.5;
-const WALK = 4.4, SPRINT = 7.3, CROUCHWALK = 2.5, FRICTION = 6.5, STOPSPEED = 2.2, GACCEL = 11;
-const AIR_CAP = 0.7, AIR_ACCEL = 16, AIR_CTRL_MAX = 6.0, AIR_CTRL = 3.4;
-const SLIDE_MIN = 5.6, SLIDE_END = 3.6, SLIDE_BOOST = 2.3, SLIDE_BOOST_CAP = 10.8, SLIDE_CD = 2.0;
+const K = 1.18; // multiplicateur global de vitesse
+const WALK = 4.4 * K, SPRINT = 7.3 * K, CROUCHWALK = 2.5 * K, FRICTION = 6.5, STOPSPEED = 2.2, GACCEL = 11;
+const AIR_CAP = 0.7, AIR_ACCEL = 16, AIR_CTRL_MAX = 6.0 * K, AIR_CTRL = 3.4;
+const SLIDE_MIN = 5.6 * K, SLIDE_END = 3.6 * K, SLIDE_BOOST = 2.3 * K, SLIDE_BOOST_CAP = 10.8 * K, SLIDE_CD = 2.0;
 const SLIDE_G = 22, SLIDE_FRIC = 2.8, SLIDE_FRIC2 = 0.15, SLIDE_STEER = 4.5;
 const CLIMB_TIME = 1.05, CLIMB_V0 = 6.4, CLIMB_V1 = 3.0;
-const WJ_OUT = 5.2, WJ_UP = 6.2, WJ_SIDE = 3.5;
-const SG_WIN = 0.1, SG_SPEED = 9.8;
+const WJ_OUT = 5.2 * K, WJ_UP = 6.2, WJ_SIDE = 3.5;
+const SG_WIN = 0.1, SG_SPEED = 9.8 * K;
 const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15;
 const MAX_SH = 75, MAX_HP = 100;
 
 /* ================= Rendu ================= */
 const canvas = $('c');
 const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.5));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const DPR = window.devicePixelRatio || 1;
+let pixelRatio = S.quality === 'low' ? Math.min(DPR, 0.85) : S.quality === 'high' ? Math.min(DPR, 1.5) : Math.min(DPR, 1.25);
+renderer.setPixelRatio(pixelRatio);
+renderer.shadowMap.enabled = S.quality !== 'low';
+renderer.shadowMap.type = S.quality === 'high' ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
 renderer.autoClear = false;
 const MAX_ANISO = renderer.capabilities.getMaxAnisotropy();
 
@@ -391,7 +419,7 @@ scene.add(sky);
 scene.add(new THREE.HemisphereLight(0xcfe0ea, 0xa47e55, 0.72));
 const sun = new THREE.DirectionalLight(0xffe6c2, 0.95);
 sun.castShadow = true;
-sun.shadow.mapSize.set(2048, 2048);
+sun.shadow.mapSize.setScalar(S.quality === 'high' ? 2048 : 1024);
 Object.assign(sun.shadow.camera, { left: -82, right: 82, top: 82, bottom: -82, near: 10, far: 340 });
 sun.shadow.camera.updateProjectionMatrix();
 sun.shadow.bias = -0.0006;
@@ -532,17 +560,52 @@ ramp(8, 12, 30, 34, 'z', -1, 0, 1.3); ramp(-8, -4, 30, 34, 'z', -1, 0, 1.3);
 pad(-22, 0, -47); pad(15, 0, -20); pad(20, 0, 45);
 {
   const mesaMat = new THREE.MeshPhongMaterial({ color: 0xb3825c, flatShading: true, shininess: 0 });
+  const mesaGeos = [];
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   for (let i = 0; i < 28; i++) {
     const a = i / 28 * Math.PI * 2 + rnd() * 0.2, d = 160 + rnd() * 140, r = 12 + rnd() * 28, h = 18 + rnd() * 55;
-    const m = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.72, r, h, 6 + ((rnd() * 3) | 0)), mesaMat);
-    m.position.set(Math.cos(a) * d, h / 2 - 2, Math.sin(a) * d); m.rotation.y = rnd() * 3; scene.add(m);
+    const g = new THREE.CylinderGeometry(r * 0.72, r, h, 6 + ((rnd() * 3) | 0)).toNonIndexed();
+    g.rotateY(rnd() * 3); g.translate(Math.cos(a) * d, h / 2 - 2, Math.sin(a) * d); mesaGeos.push(g);
   }
+  scene.add(new THREE.Mesh(mergeGeos(mesaGeos, ['position', 'normal']), mesaMat));
   const siloMat = new THREE.MeshLambertMaterial({ color: 0x6f8f92 });
+  const siloGeos = [];
   [[78, -70], [-80, 72], [84, 60], [-76, -82]].forEach(([x, z]) => {
-    const s = new THREE.Mesh(new THREE.CylinderGeometry(6, 6, 24, 20), siloMat); s.position.set(x, 12, z); s.castShadow = true; scene.add(s);
-    const c = new THREE.Mesh(new THREE.ConeGeometry(6.2, 4, 20), siloMat); c.position.set(x, 26, z); scene.add(c);
+    siloGeos.push(new THREE.CylinderGeometry(6, 6, 24, 20).toNonIndexed().translate(x, 12, z));
+    siloGeos.push(new THREE.ConeGeometry(6.2, 4, 20).toNonIndexed().translate(x, 26, z));
   });
+  const silos = new THREE.Mesh(mergeGeos(siloGeos, ['position', 'normal', 'uv']), siloMat); silos.castShadow = true; scene.add(silos);
+}
+mergeStatic();
+// Fusionne les blocs par matériau : ~130 appels de dessin deviennent une dizaine
+function mergeGeos(list, attrs) {
+  let n = 0; for (const g of list) n += g.attributes.position.count;
+  const out = new THREE.BufferGeometry();
+  for (const a of attrs) {
+    const size = list[0].attributes[a].itemSize, arr = new Float32Array(n * size);
+    let o = 0; for (const g of list) { arr.set(g.attributes[a].array, o); o += g.attributes[a].array.length; }
+    out.setAttribute(a, new THREE.BufferAttribute(arr, size));
+  }
+  out.computeBoundingSphere(); out.computeBoundingBox();
+  return out;
+}
+function mergeStatic() {
+  const ground = WORLD[0], groups = new Map(), edges = [];
+  for (const m of WORLD.slice(1)) {
+    m.updateMatrixWorld(true);
+    const g = m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone();
+    g.applyMatrix4(m.matrixWorld);
+    if (!groups.has(m.material)) groups.set(m.material, []);
+    groups.get(m.material).push(g);
+    for (const c of m.children) if (c.isLineSegments) { const e = c.geometry.clone(); e.applyMatrix4(c.matrixWorld); edges.push(e); }
+    scene.remove(m);
+  }
+  WORLD.length = 0; WORLD.push(ground);
+  for (const [mat, list] of groups) {
+    const mesh = new THREE.Mesh(mergeGeos(list, ['position', 'normal', 'uv']), mat);
+    mesh.castShadow = mesh.receiveShadow = true; scene.add(mesh); WORLD.push(mesh);
+  }
+  scene.add(new THREE.LineSegments(mergeGeos(edges, ['position']), edgeMat));
 }
 const SPAWNS = [
   [0, 0, 50, 0], [-30, 0, 45, -0.6], [40, 0, 40, 0.7], [-55, 0, 0, -1.57], [55, 0, -10, 1.57],
@@ -729,8 +792,8 @@ function mantleJump(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
   P.pos.y = m.top + 0.01;
   const d = mantleExitDir(m, wx, wz, hasWish);
-  P.vel.set(d.x * 5, 6.0, d.z * 5); P.grounded = false;
-  feed('MANTLE JUMP', '5.0 m/s'); sfx.jump();
+  P.vel.set(d.x * 5 * K, 6.0, d.z * 5 * K); P.grounded = false;
+  feed('MANTLE JUMP', (5 * K).toFixed(1) + ' m/s'); sfx.jump();
 }
 function mantleStep(dt, wx, wz, hasWish) {
   const m = P.mantle; m.t += dt;
@@ -767,7 +830,7 @@ function groundMove(dt, wx, wz, hasWish, iz) {
   }
   P.sprinting = hasWish && iz > 0 && !P.crouch && !mouse.right && !mouse.left && (keys.ShiftLeft || keys.ShiftRight || S.autoSprint);
   if (hasWish) {
-    let target = P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK;
+    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1);
     if (iz < 0) target = Math.min(target, WALK * 0.9);
     if (mouse.right) target = Math.min(target, WALK * 0.75);
     accelerate(wx, wz, target, GACCEL, dt);
@@ -798,21 +861,21 @@ function slideStep(dt, wx, wz, hasWish, crouchHeld) {
 }
 function doJump(hs) {
   P.vel.y = JUMP_V; P.grounded = false; P.jumpBuf = 0; P.airT = 0;
-  if (simTime - P.landT < 0.06 && P.landSpeed > 6.5) {
+  if (simTime - P.landT < 0.06 && P.landSpeed > 6.5 * K) {
     P.bhop++; feed('BHOP', '×' + P.bhop + ' · ' + hs.toFixed(1) + ' m/s', '', 'bhop');
   } else {
     P.bhop = 0;
-    if (P.sliding && hs > 7.6) feed('SLIDE-JUMP', hs.toFixed(1) + ' m/s');
+    if (P.sliding && hs > 7.6 * K) feed('SLIDE-JUMP', hs.toFixed(1) + ' m/s');
   }
   P.sliding = false; sfx.jump();
 }
 function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
   const v = P.vel; P.sliding = false; P.airT += dt;
   v.y -= G * dt;
-  if (P.jumpBuf > 0 && P.doubleJump) {
+  if (P.jumpBuf > 0 && (P.doubleJump || X.jumps)) {
     P.doubleJump = false; P.jumpBuf = 0; v.y = 7.4;
     const sp = Math.hypot(v.x, v.z);
-    if (hasWish) { const ns = Math.max(sp, 6.5); v.x = wx * ns; v.z = wz * ns; }
+    if (hasWish) { const ns = Math.max(sp, 6.5 * K); v.x = wx * ns; v.z = wz * ns; }
     feed('DOUBLE SAUT', Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan'); sfx.pad(0.5);
   }
   if (hasWish) {
@@ -833,7 +896,7 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
     }
   }
   const s3 = Math.hypot(v.x, v.z);
-  if (s3 > 16) { const k = 1 - 0.35 * dt; v.x *= k; v.z *= k; }
+  if (s3 > 16 * K) { const k = 1 - 0.35 * dt; v.x *= k; v.z *= k; }
   if (fwdHeld) tryWall(fx, fz);
 }
 function onLand(vy) {
@@ -1247,11 +1310,11 @@ function damageRemote(rp, amount, part) {
 }
 function fire() {
   const W = WEAPONS[WS.cur];
-  WS.ammo[WS.cur]--;
+  if (!X.ammo) WS.ammo[WS.cur]--;
   WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm;
   WS.flashT = 0.045; WS.kick += W.kick; WS.kickRot += W.kickRot;
-  const spread = currentSpread();
-  WS.bloom = Math.min(WS.bloom + W.bloom, 1.4);
+  const spread = X.norecoil ? 0 : currentSpread();
+  if (!X.norecoil) WS.bloom = Math.min(WS.bloom + W.bloom, 1.4);
   camera.updateMatrixWorld();
   camera.getWorldPosition(_o);
   const e = camera.matrixWorld.elements;
@@ -1279,7 +1342,7 @@ function fire() {
       if (ud && (ud.d || ud.rp)) {
         stats.hits++;
         const mult = ud.part === 'head' ? W.head : ud.part === 'legs' ? W.legs : 1;
-        const dmg = Math.round(W.dmg * mult);
+        const dmg = Math.round(W.dmg * mult) * (X.oneshot ? 10 : 1);
         const r = ud.d ? damageDummy(ud.d, dmg, ud.part) : damageRemote(ud.rp, dmg, ud.part);
         if (r === 'kill' || (r === 'head' && result !== 'kill') || !result) result = r;
         spawnSpark(hit.point, false);
@@ -1288,8 +1351,10 @@ function fire() {
     if (i < 3) { spawnTracer(_m, _end); ends.push([r2(_end.x), r2(_end.y), r2(_end.z)]); }
   }
   const rk = (1 - 0.35 * WS.ads) * (0.85 + Math.random() * 0.3);
-  P.pitch = clamp(P.pitch + W.rv * DEG * rk, -1.55, 1.55);
-  P.yaw += (Math.random() * 2 - 1) * W.rh * DEG;
+  if (!X.norecoil) {
+    P.pitch = clamp(P.pitch + W.rv * DEG * rk, -1.55, 1.55);
+    P.yaw += (Math.random() * 2 - 1) * W.rh * DEG;
+  }
   sfx.shot(WS.cur);
   netSend({ k: 'shot', w: WS.cur, a: [r2(_m.x), r2(_m.y), r2(_m.z)], e: ends });
   if (result) {
@@ -1490,7 +1555,7 @@ function clientRecv(m) {
   }
 }
 function applyHit(m) {
-  if (P.dead || NET.mode === 'off') return;
+  if (P.dead || NET.mode === 'off' || X.god) return;
   const dmg = Math.max(0, Math.min(400, +m.dmg || 0));
   const shBefore = P.sh;
   const toSh = Math.min(P.sh, dmg); P.sh -= toSh;
@@ -1582,7 +1647,7 @@ function updateRemotes(dt) {
     if (rp.vis) {
       if (rp.vis.mixer) {
         rp.vis.mixer.update(dt);
-        const anim = st.a === 'air' ? 'Run' : hs > 4.6 ? 'Run' : hs > 0.6 ? 'Walk' : 'Idle';
+        const anim = st.a === 'air' ? 'Run' : hs > 4.6 * K ? 'Run' : hs > 0.6 ? 'Walk' : 'Idle';
         playAnim(rp.vis, anim, 0.2);
         const act = rp.vis.actions[rp.vis.cur]; if (act) act.timeScale = st.a === 'air' ? 0.3 : st.a === 'slide' ? 0.1 : 1;
       }
@@ -1596,14 +1661,14 @@ function updateRemotes(dt) {
     if (!st.dead) {
       _p.set(rp.pos.x, rp.pos.y + (low ? 1.45 : 2.05), rp.pos.z);
       const dist = camera.position.distanceTo(_p);
-      if (dist < 90) {
+      if (dist < 90 || X.wall) {
         _d.copy(_p).sub(camera.position).normalize();
         raycaster.set(camera.position, _d); raycaster.far = dist;
-        const blocked = raycaster.intersectObjects(WORLD, false).length > 0;
+        const blocked = !X.wall && raycaster.intersectObjects(WORLD, false).length > 0;
         if (!blocked) {
           _p.project(camera);
           if (_p.z < 1) {
-            rp.tag.hidden = false; rp.tag.firstChild.textContent = rp.name;
+            rp.tag.hidden = false; rp.tag.firstChild.textContent = X.wall ? rp.name + ' · ' + Math.round(dist) + ' m' : rp.name;
             rp.tag.style.transform = `translate(${((_p.x * .5 + .5) * W).toFixed(1)}px,${((-_p.y * .5 + .5) * H).toFixed(1)}px) translate(-50%,-100%)`;
           }
         }
@@ -1724,7 +1789,7 @@ function sizeSpark() {
   spark.width = Math.round(w * dpr); spark.height = Math.round(h * dpr); sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 }
 function drawSpark() {
-  const w = spark.clientWidth || 250, h = spark.clientHeight || 54, max = 16;
+  const w = spark.clientWidth || 250, h = spark.clientHeight || 54, max = 19;
   sctx.clearRect(0, 0, w, h);
   sctx.fillStyle = 'rgba(14,18,22,.45)'; sctx.fillRect(0, 0, w, h);
   sctx.font = '600 10px "Saira Condensed", sans-serif'; sctx.fillStyle = 'rgba(244,239,230,.5)';
@@ -1824,10 +1889,11 @@ function updateHUD(dt) {
     if (P.respawnT <= 0) { spawnPlayer(true); hudEls.death.hidden = true; }
   }
   sparkAcc += dt;
-  while (sparkAcc > 1 / 30) { sparkAcc -= 1 / 30; sparkData.copyWithin(0, 1); sparkData[SPARK_N - 1] = hs; }
-  drawSpark();
+  let sparkNew = false;
+  while (sparkAcc > 1 / 30) { sparkAcc -= 1 / 30; sparkData.copyWithin(0, 1); sparkData[SPARK_N - 1] = hs; sparkNew = true; }
+  if (sparkNew) drawSpark();
   fpsAcc += dt; fpsN++;
-  if (fpsAcc > 0.5) { setTxt(hudEls.fps, Math.round(fpsN / fpsAcc) + ' IPS'); fpsAcc = 0; fpsN = 0; }
+  if (fpsAcc > 0.5) { const f = fpsN / fpsAcc; setTxt(hudEls.fps, Math.round(f) + ' IPS' + (xActive() ? ' · x' : '')); autoRes(f); fpsAcc = 0; fpsN = 0; }
   if (AC && slideGain) {
     const t = AC.currentTime;
     slideGain.gain.setTargetAtTime(P.sliding && P.grounded ? Math.min(1, hs / 12) * 0.22 : 0, t, 0.05);
@@ -1835,6 +1901,49 @@ function updateHUD(dt) {
     windGain.gain.setTargetAtTime(wind * 0.16, t, 0.1); windFilt.frequency.setTargetAtTime(350 + hs * 40, t, 0.1);
   }
 }
+// Résolution dynamique : vise 60 IPS en mode auto
+function autoRes(fps) {
+  if (S.quality !== 'auto' || !playing) return;
+  const maxPR = Math.min(DPR, 1.25);
+  let pr = pixelRatio;
+  if (fps < 52 && pr > 0.6) pr = Math.max(0.6, pr - 0.1);
+  else if (fps > 75 && pr < maxPR) pr = Math.min(maxPR, pr + 0.05);
+  if (pr !== pixelRatio) { pixelRatio = pr; renderer.setPixelRatio(pr); renderer.setSize(window.innerWidth, window.innerHeight, false); }
+}
+function applyQuality() {
+  pixelRatio = S.quality === 'low' ? Math.min(DPR, 0.85) : S.quality === 'high' ? Math.min(DPR, 1.5) : Math.min(DPR, 1.25);
+  renderer.setPixelRatio(pixelRatio); renderer.setSize(window.innerWidth, window.innerHeight, false);
+  renderer.shadowMap.enabled = S.quality !== 'low';
+  renderer.shadowMap.type = S.quality === 'high' ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
+  sun.shadow.mapSize.setScalar(S.quality === 'high' ? 2048 : 1024);
+  if (sun.shadow.map) { sun.shadow.map.dispose(); sun.shadow.map = null; }
+  scene.traverse(o => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { m.needsUpdate = true; }); });
+}
+// Mot de passe tapé dans le menu (hors champs de saisie), comparé à son empreinte SHA-256
+let xBuf = '';
+addEventListener('keydown', e => {
+  if (playing || !e.key || e.key.length !== 1) return;
+  const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
+  xBuf = (xBuf + e.key.toLowerCase()).slice(-5);
+  if (xBuf.length < 5 || !(window.crypto && crypto.subtle)) return;
+  const tried = xBuf;
+  crypto.subtle.digest('SHA-256', new TextEncoder().encode(tried)).then(buf => {
+    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    if (hex !== X_HASH) return;
+    xBuf = '';
+    xUnlocked = !xUnlocked; store.set('xu', xUnlocked);
+    if (!xUnlocked) for (const k in X) X[k] = false;
+    renderX();
+  }).catch(() => {});
+});
+function renderX() {
+  $('xlockBlock').hidden = !xUnlocked;
+  document.querySelectorAll('[data-x]').forEach(el => { el.checked = !!X[el.dataset.x]; });
+}
+document.querySelectorAll('[data-x]').forEach(el => el.addEventListener('change', () => {
+  X[el.dataset.x] = el.checked; store.set('xs', X);
+}));
+renderX();
 let toastT = 0;
 function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); toastT = sec; }
 
@@ -1949,6 +2058,8 @@ const wheelSel = $('wheel'), wheelLbl = $('wheelLbl');
 function setWheelLbl() { wheelLbl.innerHTML = S.wheel === 'jump' ? 'Sauter <small>(bhop)</small>' : 'Avancer <small>(tap-strafe)</small>'; }
 wheelSel.value = S.wheel; setWheelLbl();
 wheelSel.addEventListener('change', () => { S.wheel = wheelSel.value; store.set('wheel', S.wheel); setWheelLbl(); });
+const qSel = $('quality'); qSel.value = S.quality;
+qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quality', S.quality); applyQuality(); });
 const asEl = $('autoSprint'); asEl.checked = S.autoSprint;
 asEl.addEventListener('change', () => { S.autoSprint = asEl.checked; store.set('autoSprint', S.autoSprint); });
 $('pseudo').value = S.name;
