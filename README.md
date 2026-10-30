@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Quatre cartes (Canyon, Raffinerie, Forêt, Château), 5 armes, 6 couteaux et la hache double Morgane, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Six cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion), des buggys à conduire, 5 armes, 6 couteaux et la hache double Morgane, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -29,7 +29,14 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 - **Forêt** : pins, ruisseau, cabane avec toit accessible, mirador sur pilotis, colline de glisse de 9 m.
 - **Château** : forteresse originale avec douves, pont-levis, cour intérieure, chemin de ronde crénelé, tours d'angle, donjon avec grand escalier de glisse et pad vers la tour haute.
 
+- **Volcan** : carte immense (420 m de côté) avec un vrai relief : volcan de 74 m avec cratère de lave, trois coulées qui descendent ses flancs (la lave brûle), ponts, avant-postes dans les coins, camp de base au sud, plaine de cendres avec tremplins pour les buggys.
+- **Fusion** : les quatre cartes collées en carré, sans murs entre elles, avec un carrefour et un pad au centre.
+
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
+
+## Buggys
+
+Sur le Canyon, le Volcan et la Fusion, des buggys attendent. Approche-toi et appuie sur **E** pour monter : Z/W accélère, S freine puis recule, Q/D (A/D) tourne, **Espace** est le frein à main pour déraper, **Maj** donne un petit turbo. La caméra passe derrière le buggy et la souris tourne autour. Les tremplins et les crêtes font décoller. Foncer dans un robot ou un joueur à plus de 9 m/s lui fait des dégâts. **E** pour descendre. En ligne, les autres te voient assis au volant.
 
 ## Multijoueur
 
@@ -62,6 +69,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Q / A en AZERTY | Stim : +35 % de vitesse pendant 6 s (recharge 9 s) |
 | X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
 | J | Emotes (puis 1 à 6) |
+| E | Monter dans un buggy / en descendre |
 | G | Dôme-bouclier : bulle de 5 m qui arrête les balles pendant 12 s (recharge 25 s) |
 | F | Portail : pose l'entrée, va à au moins 6 m, réappuie pour ouvrir la sortie (40 s) |
 | M | Mini-carte |
@@ -92,6 +100,8 @@ Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au c
 **Katana :** combo de trois coups (diagonale, remontée, horizontal) avec une traînée lumineuse, moulinet en sortant la lame et inspection dédiée. Il a ses propres skins : tamahagane, Damas, lame de sang, dragon, énergie, sakura, obsidienne, éclair et néant (dragon, énergie, éclair et néant sont animés). La traînée prend la couleur du skin.
 
 **Morgane :** hache double à lames argent-violet et runes roses. Coup vertical puis diagonal, lents mais lourds. Un joueur éliminé à la Morgane réapparaît en tenue Morgane (rose, oreilles de chat, nœud et jupe plissée) jusqu'à sa prochaine mort ; les robots d'entraînement la gardent 90 s.
+
+Les bruitages des armes ont été refaits pour être moins agressifs : un coup grave, un claquement court, une légère réverbération et une petite variation de hauteur à chaque tir.
 
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 
