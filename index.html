@@ -1660,7 +1660,7 @@ function step(dt) {
 }
 
 /* ================= Audio ================= */
-let AC = null, master = null, noiseBuf = null, slideGain = null, windGain = null, windFilt = null, muted = false;
+let AC = null, master = null, noiseBuf = null, slideGain = null, muted = false;
 function audioInit() {
   if (AC) { if (AC.state === 'suspended') AC.resume(); return; }
   const C = window.AudioContext || window.webkitAudioContext; if (!C) return;
@@ -1676,7 +1676,6 @@ function audioInit() {
     return { g, fl };
   };
   slideGain = AC.createGain(); slideGain.gain.value = 0; slideGain.connect(master);
-  const b = loop(450, 0.6); windGain = b.g; windFilt = b.fl;
   const saved = store.get('slideCustom', null);
   if (saved && !customSlideBuf) loadCustomSlide(dataUrlToBuf(saved), null, false);
   buildSlideVoice();
@@ -3061,8 +3060,6 @@ function updateHUD(dt) {
     const t = AC.currentTime;
     slideGain.gain.setTargetAtTime(P.sliding && P.grounded ? Math.min(1, hs / 12) * 0.22 : 0, t, 0.05);
     if (slideVoice && P.sliding) slideVoice.mod(hs);
-    const wind = clamp((hs - 7) / 12, 0, 1) * (P.grounded ? 0.3 : 1);
-    windGain.gain.setTargetAtTime(wind * 0.16, t, 0.1); windFilt.frequency.setTargetAtTime(350 + hs * 40, t, 0.1);
   }
 }
 // Résolution dynamique : vise 60 IPS en mode auto
@@ -3124,7 +3121,7 @@ function startPlaying() {
 function pause() {
   playing = false; clearInput(); menu.hidden = false; hud.hidden = true;
   setPlayLbl(NET.mode !== 'off' ? 'play.back' : 'play.resume');
-  if (AC && slideGain) { slideGain.gain.value = 0; windGain.gain.value = 0; }
+  if (AC && slideGain) { slideGain.gain.value = 0; }
 }
 function startUnlocked() {
   if (playing) return;
