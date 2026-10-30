@@ -128,6 +128,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #netStatus.err{color:var(--hostile)}
 #roomBox{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
 #hud.emoting #xh,#hud.emoting #hm{display:none}
+#hud.inveh .slots,#hud.inveh .ammo,#hud.inveh #wname{visibility:hidden}
 .xsub{margin:16px 0 8px;font:700 13px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
 #espCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .edpanel{margin-top:18px;padding-top:14px;border-top:1px solid var(--ink-faint);display:grid;gap:10px}.edpanel h3{margin:0;font:700 16px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
@@ -379,7 +380,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <p class="touch-note" data-i18n="menu.touch">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
-        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option></select></label>
+        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option></select></label>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
       </div>
     </header>
@@ -450,7 +451,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
-        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option><option value="trident" data-i18n="knife.trident">Trident (se lance et revient)</option></select></label>
         <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
@@ -492,7 +493,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <div class="netrow">
           <label for="edName">Nom<input id="edName" maxlength="24" autocomplete="off" style="width:200px"></label>
           <label for="edSize">Taille<select id="edSize"><option value="32">Mini (64 m)</option><option value="48">Petite (96 m)</option><option value="64">Moyenne (128 m)</option><option value="96">Grande (192 m)</option><option value="140">Énorme (280 m)</option><option value="200">Géante (400 m)</option></select></label>
-          <label for="edTheme">Ambiance<select id="edTheme"><option value="canyon">Canyon</option><option value="refinery">Raffinerie</option><option value="forest">Forêt</option><option value="castle">Château</option><option value="volcano">Volcan</option><option value="mega">Fusion</option></select></label>
+          <label for="edTheme">Ambiance<select id="edTheme"><option value="canyon">Canyon</option><option value="refinery">Raffinerie</option><option value="forest">Forêt</option><option value="castle">Château</option><option value="volcano">Volcan</option><option value="mega">Fusion</option><option value="ghost">Ville fantôme</option></select></label>
           <label class="check"><input type="checkbox" id="edOpenMap"> Sans murs d’enceinte</label>
         </div>
         <div class="edbtns">
@@ -948,6 +949,25 @@ const I18N_ADD8 = {
     'w10s': 'IBHOMU', 'act.grenade': 'Ibhomu', 'act.grenType': 'Uhlobo lwebhomu' }
 };
 for (const l in I18N_ADD8) Object.assign(I18N[l], I18N_ADD8[l]);
+const I18N_ADD9 = {
+  fr: { 'map.ghost': 'Ville fantôme (énorme)', 'knife.trident': 'Trident (se lance et revient)', 'w11s': 'HÉLICO', 'w12s': 'AVION', 'w13s': 'TANK',
+    'veh.enterTank': '{key} Monter dans le tank', 'veh.enterHeli': '{key} Piloter l’hélico', 'veh.enterPlane': '{key} Piloter l’avion',
+    'veh.exitTank': '{key} Descendre · clic gauche : obus · la tourelle suit la souris', 'veh.exitHeli': '{key} Descendre · Espace monter · C descendre · clic : mitrailleuse', 'veh.exitPlane': '{key} Sauter · Z/S gaz · souris pour diriger · décolle à 30 m/s · clic : mitrailleuse' },
+  en: { 'map.ghost': 'Ghost town (huge)', 'knife.trident': 'Trident (throw it, it comes back)', 'w11s': 'HELI', 'w12s': 'PLANE', 'w13s': 'TANK',
+    'veh.enterTank': '{key} Get in the tank', 'veh.enterHeli': '{key} Fly the helicopter', 'veh.enterPlane': '{key} Fly the plane',
+    'veh.exitTank': '{key} Get out · left click: shell · the turret follows the mouse', 'veh.exitHeli': '{key} Get out · Space up · C down · click: machine gun', 'veh.exitPlane': '{key} Bail out · W/S throttle · steer with the mouse · takes off at 30 m/s · click: machine gun' },
+  af: { 'map.ghost': 'Spookdorp (reusagtig)', 'knife.trident': 'Drietand (gooi dit, dit kom terug)', 'w11s': 'HELIKOPTER', 'w12s': 'VLIEGTUIG', 'w13s': 'TENK',
+    'veh.enterTank': '{key} Klim in die tenk', 'veh.enterHeli': '{key} Vlieg die helikopter', 'veh.enterPlane': '{key} Vlieg die vliegtuig',
+    'veh.exitTank': '{key} Klim uit · linkerklik: bom · die toring volg die muis', 'veh.exitHeli': '{key} Klim uit · Spasie op · C af · klik: masjiengeweer', 'veh.exitPlane': '{key} Spring uit · W/S versneller · stuur met die muis · styg op by 30 m/s · klik: masjiengeweer' },
+  zu: { 'map.ghost': 'Idolobha lezipoki (elikhulu kakhulu)', 'knife.trident': 'Ibhoklo (liphonse, liyabuya)', 'w11s': 'INDIZA-NQUNDU', 'w12s': 'INDIZA', 'w13s': 'ITHANGI',
+    'veh.enterTank': '{key} Ngena ethangini', 'veh.enterHeli': '{key} Shayela indiza-nqundu', 'veh.enterPlane': '{key} Shayela indiza',
+    'veh.exitTank': '{key} Yehla · qhafaza kwesobunxele: ibhomu · i-turret ilandela igundane', 'veh.exitHeli': '{key} Yehla · Space phezulu · C phansi · qhafaza: isibhamu', 'veh.exitPlane': '{key} Gxuma · W/S isivinini · qondisa ngegundane · indiza ngo-30 m/s · qhafaza: isibhamu' }
+};
+Object.assign(I18N.fr, { 'dc.driving.tank': 'Aux commandes d’un tank', 'dc.driving.heli': 'Pilote un hélico', 'dc.driving.plane': 'Pilote un avion' });
+Object.assign(I18N.en, { 'dc.driving.tank': 'Driving a tank', 'dc.driving.heli': 'Flying a helicopter', 'dc.driving.plane': 'Flying a plane' });
+Object.assign(I18N.af, { 'dc.driving.tank': 'Bestuur ’n tenk', 'dc.driving.heli': 'Vlieg ’n helikopter', 'dc.driving.plane': 'Vlieg ’n vliegtuig' });
+Object.assign(I18N.zu, { 'dc.driving.tank': 'Ushayela ithangi', 'dc.driving.heli': 'Ushayela indiza-nqundu', 'dc.driving.plane': 'Ushayela indiza' });
+for (const l in I18N_ADD9) Object.assign(I18N[l], I18N_ADD9[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1109,8 +1129,8 @@ const PAL = { concrete: 0xc8c1b2, teal: 0x4f8a8c, wall: 0x9a9081, ramp: 0xd4c8b3
 const matCache = {};
 function M(key) {
   if (matCache[key]) return matCache[key];
-  const cont = key.startsWith('c-');
-  return (matCache[key] = new THREE.MeshLambertMaterial({ color: PAL[cont ? key.slice(2) : key], map: cont ? ribTex : gridTex }));
+  const cont = key.startsWith('c-'), win = key.startsWith('w-');
+  return (matCache[key] = new THREE.MeshLambertMaterial({ color: PAL[cont || win ? key.slice(2) : key], map: cont ? ribTex : win ? winTex : gridTex }));
 }
 const edgeMat = new THREE.LineBasicMaterial({ color: 0x20262b, transparent: true, opacity: 0.32 });
 const BOXES = [], RAMPS = [], PADS = [], WORLD = [];
@@ -1255,6 +1275,54 @@ function buildTerrainMeshes(colorFn) {
   }
 }
 
+/* ---------- herbe : touffes instanciées qui ondulent au vent (un seul appel de dessin par carte) ---------- */
+const GRASS_T = { value: 0 };
+const grassTex = canvasTex((g, s) => {
+  g.clearRect(0, 0, s, s);
+  let seed = 101; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 26; i++) {
+    const x = s * 0.08 + rnd() * s * 0.84, h = s * (0.45 + rnd() * 0.55), w = 3 + rnd() * 4, bend = (rnd() - 0.5) * s * 0.25;
+    const gr = g.createLinearGradient(0, s, 0, s - h); gr.addColorStop(0, '#3d5a22'); gr.addColorStop(1, rnd() < 0.5 ? '#a9c96a' : '#8fb85a');
+    g.fillStyle = gr; g.beginPath(); g.moveTo(x - w, s); g.quadraticCurveTo(x + bend * 0.4, s - h * 0.55, x + bend, s - h); g.quadraticCurveTo(x + bend * 0.4 + w * 0.3, s - h * 0.5, x + w, s); g.fill();
+  }
+}, 128);
+grassTex.wrapS = grassTex.wrapT = THREE.ClampToEdgeWrapping;
+const grassMat = new THREE.MeshLambertMaterial({ map: grassTex, alphaTest: 0.45, side: THREE.DoubleSide });
+grassMat.onBeforeCompile = sh => {
+  sh.uniforms.uTime = GRASS_T;
+  sh.vertexShader = 'uniform float uTime;\n' + sh.vertexShader.replace('#include <begin_vertex>', `#include <begin_vertex>
+  #ifdef USE_INSTANCING
+  float gsw = sin(uTime * 1.6 + instanceMatrix[3].x * 0.31 + instanceMatrix[3].z * 0.27) + 0.4 * sin(uTime * 3.1 + instanceMatrix[3].x);
+  transformed.x += gsw * 0.09 * position.y; transformed.z += gsw * 0.05 * position.y;
+  #endif`);
+};
+const grassGeo = (() => {
+  const geos = [];
+  for (let i = 0; i < 3; i++) { const pl = new THREE.PlaneGeometry(0.7, 0.55); pl.translate(0, 0.275, 0); pl.rotateY(i * Math.PI / 3); geos.push(pl.toNonIndexed()); }
+  return mergeGeos(geos, ['position', 'normal', 'uv']);
+})();
+// zone [x0,z0,x1,z1], nombre de touffes, teinte ; évite les blocs, les rampes et l'eau
+function scatterGrass(x0, z0, x1, z1, count, tint = 0xffffff, avoid) {
+  if (S.quality === 'low') count = Math.round(count * 0.3);
+  if (count <= 0) return;
+  const mesh = new THREE.InstancedMesh(grassGeo, grassMat, count);
+  const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new V3(), pos = new V3(), col = new THREE.Color(), base = new THREE.Color(tint);
+  let seed = Math.floor(Math.abs(x0 * 7 + z1 * 13)) + 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let n = 0;
+  for (let tries = 0; tries < count * 4 && n < count; tries++) {
+    const x = x0 + rnd() * (x1 - x0), z = z0 + rnd() * (z1 - z0);
+    if (avoid && avoid(x, z)) continue;
+    if (BOXES.some(b => !b.ground && b.min.y < 0.4 && x > b.min.x - 0.2 && x < b.max.x + 0.2 && z > b.min.z - 0.2 && z < b.max.z + 0.2)) continue;
+    const r = rampAt(x, z).h; if (r > 0.05 && !TERRAIN) continue;
+    const y = TERRAIN ? terrainH(x, z) : 0;
+    pos.set(x, y, z); q.setFromAxisAngle(UP, rnd() * Math.PI); const k = 0.7 + rnd() * 0.8; sc.set(k, k * (0.8 + rnd() * 0.5), k);
+    m4.compose(pos, q, sc); mesh.setMatrixAt(n, m4);
+    col.copy(base).multiplyScalar(0.75 + rnd() * 0.4); mesh.setColorAt(n, col);
+    n++;
+  }
+  mesh.count = n; mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+  mesh.receiveShadow = true; mesh.frustumCulled = false; mapRoot.add(mesh);
+}
 /* ---------- Carte 1 : Canyon ---------- */
 function buildCanyon() {
   box(0, -64, 132, 4, 0, 20, 'wall'); box(0, 64, 132, 4, 0, 20, 'wall');
@@ -1291,6 +1359,7 @@ function buildCanyon() {
     silos.push([new THREE.CylinderGeometry(6, 6, 24, 20), x, 12, z]); silos.push([new THREE.ConeGeometry(6.2, 4, 20), x, 26, z]);
   });
   farDecor(silos, new THREE.MeshLambertMaterial({ color: 0x6f8f92 }), true);
+  scatterGrass(-61, -61, 61, 61, 1600, 0xd8c070);
 }
 
 /* ---------- Carte 2 : Raffinerie (crépuscule, couloirs de wall-jump, half-pipe, passerelles) ---------- */
@@ -1400,6 +1469,7 @@ function buildForest() {
   const hills = [];
   for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2, d = 230 + rnd() * 60, r = 50 + rnd() * 40; hills.push([new THREE.SphereGeometry(r, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), Math.cos(a) * d, -4, Math.sin(a) * d]); }
   farDecor(hills, new THREE.MeshPhongMaterial({ color: 0x4d6b48, flatShading: true, shininess: 0 }));
+  scatterGrass(-61, -61, 61, 61, 9000, 0xffffff, (x, z) => Math.abs(z - 7) < 3);
 }
 
 /* ---------- Carte 4 : Château (forteresse originale : douves, pont-levis, cour, remparts, donjon) ---------- */
@@ -1462,6 +1532,8 @@ function buildCastle() {
   const hills = [];
   for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2 + 0.2, d = 220 + rnd() * 60, r = 45 + rnd() * 40; hills.push([new THREE.SphereGeometry(r, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), Math.cos(a) * d, -4, Math.sin(a) * d]); }
   farDecor(hills, new THREE.MeshPhongMaterial({ color: 0x5e8a4a, flatShading: true, shininess: 0 }));
+  // herbe dehors et dans la cour, pas dans les douves
+  scatterGrass(-61, -61, 61, 61, 8000, 0xe8ffd0, (x, z) => (Math.abs(x) < 37.5 && z > -45.5 && z < 29.5 && !(Math.abs(x) < 28 && z > -36 && z < 20)));
 }
 
 /* ---------- Carte 5 : Volcan (relief de 420 m, cratère de lave, coulées, avant-postes) ---------- */
@@ -1533,7 +1605,7 @@ function buildVolcano() {
   const tower = tb(24, 150, 4, 4, 14, 'basalt'); pad(24, tower, 150);
   for (const [x, z] of [[-8, 150], [8, 152], [0, 145]]) tb(x, z, 2.4, 2.4, 2.4, 'c-rust');
   spawns.push([0, hang, 168, 0], [0, th(0, 140), 140, 0], [-30, th(-30, 175), 175, -0.4], [30, th(30, 178), 178, 0.4]);
-  VEH_SPAWNS.push([-10, th(-10, 138), 138, 0], [10, th(10, 138), 138, 0], [-34, th(-34, 150), 150, 0.3]);
+  VEH_SPAWNS.push([-10, th(-10, 138), 138, 0], [10, th(10, 138), 138, 0], [-34, th(-34, 150), 150, 0.3], [34, th(34, 150), 150, -0.3, 'heli'], [-50, th(-50, 168), 168, 0.3, 'tank']);
   // avant-postes dans les quatre coins : plateforme, tour, caisses
   for (const [x, z, yaw] of [[118, 118, 0.8], [-118, 118, -0.8], [118, -118, 2.4], [-118, -118, -2.4]]) {
     const top = tb(x, z, 12, 12, 3, 'basalt'); const tw = tb(x + Math.sign(x) * 4, z + Math.sign(z) * 4, 4, 4, 10, 'steel');
@@ -1579,6 +1651,7 @@ function buildVolcano() {
   }
   for (const [x, z, yaw] of [[150, 0, 1.57], [-150, 0, -1.57], [0, -150, 3.14], [90, 60, 0.9], [-90, 60, -0.9], [60, -95, 2.5]]) spawns.push([x, th(x, z), z, yaw]);
   for (const [x, z] of [[150, 60], [-150, 70], [120, -60]]) VEH_SPAWNS.push([x, th(x, z), z, 0]);
+  VEH_SPAWNS.push([-150, th(-150, -60), -60, 0, 'heli'], [175, th(175, 40), 40, 0, 'plane']);
   while (dums.length < 12) { const a = dums.length * 1.7, x = Math.cos(a) * 150, z = Math.sin(a) * 150; dums.push([x, th(x, z), z, 'strafe', 'z']); }
   MAPS.volcano.spawns = spawns; MAPS.volcano.dummies = dums.slice(0, 12);
   // lave : lac du cratère et trois coulées (matériau sans éclairage, texture qui défile)
@@ -1648,11 +1721,190 @@ function buildMega() {
   // carrefour central : plateforme et pads pour passer d'une zone à l'autre
   box(0, 0, 10, 10, 0, 2, 'hazard'); pad(0, 2, 0);
   MAPS.mega.spawns = spawns; MAPS.mega.dummies = dums;
-  VEH_SPAWNS.push([-6, 0, 12, 0], [6, 0, -12, 3.14], [-100, 0, -10, 1.57], [100, 0, 10, -1.57], [10, 0, 105, 0], [-12, 0, -100, 3.14]);
+  VEH_SPAWNS.push([-6, 0, 12, 0], [6, 0, -12, 3.14], [-100, 0, -10, 1.57], [100, 0, 10, -1.57], [10, 0, 105, 0], [-12, 0, -100, 3.14], [-26, 0, 0, 1.57, 'heli'], [16, 0, 16, -0.8, 'tank']);
   let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const far = [];
   for (let i = 0; i < 30; i++) { const a = i / 30 * Math.PI * 2, d = 230 + rnd() * 120, r = 15 + rnd() * 30, h = 25 + rnd() * 60; far.push([new THREE.CylinderGeometry(r * 0.7, r, h, 7), Math.cos(a) * d, h / 2 - 2, Math.sin(a) * d, rnd() * 3]); }
   farDecor(far, new THREE.MeshPhongMaterial({ color: 0x8a7a68, flatShading: true, shininess: 0 }));
+}
+
+/* ---------- Carte 7 : Ville fantôme — grande ville abandonnée, autoroute surélevée, aérodrome ---------- */
+// façades : 4 fenêtres par 8 m, deux étages ; certaines cassées ou condamnées
+const winTex = canvasTex((g, s) => {
+  g.fillStyle = '#fff'; g.fillRect(0, 0, s, s);
+  const img = g.getImageData(0, 0, s, s), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (Math.random() * 22) | 0; d[i] -= n; d[i + 1] -= n; d[i + 2] -= n; }
+  g.putImageData(img, 0, 0);
+  let seed = 33; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const cw = s / 4, ch = s / 2;
+  for (let fy = 0; fy < 2; fy++) {
+    g.fillStyle = 'rgba(30,26,22,.35)'; g.fillRect(0, fy * ch + ch - 5, s, 5);
+    for (let fx = 0; fx < 4; fx++) {
+      const x = fx * cw + cw * 0.2, y = fy * ch + ch * 0.22, w = cw * 0.6, h = ch * 0.56, r = rnd();
+      g.fillStyle = 'rgba(40,36,30,.5)'; g.fillRect(x - 3, y - 3, w + 6, h + 6);
+      if (r < 0.18) { g.fillStyle = '#8a6a48'; g.fillRect(x, y, w, h); g.fillStyle = 'rgba(40,26,16,.5)'; for (let k = 0; k < 3; k++) g.fillRect(x - 2, y + h * (0.15 + k * 0.3), w + 4, h * 0.12); }
+      else if (r < 0.32) { g.fillStyle = '#14181a'; g.fillRect(x, y, w, h); g.fillStyle = 'rgba(160,190,190,.35)'; g.beginPath(); g.moveTo(x, y); g.lineTo(x + w * 0.6, y); g.lineTo(x + w * 0.2, y + h * 0.5); g.lineTo(x, y + h * 0.7); g.fill(); }
+      else { const gr = g.createLinearGradient(x, y, x + w, y + h); gr.addColorStop(0, '#3b4a4c'); gr.addColorStop(1, '#1d2426'); g.fillStyle = gr; g.fillRect(x, y, w, h); g.fillStyle = 'rgba(0,0,0,.4)'; g.fillRect(x + w / 2 - 1, y, 2, h); }
+    }
+  }
+  for (let i = 0; i < 9; i++) { const x = rnd() * s, gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, 'rgba(40,34,26,.0)'); gr.addColorStop(1, 'rgba(40,34,26,.22)'); g.fillStyle = gr; g.fillRect(x, rnd() * s * 0.5, 4 + rnd() * 10, s); }
+});
+winTex.repeat.set(0.25, 0.25);
+Object.assign(PAL, { gh1: 0x8f877a, gh2: 0x6e6a66, gh3: 0x9a8a70, gh4: 0x7a5244, asph: 0x3c3d3f, side: 0x77736c, roof: 0x55524e });
+const runwayTex = canvasTex((g, s) => {
+  g.fillStyle = '#fff'; g.fillRect(0, 0, s, s);
+  const img = g.getImageData(0, 0, s, s), d = img.data;
+  for (let i = 0; i < d.length; i += 4) { const n = (Math.random() * 30) | 0; d[i] -= n; d[i + 1] -= n; d[i + 2] -= n; }
+  g.putImageData(img, 0, 0);
+  g.fillStyle = 'rgba(240,236,220,.85)'; g.fillRect(s * 0.47, 0, s * 0.06, s * 0.55);
+  g.fillRect(s * 0.04, 0, s * 0.03, s); g.fillRect(s * 0.93, 0, s * 0.03, s);
+});
+function buildGhost() {
+  const L = 160, spawns = [], dums = [], tops = [];
+  let seed = 41; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  box(0, -L - 2, 2 * L + 8, 4, 0, 24, 'wall'); box(0, L + 2, 2 * L + 8, 4, 0, 24, 'wall');
+  box(-L - 2, 0, 4, 2 * L, 0, 24, 'wall'); box(L + 2, 0, 4, 2 * L, 0, 24, 'wall');
+  const XS = [-120, -80, -40, 0, 40, 80], ZS = [-120, -80, -40, 0, 40, 80, 120];
+  const FAC = ['w-gh1', 'w-gh2', 'w-gh3', 'w-gh4'];
+  const special = { '0,0': 'plaza', '-80,40': 'park', '-80,80': 'park', '40,40': 'skeleton', '0,-120': 'tower' };
+  const building = (cx, cz, w, d, h, mat) => {
+    box(cx, cz, w, d, 0, h, mat); box(cx, cz, w + 0.4, d + 0.4, h, 0.5, 'roof');
+    // acrotère : petit muret autour du toit
+    box(cx, cz - d / 2, w + 0.4, 0.3, h + 0.5, 0.7, 'roof'); box(cx, cz + d / 2, w + 0.4, 0.3, h + 0.5, 0.7, 'roof');
+    tops.push({ x: cx, z: cz, w, d, h: h + 0.5 });
+  };
+  for (const cx of XS) for (const cz of ZS) {
+    const kind = special[cx + ',' + cz];
+    if (kind === 'plaza' || kind === 'park') continue;
+    if (kind === 'skeleton') {
+      // immeuble en chantier : six dalles, poteaux, escaliers qui alternent d'un côté à l'autre
+      for (const [px, pz] of [[-12, -12], [12, -12], [-12, 12], [12, 12], [0, -12], [0, 12], [-12, 0]]) box(cx + px, cz + pz, 1, 1, 0, 24.4, 'concrete');
+      for (let k = 1; k <= 6; k++) {
+        const y = k * 4, side = k % 2 ? 1 : -1; // trou d'escalier : x ∈ [cx+6, cx+12], côté z selon l'étage
+        box(cx - 3, cz, 18, 25, y, 0.4, 'concrete');
+        box(cx + 9, cz - side * 6.25, 6, 12.5, y, 0.4, 'concrete');
+        // escalier du niveau k-1 au niveau k, dans le trou
+        const y0 = (k - 1) * 4 + (k > 1 ? 0.4 : 0), steps = 9, rise = (y + 0.4 - y0) / steps;
+        const dep = 12 / steps;
+        for (let st = 0; st < steps; st++) {
+          const zz = cz + side * (12 - (st + 0.5) * dep);
+          box(cx + 9, zz, 5, dep + 0.02, y0 + st * rise, rise, 'steel');
+        }
+      }
+      tops.push({ x: cx, z: cz, w: 25, d: 25, h: 24.4 });
+      continue;
+    }
+    if (kind === 'tower') { building(cx, cz, 24, 24, 52, 'w-gh2'); pad(cx, 52.5, cz); continue; }
+    // trottoir puis un ou deux immeubles
+    box(cx, cz, 28, 28, 0, 0.15, 'side');
+    const r = rnd(), mat = FAC[(rnd() * FAC.length) | 0];
+    if (r < 0.35) {
+      const h1 = 8 + Math.round(rnd() * 5) * 4, h2 = 8 + Math.round(rnd() * 4) * 4;
+      building(cx - 6.5, cz, 12, 24, h1, mat); building(cx + 6.5, cz, 12, 24, h2, FAC[(rnd() * FAC.length) | 0]);
+    } else {
+      const h = 8 + Math.round(rnd() * 7) * 4;
+      building(cx, cz, 24, 24, h, mat);
+      // toit en ruine : blocs cassés
+      if (rnd() < 0.4) { box(cx - 6, cz - 6, 8, 6, h + 0.5, 2.5 + rnd() * 3, mat); box(cx + 5, cz + 7, 5, 4, h + 0.5, 1.2, 'roof'); }
+      if (rnd() < 0.5) { box(cx + 8, cz - 8, 2.4, 2.4, h + 0.5, 3.5, 'steel'); }
+    }
+    // escalier de secours sur une façade : plateformes et échelles de caisses
+    if (rnd() < 0.45) { const sx = cx + 12.6; for (let k = 1; k * 4 < 16; k++) box(sx + 0.6, cz - 4 + (k % 2) * 6, 1.4, 4, k * 4, 0.25, 'steel'); }
+  }
+  // place centrale : fontaine sèche, statue, bancs, kiosque
+  box(0, 0, 10, 10, 0, 0.8, 'stone'); box(0, 0, 7, 7, 0.8, 0.2, 'side'); box(0, 0, 1.6, 1.6, 0.8, 3.5, 'stone'); box(0, 0, 2.4, 2.4, 4.3, 0.6, 'keep');
+  for (const [x, z, a] of [[-11, 6, 'x'], [11, -6, 'x'], [6, 11, 'z'], [-6, -11, 'z']]) box(x, z, a === 'x' ? 3.4 : 0.8, a === 'x' ? 0.8 : 3.4, 0, 0.6, 'wood');
+  box(-9, -9, 4, 4, 0, 3.2, 'gh4'); box(-9, -9, 5, 5, 3.2, 0.3, 'roof'); pad(9, 0, 9);
+  // parc : herbe haute, arbres morts et vivants, mur bas
+  box(-80, 26.5, 28, 0.6, 0, 0.9, 'stone'); box(-80, 93.5, 28, 0.6, 0, 0.9, 'stone');
+  const trees = [];
+  for (let i = 0; i < 18; i++) {
+    const x = -92 + rnd() * 24, z = 30 + rnd() * 60, h = 4 + rnd() * 3;
+    box(x, z, 0.6, 0.6, 0, h, 'bark');
+    const k = rnd() < 0.35 ? 0 : 1;
+    if (k) trees.push([new THREE.IcosahedronGeometry(2 + rnd() * 1.4, 0), x, h + 0.8, z, rnd() * 3]);
+  }
+  farDecor(trees, new THREE.MeshLambertMaterial({ color: 0x4f6338, flatShading: true }), true);
+  scatterGrass(-93, 28, -67, 92, 5200, 0xb8c088);
+  // terrains vagues autour de la ville et le long des rues
+  scatterGrass(-158, -158, -142, 158, 2600, 0xa8a878);
+  scatterGrass(98, -150, 124, 150, 2600, 0xa8a878);
+  // autoroute surélevée au-dessus de la rue z = −60, avec bretelles aux deux bouts
+  const HZ = -60, HY = 8;
+  box(-20, HZ, 232, 10, HY - 0.6, 0.6, 'concrete');
+  box(-20, HZ - 4.85, 232, 0.3, HY, 0.9, 'side'); box(-20, HZ + 4.85, 232, 0.3, HY, 0.9, 'side');
+  for (let x = -128; x <= 88; x += 24) box(x, HZ, 1.4, 1.4, 0, HY - 0.6, 'concrete');
+  ramp(-158, -136, HZ - 5, HZ + 5, 'x', 1, 0, HY);
+  ramp(96, 118, HZ - 5, HZ + 5, 'x', -1, 0, HY);
+  // voitures abandonnées sur l'autoroute et dans les rues
+  const car = (x, y, z, rot) => {
+    const w = rot ? 4.2 : 2, d = rot ? 2 : 4.2, cols = ['rust', 'navy', 'cream', 'red', 'blue', 'white'], c = cols[(rnd() * cols.length) | 0];
+    box(x, z, w, d, y, 1.0, c); box(x + (rot ? 0.3 : 0), z + (rot ? 0 : 0.3), rot ? 2.2 : 1.8, rot ? 1.8 : 2.2, y + 1.0, 0.7, c);
+  };
+  for (const x of [-110, -70, -12, 34, 70]) car(x, HY, HZ + (rnd() < 0.5 ? -2.4 : 2.4), true);
+  for (let i = 0; i < 26; i++) {
+    const vertical = rnd() < 0.5, line = [-140, -100, -20, 20, 60, 100, 140][(rnd() * 7) | 0], along = -130 + rnd() * 220;
+    const x = vertical ? line + (rnd() < 0.5 ? -3 : 3) : along, z = vertical ? along : line + (rnd() < 0.5 ? -3 : 3);
+    const LINES = [-140, -100, -60, -20, 20, 60, 100, 140];
+    if (Math.hypot(x, z) < 18 || x > 92 || LINES.some(l => Math.abs(along - l) < 9)) continue;
+    car(x, 0, z, !vertical);
+  }
+  // aérodrome à l'est : piste, hangar, tour de contrôle, héliport
+  const rw = new THREE.Mesh(new THREE.PlaneGeometry(22, 280), new THREE.MeshLambertMaterial({ color: 0x46484a, map: runwayTex }));
+  rw.material.map.repeat.set(1, 14); rw.rotation.x = -Math.PI / 2; rw.position.set(140, 0.03, 0); rw.receiveShadow = true; mapRoot.add(rw);
+  box(112, -150, 26, 1, 0, 10, 'steel'); box(99.5, -139, 1, 22, 0, 10, 'steel'); box(124.5, -139, 1, 22, 0, 10, 'steel'); box(112, -139, 26, 22, 10, 0.6, 'deck');
+  box(118, 128, 6, 6, 0, 16, 'w-gh2'); box(118, 128, 9, 9, 16, 4, 'navy'); box(118, 128, 9.6, 9.6, 20, 0.4, 'roof'); pad(118, 20.4, 128);
+  box(118, 60, 14, 14, 0, 0.3, 'hazard'); box(118, 60, 10, 10, 0.3, 0.05, 'asph');
+  // tyroliennes entre toits proches (du plus haut vers le plus bas)
+  let zips = 0;
+  const pairs = [];
+  for (let i = 0; i < tops.length; i++) for (let j = 0; j < tops.length; j++) {
+    const a = tops[i], b = tops[j], dist = Math.hypot(a.x - b.x, a.z - b.z);
+    if (i !== j && a.h - b.h >= 8 && dist > 30 && dist < 46) pairs.push([a, b]);
+  }
+  pairs.sort(() => rnd() - 0.5);
+  const used = new Set();
+  for (const [a, b] of pairs) {
+    if (zips >= 7 || used.has(a) || used.has(b)) continue;
+    used.add(a); used.add(b); zips++;
+    const dx = Math.sign(b.x - a.x), dz = Math.sign(b.z - a.z);
+    zipline(a.x + dx * (a.w / 2 - 1.5), a.h + 2.3, a.z + dz * (a.d / 2 - 1.5), b.x - dx * (b.w / 2 - 1.5), b.h + 2.3, b.z - dz * (b.d / 2 - 1.5));
+  }
+  // la tour (52 m) descend jusqu'à la place
+  zipline(0, 54.8, -108.5, 0, 3.3, -14);
+  // pads dans les rues
+  for (const [x, z] of [[-100, 20], [20, -100], [60, 100], [-140, -20], [100, -20]]) pad(x, 0, z);
+  // apparitions : carrefours et quelques toits
+  for (const [x, z, yaw] of [[-20, 20, 0.8], [20, -20, -2.4], [-100, -100, 2.4], [100, 100, -0.8], [-140, 60, -1.57], [60, -140, 3.14], [-60, 140, 0], [100, -100, 2.4], [-20, -100, 3.14], [20, 140, 0], [-140, -140, -2.4], [100, 20, 1.57]]) spawns.push([x, 0, z, yaw]);
+  for (const t2 of tops.slice(0, 40)) if (rnd() < 0.15 && spawns.length < 18) spawns.push([t2.x, t2.h, t2.z, rnd() * 6]);
+  for (const [x, z, m, ax] of [[-20, 0, 'strafe', 'z'], [20, 20, 'strafe', 'x'], [0, 20, 'static'], [-60, -20, 'circle'], [60, 20, 'jump'], [-100, 60, 'strafe', 'z'], [40, 40 - 8, 'static'], [-20, 60, 'strafe', 'x'], [100, 0, 'static'], [-80, 60, 'circle'], [60, -100, 'strafe', 'z'], [-60, HZ, 'static']]) dums.push([x, x === -60 && z === HZ ? HY : 0, z, m, ax]);
+  MAPS.ghost.spawns = spawns; MAPS.ghost.dummies = dums;
+  // véhicules : buggys, deux tanks, deux hélicos, deux avions sur la piste
+  VEH_SPAWNS.push([-20, 0, 40, 0], [20, 0, -40, 3.14], [-100, 0, 0, 0], [60, 0, 60, 1.57],
+    [-140, 0, 100, 0, 'tank'], [60, 0, -100, 1.57, 'tank'],
+    [118, 0.35, 60, 1.57, 'heli'], [-13, 0, 13, 0.8, 'heli'],
+    [134, 0, 110, 0, 'plane'], [146, 0, 125, 0, 'plane']);
+  // ville lointaine, en silhouette dans le brouillard
+  const far = [];
+  for (let i = 0; i < 40; i++) { const a = i / 40 * Math.PI * 2 + rnd() * 0.1, dd = 230 + rnd() * 140, w = 14 + rnd() * 26, h = 20 + rnd() * 70; far.push([new THREE.BoxGeometry(w, h, w * (0.6 + rnd() * 0.8)), Math.cos(a) * dd, h / 2 - 1, Math.sin(a) * dd, rnd() * 3]); }
+  farDecor(far, new THREE.MeshLambertMaterial({ color: 0x4a5450 }));
+  // poussière en suspension autour du joueur
+  const DN = 500, dp = new Float32Array(DN * 3);
+  for (let i = 0; i < DN; i++) { dp[i * 3] = (Math.random() - 0.5) * 70; dp[i * 3 + 1] = Math.random() * 25; dp[i * 3 + 2] = (Math.random() - 0.5) * 70; }
+  const dg = new THREE.BufferGeometry(); dg.setAttribute('position', new THREE.BufferAttribute(dp, 3));
+  const dust = new THREE.Points(dg, new THREE.PointsMaterial({ color: 0xd8d0b0, size: 0.14, map: glowTex, transparent: true, opacity: 0.55, depthWrite: false }));
+  dust.frustumCulled = false; mapRoot.add(dust);
+  MAP_TICK = dt => {
+    const t3 = performance.now() / 1000, cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
+    for (let i = 0; i < DN; i++) {
+      let x = dp[i * 3] + dt * (0.8 + Math.sin(i) * 0.3), y = dp[i * 3 + 1] + Math.sin(t3 * 0.7 + i) * dt * 0.2, z = dp[i * 3 + 2] + dt * 0.3;
+      if (x - cx > 35) x -= 70; else if (x - cx < -35) x += 70;
+      if (z - cz > 35) z -= 70; else if (z - cz < -35) z += 70;
+      if (y - cy > 14) y -= 26; else if (y - cy < -12) y += 26;
+      dp[i * 3] = x; dp[i * 3 + 1] = y; dp[i * 3 + 2] = z;
+    }
+    dg.attributes.position.needsUpdate = true;
+  };
 }
 
 const MAPS = {
@@ -1704,11 +1956,16 @@ const MAPS = {
     build: buildMega, lim: 127.6, vehicles: true,
     theme: { top: 0x3a72a8, mid: 0xaec6d2, hor: 0xf0d2a8, fog: 0xdcd0bc, fogFar: 520, hemiSky: 0xd6e6f0, hemiGround: 0x8a7a5a, hemiI: 0.8, sun: 0xfff0d8, sunI: 0.95, sunDir: [-0.5, 0.55, 0.4], ground: 0xb8a888 },
     spawns: [[0, 2, 0, 0]], dummies: []
+  },
+  ghost: {
+    build: buildGhost, lim: 159.4, vehicles: true,
+    theme: { top: 0x1a2426, mid: 0x4c5f5a, hor: 0xc0a47a, fog: 0x6c776c, fogFar: 380, hemiSky: 0xaebfae, hemiGround: 0x3a3630, hemiI: 0.78, sun: 0xffc890, sunI: 0.8, sunDir: [0.62, 0.26, -0.5], ground: 0x55534e },
+    spawns: [[0, 0, 20, 0]], dummies: []
   }
 };
 /* ---------- cartes perso (éditeur) : définitions JSON enregistrées dans le navigateur ---------- */
 const EDIT_MATS = ['concrete', 'teal', 'wall', 'rust', 'cream', 'navy', 'deck', 'steel', 'hazard', 'red', 'blue', 'white', 'rock', 'wood', 'bark', 'moss', 'stone', 'keep', 'hay', 'roofred', 'obsid', 'basalt', 'ash', 'c-rust', 'c-teal', 'c-cream'];
-const THEME_IDS = ['canyon', 'refinery', 'forest', 'castle', 'volcano', 'mega'];
+const THEME_IDS = ['canyon', 'refinery', 'forest', 'castle', 'volcano', 'mega', 'ghost'];
 const CUSTOM = (() => { const c = store.get('customMaps', {}); return c && typeof c === 'object' ? c : {}; })();
 const num = (v, lo, hi, d = 0) => { v = +v; return Number.isFinite(v) ? clamp(v, lo, hi) : d; };
 function sanitizeDef(d) {
@@ -3122,6 +3379,19 @@ function buildViewmodel(kind, knifeType) {
       const tsuba = add(C(.042, .008, 24), blk, 0, 0, -.014, Math.PI / 2);
       add(B(.026, .03, .24), blk, 0, 0, .11); wrap(.0, .23, .014, 10);
       add(B(.028, .032, .014), amb, 0, 0, .235);
+    } else if (kt === 'trident') {
+      // trident : long manche, garde, trois dents barbelées
+      add(C(.012, .82, 10), tan, 0, 0, -.26, Math.PI / 2);
+      for (let i = 0; i < 5; i++) add(B(.028, .028, .018), i % 2 ? blk : amb, 0, 0, .1 - i * .03, 0, 0, Math.PI / 4);
+      add(new THREE.SphereGeometry(.02, 12, 8), amb, 0, 0, .16);
+      add(B(.03, .13, .03), mid, 0, 0, -.66);
+      for (const sy of [-1, 0, 1]) {
+        const len = sy ? .16 : .22;
+        add(B(.012, .012, len), steel, 0, sy * .055, -.68 - len / 2);
+        add(C(0, .045, 6, .012), steel, 0, sy * .055, -.68 - len - .02, -Math.PI / 2);
+        add(B(.008, .028, .01), steel, 0, sy * .055 + (sy >= 0 ? -.012 : .012), -.68 - len + .04, sy ? sy * .5 : 0);
+      }
+      add(B(.012, .02, .012), amb, 0, 0, -.62);
     } else if (kt === 'morgane') {
       // Morgane : long manche, deux lames en croissant opposées, pointe au sommet, runes lumineuses
       add(C(.013, .74, 12), tan, 0, 0, -.2, Math.PI / 2);
@@ -3166,7 +3436,7 @@ function buildViewmodel(kind, knifeType) {
   g.visible = false; wScene.add(g);
   // points de prise des mains (repère de l'arme) : main droite sur la poignée, gauche sur le garde-main
   const HANDS = { 0: { r: [0, -.095, .09], l: [0, -.035, -.3] }, 1: { r: [0, -.1, .105], l: [0, -.17, -.07] }, 2: { r: [0, -.09, .12], l: [0, -.06, -.38] }, 3: { r: [0, -.09, .16], l: [0, -.07, -.3] }, 4: { r: [0, -.075, .045], l: [-.025, -.1, .06] } };
-  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] } };
+  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, trident: { r: [0, 0, .08], l: [0, 0, -.18] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] } };
   const hands = kind === 5 ? KHANDS[knifeType] || KHANDS.combat : HANDS[kind] || HANDS[4];
   return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind, hands };
 }
@@ -3174,7 +3444,8 @@ S.knife = store.get('knife', 'combat');
 const KNIVES = {
   combat: { dmg: 50, rpm: 115, range: 2.7 }, karambit: { dmg: 42, rpm: 145, range: 2.4 }, katana: { dmg: 70, rpm: 80, range: 3.6 },
   machete: { dmg: 65, rpm: 85, range: 3.3 }, dagger: { dmg: 55, rpm: 110, range: 2.6 }, butterfly: { dmg: 46, rpm: 135, range: 2.5 },
-  morgane: { dmg: 85, rpm: 62, range: 3.4 }
+  morgane: { dmg: 85, rpm: 62, range: 3.4 },
+  trident: { dmg: 70, rpm: 80, range: 3.6 }
 };
 function applyKnifeStats() { Object.assign(WEAPONS[5], KNIVES[S.knife] || KNIVES.combat); }
 applyKnifeStats();
@@ -3353,11 +3624,13 @@ const KSKINS = {
   void: { steel: 0xffffff, mid: [0xe0c0ff, 0x6030c0], blk: 0x0a0614, amb: 0x8a5ad0, map: kVoidTex, emap: kVoidTex, emapCol: 0x302050, mapRoles: ['steel'], trail: 0xc890ff, anim: 'scroll', spd: [0.06, 0.015] }
 };
 // Morgane : hache double à lames argent-violet et runes roses qui pulsent
+const TRIDENT_SKIN = { steel: [0x9ff4ff, 0x0a3a44], mid: 0x1f5f66, tan: 0x2a3d44, blk: 0x10181c, amb: [0xffd24a, 0x5a3a00], dark: 0x1f3a40, teal: 0x2a6a70, trail: 0x66f0ff, anim: 'pulse', pulseRoles: ['steel'] };
 const MORGANE_SKIN = { steel: [0xeedcff, 0x24082e], mid: 0x3a1a4a, tan: 0x4a1e30, blk: 0x1a0a14, amb: [0xff7ad0, 0xff2aa0], dark: 0x2a1020, teal: 0x3a1a4a, trail: 0xff6ad0, anim: 'pulse', pulseRoles: ['amb'] };
 S.kskin = KSKINS[store.get('kskin', 'follow')] !== undefined ? store.get('kskin', 'follow') : 'follow';
 function vmSkin(i) {
   if (i === 5 && S.knife === 'katana' && KSKINS[S.kskin]) return KSKINS[S.kskin];
   if (i === 5 && S.knife === 'morgane') return MORGANE_SKIN;
+  if (i === 5 && S.knife === 'trident') return TRIDENT_SKIN;
   return SKINS[S.skin] || SKINS.std;
 }
 function applySkinVM(vm, sk) {
@@ -3469,7 +3742,7 @@ function damageRemote(rp, amount, part) {
 function melee() {
   const W = WEAPONS[WS.cur];
   WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm; WS.swingDur = SWING_DUR[S.knife] || 0.32; WS.swingT = WS.swingDur; WS.inspT = 0; WS.flourT = 0;
-  WS.combo = (WS.combo + 1) % 3; WS.swingKind = S.knife === 'morgane' ? WS.combo % 2 : WS.combo;
+  WS.combo = (WS.combo + 1) % 3; WS.swingKind = S.knife === 'morgane' || S.knife === 'trident' ? WS.combo % 2 : WS.combo;
   camera.updateMatrixWorld(); camera.getWorldPosition(_o);
   const e = camera.matrixWorld.elements;
   _r.set(e[0], e[1], e[2]); _u.set(e[4], e[5], e[6]); _f.set(-e[8], -e[9], -e[10]);
@@ -3507,7 +3780,7 @@ function melee() {
   }
 }
 const INSPECT_DUR = 2.4;
-const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38 };
+const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38, trident: 0.42 };
 /* ---------- poses de frappe : [dx, dy, dz, rx, ry, rz] ; préparation → frappe rapide → retour ----------
    rx incline la lame vers le haut, ry la tourne vers la gauche, rz la fait rouler sur son axe */
 const SWINGS = {
@@ -3515,6 +3788,10 @@ const SWINGS = {
     { a: 0.24, b: 0.52, W: [0.05, 0.04, 0.05, 0.8, -1.0, -0.35], E: [-0.2, -0.08, -0.1, -0.75, 0.6, 0.55] },
     { a: 0.24, b: 0.52, W: [-0.12, -0.1, 0.04, -0.75, 0.5, 0.5], E: [0.16, 0.13, -0.1, 0.9, -1.3, -0.45] },
     { a: 0.26, b: 0.54, W: [0.12, 0.11, 0.06, 0.12, -1.6, -1.2], E: [-0.2, 0.1, -0.12, 0.02, 0.85, -1.2] }
+  ],
+  trident: [
+    { a: 0.2, b: 0.45, W: [0.04, 0.02, 0.12, 0.05, -0.75, 0], E: [-0.06, 0.02, -0.35, 0.02, -0.75, 0] },
+    { a: 0.2, b: 0.45, W: [0.08, 0.06, 0.1, 0.2, -0.9, 0.3], E: [-0.1, -0.02, -0.32, -0.1, -0.6, -0.3] }
   ],
   morgane: [
     { a: 0.38, b: 0.6, W: [-0.08, 0.14, 0.08, 1.45, -1.0, 0.2], E: [-0.16, -0.04, -0.2, -0.55, -0.35, -0.2] },
@@ -3545,7 +3822,7 @@ trailGeo.setAttribute('color', new THREE.BufferAttribute(new Float32Array(TRAIL_
 { const idx = []; for (let i = 0; i < TRAIL_N - 1; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } trailGeo.setIndex(idx); }
 const trailMesh = new THREE.Mesh(trailGeo, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false }));
 trailMesh.frustumCulled = false; trailMesh.visible = false; wScene.add(trailMesh);
-const TRAIL_PTS = { katana: [new V3(0, 0.02, -0.68), new V3(0, 0, -0.3)], morgane: [new V3(0, 0.21, -0.5), new V3(0, 0.1, -0.46)] };
+const TRAIL_PTS = { trident: [new V3(0, 0, -0.9), new V3(0, 0, -0.66)], katana: [new V3(0, 0.02, -0.68), new V3(0, 0, -0.3)], morgane: [new V3(0, 0.21, -0.5), new V3(0, 0.1, -0.46)] };
 const _trObj = new THREE.Object3D(), _trA = new V3(), _trB = new V3(), _trC = new THREE.Color(), _pose = [0, 0, 0, 0, 0, 0];
 function updateTrail(vm, p, fin, pose0) {
   const pts = TRAIL_PTS[S.knife];
@@ -3657,7 +3934,7 @@ function updateWeapon(dt) {
   WS.cool -= dt; WS.bloom = Math.max(0, WS.bloom - dt * 2.2);
   if (WS.swapT > 0) WS.swapT -= dt;
   if (WS.reloading) { WS.reloadT -= dt; if (WS.reloadT <= 0) { WS.reloading = false; WS.ammo[WS.cur] = W.mag; } }
-  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !EDIT.on) {
+  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !EDIT.on && !(W.melee && TRI.state !== 'hand')) {
     if (WS.ammo[WS.cur] > 0) { if (W.auto || !WS.trigger) fire(); }
     else if (!WS.trigger) { sfx.empty(); startReload(); }
   }
@@ -3666,6 +3943,8 @@ function updateWeapon(dt) {
   if (WS.ammo[WS.cur] === 0 && !WS.reloading && !mouse.left) startReload();
   if (WS.swingT > 0) WS.swingT -= dt;
   if (WS.inspT > 0) { WS.inspT -= dt; if (mouse.right || WS.reloading) WS.inspT = 0; }
+  if (W.melee && S.knife === 'trident' && mouse.right && !WS.rightPrev && !P.dead && !P.veh && !EDIT.on) throwTrident();
+  WS.rightPrev = mouse.right;
   WS.ads = approach(WS.ads, mouse.right && !W.melee && !WS.reloading && WS.swapT <= 0 && !P.mantle && !P.dead ? 1 : 0, dt * (W.scope ? 5 : 7));
 }
 
@@ -3754,7 +4033,7 @@ function updateViewmodel(dt) {
   const vm = VM[WS.cur], g = vm.g, a = easeOut(WS.ads), hs = Math.hypot(P.vel.x, P.vel.z);
   let swingP = -1, viewSpin = 0;
   const scoped = WEAPONS[WS.cur].scope && WS.ads > 0.85;
-  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on;
+  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on && !(vm.kind === 5 && TRI.state !== 'hand');
   WS.sprintK = approach(WS.sprintK, P.sprinting && P.grounded && !mouse.left && !WS.reloading ? 1 : 0, dt * 6);
   WS.slideK = approach(WS.slideK, P.sliding ? 1 : 0, dt * 6);
   WS.swayX *= Math.exp(-10 * dt); WS.swayY *= Math.exp(-10 * dt);
@@ -3855,7 +4134,7 @@ function myState() {
   const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
   const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint };
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
-  if (P.veh) { st.vh = P.veh.i + 1; st.vy = r2(P.veh.yaw); st.y = st.vy; st.a = P.veh.grounded ? 'ground' : 'air'; }
+  if (P.veh) { st.vh = P.veh.i + 1; st.vy = r2(P.veh.yaw); st.y = st.vy; st.a = P.veh.grounded ? 'ground' : 'air'; if (P.veh.type !== 'buggy') st.vq = [r2(P.veh.pitch), r2(P.veh.roll), r2(P.veh.tYaw), r2(P.veh.tPitch)]; }
   if (P.mgT > 0) st.mg = 1;
   if (HOOK.p) st.gp = [r2(HOOK.p.x), r2(HOOK.p.y), r2(HOOK.p.z)];
   st.sk = S.skin; if (WS.cur === 5) { st.kt = S.knife; if (S.knife === 'katana') st.ks = S.kskin; }
@@ -3901,6 +4180,7 @@ function hostRecv(from, m) {
   else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'lpad' && Array.isArray(m.p)) broadcast({ k: 'lpad', p: m.p.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'blink' && Array.isArray(m.a)) broadcast({ k: 'blink', a: m.a.slice(0, 3).map(Number), b: Array.isArray(m.b) ? m.b.slice(0, 3).map(Number) : undefined }, from);
+  else if (m.k === 'trid' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'trid', p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'gren' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'gren', t: String(m.t), p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'push' && Array.isArray(m.v)) { if (NET.players.has(m.to)) sendTo(m.to, { k: 'push', v: m.v.slice(0, 3).map(v => clamp(+v || 0, -30, 30)) }); }
   else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number), o: from }, from);
@@ -3960,7 +4240,8 @@ function clientRecv(m) {
   if (m.k === 'dome') { SND_OWNER = m.o || null; spawnDome(m.p); SND_OWNER = null; return; }
   if (m.k === 'lpad') { spawnLaunchpad(m.p); return; }
   if (m.k === 'blink') { if (m.b) spawnBlinkTrail(m.a, m.b); else spawnGhost(m.a); return; }
-  if (m.k === 'gren') { if (GREN_TYPES.includes(m.t)) spawnGrenade(m.t, m.p, m.v, m.o, false); return; }
+  if (m.k === 'trid') { spawnOtherTrident(m.o, m.p, m.v); return; }
+  if (m.k === 'gren') { if (GREN_TYPES.includes(m.t) || m.t === 'shell') spawnGrenade(m.t, m.p, m.v, m.o, false); return; }
   if (m.k === 'push') { if (!P.dead && !P.veh) { P.vel.x += m.v[0]; P.vel.y += m.v[1]; P.vel.z += m.v[2]; P.grounded = false; P.zip = null; } return; }
   if (m.k === 'portal') { SND_OWNER = m.o || null; spawnPortal(m.a, m.b); SND_OWNER = null; return; }
   if (m.k === 'kick') { leaveNet(); setNetStatus(t('net.kicked'), 'err'); toast(t('net.kicked'), 4); if (playing) pause(); return; }
@@ -3977,7 +4258,7 @@ function clientRecv(m) {
 }
 function applyHit(m) {
   if (P.dead || NET.mode === 'off' || X.god) return;
-  const dmg = Math.max(0, Math.min(400, +m.dmg || 0));
+  const dmg = Math.max(0, Math.min(400, +m.dmg || 0)) * (P.veh && P.veh.type === 'tank' ? 0.4 : 1);
   const shBefore = P.sh;
   const toSh = Math.min(P.sh, dmg); P.sh -= toSh;
   P.hp = Math.max(0, P.hp - (dmg - toSh));
@@ -3996,7 +4277,7 @@ function applyHit(m) {
   }
 }
 // 8 = lave, 9 = buggy (dégâts qui ne viennent pas d'une arme)
-function wLabel(i) { return WEAPONS[i] || i === 8 || i === 9 || i === 10 ? wShort(i) : ''; }
+function wLabel(i) { return WEAPONS[i] || (i >= 8 && i <= 13) ? wShort(i) : ''; }
 // dégâts de l'environnement (lave) : marche aussi hors ligne
 function hurtSelf(dmg, w) {
   if (P.dead || X.god) return;
@@ -4467,7 +4748,7 @@ function endEmote() {
 function updateSelfAvatar(dt) {
   if (EMOTE.on && (P.dead || !P.grounded || act('forward') || act('back') || act('left') || act('right') || act('jump') || act('crouch') || mouse.left || !playing)) endEmote();
   if (P.mgT > 0) P.mgT -= dt;
-  hud.classList.toggle('emoting', EMOTE.on || !!P.veh);
+  hud.classList.toggle('emoting', EMOTE.on || (!!P.veh && !(VEHP[P.veh.type] || VEH).gun)); hud.classList.toggle('inveh', !!P.veh);
   if (!EMOTE.on) return;
   const vis = ensureSelfAvatar(); if (!vis) { endEmote(); return; }
   SELF.g.visible = true;
@@ -4480,9 +4761,9 @@ function updateSelfAvatar(dt) {
 // caméra à la troisième personne qui tourne autour de l'avatar ; recule moins si un mur gêne
 function emoteCamera() {
   if (!EMOTE.on && !P.veh) return;
-  const cp = Math.cos(P.pitch), far = P.veh ? 7.5 : EMOTE.dist;
+  const PR = P.veh ? VEHP[P.veh.type] || VEH : null, cp = Math.cos(P.pitch), far = PR ? PR.cam : EMOTE.dist;
   _d.set(Math.sin(P.yaw) * cp, -Math.sin(P.pitch), Math.cos(P.yaw) * cp);
-  _p.set(rPos.x, rPos.y + (P.veh ? 2.1 : 1.05), rPos.z);
+  _p.set(rPos.x, rPos.y + (PR ? PR.camH : 1.05), rPos.z);
   raycaster.set(_p, _d); raycaster.far = far;
   const hit = raycaster.intersectObjects(WORLD, false)[0];
   const dist = hit ? Math.max(0.6, hit.distance - 0.25) : far;
@@ -4817,12 +5098,96 @@ function edApplyMeta() {
   });
   edRenderPanel();
 }
+/* ---------- trident : clic droit pour le lancer, il revient tout seul dans la main ---------- */
+const TRI = { state: 'hand', pos: new V3(), vel: new V3(), t: 0, hits: new Set(), mesh: null, glow: null };
+const OTHER_TRI = [];
+function tridentMesh() {
+  const vm = buildViewmodel(5, 'trident'); wScene.remove(vm.g); applySkinVM(vm, TRIDENT_SKIN);
+  vm.g.scale.setScalar(1.1); vm.g.visible = true; vm.flash.visible = false;
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x66f0ff, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending }));
+  glow.position.set(0, 0, -0.75); glow.scale.setScalar(1.2); vm.g.add(glow);
+  scene.add(vm.g); return { g: vm.g, glow };
+}
+function throwTrident() {
+  if (TRI.state !== 'hand' || WS.swapT > 0) return;
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]); _r.set(e[0], e[1], e[2]);
+  TRI.pos.copy(_o).addScaledVector(_f, 0.5).addScaledVector(_r, 0.2); TRI.vel.copy(_f).multiplyScalar(48);
+  TRI.state = 'out'; TRI.t = 0; TRI.hits.clear(); WS.swingT = 0;
+  if (!TRI.mesh) TRI.mesh = tridentMesh();
+  TRI.mesh.g.visible = true;
+  sfx.throwG(); sfx.dash(); camKick(3);
+  netSend({ k: 'trid', p: [r2(TRI.pos.x), r2(TRI.pos.y), r2(TRI.pos.z)], v: [r2(TRI.vel.x), r2(TRI.vel.y), r2(TRI.vel.z)] });
+}
+// touche robots et joueurs le long du segment parcouru (une fois chacun par aller et par retour)
+function tridentSweep(o, mine, hits, from, to) {
+  _d.copy(to).sub(from); const len = _d.length(); if (len < 1e-4) return null; _d.divideScalar(len);
+  raycaster.set(from, _d); raycaster.far = len + 0.2;
+  const list = raycaster.intersectObjects(SHOOTABLE, false);
+  for (const h of list) {
+    const ud = h.object.userData;
+    if (ud && ud.d) { if (!ud.d.alive || !RULES.bots || hits.has(ud.d)) continue; hits.add(ud.d); if (mine) { const r = damageDummy(ud.d, Math.round(95 * (ud.part === 'head' ? 1.4 : 1)) * (X.oneshot && xUnlocked ? 10 : 1), ud.part); sfx.hit(r === 'head'); if (r === 'kill') { hmEl.className = 'kill'; hmT = 0.35; } } spawnSpark(h.point, true); continue; }
+    if (ud && ud.rp) { if (!ud.rp.st || ud.rp.st.dead || hits.has(ud.rp)) continue; hits.add(ud.rp); if (mine) { ud.rp.flash = 1; netSend({ k: 'hit', to: ud.rp.id, dmg: Math.round(95 * (ud.part === 'head' ? 1.4 : 1)) * (X.oneshot && xUnlocked ? 10 : 1), head: ud.part === 'head', w: 5, kt: 'trident' }); sfx.hit(ud.part === 'head'); } spawnSpark(h.point, true); continue; }
+    return h; // mur
+  }
+  return null;
+}
+const _tp = new V3(), _th = new V3();
+function stepTrident(T, dt, mine, holderPos) {
+  T.t += dt;
+  _tp.copy(T.pos);
+  if (T.state === 'out') {
+    T.vel.y -= G * 0.12 * dt;
+    T.pos.addScaledVector(T.vel, dt);
+    const wall = tridentSweep(null, mine, T.hits, _tp, T.pos);
+    if (wall) { T.pos.copy(wall.point).addScaledVector(T.vel.clone().normalize(), -0.15); T.state = 'stuck'; T.t = 0; sfx.zapStick(); spawnSpark(wall.point, false); }
+    else if (T.t > 1.25) { T.state = 'back'; T.hits.clear(); }
+  } else if (T.state === 'stuck') {
+    if (T.t > 0.35) { T.state = 'back'; T.hits.clear(); sfx.blink(); }
+  } else if (T.state === 'back') {
+    _th.copy(holderPos).sub(T.pos); const d = _th.length();
+    const sp = Math.min(60, 30 + T.t * 40);
+    T.vel.copy(_th).multiplyScalar(sp / Math.max(d, 1e-3));
+    T.pos.addScaledVector(T.vel, Math.min(dt, d / sp));
+    tridentSweep(null, mine, T.hits, _tp, T.pos);
+    if (d < 1.3) return true;
+  }
+  return false;
+}
+function orientTrident(m, T) {
+  if (T.state === 'stuck') return;
+  _th.copy(T.pos).add(T.vel); m.g.position.copy(T.pos); m.g.lookAt(_th);
+  if (T.state === 'out') m.g.rotateY(Math.PI); // pointe devant à l'aller, manche devant au retour
+  m.glow.material.opacity = 0.5 + 0.3 * Math.sin(performance.now() / 50);
+}
+function updateTrident(dt) {
+  if (TRI.state !== 'hand') {
+    if (S.knife !== 'trident' || P.dead) { TRI.state = 'hand'; if (TRI.mesh) TRI.mesh.g.visible = false; }
+    else {
+      _o.set(P.pos.x, P.pos.y + 1.3, P.pos.z);
+      if (stepTrident(TRI, dt, true, _o)) {
+        TRI.state = 'hand'; TRI.mesh.g.visible = false;
+        sfx.swap(); sfx.zapStick(); camKick(2); if (WS.cur === 5) WS.flourT = 0.3; WS.cool = Math.min(WS.cool, 0.15);
+      } else orientTrident(TRI.mesh, TRI);
+    }
+  }
+  for (let i = OTHER_TRI.length - 1; i >= 0; i--) {
+    const o = OTHER_TRI[i], rp = remotes.get(o.owner);
+    const hold = rp ? _th.set(rp.pos.x, rp.pos.y + 1.3, rp.pos.z).clone() : o.pos.clone();
+    if (stepTrident(o, dt, false, hold) || o.t > 6) { scene.remove(o.mesh.g); OTHER_TRI.splice(i, 1); }
+    else orientTrident(o.mesh, o);
+  }
+}
+function spawnOtherTrident(owner, p, v) {
+  const o = { owner, state: 'out', pos: new V3(p[0], p[1], p[2]), vel: new V3(v[0], v[1], v[2]), t: 0, hits: new Set(), mesh: tridentMesh() };
+  OTHER_TRI.push(o);
+}
 /* ================= Grenades : G lance, H change de type ================= */
 const GREN_TYPES = ['frag', 'thermite', 'arc', 'smoke', 'impulse'];
 const GREN_MAX = 2, GREN_REGEN = 12;
 const GREN = { type: GREN_TYPES.includes(store.get('gren', 'frag')) ? store.get('gren', 'frag') : 'frag', charges: {}, regen: {}, list: [], fires: [], smokes: [] };
 for (const k of GREN_TYPES) { GREN.charges[k] = GREN_MAX; GREN.regen[k] = 0; }
-const GREN_COL = { frag: 0x8a9a4a, thermite: 0xd8642a, arc: 0x40e8ff, smoke: 0xc8ccd0, impulse: 0xc78cff };
+const GREN_COL = { frag: 0x8a9a4a, thermite: 0xd8642a, arc: 0x40e8ff, smoke: 0xc8ccd0, impulse: 0xc78cff, shell: 0xffb040 };
 const grenGeo = new THREE.SphereGeometry(0.11, 12, 8), grenBand = new THREE.TorusGeometry(0.11, 0.025, 6, 16), arcGeo = new THREE.OctahedronGeometry(0.16);
 const blastLight = new THREE.PointLight(0xffa040, 0, 26, 2); scene.add(blastLight);
 function grenFull() { for (const k of GREN_TYPES) { GREN.charges[k] = GREN_MAX; GREN.regen[k] = 0; } }
@@ -4846,11 +5211,11 @@ function throwGrenade() {
 function spawnGrenade(type, p, v, owner, mine) {
   const col = GREN_COL[type];
   const mesh = new THREE.Group();
-  const glowy = type === 'arc' || type === 'impulse';
+  const glowy = type === 'arc' || type === 'impulse' || type === 'shell';
   const body = new THREE.Mesh(type === 'arc' ? arcGeo : grenGeo, new THREE.MeshLambertMaterial({ color: col, emissive: glowy ? col : 0x000000, emissiveIntensity: 0.6 }));
   mesh.add(body);
   if (type !== 'arc') { const band = new THREE.Mesh(grenBand, new THREE.MeshLambertMaterial({ color: 0x222222 })); band.rotation.x = Math.PI / 2; mesh.add(band); }
-  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending })); glow.scale.setScalar(0.6); mesh.add(glow);
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending })); glow.scale.setScalar(type === 'shell' ? 1.8 : 0.6); mesh.add(glow);
   mesh.position.set(p[0], p[1], p[2]); scene.add(mesh);
   GREN.list.push({ type, pos: new V3(p[0], p[1], p[2]), vel: new V3(v[0], v[1], v[2]), t: 0, stuckT: -1, owner, mine, mesh, glow });
 }
@@ -4882,13 +5247,15 @@ function grenStep(dt) {
       const n = Math.max(1, Math.ceil(dt * 120));
       for (let s2 = 0; s2 < n; s2++) {
         const h = dt / n;
-        g.vel.y -= G * h; g.pos.addScaledVector(g.vel, h);
+        g.vel.y -= G * h * (g.type === 'shell' ? 0.3 : 1); g.pos.addScaledVector(g.vel, h);
+        if (g.type === 'shell' && shellHitsBody(g)) { g.t = 99; break; }
         if (grenCollide(g)) {
+          if (g.type === 'shell') { g.t = 99; break; }
           if (g.type === 'arc') { g.stuckT = 0; g.vel.set(0, 0, 0); sfx.zapStick(); break; }
           if (g.type === 'thermite' || g.type === 'impulse') { g.t = 99; break; }
         }
       }
-      g.mesh.rotation.x += dt * 9; g.mesh.rotation.z += dt * 5;
+      if (g.type === 'shell') g.mesh.lookAt(_gt.copy(g.pos).add(g.vel)); else { g.mesh.rotation.x += dt * 9; g.mesh.rotation.z += dt * 5; }
     } else g.stuckT += dt;
     g.mesh.position.copy(g.pos);
     g.glow.material.opacity = 0.4 + 0.3 * Math.sin(g.t * (g.type === 'frag' ? 8 + g.t * 8 : 12));
@@ -4917,7 +5284,7 @@ function losClear(a, b) {
 }
 // dégâts de zone : le lanceur les applique aux robots et aux autres joueurs, et à lui-même
 const _gp = new V3(), _gt = new V3();
-function grenDamage(c, radius, dmgMax, mine, flat) {
+function grenDamage(c, radius, dmgMax, mine, flat, w = 10) {
   if (!mine) return;
   _gp.copy(c); _gp.y += 0.3;
   const amount = dist => Math.round(flat ? dmgMax : dmgMax * Math.pow(1 - dist / radius, 0.7)) * (X.oneshot && xUnlocked ? 10 : 1);
@@ -4933,11 +5300,11 @@ function grenDamage(c, radius, dmgMax, mine, flat) {
     _gt.set(rp.pos.x, rp.pos.y + 1, rp.pos.z);
     const dist = _gt.distanceTo(_gp); if (dist > radius || !losClear(_gp, _gt)) continue;
     const dmg = amount(dist);
-    if (dmg > 0) { rp.flash = 1; netSend({ k: 'hit', to: rp.id, dmg, head: false, w: 10 }); }
+    if (dmg > 0) { rp.flash = 1; netSend({ k: 'hit', to: rp.id, dmg, head: false, w }); }
   }
   _gt.set(P.pos.x, P.pos.y + 1, P.pos.z);
   const dist = _gt.distanceTo(_gp);
-  if (dist < radius && losClear(_gp, _gt)) hurtSelf((flat ? dmgMax : dmgMax * Math.pow(1 - dist / radius, 0.7)) * 0.7, 10);
+  if (dist < radius && losClear(_gp, _gt)) hurtSelf((flat ? dmgMax : dmgMax * Math.pow(1 - dist / radius, 0.7)) * (P.veh && P.veh.type === 'tank' ? 0.15 : 0.7), w);
 }
 function blastFx(c, col, size, dur = 0.45) {
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
@@ -4952,6 +5319,7 @@ function blastFx(c, col, size, dur = 0.45) {
 function grenExplode(type, c, mine) {
   const dist = camera.position.distanceTo(c), vol = clamp(1.6 / (1 + dist * 0.05), 0.1, 1);
   if (type === 'frag') { blastFx(c, 0xffa040, 9); sfx.boom(vol); grenDamage(c, 7, 115, mine, false); grenPushSelf(c, 7, 9, 3); }
+  else if (type === 'shell') { blastFx(c, 0xff8a30, 12, 0.6); sfx.boom(Math.min(1, vol * 1.3)); grenDamage(c, 6, 130, mine, false, 13); grenPushSelf(c, 6, 11, 4); }
   else if (type === 'arc') { blastFx(c, 0x40e8ff, 6, 0.35); sfx.zap(vol); grenDamage(c, 4.2, 72, mine, false); }
   else if (type === 'impulse') { blastFx(c, 0xc78cff, 7, 0.35); sfx.impulse(vol); grenImpulse(c, mine); }
   else if (type === 'thermite') {
@@ -4995,6 +5363,15 @@ function grenImpulse(c, mine) {
     const k = 1 - d / 6.5; _d.copy(_gt).sub(c).normalize();
     netSend({ k: 'push', to: rp.id, v: [r2(_d.x * 15 * k), r2(_d.y * 15 * k + 10 * k), r2(_d.z * 15 * k)] });
   }
+}
+// l'obus explose au contact d'un robot ou d'un joueur
+function shellHitsBody(g) {
+  if (g.t < 0.05) return false;
+  for (const d of dummies) if (d.alive && RULES.bots && Math.hypot(d.g.position.x - g.pos.x, d.g.position.z - g.pos.z) < 0.8 && g.pos.y > d.g.position.y - 0.2 && g.pos.y < d.g.position.y + 2) return true;
+  for (const rp of remotes.values()) if (rp.st && !rp.st.dead && rp.id !== g.owner && Math.hypot(rp.pos.x - g.pos.x, rp.pos.z - g.pos.z) < 0.9 && g.pos.y > rp.pos.y - 0.2 && g.pos.y < rp.pos.y + 2.2) return true;
+  if (!g.mine && !P.dead && Math.hypot(P.pos.x - g.pos.x, P.pos.z - g.pos.z) < (P.veh ? (VEHP[P.veh.type] || VEH).R : 0.8) && g.pos.y > P.pos.y - 0.2 && g.pos.y < P.pos.y + 2.4) return true;
+  for (const v of VEHICLES) if (v.driver && v.driver !== 'me' && v.driver !== g.owner && Math.hypot(v.pos.x - g.pos.x, v.pos.z - g.pos.z) < (VEHP[v.type] || VEH).R && g.pos.y > v.pos.y && g.pos.y < v.pos.y + 3) return true;
+  return false;
 }
 function clearGrenades() {
   for (const g of GREN.list) scene.remove(g.mesh); GREN.list.length = 0;
@@ -5042,25 +5419,232 @@ function buildBuggy(color) {
   }
   return { g, body, wheels };
 }
+/* ---------- tank, hélicoptère, avion : paramètres, modèles, physique ---------- */
+VEH.cam = 7.5; VEH.camH = 2.1;
+const VEHP = {
+  buggy: VEH,
+  tank: { R: 2.4, maxF: 13, maxR: 6, acc: 7, brake: 18, steer: 1.15, grip: 12, drift: 6, step: 1.05, ram: 4, ramMul: 2.2, gun: 'cannon', cam: 9.5, camH: 3.3, seat: null },
+  heli: { R: 2.6, air: true, gun: 'mg', cam: 11, camH: 3.2, seat: [-0.45, 0.55, -0.7] },
+  plane: { R: 2.2, air: true, gun: 'mg', cam: 13, camH: 2.6, seat: null }
+};
+VEH.seat = [-0.38, -0.12, 0.28];
+const vehMat = (c, sh = 30) => new THREE.MeshPhongMaterial({ color: c, shininess: sh, specular: 0x333333 });
+function mergeParts(parts, parent) { for (const [m, list] of parts) { const mesh = new THREE.Mesh(mergeGeos(list, ['position', 'normal']), m); mesh.castShadow = true; parent.add(mesh); } }
+function partAdder(parts) {
+  return (geo, m, x, y, z, rx = 0, ry = 0, rz = 0) => {
+    const g2 = (geo.index ? geo.toNonIndexed() : geo); g2.rotateX(rx); g2.rotateY(ry); g2.rotateZ(rz); g2.translate(x, y, z);
+    if (!parts.has(m)) parts.set(m, []); parts.get(m).push(g2);
+  };
+}
+function buildTank(color) {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const paint = vehMat(color, 15), dark = vehMat(0x22251f, 10);
+  const parts = new Map(), A = partAdder(parts), Bx = (w, h, d) => new THREE.BoxGeometry(w, h, d);
+  A(Bx(3.0, 0.9, 5.0), paint, 0, 1.05, 0); A(Bx(2.6, 0.5, 1.2), paint, 0, 1.0, -2.8, -0.5);
+  for (const sx of [-1, 1]) {
+    A(Bx(0.75, 0.95, 5.6), dark, sx * 1.75, 0.55, 0);
+    for (let i = 0; i < 6; i++) A(new THREE.CylinderGeometry(0.36, 0.36, 0.78, 14), vehMat(0x3a3d36, 8), sx * 1.75, 0.42, -2.1 + i * 0.84, 0, 0, Math.PI / 2);
+    A(Bx(0.85, 0.08, 5.7), paint, sx * 1.75, 1.08, 0);
+  }
+  mergeParts(parts, body);
+  const turret = new THREE.Group(); turret.position.set(0, 1.5, 0.25); body.add(turret);
+  const tp = new Map(), T = partAdder(tp);
+  T(Bx(2.2, 0.75, 2.6), paint, 0, 0.35, 0); T(Bx(1.6, 0.5, 0.9), paint, 0, 0.3, -1.6, 0.2); T(new THREE.CylinderGeometry(0.42, 0.42, 0.2, 16), dark, 0.5, 0.82, 0.4);
+  mergeParts(tp, turret);
+  const barrel = new THREE.Group(); barrel.position.set(0, 0.38, -1.4); turret.add(barrel);
+  const bp = new Map(), Bp = partAdder(bp);
+  Bp(new THREE.CylinderGeometry(0.13, 0.15, 3.3, 14), dark, 0, 0, -1.65, Math.PI / 2); Bp(new THREE.CylinderGeometry(0.2, 0.2, 0.45, 14), dark, 0, 0, -3.25, Math.PI / 2);
+  mergeParts(bp, barrel);
+  return { g, body, wheels: [], turret, barrel };
+}
+function buildHeli(color) {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const paint = vehMat(color, 60), dark = vehMat(0x1f2226, 30), glass = new THREE.MeshPhongMaterial({ color: 0x1a3550, shininess: 120, specular: 0x88aaff, transparent: true, opacity: 0.85 });
+  const parts = new Map(), A = partAdder(parts), Bx = (w, h, d) => new THREE.BoxGeometry(w, h, d);
+  A(Bx(1.9, 1.6, 3.4), paint, 0, 1.45, 0); A(Bx(1.7, 1.2, 1.2), glass, 0, 1.5, -2.1); A(Bx(1.5, 0.8, 0.6), paint, 0, 1.05, -2.6);
+  A(Bx(0.4, 0.45, 4.6), paint, 0, 1.75, 3.8); A(Bx(0.12, 1.3, 0.9), paint, 0, 2.3, 5.9); A(Bx(1.6, 0.1, 0.6), paint, 0, 1.75, 5.7);
+  A(Bx(1.0, 0.5, 1.6), dark, 0, 2.4, 0.3); A(new THREE.CylinderGeometry(0.12, 0.12, 0.5, 10), dark, 0, 2.85, 0);
+  for (const sx of [-1, 1]) { A(Bx(0.12, 0.12, 3.6), dark, sx * 1.05, 0.12, -0.2); A(Bx(0.1, 0.65, 0.1), dark, sx * 0.95, 0.45, -1); A(Bx(0.1, 0.65, 0.1), dark, sx * 0.95, 0.45, 0.8); A(Bx(0.05, 0.6, 1.0), glass, sx * 0.96, 1.6, -0.8); }
+  A(new THREE.CylinderGeometry(0.07, 0.07, 1.3, 8), dark, 1.0, 1.0, -1.6, Math.PI / 2);
+  mergeParts(parts, body);
+  const rotor = new THREE.Group(); rotor.position.set(0, 3.12, 0); body.add(rotor);
+  for (let i = 0; i < 4; i++) { const b = new THREE.Mesh(Bx(5.2, 0.05, 0.32), dark); b.position.x = 2.6; const piv = new THREE.Group(); piv.rotation.y = i * Math.PI / 2; piv.add(b); rotor.add(piv); }
+  const tail = new THREE.Group(); tail.position.set(0.3, 2.3, 6.1); body.add(tail);
+  for (let i = 0; i < 2; i++) { const b = new THREE.Mesh(Bx(0.05, 1.2, 0.16), dark); b.rotation.x = i * Math.PI / 2; tail.add(b); }
+  return { g, body, wheels: [], rotor, tail };
+}
+function buildPlane(color) {
+  const g = new THREE.Group(), body = new THREE.Group(); g.add(body);
+  const paint = vehMat(color, 70), white = vehMat(0xe8eaec, 50), dark = vehMat(0x1f2226, 30), glass = new THREE.MeshPhongMaterial({ color: 0x1a3550, shininess: 120, specular: 0x88aaff });
+  const parts = new Map(), A = partAdder(parts), Bx = (w, h, d) => new THREE.BoxGeometry(w, h, d);
+  A(new THREE.CylinderGeometry(0.62, 0.45, 6.6, 14), white, 0, 1.45, 0.3, Math.PI / 2);
+  A(new THREE.CylinderGeometry(0.15, 0.62, 1.1, 14), paint, 0, 1.45, -3.55, -Math.PI / 2);
+  A(Bx(0.8, 0.5, 1.4), glass, 0, 2.0, -1.0);
+  A(Bx(9.6, 0.14, 1.7), paint, 0, 1.3, -0.4); A(Bx(1.2, 0.16, 1.75), white, 0, 1.31, -0.4);
+  for (const sx of [-1, 1]) A(Bx(0.5, 0.15, 1.8), white, sx * 4.4, 1.33, -0.4);
+  A(Bx(3.4, 0.12, 0.9), paint, 0, 1.6, 3.2); A(Bx(0.12, 1.2, 1.0), paint, 0, 2.15, 3.2);
+  for (const sx of [-1, 1]) { A(Bx(0.08, 0.9, 0.08), dark, sx * 1.1, 0.75, -0.7); A(new THREE.CylinderGeometry(0.32, 0.32, 0.22, 12), dark, sx * 1.1, 0.32, -0.7, 0, 0, Math.PI / 2); }
+  A(new THREE.CylinderGeometry(0.2, 0.2, 0.16, 10), dark, 0, 0.6, 3.2, 0, 0, Math.PI / 2);
+  mergeParts(parts, body);
+  const prop = new THREE.Group(); prop.position.set(0, 1.45, -4.15); body.add(prop);
+  for (let i = 0; i < 3; i++) { const b = new THREE.Mesh(Bx(0.18, 1.5, 0.05), dark); b.position.y = 0.75; const piv = new THREE.Group(); piv.rotation.z = i * Math.PI * 2 / 3; piv.add(b); prop.add(piv); }
+  return { g, body, wheels: [], prop };
+}
+// collisions cercle contre boîtes sur une tranche de hauteur (hélico)
+function vehPushOut(v, R, y0, y1) {
+  let hit = 0;
+  for (const b of BOXES) {
+    if (b.ground || b.max.y <= y0 || b.min.y >= y1) continue;
+    const cx = clamp(v.pos.x, b.min.x, b.max.x), cz = clamp(v.pos.z, b.min.z, b.max.z), dx = v.pos.x - cx, dz = v.pos.z - cz, d2 = dx * dx + dz * dz;
+    if (d2 >= R * R) continue;
+    let nx, nz, pen;
+    if (d2 > 1e-6) { const d = Math.sqrt(d2); nx = dx / d; nz = dz / d; pen = R - d; }
+    else { const o = [[v.pos.x - b.min.x, -1, 0], [b.max.x - v.pos.x, 1, 0], [v.pos.z - b.min.z, 0, -1], [b.max.z - v.pos.z, 0, 1]].sort((p, q) => p[0] - q[0])[0]; nx = o[1]; nz = o[2]; pen = o[0] + R; }
+    v.pos.x += nx * pen; v.pos.z += nz * pen;
+    const vn = v.vel.x * nx + v.vel.z * nz; if (vn < 0) { v.vel.x -= vn * nx * 1.2; v.vel.z -= vn * nz * 1.2; hit = Math.max(hit, -vn); }
+  }
+  const L = MAP_LIM - 1;
+  if (Math.abs(v.pos.x) > L) { v.pos.x = clamp(v.pos.x, -L, L); v.vel.x *= -0.3; }
+  if (Math.abs(v.pos.z) > L) { v.pos.z = clamp(v.pos.z, -L, L); v.vel.z *= -0.3; }
+  return hit;
+}
+function vehInput() {
+  let iz = (act('forward') ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
+  if (PAD.active && Math.hypot(PAD.mx, PAD.my) > 0.2) { ix = PAD.mx; iz = -PAD.my; }
+  return playing ? { iz, ix, up: (act('jump') ? 1 : 0) - (act('crouch') ? 1 : 0), boost: act('sprint') } : { iz: 0, ix: 0, up: 0, boost: false };
+}
+// hélico : se déplace dans la direction de la caméra, Espace monte, C descend, se tourne vers où tu regardes
+function heliStep(v, dt) {
+  const inp = vehInput(), sy = Math.sin(P.yaw), cy = Math.cos(P.yaw), mx = inp.boost ? 36 : 25;
+  let wx = -sy * inp.iz + cy * inp.ix, wz = -cy * inp.iz - sy * inp.ix; const wl = Math.hypot(wx, wz); if (wl > 1) { wx /= wl; wz /= wl; }
+  v.vel.x += clamp(wx * mx - v.vel.x, -15 * dt, 15 * dt); v.vel.z += clamp(wz * mx - v.vel.z, -15 * dt, 15 * dt);
+  v.vel.y += clamp(inp.up * 11 - v.vel.y, -18 * dt, 18 * dt);
+  v.yaw += angDiff(P.yaw, v.yaw) * (1 - Math.exp(-2.4 * dt));
+  const fx = -Math.sin(v.yaw), fz = -Math.cos(v.yaw), fwd = v.vel.x * fx + v.vel.z * fz, lat = v.vel.x * -fz + v.vel.z * fx;
+  v.pitch += (-clamp(fwd / 70, -0.35, 0.35) - v.pitch) * (1 - Math.exp(-4 * dt));
+  v.roll += (clamp(lat / 70, -0.35, 0.35) - v.roll) * (1 - Math.exp(-4 * dt));
+  v.pos.x += v.vel.x * dt; v.pos.z += v.vel.z * dt;
+  const hit = vehPushOut(v, VEHP.heli.R, v.pos.y + 0.3, v.pos.y + 3);
+  if (hit > 8) { sfx.land(Math.min(1, hit / 20)); camShake(0.3); }
+  v.pos.y = Math.min(160, v.pos.y + v.vel.y * dt);
+  const gh = groundAtPoint(v.pos.x, v.pos.z, v.pos.y + 0.6);
+  if (v.pos.y <= gh) { if (v.vel.y < -9) { sfx.land(1); camShake(0.5); } v.pos.y = gh; v.vel.y = Math.max(0, v.vel.y); v.grounded = true; } else v.grounded = false;
+  v.spin += dt;
+  P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded;
+}
+// avion : Z/S règlent les gaz, la souris donne la direction, Q/D penchent ; décolle à plus de 30 m/s
+function planeStep(v, dt) {
+  const inp = vehInput();
+  v.thr = clamp((v.thr || 0) + inp.iz * 0.55 * dt, 0, 1);
+  const target = v.thr * (inp.boost ? 88 : 68);
+  v.speed = (v.speed || 0) + clamp(target - (v.speed || 0), -10 * dt, (v.grounded ? 14 : 18) * dt);
+  let wantP = clamp(P.pitch, -0.95, 0.95);
+  if (v.grounded) wantP = v.speed > 30 ? Math.max(0, wantP) : 0;
+  const turn = 1.25 * clamp(v.speed / 30, 0.15, 1) * dt;
+  const dyaw = clamp(angDiff(P.yaw, v.yaw), -turn, turn) - inp.ix * 0.7 * dt * clamp(v.speed / 30, 0.2, 1);
+  v.yaw += dyaw; v.pitch += clamp(wantP - v.pitch, -turn, turn);
+  if (!v.grounded && v.speed < 24) v.pitch -= (24 - v.speed) * 0.03 * dt;
+  v.roll += (clamp(-dyaw / dt * 0.55, -1.1, 1.1) * (v.grounded ? 0 : 1) - v.roll) * (1 - Math.exp(-4 * dt));
+  // près du bord : demi-tour automatique vers le centre
+  const L = MAP_LIM - 30, outward = -Math.sin(v.yaw) * v.pos.x - Math.cos(v.yaw) * v.pos.z > 0;
+  if (!v.grounded && outward && (Math.abs(v.pos.x) > L || Math.abs(v.pos.z) > L)) { const dy = clamp(angDiff(Math.atan2(v.pos.x, v.pos.z), v.yaw), -turn * 3, turn * 3); v.yaw += dy; P.yaw += dy; }
+  const cp = Math.cos(v.pitch);
+  v.vel.set(-Math.sin(v.yaw) * cp * v.speed, Math.sin(v.pitch) * v.speed, -Math.cos(v.yaw) * cp * v.speed);
+  if (!v.grounded && v.speed < 24) v.vel.y -= (24 - v.speed) * 0.7;
+  const n = Math.max(1, Math.ceil(v.speed * dt / 0.8));
+  for (let k = 0; k < n; k++) {
+    v.pos.addScaledVector(v.vel, dt / n);
+    v.pos.x = clamp(v.pos.x, -MAP_LIM + 1, MAP_LIM - 1); v.pos.z = clamp(v.pos.z, -MAP_LIM + 1, MAP_LIM - 1);
+    v.pos.y = Math.min(220, v.pos.y);
+    // choc contre un bâtiment
+    for (const b of BOXES) {
+      if (b.ground) continue;
+      if (v.pos.x > b.min.x - 1 && v.pos.x < b.max.x + 1 && v.pos.z > b.min.z - 1 && v.pos.z < b.max.z + 1 && v.pos.y + 1.2 > b.min.y && v.pos.y + 0.4 < b.max.y) {
+        if (v.speed > 20 && v.pos.y + 0.4 < b.max.y - 0.6) { planeCrash(v); return; }
+        v.pos.y = b.max.y; v.grounded = true; v.speed *= 0.95;
+      }
+    }
+    const gh = groundAtPoint(v.pos.x, v.pos.z, v.pos.y + 0.6);
+    if (v.pos.y <= gh) {
+      if (v.vel.y < -14 || (v.speed > 45 && v.pitch < -0.3)) { planeCrash(v); return; }
+      v.pos.y = gh; v.grounded = true; if (v.pitch < 0) v.pitch = 0;
+    } else if (v.pos.y > gh + 0.6) v.grounded = false;
+  }
+  if (v.grounded && v.thr < 0.05) v.speed = Math.max(0, v.speed - 10 * dt);
+  v.spin += dt * (2 + v.thr * 30);
+  P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded;
+}
+function planeCrash(v) {
+  blastFx(v.pos.clone(), 0xffa040, 12); sfx.boom(1);
+  const wasMe = P.veh === v;
+  v.speed = 0; v.thr = 0; v.vel.set(0, 0, 0);
+  if (wasMe) { exitVehicle(true); P.vel.set(0, 6, 0); hurtSelf(70, 12); }
+  v.g.visible = false; v.wreck = 8;
+}
+// tir des véhicules armés : obus du tank, mitrailleuse de l'hélico et de l'avion
+const _vm = new V3(), _vt = new V3();
+function vehAimPoint() {
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]);
+  raycaster.set(_o, _f); raycaster.far = 500;
+  const h = raycaster.intersectObjects(SHOOTABLE, false)[0];
+  return h ? h.point.clone() : _o.clone().addScaledVector(_f, 500);
+}
+function vehFire(v, dt) {
+  const PR = VEHP[v.type] || VEH;
+  v.fireCd = Math.max(0, (v.fireCd || 0) - dt);
+  if (!PR.gun || !mouse.left || v.fireCd > 0 || !playing) return;
+  const aim = vehAimPoint();
+  if (PR.gun === 'cannon') {
+    v.barrel.updateMatrixWorld(true); _vm.set(0, 0, -3.5).applyMatrix4(v.barrel.matrixWorld);
+    _vt.copy(aim).sub(_vm).normalize();
+    const p = [_vm.x, _vm.y, _vm.z].map(r2), vel = [_vt.x * 80, _vt.y * 80, _vt.z * 80].map(r2);
+    spawnGrenade('shell', p, vel, NET.selfId || 'me', true); netSend({ k: 'gren', t: 'shell', p, v: vel });
+    v.fireCd = 2.2; sfx.shot(3, 1); camShake(0.6); blastFx(_vm.clone(), 0xffc060, 2.5, 0.2); if (PAD.active) PAD.rumble = 1;
+    return;
+  }
+  // mitrailleuse : tir instantané avec un peu de dispersion
+  v.fireCd = v.type === 'plane' ? 0.07 : 0.09;
+  _vm.copy(v.pos); _vm.y += v.type === 'plane' ? 1.3 : 1.2;
+  _vm.x += -Math.sin(v.yaw) * (v.type === 'plane' ? 3.8 : 2.4); _vm.z += -Math.cos(v.yaw) * (v.type === 'plane' ? 3.8 : 2.4);
+  _vt.copy(aim).sub(_vm).normalize(); _vt.x += (Math.random() - 0.5) * 0.02; _vt.y += (Math.random() - 0.5) * 0.02; _vt.z += (Math.random() - 0.5) * 0.02; _vt.normalize();
+  raycaster.set(_vm, _vt); raycaster.far = 500;
+  let end = _vm.clone().addScaledVector(_vt, 500);
+  for (const h of raycaster.intersectObjects(SHOOTABLE, false)) {
+    const ud = h.object.userData;
+    if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
+    if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
+    end = h.point.clone();
+    const dmg = (v.type === 'plane' ? 16 : 14) * (ud && ud.part === 'head' ? 1.4 : 1) * (X.oneshot && xUnlocked ? 10 : 1);
+    if (ud && ud.d) { const r = damageDummy(ud.d, Math.round(dmg), ud.part); sfx.hit(r === 'head'); if (r === 'kill') { hmEl.className = 'kill'; hmT = 0.35; } }
+    else if (ud && ud.rp) { ud.rp.flash = 1; netSend({ k: 'hit', to: ud.rp.id, dmg: Math.round(dmg), head: ud.part === 'head', w: 12 }); sfx.hit(false); }
+    spawnSpark(h.point, false);
+    break;
+  }
+  spawnTracer(_vm, end, 0xffe08a); sfx.shot(1, 0.7); camShake(0.08);
+  netSend({ k: 'shot', w: 1, a: [r2(_vm.x), r2(_vm.y), r2(_vm.z)], e: [[r2(end.x), r2(end.y), r2(end.z)]] });
+}
 function resetVehicles() {
   if (!VEH_READY) return;
   if (P.veh) exitVehicle(true);
   for (const v of VEHICLES) scene.remove(v.g);
   VEHICLES.length = 0;
   VEH_SPAWNS.forEach((sp, i) => {
-    const m = buildBuggy(VEH_COLORS[i % VEH_COLORS.length]);
-    const v = { i, ...m, pos: new V3(sp[0], sp[1], sp[2]), vel: new V3(), yaw: sp[3] || 0, grounded: true, pitch: 0, roll: 0, spin: 0, steerV: 0, driver: null, ramCd: new Map(), home: sp.slice() };
+    const type = VEHP[sp[4]] ? sp[4] : 'buggy', col = VEH_COLORS[i % VEH_COLORS.length];
+    const m = type === 'tank' ? buildTank([0x66753f, 0x8a7a52, 0x56685e][i % 3]) : type === 'heli' ? buildHeli(col) : type === 'plane' ? buildPlane(col) : buildBuggy(col);
+    const v = { i, type, ...m, pos: new V3(sp[0], sp[1], sp[2]), vel: new V3(), yaw: sp[3] || 0, grounded: true, pitch: 0, roll: 0, spin: 0, steerV: 0, driver: null, ramCd: new Map(), home: sp.slice(), thr: 0, speed: 0, fireCd: 0, wreck: 0, tYaw: 0, tPitch: 0 };
     scene.add(v.g); VEHICLES.push(v); placeVehicleMesh(v, v.pos, v.yaw, 1);
   });
 }
-function vehGround(x, z, y) {
+function vehGround(x, z, y, step = VEH.step) {
   let h = rampAt(x, z).h;
   if (h > y + 1.3) h = -Infinity;
-  for (const b of BOXES) if (x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y + VEH.step && b.max.y > h) h = b.max.y;
+  for (const b of BOXES) if (x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y + step && b.max.y > h) h = b.max.y;
   return h;
 }
 // inclinaison du châssis d'après le sol sous les quatre coins
 function placeVehicleMesh(v, pos, yaw, k) {
+  if (VEHP[v.type] && VEHP[v.type].air && (v.driver || !v.grounded)) { v.g.position.copy(pos); v.g.rotation.set(v.pitch, yaw, -v.roll, 'YXZ'); return; }
   const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw), y = pos.y + 0.5;
   const gf = vehGround(pos.x + fx * 1.3, pos.z + fz * 1.3, y), gb = vehGround(pos.x - fx * 1.3, pos.z - fz * 1.3, y);
   const gl = vehGround(pos.x - rx * 0.9, pos.z - rz * 0.9, y), gr = vehGround(pos.x + rx * 0.9, pos.z + rz * 0.9, y);
@@ -5071,20 +5655,23 @@ function placeVehicleMesh(v, pos, yaw, k) {
   v.g.position.copy(pos); v.g.rotation.set(v.pitch, yaw, -v.roll, 'YXZ');
 }
 function vehStep(v, dt) {
+  if (v.type === 'heli') return heliStep(v, dt);
+  if (v.type === 'plane') return planeStep(v, dt);
+  const PR = VEHP[v.type] || VEH, tank = v.type === 'tank';
   const fx = -Math.sin(v.yaw), fz = -Math.cos(v.yaw), rx = Math.cos(v.yaw), rz = -Math.sin(v.yaw);
   let vf = v.vel.x * fx + v.vel.z * fz, vl = v.vel.x * rx + v.vel.z * rz;
   const thr = playing ? (act('forward') ? 1 : 0) - (act('back') ? 1 : 0) : 0, st = playing ? (act('left') ? 1 : 0) - (act('right') ? 1 : 0) : 0;
   const hand = playing && act('jump'), boost = playing && act('sprint') ? 1.15 : 1;
   v.steerV += (st - v.steerV) * (1 - Math.exp(-10 * dt));
   if (v.grounded) {
-    if (thr > 0) vf += (vf < -0.5 ? VEH.brake : VEH.acc * (1 - clamp(vf / (VEH.maxF * boost), 0, 1) * 0.55)) * dt;
-    else if (thr < 0) vf -= (vf > 0.5 ? VEH.brake : VEH.acc * 0.7) * dt;
+    if (thr > 0) vf += (vf < -0.5 ? PR.brake : PR.acc * (1 - clamp(vf / (PR.maxF * boost), 0, 1) * 0.55)) * dt;
+    else if (thr < 0) vf -= (vf > 0.5 ? PR.brake : PR.acc * 0.7) * dt;
     else vf -= Math.sign(vf) * Math.min(Math.abs(vf), 3.2 * dt);
     if (hand) vf -= Math.sign(vf) * Math.min(Math.abs(vf), 9 * dt);
-    vf = clamp(vf, -VEH.maxR, VEH.maxF * boost);
-    const sf = clamp(Math.abs(vf) / 4.5, 0, 1) * (1 - clamp(Math.abs(vf) / 70, 0, 0.35));
-    v.yaw += v.steerV * VEH.steer * sf * (vf < -0.3 ? -1 : 1) * dt * (hand ? 1.45 : 1);
-    vl *= Math.exp(-(hand ? VEH.drift : VEH.grip) * dt);
+    vf = clamp(vf, -PR.maxR, PR.maxF * boost);
+    const sf = tank ? 1 - clamp(Math.abs(vf) / 40, 0, 0.3) : clamp(Math.abs(vf) / 4.5, 0, 1) * (1 - clamp(Math.abs(vf) / 70, 0, 0.35));
+    v.yaw += v.steerV * PR.steer * sf * (vf < -0.3 ? -1 : 1) * dt * (hand ? 1.45 : 1);
+    vl *= Math.exp(-(hand ? PR.drift : PR.grip) * dt);
     const nfx = -Math.sin(v.yaw), nfz = -Math.cos(v.yaw), nrx = Math.cos(v.yaw), nrz = -Math.sin(v.yaw);
     v.vel.x = nfx * vf + nrx * vl; v.vel.z = nfz * vf + nrz * vl;
     // la pente accélère vers le bas
@@ -5100,12 +5687,12 @@ function vehStep(v, dt) {
   for (let k = 0; k < n; k++) {
     v.pos.x += v.vel.x * dt / n; v.pos.z += v.vel.z * dt / n;
     for (const b of BOXES) {
-      if (b.ground || b.max.y <= v.pos.y + VEH.step || b.min.y >= v.pos.y + 1.7) continue;
+      if (b.ground || b.max.y <= v.pos.y + PR.step || b.min.y >= v.pos.y + 1.7) continue;
       const cx = clamp(v.pos.x, b.min.x, b.max.x), cz = clamp(v.pos.z, b.min.z, b.max.z), dx = v.pos.x - cx, dz = v.pos.z - cz, d2 = dx * dx + dz * dz;
-      if (d2 >= VEH.R * VEH.R) continue;
+      if (d2 >= PR.R * PR.R) continue;
       let nx, nz, pen;
-      if (d2 > 1e-6) { const d = Math.sqrt(d2); nx = dx / d; nz = dz / d; pen = VEH.R - d; }
-      else { const o = [[v.pos.x - b.min.x, -1, 0], [b.max.x - v.pos.x, 1, 0], [v.pos.z - b.min.z, 0, -1], [b.max.z - v.pos.z, 0, 1]].sort((p, q) => p[0] - q[0])[0]; nx = o[1]; nz = o[2]; pen = o[0] + VEH.R; }
+      if (d2 > 1e-6) { const d = Math.sqrt(d2); nx = dx / d; nz = dz / d; pen = PR.R - d; }
+      else { const o = [[v.pos.x - b.min.x, -1, 0], [b.max.x - v.pos.x, 1, 0], [v.pos.z - b.min.z, 0, -1], [b.max.z - v.pos.z, 0, 1]].sort((p, q) => p[0] - q[0])[0]; nx = o[1]; nz = o[2]; pen = o[0] + PR.R; }
       v.pos.x += nx * pen; v.pos.z += nz * pen;
       const vn = v.vel.x * nx + v.vel.z * nz;
       if (vn < 0) { v.vel.x -= vn * nx * 1.3; v.vel.z -= vn * nz * 1.3; hitWall = Math.max(hitWall, -vn); }
@@ -5116,7 +5703,7 @@ function vehStep(v, dt) {
   }
   if (hitWall > 6) { sfx.land(Math.min(1, hitWall / 20)); P.dip = Math.min(0.2, hitWall * 0.01); }
   // vertical : suit le sol, décolle au sommet des tremplins
-  const gh = vehGround(v.pos.x, v.pos.z, v.pos.y);
+  const gh = vehGround(v.pos.x, v.pos.z, v.pos.y, PR.step);
   if (v.grounded) {
     if (gh > -Infinity && gh >= v.pos.y - 0.35 - sp * dt * 0.6) { const vy = (gh - v.pos.y) / dt; v.vel.y = clamp(v.vel.y * 0.5 + vy * 0.5, -20, 22); v.pos.y = gh; }
     else v.grounded = false;
@@ -5127,31 +5714,31 @@ function vehStep(v, dt) {
   if (v.pos.y < -20) { v.pos.set(v.home[0], v.home[1] + 1, v.home[2]); v.vel.set(0, 0, 0); }
   v.spin += vf * dt / 0.48;
   // percuter un robot ou un joueur
-  if (sp > VEH.ram) {
+  if (sp > PR.ram) {
     for (const d of dummies) {
       if (!d.alive || !RULES.bots) continue;
       const p = d.g.position;
-      if (Math.hypot(p.x - v.pos.x, p.z - v.pos.z) < VEH.R + 0.5 && Math.abs(p.y - v.pos.y) < 2 && !(v.ramCd.get(d) > simTime)) {
-        v.ramCd.set(d, simTime + 0.6); const r = damageDummy(d, Math.round(40 + sp * 3), 'body'); sfx.hit(false);
+      if (Math.hypot(p.x - v.pos.x, p.z - v.pos.z) < PR.R + 0.5 && Math.abs(p.y - v.pos.y) < 2 && !(v.ramCd.get(d) > simTime)) {
+        v.ramCd.set(d, simTime + 0.6); const r = damageDummy(d, Math.round((40 + sp * 3) * (PR.ramMul || 1)), 'body'); sfx.hit(false);
         if (r === 'kill') { hmEl.className = 'kill'; hmT = 0.35; }
       }
     }
     for (const rp of remotes.values()) {
       if (!rp.st || rp.st.dead || rp.st.vh) continue;
-      if (Math.hypot(rp.pos.x - v.pos.x, rp.pos.z - v.pos.z) < VEH.R + 0.5 && Math.abs(rp.pos.y - v.pos.y) < 2 && !(v.ramCd.get(rp.id) > simTime)) {
+      if (Math.hypot(rp.pos.x - v.pos.x, rp.pos.z - v.pos.z) < PR.R + 0.5 && Math.abs(rp.pos.y - v.pos.y) < 2 && !(v.ramCd.get(rp.id) > simTime)) {
         v.ramCd.set(rp.id, simTime + 0.8); rp.flash = 1; sfx.hit(false);
-        netSend({ k: 'hit', to: rp.id, dmg: Math.round(40 + sp * 3), head: false, w: 9 });
+        netSend({ k: 'hit', to: rp.id, dmg: Math.round((40 + sp * 3) * (PR.ramMul || 1)), head: false, w: tank ? 13 : 9 });
       }
     }
   }
   P.pos.copy(v.pos); P.vel.copy(v.vel); P.grounded = v.grounded;
 }
 function nearVehicle() {
-  let best = null, bd = 3.4;
+  let best = null, bd = 99;
   for (const v of VEHICLES) {
-    if (v.driver) continue;
-    const d = Math.hypot(v.pos.x - P.pos.x, v.pos.z - P.pos.z);
-    if (d < bd && Math.abs(v.pos.y - P.pos.y) < 2.5) { bd = d; best = v; }
+    if (v.driver || v.wreck > 0) continue;
+    const d = Math.hypot(v.pos.x - P.pos.x, v.pos.z - P.pos.z) - (VEHP[v.type] || VEH).R;
+    if (d < 2.05 && d < bd && Math.abs(v.pos.y - P.pos.y) < 3) { bd = d; best = v; }
   }
   return best;
 }
@@ -5160,16 +5747,17 @@ function enterVehicle(v) {
   endEmote(); WS.inspT = 0; WS.ads = 0;
   P.veh = v; v.driver = 'me'; v.vel.set(0, 0, 0); v.grounded = true;
   P.climbing = false; P.sliding = false; P.crouch = false; P.height = STAND_H;
-  P.yaw = v.yaw; P.pitch = -0.18; P.pos.copy(v.pos); P.prev.copy(v.pos);
-  engineSound(true); sfx.swap();
+  P.yaw = v.yaw; P.pitch = v.type === 'plane' ? 0 : -0.18; P.pos.copy(v.pos); P.prev.copy(v.pos);
+  v.thr = 0; v.speed = 0; v.fireCd = 0.4;
+  engineSound(true, v.type); sfx.swap();
 }
 function exitVehicle(silent) {
   const v = P.veh; if (!v) return;
   P.veh = null; v.driver = null; engineSound(false);
-  const rx = Math.cos(v.yaw), rz = -Math.sin(v.yaw);
+  const rx = Math.cos(v.yaw), rz = -Math.sin(v.yaw), off = (VEHP[v.type] || VEH).R + 0.9;
   let placed = false;
   for (const sd of [-1, 1]) {
-    const x = v.pos.x + rx * sd * 2.2, z = v.pos.z + rz * sd * 2.2, y = Math.max(v.pos.y, groundAtPoint(x, z, v.pos.y + 1.2));
+    const x = v.pos.x + rx * sd * off, z = v.pos.z + rz * sd * off, y = Math.max(v.pos.y, groundAtPoint(x, z, v.pos.y + 1.2));
     if (freeAt(x, y, z, STAND_H)) { P.pos.set(x, y, z); placed = true; break; }
   }
   if (!placed) P.pos.set(v.pos.x, v.pos.y + 2.2, v.pos.z);
@@ -5184,28 +5772,47 @@ function groundAtPoint(x, z, y) {
 }
 // bruit de moteur : deux oscillateurs filtrés dont la hauteur suit la vitesse
 let engine = null;
-function engineSound(on) {
+function engineSound(on, type) {
   if (!AC) return;
+  if (on && engine && engine.type !== type) { const e = engine; engine = null; e.g.gain.value = 0; try { e.o1.stop(); e.o2.stop(); } catch (er) {} }
   if (!on) { if (engine) { const e = engine; engine = null; e.g.gain.setTargetAtTime(0, AC.currentTime, 0.08); setTimeout(() => { try { e.o1.stop(); e.o2.stop(); } catch (er) {} }, 400); } return; }
   if (engine) return;
   const o1 = AC.createOscillator(), o2 = AC.createOscillator(), f = AC.createBiquadFilter(), g = AC.createGain();
-  o1.type = 'sawtooth'; o2.type = 'square'; f.type = 'lowpass'; f.frequency.value = 420; f.Q.value = 2; g.gain.value = 0;
+  o1.type = 'sawtooth'; o2.type = type === 'heli' ? 'triangle' : 'square'; f.type = 'lowpass'; f.frequency.value = 420; f.Q.value = 2; g.gain.value = 0;
   o1.connect(f); o2.connect(f); f.connect(g); g.connect(master); o1.start(); o2.start();
-  g.gain.setTargetAtTime(0.07, AC.currentTime, 0.1);
-  engine = { o1, o2, f, g };
+  g.gain.setTargetAtTime(type === 'tank' ? 0.09 : 0.07, AC.currentTime, 0.1);
+  engine = { o1, o2, f, g, type: type || 'buggy' };
 }
 function updateVehicles(dt) {
   const me = P.veh;
   for (const v of VEHICLES) {
+    const air = !!(VEHP[v.type] && VEHP[v.type].air);
+    if (v.wreck > 0) { v.wreck -= dt; if (v.wreck <= 0) { v.wreck = 0; v.pos.set(v.home[0], v.home[1], v.home[2]); v.yaw = v.home[3] || 0; v.vel.set(0, 0, 0); v.pitch = v.roll = 0; v.grounded = true; v.g.visible = true; placeVehicleMesh(v, v.pos, v.yaw, 1); } continue; }
     if (v === me) placeVehicleMesh(v, rPos, v.yaw, 1 - Math.exp(-10 * dt));
     else if (v.driver && v.driver !== 'me') {
       const rp = remotes.get(v.driver);
-      if (!rp || !rp.st || !rp.st.vh || rp.st.vh - 1 !== v.i) { v.driver = null; v.grounded = true; placeVehicleMesh(v, v.pos, v.yaw, 1); continue; }
+      if (!rp || !rp.st || !rp.st.vh || rp.st.vh - 1 !== v.i) { v.driver = null; v.grounded = !air; v.vel.set(0, 0, 0); placeVehicleMesh(v, v.pos, v.yaw, 1); continue; }
       v.pos.copy(rp.pos); v.yaw += angDiff(typeof rp.st.vy === 'number' ? rp.st.vy : rp.yaw, v.yaw) * (1 - Math.exp(-14 * dt));
       v.grounded = rp.st.a !== 'air'; v.vel.set(rp.st.v[0], rp.st.v[1], rp.st.v[2]);
-      v.spin += (v.vel.x * -Math.sin(v.yaw) + v.vel.z * -Math.cos(v.yaw)) * dt / 0.48;
-      placeVehicleMesh(v, v.pos, v.yaw, 1 - Math.exp(-10 * dt));
+      const q = Array.isArray(rp.st.vq) ? rp.st.vq : null, kq = 1 - Math.exp(-10 * dt);
+      if (q && air) { v.pitch += ((+q[0] || 0) - v.pitch) * kq; v.roll += ((+q[1] || 0) - v.roll) * kq; }
+      if (q && v.turret) { v.tYaw += angDiff(+q[2] || 0, v.tYaw) * kq; v.tPitch += ((+q[3] || 0) - v.tPitch) * kq; }
+      v.spin += air ? dt * (v.type === 'plane' ? 20 : 1) : (v.vel.x * -Math.sin(v.yaw) + v.vel.z * -Math.cos(v.yaw)) * dt / 0.48;
+      placeVehicleMesh(v, v.pos, v.yaw, kq);
+    } else if (!v.grounded) {
+      // un hélico ou un avion abandonné en l'air retombe
+      v.vel.y -= G * dt; if (v.type === 'heli') v.vel.y = Math.max(v.vel.y, -7); // rotor en autorotation : descente douce
+      v.pos.addScaledVector(v.vel, dt); v.vel.x *= Math.exp(-0.5 * dt); v.vel.z *= Math.exp(-0.5 * dt);
+      v.pitch *= Math.exp(-dt); v.roll *= Math.exp(-dt);
+      const gh = groundAtPoint(v.pos.x, v.pos.z, v.pos.y + 1);
+      if (v.pos.y <= gh) { v.pos.y = gh; if (v.vel.y < -16) { blastFx(v.pos.clone(), 0xffa040, 10); sfx.boom(clamp(1.6 / (1 + camera.position.distanceTo(v.pos) * 0.05), 0.1, 1)); v.g.visible = false; v.wreck = 8; } v.vel.set(0, 0, 0); v.grounded = true; }
+      if (v.pos.y < -30) { v.g.visible = false; v.wreck = 1; }
+      placeVehicleMesh(v, v.pos, v.yaw, 1);
     }
+    if (v === me && v.turret) { v.tYaw = angDiff(P.yaw, v.yaw); v.tPitch = clamp(P.pitch + 0.16, -0.12, 0.42); }
+    if (v.turret) { v.turret.rotation.y = v.tYaw; v.barrel.rotation.x = v.tPitch; }
+    if (v.rotor) { const rs = v.driver ? 26 : 0; v.rotorV = approach(v.rotorV || 0, rs, dt * 10); v.rotor.rotation.y += v.rotorV * dt; v.tail.rotation.x += v.rotorV * 1.6 * dt; }
+    if (v.prop) { v.propV = approach(v.propV || 0, v.driver ? 10 + (v === me ? v.thr * 40 : 30) : 0, dt * 12); v.prop.rotation.z += v.propV * dt; }
     for (const w of v.wheels) { w.w.rotation.x = -v.spin; if (w.front) w.piv.rotation.y = v.steerV * 0.45; }
   }
   // un joueur distant qui conduit réserve son buggy
@@ -5215,12 +5822,14 @@ function updateVehicles(dt) {
   }
   if (me) {
     const sp = Math.hypot(me.vel.x, me.vel.z);
-    if (sp > 4 && !mouse.right) P.yaw += angDiff(me.yaw, P.yaw) * (1 - Math.exp(-1.2 * dt));
-    if (engine) { const f = 40 + sp * 3.4 + (act('forward') ? 12 : 0); engine.o1.frequency.setTargetAtTime(f, AC.currentTime, 0.05); engine.o2.frequency.setTargetAtTime(f * 0.502, AC.currentTime, 0.05); engine.f.frequency.setTargetAtTime(300 + sp * 28, AC.currentTime, 0.05); }
+    if (sp > 4 && !mouse.right && me.type === 'buggy') P.yaw += angDiff(me.yaw, P.yaw) * (1 - Math.exp(-1.2 * dt));
+    vehFire(me, dt);
+    if (engine) { const f = me.type === 'heli' ? 28 + sp * 0.8 + (me.rotorV || 0) * 1.2 : me.type === 'plane' ? 50 + me.thr * 90 + sp * 0.6 : me.type === 'tank' ? 26 + sp * 3 + (act('forward') ? 8 : 0) : 40 + sp * 3.4 + (act('forward') ? 12 : 0); engine.o1.frequency.setTargetAtTime(f, AC.currentTime, 0.05); engine.o2.frequency.setTargetAtTime(f * 0.502, AC.currentTime, 0.05); engine.f.frequency.setTargetAtTime(300 + sp * 28, AC.currentTime, 0.05); }
   }
   const near = !me && !P.dead && !P.zip && playing ? nearVehicle() : null;
   const zipHit = !me && !P.dead && !P.zip && playing ? zipNear() : null;
-  const key = P.zip ? 'zip.ride' : zipHit ? 'zip.grab' : me ? 'veh.exit' : near ? 'veh.enter' : '';
+  const VK = { buggy: '', tank: 'Tank', heli: 'Heli', plane: 'Plane' };
+  const key = P.zip ? 'zip.ride' : zipHit ? 'zip.grab' : me ? 'veh.exit' + VK[me.type] : near ? 'veh.enter' + VK[near.type] : '';
   usePrompt.hidden = !key;
   if (key && usePrompt.dataset.k !== key + LANG) { usePrompt.dataset.k = key + LANG; usePrompt.innerHTML = t(key).replace('{key}', '<kbd>' + codeLabel(BINDS.use[0] || BINDS.use[1] || 'KeyE') + '</kbd>'); }
   updateZipFx();
@@ -5243,7 +5852,7 @@ function updateRemoteGun(rp, dt) {
     const kind = clamp(st.w | 0, 0, 5), kt = KNIVES[st.kt] ? st.kt : 'combat';
     const vm = buildViewmodel(kind, kt); wScene.remove(vm.g);
     vm.g.scale.setScalar(0.92); vm.g.traverse(o => { if (o.isMesh && o !== vm.flash) o.castShadow = true; });
-    applySkinVM(vm, kind === 5 && kt === 'katana' && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : SKINS[st.sk] || SKINS.std);
+    applySkinVM(vm, kind === 5 && kt === 'katana' && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : SKINS[st.sk] || SKINS.std);
     rp.g.add(vm.g); rp.gun = { vm, key, flashT: 0 };
   }
   const vm = rp.gun.vm, g = vm.g; g.visible = true;
@@ -5304,9 +5913,10 @@ function updateRemotes(dt) {
       if (st.a === 'slide') rp.vis.obj.rotation.x = -0.35 * rp.crouchK; else if (st.a !== 'sg' || rp.vis.ch !== 'robot') rp.vis.obj.rotation.x = 0;
       updateRemoteGun(rp, dt);
       if (rp.vis.mixer) {
-        const seated = !!(st.vh && VEHICLES[st.vh - 1]);
-        // au volant : assis sur le siège gauche du buggy
-        rp.vis.obj.position.set(seated ? -0.38 : 0, -MODELS.chars[rp.vis.ch].minY * rp.vis.base - (seated ? 0.12 : rp.vis.lower || 0), seated ? 0.28 : 0);
+        const seatV = st.vh && VEHICLES[st.vh - 1], seat = seatV ? (VEHP[seatV.type] || VEH).seat : null;
+        // au volant : assis sur le siège du conducteur (caché dans le tank et l'avion)
+        rp.vis.obj.visible = !seatV || !!seat;
+        rp.vis.obj.position.set(seat ? seat[0] : 0, -MODELS.chars[rp.vis.ch].minY * rp.vis.base - (seat ? -seat[1] : rp.vis.lower || 0), seat ? seat[2] : 0);
         updateOutfit(rp.vis, rp.g, 1 - rp.crouchK * 0.33);
       }
       rp.flash = Math.max(0, rp.flash - dt * 8);
@@ -5571,7 +6181,7 @@ function dcPayload() {
   const online = NET.mode !== 'off', n = online ? (NET.mode === 'host' ? NET.players.size : (NET.board ? NET.board.length : 1)) : 1;
   const kills = online ? (NET.meScore ? NET.meScore.kills : 0) : stats.kills;
   const mode = online ? t('dc.online', { n, max: 8 }) : t('dc.solo');
-  const what = P.veh ? t('dc.driving') : EMOTE.on ? t('dc.emote') : wName(WS.cur).toLowerCase().replace(/(^|[\s-])\S/g, c => c.toUpperCase());
+  const what = P.veh ? t(P.veh.type === 'buggy' ? 'dc.driving' : 'dc.driving.' + P.veh.type) : EMOTE.on ? t('dc.emote') : wName(WS.cur).toLowerCase().replace(/(^|[\s-])\S/g, c => c.toUpperCase());
   const p = {
     on: S.dcOn && /^[0-9]{15,22}$/.test(S.dcId), cid: S.dcId, start: DC.start,
     details: EDIT.on ? t('dc.editor') : playing ? mapName(S.map) + ' · ' + mode : online ? t('dc.lobby', { map: mapName(S.map) }) : t('dc.menu'),
@@ -6436,6 +7046,7 @@ function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min((now - lastFrame) / 1000, 0.1); lastFrame = now;
   for (const c in wheelT) if (wheelT[c] > 0) wheelT[c] -= dt;
+  GRASS_T.value += dt;
   if (playing) { mouse.left = act('fire'); mouse.right = act('ads'); } else { mouse.left = mouse.right = false; }
   if (playing || NET.mode !== 'off') {
     acc += dt;
@@ -6460,6 +7071,7 @@ function frame(now) {
   updateFpLegs(dt);
   updateVehicles(dt);
   grenStep(dt);
+  updateTrident(dt);
   updateEditor();
   drawEsp();
   if (MAP_TICK) MAP_TICK(dt);

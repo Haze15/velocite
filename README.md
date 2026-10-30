@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Six cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion), des buggys à conduire, 5 armes, 6 couteaux et la hache double Morgane, quatre personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Sept cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion, Ville fantôme), des buggys, tanks, hélicos et avions à piloter, 5 armes, 6 couteaux, la hache double Morgane et un trident qui se lance et revient, quatre personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -42,6 +42,9 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 
 - **Volcan** : carte immense (420 m de côté) avec un vrai relief : volcan de 74 m avec cratère de lave, trois coulées qui descendent ses flancs (la lave brûle), ponts, avant-postes dans les coins, camp de base au sud, plaine de cendres avec tremplins pour les buggys.
 - **Fusion** : les quatre cartes collées en carré, sans murs entre elles, avec un carrefour et un pad au centre.
+- **Ville fantôme** : grande ville abandonnée de 320 m de côté au crépuscule, dans un brouillard verdâtre plein de poussière. Rues en damier, immeubles à fenêtres cassées ou condamnées (jusqu'à une tour de 52 m avec un pad sur le toit), immeuble en chantier à six étages avec escaliers, autoroute surélevée avec bretelles, voitures abandonnées, place centrale, parc d'herbes hautes, tyroliennes entre les toits et aérodrome à l'est avec piste, hangar, tour de contrôle et héliport.
+
+L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondule au vent.
 
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
 
@@ -49,9 +52,17 @@ La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui chois
 
 Des câbles ambre lumineux relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts, traits ambre sur la mini-carte), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
 
-## Buggys
+## Véhicules
 
-Sur le Canyon, le Volcan et la Fusion, des buggys attendent. Approche-toi et appuie sur **E** pour monter : Z/W accélère, S freine puis recule, Q/D (A/D) tourne, **Espace** est le frein à main pour déraper, **Maj** donne un petit turbo. La caméra passe derrière le buggy et la souris tourne autour. Les tremplins et les crêtes font décoller. Foncer dans un robot ou un joueur à plus de 9 m/s lui fait des dégâts. **E** pour descendre. En ligne, les autres te voient assis au volant.
+Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. Approche-toi et appuie sur **E** pour monter : Z/W accélère, S freine puis recule, Q/D (A/D) tourne, **Espace** est le frein à main pour déraper, **Maj** donne un petit turbo. La caméra passe derrière le buggy et la souris tourne autour. Les tremplins et les crêtes font décoller. Foncer dans un robot ou un joueur à plus de 9 m/s lui fait des dégâts. **E** pour descendre. En ligne, les autres te voient assis au volant.
+
+| Véhicule | Où | Commandes | Arme |
+| --- | --- | --- | --- |
+| Tank | Ville fantôme (2), Volcan, Fusion | Z/S avance et recule, Q/D pivote sur place ; la tourelle et le canon suivent la souris | Obus au clic gauche (130 dégâts en zone, rechargement 2,2 s). Le blindage divise par 2,5 les dégâts reçus |
+| Hélico | Ville fantôme (2), Volcan (2), Fusion | Il se tourne vers où tu regardes ; Z/Q/S/D le déplacent, **Espace** monte, **C** descend, **Maj** accélère | Mitrailleuse au clic gauche |
+| Avion | Ville fantôme (2, sur la piste), Volcan | Z/S règlent les gaz, la souris donne la direction, Q/D penchent ; il décolle en tirant vers le haut au-dessus de 30 m/s | Mitrailleuse au clic gauche |
+
+Un avion qui pique dans le sol ou percute un immeuble explose (tu es éjecté et blessé) et réapparaît à sa place 8 s plus tard. Près du bord de la carte, l'avion fait demi-tour tout seul. Un hélico abandonné en vol redescend doucement en autorotation.
 
 ## Multijoueur
 
@@ -104,7 +115,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Q / A en AZERTY | Capacité tactique de ta classe |
 | X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
 | J | Emotes (puis 1 à 6) |
-| E | S'accrocher à une tyrolienne, monter dans un buggy / en descendre |
+| E | S'accrocher à une tyrolienne, monter dans un véhicule / en descendre |
 | G / H | Lancer une grenade / changer de type |
 | F | Capacité ultime de ta classe |
 | M | Mini-carte |
@@ -129,12 +140,15 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Papillon | 46, portée 2,5 m | 135 coups/min | — |
 | Katana | 70, portée 3,6 m | 80 coups/min | — |
 | Morgane (hache double) | 85, portée 3,4 m | 62 coups/min | — |
+| Trident | 70 au corps à corps, 95 lancé (tête ×1,4) | 80 coups/min | — |
 
 Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon, sakura, océan, toxique, royal, camo urbain, coucher de soleil, et cinq skins animés (plasma, arc-en-ciel, pulsation, circuit, flammes).
 
 **Katana :** combo de trois coups (diagonale, remontée, horizontal) avec une traînée lumineuse, moulinet en sortant la lame et inspection dédiée. Il a ses propres skins : tamahagane, Damas, lame de sang, dragon, énergie, sakura, obsidienne, éclair et néant (dragon, énergie, éclair et néant sont animés). La traînée prend la couleur du skin.
 
 **Morgane :** hache double à lames argent-violet et runes roses. Coup vertical puis diagonal, lents mais lourds. Un joueur éliminé à la Morgane réapparaît en tenue Morgane (rose, oreilles de chat, nœud et jupe plissée) jusqu'à sa prochaine mort ; les robots d'entraînement la gardent 90 s.
+
+**Trident :** clic gauche pour frapper d'estoc, clic droit pour le lancer. Il file droit devant à 48 m/s et touche tout ce qu'il traverse ; s'il touche un mur, il s'y plante une fraction de seconde, puis il revient vers toi en accélérant et touche encore sur le chemin du retour. Tu le rattrapes automatiquement. En ligne, les autres le voient voler.
 
 **Sons personnalisés :** dans les réglages, tu peux remplacer le son de chaque arme, du couteau, du saut, de l'atterrissage, des éliminations, des touches, du superglide et des capacités par ton propre fichier (300 Ko et 4 s maximum). En ligne, les autres joueurs entendent tes sons quand c'est toi qui tires ou qui utilises la capacité (chacun peut couper ça dans ses réglages).
 
