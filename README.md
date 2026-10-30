@@ -16,13 +16,15 @@ Sur certains réseaux (4G, réseaux d'entreprise), la connexion directe entre de
 
 ## Commandes
 
+Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souris ou molette, deux touches par action. Touches par défaut :
+
 | Touche | Action |
 | --- | --- |
 | ZQSD / WASD | Se déplacer (touches physiques, marche en AZERTY comme en QWERTY) |
 | Maj | Sprint (automatique par défaut) |
 | Espace | Sauter |
 | C | S'accroupir, glisser |
-| Molette | Avancer (tap-strafe) ou sauter, au choix dans les réglages |
+| Molette ↓ | Avancer (tap-strafe) |
 | Clic gauche / droit | Tirer / viser |
 | 1 à 5 | Carabine, mitraillette, pompe, sniper, pistolet |
 | R | Recharger |

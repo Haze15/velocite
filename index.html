@@ -61,6 +61,18 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .keys dt{display:flex;gap:4px;flex-wrap:wrap}
 .keys dd{margin:0;font-size:15px;color:var(--ink)}
 .keys dd small{color:var(--ink-dim);font-size:13px}
+.binds{display:grid;gap:4px;margin:0 0 14px}
+.bind{display:grid;grid-template-columns:minmax(0,1fr) 112px 112px;gap:6px;align-items:center}
+.bind span{font-size:14.5px;color:var(--ink)}
+.kb{font:600 13px/1 var(--f-display);letter-spacing:.04em;color:var(--ink);background:rgba(244,239,230,.06);border:1px solid rgba(244,239,230,.24);border-bottom-width:2px;border-radius:3px;padding:6px 6px 5px;cursor:pointer;min-height:28px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kb:hover{border-color:var(--amber)}
+.kb:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.kb.empty{color:var(--ink-dim);font-weight:500}
+.kb.wait{background:var(--amber);color:#1b1406;border-color:var(--amber)}
+.binds-hint{margin:0 0 12px}
+.bind-actions{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
+#bindMsg.warn{color:var(--amber)}
+.binds-hint kbd{font-size:11px;min-width:20px;padding:2px 5px 1px}
 .techs{list-style:none;margin:0;padding:0}
 .techs li{display:grid;grid-template-columns:62px minmax(0,1fr);gap:4px 14px;padding-block:10px;border-top:1px solid var(--ink-faint)}
 .techs li:last-child{border-bottom:1px solid var(--ink-faint)}
@@ -274,29 +286,19 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
     <div class="cols">
       <div class="block">
         <h2>Commandes</h2>
-        <dl class="keys">
-          <dt><kbd data-code="KeyW">Z</kbd><kbd data-code="KeyA">Q</kbd><kbd data-code="KeyS">S</kbd><kbd data-code="KeyD">D</kbd></dt><dd>Se déplacer</dd>
-          <dt><kbd>Maj</kbd></dt><dd>Sprint <small>(auto par défaut)</small></dd>
-          <dt><kbd>Espace</kbd></dt><dd>Sauter</dd>
-          <dt><kbd data-code="KeyC">C</kbd></dt><dd>S'accroupir, glisser</dd>
-          <dt><kbd>Molette</kbd></dt><dd id="wheelLbl">Avancer <small>(tap-strafe)</small></dd>
-          <dt><kbd>Clic G</kbd><kbd>Clic D</kbd></dt><dd>Tirer, viser</dd>
-          <dt><kbd>1</kbd><kbd>2</kbd><kbd>3</kbd><kbd>4</kbd><kbd>5</kbd></dt><dd>Carabine, mitraillette, pompe, sniper, pistolet</dd>
-          <dt><kbd data-code="KeyR">R</kbd></dt><dd>Recharger</dd>
-          <dt><kbd>Tab</kbd></dt><dd>Scores <small>(en ligne)</small></dd>
-          <dt><kbd data-code="KeyT">T</kbd></dt><dd>Réapparaître</dd>
-          <dt><kbd data-code="KeyP">P</kbd></dt><dd>Couper le son</dd>
-        </dl>
+        <p class="hint binds-hint">Clique sur une touche pour la changer, puis appuie sur la nouvelle touche, un bouton de souris ou la molette. <kbd>Suppr</kbd> efface, <kbd>Échap</kbd> annule.</p>
+        <div class="binds" id="binds"></div>
+        <div class="bind-actions"><button class="btn2" id="resetBinds" type="button"><span>Touches par défaut</span></button><span class="hint" id="bindMsg"></span></div>
       </div>
       <div class="block">
         <h2>Techniques</h2>
         <ul class="techs">
-          <li><span class="tag">Base</span><div><strong>Slide-jump</strong><p>Sprinte, puis <kbd data-code="KeyC">C</kbd> pour glisser. La glissade donne un boost toutes les 2 s. Saute pendant la glissade pour garder la vitesse.</p></div></li>
+          <li><span class="tag">Base</span><div><strong>Slide-jump</strong><p>Sprinte, puis <kbd data-act="crouch">C</kbd> pour glisser. La glissade donne un boost toutes les 2 s. Saute pendant la glissade pour garder la vitesse.</p></div></li>
           <li><span class="tag">Base</span><div><strong>Jump pads</strong><p>Les disques ambre te projettent à 6 m et te donnent un double saut en l'air.</p></div></li>
-          <li><span class="tag mid">Inter</span><div><strong>Bhop</strong><p>Garde <kbd data-code="KeyC">C</kbd> enfoncé en retombant pour reglisser, et saute au moment où tu touches le sol. Pas de friction, aucune perte.</p></div></li>
-          <li><span class="tag mid">Inter</span><div><strong>Escalade et wall-jump</strong><p>Saute face à un mur en avançant pour grimper jusqu'à 6 m. <kbd>Espace</kbd> pendant la montée pour rebondir dans une autre direction.</p></div></li>
-          <li><span class="tag adv">Avancé</span><div><strong>Air-strafe et tap-strafe</strong><p>En l'air, tourne la souris du côté de <kbd data-code="KeyA">Q</kbd> ou <kbd data-code="KeyD">D</kbd>. Pour un virage sec juste après un saut, garde la touche, tourne et fais rouler la molette.</p></div></li>
-          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd>Espace</kbd> puis <kbd data-code="KeyC">C</kbd> presque en même temps. Sortie à près de 12 m/s.</p></div></li>
+          <li><span class="tag mid">Inter</span><div><strong>Bhop</strong><p>Garde <kbd data-act="crouch">C</kbd> enfoncé en retombant pour reglisser, et saute au moment où tu touches le sol. Pas de friction, aucune perte.</p></div></li>
+          <li><span class="tag mid">Inter</span><div><strong>Escalade et wall-jump</strong><p>Saute face à un mur en avançant pour grimper jusqu'à 6 m. <kbd data-act="jump">Espace</kbd> pendant la montée pour rebondir dans une autre direction.</p></div></li>
+          <li><span class="tag adv">Avancé</span><div><strong>Air-strafe et tap-strafe</strong><p>En l'air, tourne la souris du côté de <kbd data-act="left">Q</kbd> ou <kbd data-act="right">D</kbd>. Pour un virage sec juste après un saut, garde la touche, tourne et martèle <kbd data-act="forward" data-slot="1">Molette ↓</kbd>.</p></div></li>
+          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd data-act="jump">Espace</kbd> puis <kbd data-act="crouch">C</kbd> presque en même temps. Sortie à près de 12 m/s.</p></div></li>
         </ul>
       </div>
     </div>
@@ -307,7 +309,6 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field"><span class="lab">Sensibilité <output id="oSens"></output></span><input type="range" id="sens" min="0.4" max="6" step="0.1"></label>
         <label class="field"><span class="lab">Champ de vision <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab">Volume <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
-        <label class="field"><span class="lab">Molette</span><select id="wheel"><option value="forward">Avancer (tap-strafe)</option><option value="jump">Sauter (bhop)</option></select></label>
         <label class="field"><span class="lab">Graphismes</span><select id="quality"><option value="auto">Auto (adapte la résolution)</option><option value="high">Élevés</option><option value="low">Rapides (sans ombres)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> Sprint automatique</label>
       </div>
@@ -353,7 +354,7 @@ const store = {
 };
 const S = {
   sens: store.get('sens', 2.0), fov: store.get('fov', 106), vol: store.get('vol', 0.6),
-  wheel: store.get('wheel', 'forward'), autoSprint: store.get('autoSprint', true),
+  autoSprint: store.get('autoSprint', true),
   name: store.get('name', 'Joueur' + Math.floor(100 + Math.random() * 900))
 };
 
@@ -650,7 +651,7 @@ const P = {
   landT: -9, landSpeed: 0, bhop: 0, airT: 0, eye: 1.62, dip: 0, roll: 0, stepDist: 0, bob: 0,
   hp: MAX_HP, sh: MAX_SH, dead: false, respawnT: 0, hurtT: 9, lastHit: 0
 };
-let simTime = 0, fwdTap = 0, lastCrouchT = -9, crouchEdge = false;
+let simTime = 0, lastCrouchT = -9, crouchEdge = false;
 function spawnPlayer(random) {
   let s = SPAWNS[0];
   if (random) {
@@ -828,7 +829,7 @@ function groundMove(dt, wx, wz, hasWish, iz) {
     const ctrl = Math.max(sp, STOPSPEED); let ns = sp - ctrl * FRICTION * dt; if (ns < 0) ns = 0;
     v.x *= ns / sp; v.z *= ns / sp;
   }
-  P.sprinting = hasWish && iz > 0 && !P.crouch && !mouse.right && !mouse.left && (keys.ShiftLeft || keys.ShiftRight || S.autoSprint);
+  P.sprinting = hasWish && iz > 0 && !P.crouch && !mouse.right && !mouse.left && (act('sprint') || S.autoSprint);
   if (hasWish) {
     let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1);
     if (iz < 0) target = Math.min(target, WALK * 0.9);
@@ -906,20 +907,20 @@ function onLand(vy) {
   const impact = clamp(-vy / 16, 0, 1);
   P.dip = Math.max(P.dip, impact * 0.16);
   sfx.land(impact);
-  if (keys.KeyC && P.landSpeed > SLIDE_MIN - 0.8) startSlide();
+  if (act('crouch') && P.landSpeed > SLIDE_MIN - 0.8) startSlide();
 }
 function step(dt) {
   simTime += dt; P.prev.copy(P.pos);
-  P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; fwdTap -= dt;
+  P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt;
   if (P.dead) { P.vel.set(0, 0, 0); return; }
-  const fwdHeld = !!keys.KeyW || fwdTap > 0;
-  const iz = (fwdHeld ? 1 : 0) - (keys.KeyS ? 1 : 0), ix = (keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0);
+  const fwdHeld = act('forward');
+  const iz = (fwdHeld ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
   const sy = Math.sin(P.yaw), cy = Math.cos(P.yaw);
   const fx = -sy, fz = -cy, rx = cy, rz = -sy;
   let wx = fx * iz + rx * ix, wz = fz * iz + rz * ix;
   const wl = Math.hypot(wx, wz), hasWish = wl > 0.01;
   if (hasWish) { wx /= wl; wz /= wl; }
-  const crouchHeld = !!keys.KeyC;
+  const crouchHeld = act('crouch');
   const tapPulse = P.tapPulse; P.tapPulse = false;
   const cEdge = crouchEdge; crouchEdge = false;
 
@@ -1408,7 +1409,7 @@ function updateCamera(dt, alpha) {
     P.stepDist += hs * dt;
     if (P.stepDist > (P.sprinting ? 2.4 : 1.9)) { P.stepDist = 0; sfx.step(); }
   }
-  const strafe = ((keys.KeyD ? 1 : 0) - (keys.KeyA ? 1 : 0));
+  const strafe = ((act('right') ? 1 : 0) - (act('left') ? 1 : 0));
   const rollT = P.dead ? 0.3 : P.sliding ? -0.05 : P.climbing ? 0 : -strafe * 0.012 * Math.min(1, hs / 5);
   P.roll = lerp(P.roll, rollT, 1 - Math.exp(-8 * dt));
   camera.position.set(rPos.x, rPos.y + P.eye - P.dip + bobY, rPos.z);
@@ -1873,8 +1874,9 @@ function updateHUD(dt) {
     setTxt(hudEls.meVal, String(Math.round(P.sh + P.hp)));
     hudEls.meSh.style.width = (P.sh / MAX_SH * 100) + '%'; hudEls.meHp.style.width = (P.hp / MAX_HP * 100) + '%';
     if (!P.dead && now - P.lastHit > 4000 && P.sh < MAX_SH) P.sh = Math.min(MAX_SH, P.sh + 25 * dt);
-    hudEls.board.hidden = !keys.Tab;
-    if (keys.Tab) renderBoard();
+    const showBoard = act('board');
+    hudEls.board.hidden = !showBoard;
+    if (showBoard) renderBoard();
   } else hudEls.board.hidden = true;
   P.hurtT += dt;
   hudEls.hurt.style.opacity = P.dead ? 0.6 : Math.max(0, 0.9 - P.hurtT * 1.6).toFixed(2);
@@ -1949,7 +1951,7 @@ function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.cl
 
 /* ================= Entrées ================= */
 let playing = false, everLocked = false, unlockedMode = false, everPlayed = false;
-function clearInput() { for (const k in keys) keys[k] = false; mouse.left = mouse.right = false; }
+function clearInput() { for (const k in keys) keys[k] = false; for (const k in wheelT) wheelT[k] = 0; mouse.left = mouse.right = false; }
 function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
   $('hint').classList.remove('warn'); $('hint').textContent = 'Le clic verrouille la souris. Échap met en pause.';
@@ -1984,25 +1986,55 @@ document.addEventListener('pointerlockchange', () => {
 });
 document.addEventListener('pointerlockerror', () => { if (!everLocked) startUnlocked(); });
 
-const GAME_KEYS = new Set(['Space', 'Tab', 'KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyC', 'KeyR', 'KeyT', 'KeyP', 'ShiftLeft', 'ShiftRight', 'Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'ControlLeft']);
+// ---- Touches configurables : chaque action a deux emplacements (clavier, souris ou molette)
+const ACTIONS = [
+  ['forward', 'Avancer', ['KeyW', 'WheelDown']], ['back', 'Reculer', ['KeyS', null]],
+  ['left', 'Gauche', ['KeyA', null]], ['right', 'Droite', ['KeyD', null]],
+  ['jump', 'Sauter', ['Space', null]], ['crouch', 'S’accroupir, glisser', ['KeyC', null]],
+  ['sprint', 'Sprint', ['ShiftLeft', null]],
+  ['fire', 'Tirer', ['Mouse0', null]], ['ads', 'Viser', ['Mouse2', null]], ['reload', 'Recharger', ['KeyR', null]],
+  ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
+  ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]],
+  ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['mute', 'Couper le son', ['KeyP', null]]
+];
+const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
+const BINDS = {};
+function loadBinds() {
+  const saved = store.get('binds', null);
+  for (const [id] of ACTIONS) BINDS[id] = (saved && Array.isArray(saved[id]) ? saved[id] : DEFAULT_BINDS[id]).slice(0, 2);
+  // ancien réglage « molette = sauter »
+  if (!saved && store.get('wheel', 'forward') === 'jump') { BINDS.forward[1] = null; BINDS.jump[1] = 'WheelDown'; }
+}
+loadBinds();
+const wheelT = {};
+const act = id => { const b = BINDS[id]; return !!b && b.some(c => c && (keys[c] || wheelT[c] > 0)); };
+const boundCodes = () => { const set = new Set(); for (const id in BINDS) for (const c of BINDS[id]) if (c) set.add(c); return set; };
+function pressCode(c) {
+  for (const id in BINDS) if (BINDS[id].includes(c)) onAction(id);
+}
+function onAction(id) {
+  if (id === 'jump') P.jumpBuf = 0.09;
+  else if (id === 'crouch') { lastCrouchT = simTime; crouchEdge = true; }
+  else if (id === 'forward') P.tapPulse = true;
+  else if (id === 'reload') startReload();
+  else if (id[0] === 'w' && id.length === 2) swapTo(parseInt(id[1], 10) - 1);
+  else if (id === 'next') swapTo((WS.cur + 1) % WEAPONS.length);
+  else if (id === 'prev') swapTo((WS.cur + WEAPONS.length - 1) % WEAPONS.length);
+  else if (id === 'respawn' && !P.dead) {
+    if (NET.mode === 'off') { spawnPlayer(false); feed('RETOUR', 'point de départ'); }
+    else if (P.hp >= MAX_HP && P.sh >= MAX_SH) { spawnPlayer(true); feed('RÉAPPARITION', 'nouveau point'); }
+    else toast('Réapparition possible avec PV et bouclier pleins.', 2);
+  }
+  else if (id === 'mute') { muted = !muted; if (master) master.gain.value = muted ? 0 : S.vol; toast(muted ? 'Son coupé' : 'Son activé', 1.5); }
+}
 addEventListener('keydown', e => {
+  if (capture) return;
   if (!playing) return;
   const c = e.code;
-  if (GAME_KEYS.has(c)) e.preventDefault();
-  if (c === 'Escape' && unlockedMode) { pause(); return; }
-  if (!keys[c]) {
-    if (c === 'Space') { P.jumpBuf = 0.09; }
-    else if (c === 'KeyC') { lastCrouchT = simTime; crouchEdge = true; }
-    else if (c === 'KeyW') { P.tapPulse = true; }
-    else if (c === 'KeyR') startReload();
-    else if (c.startsWith('Digit')) swapTo(parseInt(c.slice(5), 10) - 1);
-    else if (c === 'KeyT' && !P.dead) {
-      if (NET.mode === 'off') { spawnPlayer(false); feed('RETOUR', 'point de départ'); }
-      else if (P.hp >= MAX_HP && P.sh >= MAX_SH) { spawnPlayer(true); feed('RÉAPPARITION', 'nouveau point'); }
-      else toast('Réapparition possible avec PV et bouclier pleins.', 2);
-    }
-    else if (c === 'KeyP') { muted = !muted; if (master) master.gain.value = muted ? 0 : S.vol; toast(muted ? 'Son coupé' : 'Son activé', 1.5); }
-  }
+  if (c === 'Escape') { if (unlockedMode) pause(); return; }
+  if (boundCodes().has(c) || c === 'Space' || c === 'Tab') e.preventDefault();
+  if (!keys[c]) pressCode(c);
   keys[c] = true;
 });
 addEventListener('keyup', e => { keys[e.code] = false; });
@@ -2018,31 +2050,116 @@ addEventListener('mousemove', e => {
   WS.swayX += mx * k; WS.swayY += my * k;
 });
 addEventListener('mousedown', e => {
-  if (!playing) return;
-  if (e.button === 0) mouse.left = true; else if (e.button === 2) mouse.right = true;
+  if (!playing || capture) return;
+  const c = 'Mouse' + e.button;
+  if (e.button > 2) e.preventDefault();
+  if (!keys[c]) pressCode(c);
+  keys[c] = true;
 });
-addEventListener('mouseup', e => { if (e.button === 0) mouse.left = false; else if (e.button === 2) mouse.right = false; });
+addEventListener('mouseup', e => { keys['Mouse' + e.button] = false; if (playing && e.button > 2) e.preventDefault(); });
 addEventListener('contextmenu', e => { if (playing) e.preventDefault(); });
 addEventListener('wheel', e => {
-  if (!playing) return;
+  if (!playing || capture) return;
   e.preventDefault();
-  if (S.wheel === 'jump') P.jumpBuf = 0.09;
-  else { fwdTap = 0.08; P.tapPulse = true; }
+  if (!e.deltaY) return;
+  const c = e.deltaY > 0 ? 'WheelDown' : 'WheelUp';
+  pressCode(c); wheelT[c] = 0.08;
 }, { passive: false });
 
 /* ================= Menu ================= */
 const fr = (navigator.language || '').toLowerCase().startsWith('fr');
-const DEF_LABELS = fr ? { KeyW: 'Z', KeyA: 'Q', KeyS: 'S', KeyD: 'D' } : { KeyW: 'W', KeyA: 'A', KeyS: 'S', KeyD: 'D' };
-function applyLabels(map) {
-  document.querySelectorAll('kbd[data-code]').forEach(k => {
-    const c = k.dataset.code;
-    let l = map && map.get ? map.get(c) : null;
-    if (!l) l = DEF_LABELS[c] || c.replace('Key', '');
-    k.textContent = l.toUpperCase();
+let layoutMap = null;
+const CODE_NAMES = {
+  Space: 'Espace', ShiftLeft: 'Maj G', ShiftRight: 'Maj D', ControlLeft: 'Ctrl G', ControlRight: 'Ctrl D', AltLeft: 'Alt', AltRight: 'Alt Gr',
+  Tab: 'Tab', CapsLock: 'Verr. maj', Enter: 'Entrée', Backspace: 'Retour', Backquote: '²', MetaLeft: 'Win',
+  ArrowUp: '↑', ArrowDown: '↓', ArrowLeft: '←', ArrowRight: '→',
+  Mouse0: 'Clic G', Mouse1: 'Clic molette', Mouse2: 'Clic D', Mouse3: 'Souris 4', Mouse4: 'Souris 5',
+  WheelUp: 'Molette ↑', WheelDown: 'Molette ↓'
+};
+const FR_KEYS = { KeyW: 'Z', KeyA: 'Q', KeyQ: 'A', KeyZ: 'W', KeyM: ',', Semicolon: 'M' };
+function codeLabel(c) {
+  if (!c) return '—';
+  if (CODE_NAMES[c]) return CODE_NAMES[c];
+  const l = layoutMap && layoutMap.get ? layoutMap.get(c) : null;
+  if (l) return l.toUpperCase();
+  if (fr && FR_KEYS[c]) return FR_KEYS[c];
+  if (c.startsWith('Key')) return c.slice(3);
+  if (c.startsWith('Digit')) return c.slice(5);
+  if (c.startsWith('Numpad')) return 'Pavé ' + c.slice(6);
+  return c;
+}
+const bindsEl = $('binds');
+let capture = null;
+function renderBinds() {
+  bindsEl.replaceChildren(...ACTIONS.map(([id, label]) => {
+    const row = document.createElement('div'); row.className = 'bind';
+    const name = document.createElement('span'); name.textContent = label; row.appendChild(name);
+    for (let slot = 0; slot < 2; slot++) {
+      const b = document.createElement('button'); b.type = 'button';
+      const c = BINDS[id][slot];
+      const waiting = capture && capture.id === id && capture.slot === slot;
+      b.className = 'kb' + (waiting ? ' wait' : c ? '' : ' empty');
+      b.textContent = waiting ? 'Appuie…' : codeLabel(c);
+      b.setAttribute('aria-label', label + ', touche ' + (slot + 1) + ' : ' + codeLabel(c));
+      b.addEventListener('click', ev => { ev.stopPropagation(); startCapture(id, slot); });
+      row.appendChild(b);
+    }
+    return row;
+  }));
+  document.querySelectorAll('kbd[data-act]').forEach(k => {
+    const b = BINDS[k.dataset.act] || [];
+    const c = k.dataset.slot ? b[+k.dataset.slot] || b[0] : b[0] || b[1];
+    k.textContent = codeLabel(c);
   });
 }
-applyLabels(null);
-try { if (navigator.keyboard && navigator.keyboard.getLayoutMap) navigator.keyboard.getLayoutMap().then(applyLabels).catch(() => {}); } catch (e) {}
+function bindMsg(t, warn) { const el = $('bindMsg'); el.textContent = t; el.classList.toggle('warn', !!warn); }
+function startCapture(id, slot) { bindMsg(''); capture = { id, slot, t: performance.now() }; renderBinds(); }
+function finishCapture(code) {
+  if (!capture) return;
+  const { id, slot } = capture;
+  capture = null;
+  if (code === undefined) { renderBinds(); return; }
+  if (code) {
+    for (const other in BINDS) for (let k = 0; k < 2; k++) {
+      if (BINDS[other][k] === code && !(other === id && k === slot)) {
+        BINDS[other][k] = null;
+        const lab = ACTIONS.find(a => a[0] === other)[1];
+        bindMsg('« ' + codeLabel(code) + ' » retirée de « ' + lab + ' ».');
+      }
+    }
+    if (code === 'ControlLeft' || code === 'ControlRight') bindMsg('Attention : Ctrl + une lettre peut déclencher un raccourci du navigateur (Ctrl+W ferme l’onglet en QWERTY).', true);
+  }
+  BINDS[id][slot] = code;
+  store.set('binds', BINDS);
+  renderBinds();
+}
+// capture : clavier, souris (après le clic qui l'a lancée) et molette
+addEventListener('keydown', e => {
+  if (!capture) return;
+  e.preventDefault(); e.stopPropagation();
+  if (e.code === 'Escape') finishCapture(undefined);
+  else if (e.code === 'Delete' || e.code === 'Backspace') finishCapture(null);
+  else finishCapture(e.code);
+}, true);
+addEventListener('mousedown', e => {
+  if (!capture || performance.now() - capture.t < 120) return;
+  e.preventDefault(); e.stopPropagation();
+  finishCapture('Mouse' + e.button);
+}, true);
+addEventListener('contextmenu', e => { if (capture) e.preventDefault(); }, true);
+addEventListener('wheel', e => {
+  if (!capture || !e.deltaY) return;
+  e.preventDefault();
+  finishCapture(e.deltaY > 0 ? 'WheelDown' : 'WheelUp');
+}, { passive: false, capture: true });
+$('resetBinds').addEventListener('click', () => {
+  for (const [id] of ACTIONS) BINDS[id] = DEFAULT_BINDS[id].slice();
+  store.set('binds', BINDS); capture = null; renderBinds(); bindMsg('Touches par défaut rétablies.');
+});
+renderBinds();
+try {
+  if (navigator.keyboard && navigator.keyboard.getLayoutMap) navigator.keyboard.getLayoutMap().then(m => { layoutMap = m; renderBinds(); }).catch(() => {});
+} catch (e) {}
 function bindRange(id, key, fmt) {
   const el = $(id), out = $('o' + id[0].toUpperCase() + id.slice(1));
   el.value = S[key]; out.textContent = fmt(S[key]);
@@ -2054,10 +2171,6 @@ function bindRange(id, key, fmt) {
 bindRange('sens', 'sens', v => v.toFixed(1));
 bindRange('fov', 'fov', v => Math.round(v) + '°');
 bindRange('vol', 'vol', v => Math.round(v * 100) + '%');
-const wheelSel = $('wheel'), wheelLbl = $('wheelLbl');
-function setWheelLbl() { wheelLbl.innerHTML = S.wheel === 'jump' ? 'Sauter <small>(bhop)</small>' : 'Avancer <small>(tap-strafe)</small>'; }
-wheelSel.value = S.wheel; setWheelLbl();
-wheelSel.addEventListener('change', () => { S.wheel = wheelSel.value; store.set('wheel', S.wheel); setWheelLbl(); });
 const qSel = $('quality'); qSel.value = S.quality;
 qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quality', S.quality); applyQuality(); });
 const asEl = $('autoSprint'); asEl.checked = S.autoSprint;
@@ -2095,6 +2208,8 @@ let lastFrame = performance.now(), acc = 0;
 function frame(now) {
   requestAnimationFrame(frame);
   const dt = Math.min((now - lastFrame) / 1000, 0.1); lastFrame = now;
+  for (const c in wheelT) if (wheelT[c] > 0) wheelT[c] -= dt;
+  if (playing) { mouse.left = act('fire'); mouse.right = act('ads'); } else { mouse.left = mouse.right = false; }
   if (playing || NET.mode !== 'off') {
     acc += dt;
     let n = 0;
