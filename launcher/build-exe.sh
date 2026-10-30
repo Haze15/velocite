@@ -9,5 +9,5 @@ cp -r ../assets/models game/assets/
 cp vendor/*.js game/vendor/
 if command -v rsrc >/dev/null 2>&1; then rsrc -ico icon.ico -arch amd64 -o rsrc_windows_amd64.syso; fi
 mkdir -p ../dist
-GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -trimpath -ldflags "-H windowsgui -s -w" -o ../dist/Velocite.exe .
+GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -mod=mod -trimpath -ldflags "-H windowsgui -s -w" -o ../dist/Velocite.exe .
 echo "OK : dist/Velocite.exe"

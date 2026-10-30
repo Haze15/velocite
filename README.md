@@ -107,7 +107,7 @@ Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s
 
 ## Appli Windows
 
-`Velocite.exe` ouvre le jeu dans sa propre fenêtre, sans barre d'adresse, avec Chrome, Edge ou Brave (sinon dans le navigateur par défaut). Le jeu et ses modèles sont dans l'exécutable : le solo marche hors ligne, le multijoueur demande internet. Les liens de partie partagés depuis l'appli pointent vers la version en ligne. L'appli se ferme toute seule quand on ferme la fenêtre du jeu.
+`Velocite.exe` ouvre le jeu dans sa propre fenêtre (agrandie), grâce à WebView2, le moteur d'Edge déjà présent sur Windows 10 et 11. Comme la fenêtre appartient à `Velocite.exe`, Discord peut la détecter : Paramètres Discord → Jeux enregistrés → « Ajoute-le ! » → Velocite. Si WebView2 manque, ou si on lance `Velocite.exe -navigateur`, le jeu s'ouvre dans une fenêtre d'application Chrome, Edge ou Brave (sinon dans le navigateur par défaut). Le jeu et ses modèles sont dans l'exécutable : le solo marche hors ligne, le multijoueur demande internet. Les liens de partie partagés depuis l'appli pointent vers la version en ligne. L'appli se ferme toute seule quand on ferme la fenêtre du jeu.
 
 ### Statut Discord
 
@@ -143,3 +143,4 @@ python3 -m http.server 8000
 - Robot : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
 - Soldat et X-Bot : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js.
 - Moteur : [three.js](https://threejs.org/) r128 (MIT), copié dans `launcher/vendor/` pour l'appli Windows. Réseau : [PeerJS](https://peerjs.com/) (MIT).
+- Fenêtre de l'appli : [go-webview2](https://github.com/jchv/go-webview2) (MIT) et [go-winloader](https://github.com/jchv/go-winloader) (ISC) de John Chadwick, [golang.org/x/sys](https://pkg.go.dev/golang.org/x/sys) (BSD), copiés dans `launcher/third_party/`.

@@ -1,8 +1,9 @@
 //go:build windows
 
-// Vélocité pour Windows : sert le jeu embarqué sur 127.0.0.1 et l'ouvre dans une fenêtre
-// d'application Chrome, Edge ou Brave (sinon dans le navigateur par défaut).
-// L'appli se ferme toute seule quand la fenêtre du jeu est fermée.
+// Vélocité pour Windows : sert le jeu embarqué sur 127.0.0.1 et l'affiche dans sa propre fenêtre
+// (WebView2, le moteur d'Edge présent sur Windows 10 et 11). Comme la fenêtre appartient à
+// Velocite.exe, Discord peut détecter le jeu. Sans WebView2 (ou avec -navigateur), le jeu s'ouvre
+// dans une fenêtre d'application Chrome, Edge ou Brave et l'appli se ferme avec cette fenêtre.
 package main
 
 import (
@@ -18,6 +19,8 @@ import (
 	"syscall"
 	"time"
 	"unsafe"
+
+	webview2 "github.com/jchv/go-webview2"
 )
 
 //go:embed game
@@ -66,6 +69,9 @@ func main() {
 	url := "http://" + ln.Addr().String() + "/"
 	go func() { _ = http.Serve(ln, mux) }()
 
+	if !wantsBrowser() && runWindow(url) {
+		return
+	}
 	// 90 s pour que la fenêtre s'ouvre et que la page envoie son premier signe de vie
 	lastPing.Store(time.Now().Unix() + 90)
 	if !openAppWindow(url) {
@@ -91,6 +97,53 @@ func patchPage(html string) string {
 	// signale à la page qu'elle tourne dans l'appli (statut Discord disponible)
 	html = strings.Replace(html, "<script>\n(() => {", "<script>window.__VELOCITE_APP=1;</script>\n<script>\n(() => {", 1)
 	return strings.Replace(html, "</body>", beat, 1)
+}
+
+func wantsBrowser() bool {
+	for _, a := range os.Args[1:] {
+		if a == "-navigateur" || a == "--navigateur" || a == "-browser" {
+			return true
+		}
+	}
+	return false
+}
+
+// Fenêtre propre au jeu, agrandie à l'ouverture ; renvoie false si WebView2 est absent.
+func runWindow(url string) bool {
+	data := filepath.Join(os.Getenv("LOCALAPPDATA"), "Velocite", "webview")
+	_ = os.MkdirAll(data, 0o755)
+	w := webview2.NewWithOptions(webview2.WebViewOptions{
+		AutoFocus: true,
+		DataPath:  data,
+		WindowOptions: webview2.WindowOptions{
+			Title: "Vélocité", Width: 1600, Height: 900, Center: true, IconId: iconID(),
+		},
+	})
+	if w == nil {
+		return false
+	}
+	defer w.Destroy()
+	if hwnd := w.Window(); hwnd != nil {
+		user32 := syscall.NewLazyDLL("user32.dll")
+		_, _, _ = user32.NewProc("ShowWindow").Call(uintptr(hwnd), 3) // SW_MAXIMIZE
+	}
+	w.Navigate(url)
+	w.Run()
+	return true
+}
+
+// Numéro de la ressource icône ajoutée par rsrc (le groupe vient après les images).
+func iconID() uint {
+	user32 := syscall.NewLazyDLL("user32.dll")
+	kernel32 := syscall.NewLazyDLL("kernel32.dll")
+	h, _, _ := kernel32.NewProc("GetModuleHandleW").Call(0)
+	load := user32.NewProc("LoadImageW")
+	for id := uintptr(1); id <= 16; id++ {
+		if r, _, _ := load.Call(h, id, 1, 0, 0, 0x40|0x8000); r != 0 {
+			return uint(id)
+		}
+	}
+	return 0
 }
 
 func openAppWindow(url string) bool {
