@@ -295,10 +295,10 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <ul class="techs">
           <li><span class="tag">Base</span><div><strong>Slide-jump</strong><p>Sprinte, puis <kbd data-act="crouch">C</kbd> pour glisser. La glissade donne un boost toutes les 2 s. Saute pendant la glissade pour garder la vitesse.</p></div></li>
           <li><span class="tag">Base</span><div><strong>Jump pads</strong><p>Les disques ambre te projettent à 6 m et te donnent un double saut en l'air.</p></div></li>
-          <li><span class="tag mid">Inter</span><div><strong>Bhop</strong><p>Garde <kbd data-act="crouch">C</kbd> enfoncé en retombant pour reglisser, et saute au moment où tu touches le sol. Pas de friction, aucune perte.</p></div></li>
-          <li><span class="tag mid">Inter</span><div><strong>Escalade et wall-jump</strong><p>Saute face à un mur en avançant pour grimper jusqu'à 6 m. <kbd data-act="jump">Espace</kbd> pendant la montée pour rebondir dans une autre direction.</p></div></li>
+          <li><span class="tag mid">Inter</span><div><strong>Bhop</strong><p>Garde <kbd data-act="crouch">C</kbd> enfoncé en retombant pour reglisser, et saute quand tu touches le sol. Pas de friction, et chaque saut enchaîné ajoute un peu de vitesse, jusqu'à 17 m/s.</p></div></li>
+          <li><span class="tag mid">Inter</span><div><strong>Escalade et wall-jump</strong><p>Saute face à un mur en avançant pour grimper jusqu'à 6 m. En l'air contre n'importe quel mur, <kbd data-act="jump">Espace</kbd> te fait rebondir en gardant ton élan, trois fois avant de retoucher le sol.</p></div></li>
           <li><span class="tag adv">Avancé</span><div><strong>Air-strafe et tap-strafe</strong><p>En l'air, tourne la souris du côté de <kbd data-act="left">Q</kbd> ou <kbd data-act="right">D</kbd>. Pour un virage sec juste après un saut, garde la touche, tourne et martèle <kbd data-act="forward" data-slot="1">Molette ↓</kbd>.</p></div></li>
-          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd data-act="jump">Espace</kbd> puis <kbd data-act="crouch">C</kbd> presque en même temps. Sortie à près de 12 m/s.</p></div></li>
+          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd data-act="jump">Espace</kbd> puis <kbd data-act="crouch">C</kbd> presque en même temps. Sortie à 14,5 m/s, plus si tu arrives lancé.</p></div></li>
         </ul>
       </div>
     </div>
@@ -371,12 +371,13 @@ const STEP = 1 / 120;
 const G = 18, JUMP_V = 6.4, R = 0.38, STAND_H = 1.8, CROUCH_H = 1.15, STEP_H = 0.5;
 const K = 1.18; // multiplicateur global de vitesse
 const WALK = 4.4 * K, SPRINT = 7.3 * K, CROUCHWALK = 2.5 * K, FRICTION = 6.5, STOPSPEED = 2.2, GACCEL = 11;
-const AIR_CAP = 0.7, AIR_ACCEL = 16, AIR_CTRL_MAX = 6.0 * K, AIR_CTRL = 3.4;
+const AIR_CAP = 0.85, AIR_ACCEL = 16, AIR_CTRL_MAX = 6.0 * K, AIR_CTRL = 3.4;
 const SLIDE_MIN = 5.6 * K, SLIDE_END = 3.6 * K, SLIDE_BOOST = 2.3 * K, SLIDE_BOOST_CAP = 10.8 * K, SLIDE_CD = 2.0;
 const SLIDE_G = 22, SLIDE_FRIC = 2.8, SLIDE_FRIC2 = 0.15, SLIDE_STEER = 4.5;
 const CLIMB_TIME = 1.05, CLIMB_V0 = 6.4, CLIMB_V1 = 3.0;
-const WJ_OUT = 5.2 * K, WJ_UP = 6.2, WJ_SIDE = 3.5;
-const SG_WIN = 0.1, SG_SPEED = 9.8 * K;
+const WJ_OUT = 6.6 * K, WJ_UP = 7.0, WJ_SIDE = 4.0, WJ_MAX = 3;
+const BHOP_WIN = 0.12, BHOP_CAP = 17.5;
+const SG_WIN = 0.14, SG_SPEED = 12.3 * K;
 const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15;
 const MAX_SH = 75, MAX_HP = 100;
 
@@ -648,7 +649,7 @@ const P = {
   height: STAND_H, crouch: false, sliding: false, sprinting: false, slideBoostT: 9,
   climbing: false, climbT: 0, climbAvail: true, climbN: null, mantle: null,
   doubleJump: false, padCd: 0, jumpBuf: 0, tapPulse: false, tapBudget: TAP_BUDGET, tapAcc: 0,
-  landT: -9, landSpeed: 0, bhop: 0, airT: 0, eye: 1.62, dip: 0, roll: 0, stepDist: 0, bob: 0,
+  landT: -9, landSpeed: 0, landDir: { x: 0, z: -1 }, bhop: 0, wallJumps: 0, wjCd: 0, airT: 0, eye: 1.62, dip: 0, roll: 0, stepDist: 0, bob: 0,
   hp: MAX_HP, sh: MAX_SH, dead: false, respawnT: 0, hurtT: 9, lastHit: 0
 };
 let simTime = 0, lastCrouchT = -9, crouchEdge = false;
@@ -757,14 +758,7 @@ function startClimb(n) { P.climbing = true; P.climbT = 0; P.climbN = n; P.climbA
 function climbStep(dt, fwdHeld, fx, fz, wx, wz, hasWish) {
   const v = P.vel, n = P.climbN;
   P.climbT += dt;
-  if (P.jumpBuf > 0) {
-    P.jumpBuf = 0; P.climbing = false;
-    let lx = 0, lz = 0;
-    if (hasWish) { const al = wx * n.x + wz * n.z; lx = wx - n.x * al; lz = wz - n.z * al; }
-    v.set(n.x * WJ_OUT + lx * WJ_SIDE, WJ_UP, n.z * WJ_OUT + lz * WJ_SIDE);
-    feed('WALL-JUMP', Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan'); sfx.jump();
-    return;
-  }
+  if (P.jumpBuf > 0) { wallKick(n, wx, wz, hasWish); return; }
   const top = ledgeTop(-n.x, -n.z);
   if (top !== null && top - P.pos.y <= 1.35) { startMantle(top, n); return; }
   const facing = -(n.x * fx + n.z * fz);
@@ -773,11 +767,31 @@ function climbStep(dt, fwdHeld, fx, fz, wx, wz, hasWish) {
   }
   v.y = lerp(CLIMB_V0, CLIMB_V1, P.climbT / CLIMB_TIME); v.x = -n.x * 0.6; v.z = -n.z * 0.6;
 }
+// Mur proche dans n'importe quelle direction (pour le wall-jump en l'air)
+function wallNear() {
+  const p = P.pos, reach = R + 0.28;
+  for (const h of [0.5, 1.15]) for (let i = 0; i < 8; i++) {
+    const a = i * Math.PI / 4, b = boxAtPoint(p.x + Math.cos(a) * reach, p.y + h, p.z + Math.sin(a) * reach);
+    if (b) return faceNormal(b);
+  }
+  return null;
+}
+// Garde la vitesse le long du mur, remplace la composante vers le mur par une poussée
+function wallKick(n, wx, wz, hasWish) {
+  const v = P.vel, vn = v.x * n.x + v.z * n.z;
+  let tx = (v.x - n.x * vn) * 1.05, tz = (v.z - n.z * vn) * 1.05;
+  if (hasWish) { const al = wx * n.x + wz * n.z; tx += (wx - n.x * al) * WJ_SIDE; tz += (wz - n.z * al) * WJ_SIDE; }
+  v.set(tx + n.x * WJ_OUT, WJ_UP, tz + n.z * WJ_OUT);
+  const hs = Math.hypot(v.x, v.z);
+  if (hs > 19) { v.x *= 19 / hs; v.z *= 19 / hs; }
+  P.climbing = false; P.jumpBuf = 0; P.wallJumps++; P.wjCd = 0.18; P.airT = 0;
+  feed('WALL-JUMP', '×' + P.wallJumps + ' · ' + Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan', 'wj'); sfx.jump();
+}
 function startMantle(top, n) {
   const p = P.pos, tx = p.x - n.x * (R + 0.6), tz = p.z - n.z * (R + 0.6);
   if (!freeAt(tx, top + 0.01, tz, CROUCH_H)) return;
   const dur = 0.16 + 0.12 * clamp(top - p.y, 0, 1.4);
-  P.mantle = { t: 0, dur, from: p.clone(), top, tx, tz, n, start: simTime, pend: -1 };
+  P.mantle = { t: 0, dur, from: p.clone(), top, tx, tz, n, start: simTime, pend: -1, inSpeed: Math.hypot(P.vel.x, P.vel.z) };
   P.climbing = false; P.sliding = false; P.vel.set(0, 0, 0); sfx.mantle();
 }
 function mantleExitDir(m, wx, wz, hasWish) { return hasWish ? { x: wx, z: wz } : { x: -m.n.x, z: -m.n.z }; }
@@ -785,9 +799,10 @@ function superglide(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
   P.pos.y = m.top + 0.01;
   const d = mantleExitDir(m, wx, wz, hasWish);
-  P.vel.set(d.x * SG_SPEED, 4.3, d.z * SG_SPEED);
+  const sp = Math.min(19, Math.max(SG_SPEED, m.inSpeed + 3));
+  P.vel.set(d.x * sp, 4.6, d.z * sp);
   P.grounded = false; P.crouch = true; P.climbAvail = false;
-  feed('SUPERGLIDE', SG_SPEED.toFixed(1) + ' m/s', 'gold'); sfx.superglide();
+  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide();
 }
 function mantleJump(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
@@ -814,7 +829,7 @@ function mantleStep(dt, wx, wz, hasWish) {
   if (k >= 1 && m.pend < 0) {
     P.mantle = null; P.pos.set(m.tx, m.top, m.tz);
     P.vel.set(-m.n.x * 2.4, 0, -m.n.z * 2.4); P.grounded = true; P.gN = UP;
-    P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.doubleJump = false;
+    P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.doubleJump = false; P.wallJumps = 0;
   }
 }
 function accelerate(wx, wz, ws, acc, dt) {
@@ -862,7 +877,13 @@ function slideStep(dt, wx, wz, hasWish, crouchHeld) {
 }
 function doJump(hs) {
   P.vel.y = JUMP_V; P.grounded = false; P.jumpBuf = 0; P.airT = 0;
-  if (simTime - P.landT < 0.06 && P.landSpeed > 6.5 * K) {
+  if (simTime - P.landT < BHOP_WIN && P.landSpeed > 6 * K) {
+    // rend la vitesse perdue au sol et ajoute un petit gain à chaque saut enchaîné
+    const v = P.vel, base = Math.max(hs, P.landSpeed);
+    const ns = Math.min(BHOP_CAP, Math.max(base, base * 1.02 + 0.25));
+    const h = Math.hypot(v.x, v.z);
+    const dx = h > 0.1 ? v.x / h : P.landDir.x, dz = h > 0.1 ? v.z / h : P.landDir.z;
+    v.x = dx * ns; v.z = dz * ns; hs = ns;
     P.bhop++; feed('BHOP', '×' + P.bhop + ' · ' + hs.toFixed(1) + ' m/s', '', 'bhop');
   } else {
     P.bhop = 0;
@@ -873,6 +894,10 @@ function doJump(hs) {
 function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
   const v = P.vel; P.sliding = false; P.airT += dt;
   v.y -= G * dt;
+  if (P.jumpBuf > 0 && P.airT > 0.08 && P.wjCd <= 0 && (P.wallJumps < WJ_MAX || X.jumps)) {
+    const n = wallNear();
+    if (n) wallKick(n, wx, wz, hasWish);
+  }
   if (P.jumpBuf > 0 && (P.doubleJump || X.jumps)) {
     P.doubleJump = false; P.jumpBuf = 0; v.y = 7.4;
     const sp = Math.hypot(v.x, v.z);
@@ -903,6 +928,8 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
 function onLand(vy) {
   const v = P.vel;
   P.landT = simTime; P.landSpeed = Math.hypot(v.x, v.z);
+  P.landDir = P.landSpeed > 0.1 ? { x: v.x / P.landSpeed, z: v.z / P.landSpeed } : { x: 0, z: 0 };
+  P.wallJumps = 0;
   P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.doubleJump = false; P.airT = 0;
   const impact = clamp(-vy / 16, 0, 1);
   P.dip = Math.max(P.dip, impact * 0.16);
@@ -911,7 +938,7 @@ function onLand(vy) {
 }
 function step(dt) {
   simTime += dt; P.prev.copy(P.pos);
-  P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt;
+  P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
   if (P.dead) { P.vel.set(0, 0, 0); return; }
   const fwdHeld = act('forward');
   const iz = (fwdHeld ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
@@ -2014,7 +2041,7 @@ function pressCode(c) {
   for (const id in BINDS) if (BINDS[id].includes(c)) onAction(id);
 }
 function onAction(id) {
-  if (id === 'jump') P.jumpBuf = 0.09;
+  if (id === 'jump') P.jumpBuf = 0.14;
   else if (id === 'crouch') { lastCrouchT = simTime; crouchEdge = true; }
   else if (id === 'forward') P.tapPulse = true;
   else if (id === 'reload') startReload();
