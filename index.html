@@ -56,6 +56,9 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .btn2 span{display:inline-block;transform:skewX(12deg)}
 .btn2:hover{border-color:var(--amber);color:var(--amber)}
 .btn2:disabled{opacity:.4;cursor:default}
+.mapsel{display:grid;gap:5px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
+.mapsel select{font:600 16px/1 var(--f-display);letter-spacing:.06em;text-transform:none;background:rgba(10,13,16,.7);color:var(--ink);border:1px solid rgba(244,239,230,.3);border-radius:3px;padding:8px 10px}
+.mapsel select:disabled{opacity:.55}
 .hint{font-size:14px;color:var(--ink-dim);max-width:46ch;line-height:1.45}
 .hint.warn{color:var(--amber)}
 .cols{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.35fr);gap:26px 46px}
@@ -281,6 +284,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <p class="touch-note" data-i18n="menu.touch">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
+        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option></select></label>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
       </div>
     </header>
@@ -327,7 +331,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
         <label class="field"><span class="lab" data-i18n="set.quality">Graphismes</span><select id="quality"><option value="auto" data-i18n="q.auto">Auto (adapte la résolution)</option><option value="high" data-i18n="q.high">Élevés</option><option value="low" data-i18n="q.low">Rapides (sans ombres)</option></select></label>
-        <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option><option value="crimson" data-i18n="skin.crimson">Rouge sang</option><option value="jungle" data-i18n="skin.jungle">Jungle</option><option value="chrome" data-i18n="skin.chrome">Chrome</option><option value="lava" data-i18n="skin.lava">Lave</option><option value="galaxy" data-i18n="skin.galaxy">Galaxie</option><option value="tiger" data-i18n="skin.tiger">Tigre</option><option value="candy" data-i18n="skin.candy">Bonbon</option></select></label>
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
@@ -449,7 +453,7 @@ const I18N = {
     'feed.respawn': 'RÉAPPARITION', 'feed.newPoint': 'nouveau point',
     'w0': 'CARABINE K-31', 'w1': 'MITRAILLETTE VX', 'w2': 'POMPE KS-8', 'w3': 'ÉPERVIER .50', 'w4': 'PISTOLET HX',
     'w0s': 'CARABINE', 'w1s': 'MITRAILL.', 'w2s': 'POMPE', 'w3s': 'SNIPER', 'w4s': 'PISTOLET',
-    'w5': 'COUTEAU', 'w5s': 'COUTEAU', 'act.w6': 'Couteau', 'act.map': 'Mini-carte', 'set.minimap': 'Mini-carte', 'set.skin': 'Skin d’arme', 'skin.std': 'Standard', 'skin.gold': 'Or', 'skin.desert': 'Camo désert', 'skin.neon': 'Néon', 'skin.carbon': 'Carbone', 'skin.arctic': 'Arctique', 'set.slideSnd': 'Son de glissade', 'snd.gravel': 'Gravier', 'snd.metal': 'Métal', 'snd.wind': 'Souffle', 'snd.electric': 'Électrique', 'snd.off': 'Aucun', 'snd.custom': 'Mon fichier', 'snd.import': 'Importer un son', 'snd.test': 'Écouter', 'snd.loaded': 'Son « {name} » chargé et mémorisé.', 'snd.tooBig': 'Son chargé pour cette session seulement : trop lourd pour être mémorisé (2 Mo max).', 'snd.bad': 'Ce fichier n’est pas un son lisible.', 'snd.need': 'Importe d’abord un fichier son.'
+    'w5': 'COUTEAU', 'w5s': 'COUTEAU', 'act.w6': 'Couteau', 'act.map': 'Mini-carte', 'set.minimap': 'Mini-carte', 'set.skin': 'Skin d’arme', 'skin.std': 'Standard', 'skin.gold': 'Or', 'skin.desert': 'Camo désert', 'skin.neon': 'Néon', 'skin.carbon': 'Carbone', 'skin.arctic': 'Arctique', 'skin.crimson': 'Rouge sang', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lave', 'skin.galaxy': 'Galaxie', 'skin.tiger': 'Tigre', 'skin.candy': 'Bonbon', 'map.label': 'Carte', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinerie', 'map.hostOnly': 'Seul l’hôte choisit la carte.', 'set.slideSnd': 'Son de glissade', 'snd.gravel': 'Gravier', 'snd.metal': 'Métal', 'snd.wind': 'Souffle', 'snd.electric': 'Électrique', 'snd.off': 'Aucun', 'snd.custom': 'Mon fichier', 'snd.import': 'Importer un son', 'snd.test': 'Écouter', 'snd.loaded': 'Son « {name} » chargé et mémorisé.', 'snd.tooBig': 'Son chargé pour cette session seulement : trop lourd pour être mémorisé (2 Mo max).', 'snd.bad': 'Ce fichier n’est pas un son lisible.', 'snd.need': 'Importe d’abord un fichier son.'
   },
   en: {
     'menu.kicker': 'Movement lab · Browser FPS',
@@ -515,7 +519,7 @@ const I18N = {
     'feed.respawn': 'RESPAWN', 'feed.newPoint': 'new spawn',
     'w0': 'CARBINE K-31', 'w1': 'SMG VX', 'w2': 'SHOTGUN KS-8', 'w3': 'SPARROWHAWK .50', 'w4': 'PISTOL HX',
     'w0s': 'CARBINE', 'w1s': 'SMG', 'w2s': 'SHOTGUN', 'w3s': 'SNIPER', 'w4s': 'PISTOL',
-    'w5': 'KNIFE', 'w5s': 'KNIFE', 'act.w6': 'Knife', 'act.map': 'Minimap', 'set.minimap': 'Minimap', 'set.skin': 'Weapon skin', 'skin.std': 'Standard', 'skin.gold': 'Gold', 'skin.desert': 'Desert camo', 'skin.neon': 'Neon', 'skin.carbon': 'Carbon', 'skin.arctic': 'Arctic', 'set.slideSnd': 'Slide sound', 'snd.gravel': 'Gravel', 'snd.metal': 'Metal', 'snd.wind': 'Whoosh', 'snd.electric': 'Electric', 'snd.off': 'None', 'snd.custom': 'My file', 'snd.import': 'Import a sound', 'snd.test': 'Listen', 'snd.loaded': 'Sound “{name}” loaded and saved.', 'snd.tooBig': 'Sound loaded for this session only: too large to save (2 MB max).', 'snd.bad': 'This file isn’t a playable sound.', 'snd.need': 'Import a sound file first.'
+    'w5': 'KNIFE', 'w5s': 'KNIFE', 'act.w6': 'Knife', 'act.map': 'Minimap', 'set.minimap': 'Minimap', 'set.skin': 'Weapon skin', 'skin.std': 'Standard', 'skin.gold': 'Gold', 'skin.desert': 'Desert camo', 'skin.neon': 'Neon', 'skin.carbon': 'Carbon', 'skin.arctic': 'Arctic', 'skin.crimson': 'Crimson', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lava', 'skin.galaxy': 'Galaxy', 'skin.tiger': 'Tiger', 'skin.candy': 'Candy', 'map.label': 'Map', 'map.canyon': 'Canyon', 'map.refinery': 'Refinery', 'map.hostOnly': 'Only the host picks the map.', 'set.slideSnd': 'Slide sound', 'snd.gravel': 'Gravel', 'snd.metal': 'Metal', 'snd.wind': 'Whoosh', 'snd.electric': 'Electric', 'snd.off': 'None', 'snd.custom': 'My file', 'snd.import': 'Import a sound', 'snd.test': 'Listen', 'snd.loaded': 'Sound “{name}” loaded and saved.', 'snd.tooBig': 'Sound loaded for this session only: too large to save (2 MB max).', 'snd.bad': 'This file isn’t a playable sound.', 'snd.need': 'Import a sound file first.'
   },
   af: {
     'menu.kicker': 'Bewegingslab · Blaaier-FPS',
@@ -579,7 +583,7 @@ const I18N = {
     'feed.respawn': 'HERVERSKYN', 'feed.newPoint': 'nuwe punt',
     'w0': 'KARABYN K-31', 'w1': 'MASJIENPISTOOL VX', 'w2': 'HAELGEWEER KS-8', 'w3': 'SPERWER .50', 'w4': 'PISTOOL HX',
     'w0s': 'KARABYN', 'w1s': 'MASJIENP.', 'w2s': 'HAELGEW.', 'w3s': 'SKERPSKUT.', 'w4s': 'PISTOOL',
-    'w5': 'MES', 'w5s': 'MES', 'act.w6': 'Mes', 'act.map': 'Minikaart', 'set.minimap': 'Minikaart', 'set.skin': 'Wapenvel', 'skin.std': 'Standaard', 'skin.gold': 'Goud', 'skin.desert': 'Woestynkamoeflering', 'skin.neon': 'Neon', 'skin.carbon': 'Koolstof', 'skin.arctic': 'Arkties', 'set.slideSnd': 'Glyklank', 'snd.gravel': 'Gruis', 'snd.metal': 'Metaal', 'snd.wind': 'Wind', 'snd.electric': 'Elektries', 'snd.off': 'Geen', 'snd.custom': 'My lêer', 'snd.import': 'Voer ’n klank in', 'snd.test': 'Luister', 'snd.loaded': 'Klank “{name}” gelaai en gestoor.', 'snd.tooBig': 'Klank net vir hierdie sessie gelaai: te groot om te stoor (maks. 2 MB).', 'snd.bad': 'Hierdie lêer is nie ’n speelbare klank nie.', 'snd.need': 'Voer eers ’n klanklêer in.'
+    'w5': 'MES', 'w5s': 'MES', 'act.w6': 'Mes', 'act.map': 'Minikaart', 'set.minimap': 'Minikaart', 'set.skin': 'Wapenvel', 'skin.std': 'Standaard', 'skin.gold': 'Goud', 'skin.desert': 'Woestynkamoeflering', 'skin.neon': 'Neon', 'skin.carbon': 'Koolstof', 'skin.arctic': 'Arkties', 'skin.crimson': 'Bloedrooi', 'skin.jungle': 'Oerwoud', 'skin.chrome': 'Chroom', 'skin.lava': 'Lawa', 'skin.galaxy': 'Sterrestelsel', 'skin.tiger': 'Tier', 'skin.candy': 'Lekkergoed', 'map.label': 'Kaart', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinadery', 'map.hostOnly': 'Net die gasheer kies die kaart.', 'set.slideSnd': 'Glyklank', 'snd.gravel': 'Gruis', 'snd.metal': 'Metaal', 'snd.wind': 'Wind', 'snd.electric': 'Elektries', 'snd.off': 'Geen', 'snd.custom': 'My lêer', 'snd.import': 'Voer ’n klank in', 'snd.test': 'Luister', 'snd.loaded': 'Klank “{name}” gelaai en gestoor.', 'snd.tooBig': 'Klank net vir hierdie sessie gelaai: te groot om te stoor (maks. 2 MB).', 'snd.bad': 'Hierdie lêer is nie ’n speelbare klank nie.', 'snd.need': 'Voer eers ’n klanklêer in.'
   },
   zu: {
     'menu.kicker': 'Ilabhu yokunyakaza · I-FPS yesiphequluli',
@@ -640,7 +644,7 @@ const I18N = {
     'state.sprint': 'UKUGIJIMA', 'state.crouch': 'UGOBILE', 'state.ground': 'PHANSI',
     'feed.kill': 'UKUKHISHWA', 'feed.djReady': 'ukweqa kabili kulungile', 'feed.back': 'BUYELA', 'feed.start': 'lapho uqale khona',
     'feed.respawn': 'VELA KABUSHA', 'feed.newPoint': 'indawo entsha',
-    'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
+    'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'skin.crimson': 'Okubomvu klebhu', 'skin.jungle': 'Ihlathi', 'skin.chrome': 'I-chrome', 'skin.lava': 'I-lava', 'skin.galaxy': 'Umthala', 'skin.tiger': 'Ingwe', 'skin.candy': 'Uswidi', 'map.label': 'Imephu', 'map.canyon': 'Umhosha', 'map.refinery': 'Ifekthri kawoyela', 'map.hostOnly': 'Umsingathi kuphela okhetha imephu.', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
   }
 };
 const LANGS = Object.keys(I18N);
@@ -663,7 +667,7 @@ function t(key, vars) {
 const wName = i => t('w' + i), wShort = i => t('w' + i + 's');
 
 /* ================= Mode secret ================= */
-const X_HASH = 'e20280a81b036e15986c488eeb27e598277b81b2f7735631e5824c22f217d34d';
+const X_HASH = '52a515b30b2a484cfa5de4a841b74b5386a9170f647be3fad100eea59ca21574';
 const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false };
 let xUnlocked = store.get('xu', false) === true;
 if (xUnlocked) Object.assign(X, store.get('xs', {}));
@@ -672,6 +676,7 @@ S.quality = store.get('quality', 'auto');
 S.skin = store.get('skin', 'std');
 S.slideSnd = store.get('slideSnd', 'gravel');
 S.minimap = store.get('minimap', true);
+S.map = store.get('map', 'canyon');
 
 /* ================= Constantes de mouvement (mètres, secondes) ================= */
 const STEP = 1 / 120;
@@ -725,7 +730,8 @@ const sky = new THREE.Mesh(new THREE.SphereGeometry(600, 32, 16), new THREE.Shad
 sky.renderOrder = -1;
 scene.add(sky);
 
-scene.add(new THREE.HemisphereLight(0xcfe0ea, 0xa47e55, 0.72));
+const hemi = new THREE.HemisphereLight(0xcfe0ea, 0xa47e55, 0.72);
+scene.add(hemi);
 const sun = new THREE.DirectionalLight(0xffe6c2, 0.95);
 sun.castShadow = true;
 sun.shadow.mapSize.setScalar(S.quality === 'high' ? 2048 : 1024);
@@ -787,7 +793,8 @@ const flashTex = canvasTex((g, s) => {
 }, 128);
 
 /* ================= Monde ================= */
-const PAL = { concrete: 0xc8c1b2, teal: 0x4f8a8c, wall: 0x9a9081, ramp: 0xd4c8b3, ground: 0xd9c29b, rust: 0xbd5b34, cream: 0xe5d8bb };
+const PAL = { concrete: 0xc8c1b2, teal: 0x4f8a8c, wall: 0x9a9081, ramp: 0xd4c8b3, ground: 0xd9c29b, rust: 0xbd5b34, cream: 0xe5d8bb,
+  navy: 0x3d4b60, deck: 0x9aa3ad, steel: 0x66737f, hazard: 0xe0b23a, tank: 0xc9ced4, red: 0xb23a2e, blue: 0x2f5f9e, white: 0xdfe3e6 };
 const matCache = {};
 function M(key) {
   if (matCache[key]) return matCache[key];
@@ -814,7 +821,7 @@ function box(cx, cz, sx, sz, y0, h, key) {
   m.position.set(cx, y0 + h / 2, cz);
   m.castShadow = m.receiveShadow = true;
   m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo), edgeMat));
-  scene.add(m); WORLD.push(m);
+  mapRoot.add(m); WORLD.push(m);
 }
 function ramp(x0, x1, z0, z1, axis, hi, hLow, hHigh) {
   const L = axis === 'x' ? x1 - x0 : z1 - z0, W = axis === 'x' ? z1 - z0 : x1 - x0;
@@ -831,61 +838,155 @@ function ramp(x0, x1, z0, z1, axis, hi, hLow, hHigh) {
   else { if (hi < 0) { m.rotation.y = Math.PI / 2; m.position.set(x0, 0, z1); } else { m.rotation.y = -Math.PI / 2; m.position.set(x1, 0, z0); } }
   m.castShadow = m.receiveShadow = true;
   m.add(new THREE.LineSegments(new THREE.EdgesGeometry(geo, 20), edgeMat));
-  scene.add(m); WORLD.push(m);
+  mapRoot.add(m); WORLD.push(m);
 }
 const padBaseMat = new THREE.MeshLambertMaterial({ color: 0x2a2f33 });
 const padGlowMat = new THREE.MeshBasicMaterial({ color: 0xffb020 });
 function pad(x, y, z) {
   const base = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.45, 0.16, 28), padBaseMat);
-  base.position.set(x, y + 0.08, z); base.receiveShadow = true; scene.add(base);
+  base.position.set(x, y + 0.08, z); base.receiveShadow = true; mapRoot.add(base);
   const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.03, 28), padGlowMat);
-  disc.position.set(x, y + 0.17, z); scene.add(disc);
+  disc.position.set(x, y + 0.17, z); mapRoot.add(disc);
   const ring = new THREE.Mesh(new THREE.RingGeometry(0.85, 1.05, 32), new THREE.MeshBasicMaterial({ color: 0xffb020, transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
-  ring.rotation.x = -Math.PI / 2; scene.add(ring);
+  ring.rotation.x = -Math.PI / 2; mapRoot.add(ring);
   PADS.push({ x, y, z, ring, ph: Math.random() });
 }
+const groundMat = new THREE.MeshLambertMaterial({ color: PAL.ground, map: gridTex });
 {
   const gg = new THREE.PlaneGeometry(800, 800); const uv = gg.attributes.uv;
   for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * 400, uv.getY(i) * 400);
-  const ground = new THREE.Mesh(gg, new THREE.MeshLambertMaterial({ color: PAL.ground, map: gridTex }));
+  const ground = new THREE.Mesh(gg, groundMat);
   ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground); WORLD.push(ground);
 }
-box(0, -64, 132, 4, 0, 10, 'wall'); box(0, 64, 132, 4, 0, 10, 'wall');
-box(-64, 0, 4, 124, 0, 10, 'wall'); box(64, 0, 4, 124, 0, 10, 'wall');
-box(0, -5, 14, 14, 0, 4.5, 'concrete'); box(0, -5, 7, 7, 4.5, 4, 'teal');
-ramp(-3, 3, 2, 12, 'z', -1, 0, 4.5);
-box(-42, -47, 16, 14, 0, 10, 'concrete');
-ramp(-50, -34, -40, -5, 'z', -1, 0, 10);
-box(-29, -50, 6, 4, 0, 2.6, 'c-rust'); box(-29, -50, 6, 4, 2.6, 2.6, 'c-cream'); box(-27, -43, 2.4, 6, 0, 2.6, 'c-teal');
-box(35, -43, 20, 14, 0, 6, 'concrete'); box(50, -27, 12, 10, 0, 3.5, 'teal'); box(20, -20, 1, 6, 0, 1.6, 'cream');
-box(14, 6, 8, 8, 0, 3, 'concrete'); ramp(10, 18, 10, 24, 'z', -1, 0, 3);
-box(25, 0, 6, 1, 0, 1.2, 'cream'); box(35, 8, 1, 6, 0, 1.2, 'cream'); box(45, -5, 6, 1, 0, 1.2, 'cream');
-box(40, 20, 8, 8, 0, 2.5, 'teal'); ramp(36, 44, 24, 30, 'z', -1, 0, 2.5); box(52, 5, 6, 10, 0, 3.5, 'concrete');
-box(-20, 20, 6, 2.4, 0, 2.6, 'c-rust'); box(-20, 20, 6, 2.4, 2.6, 2.6, 'c-teal');
-box(-35, 30, 2.4, 6, 0, 2.6, 'c-cream'); box(-12, 40, 6, 2.4, 0, 2.6, 'c-teal'); box(15, 40, 2.4, 6, 0, 2.6, 'c-rust');
-box(-45, 10, 2.4, 6, 0, 2.6, 'c-rust'); box(-45, 16.5, 2.4, 6, 0, 2.6, 'c-teal'); box(-45, 13.25, 2.4, 6, 2.6, 2.6, 'c-cream');
-box(20, 30, 6, 2.4, 0, 2.6, 'c-cream'); box(-15, -40, 6, 2.4, 0, 2.6, 'c-rust'); box(30, 46, 6, 2.4, 0, 2.6, 'c-teal');
-ramp(8, 12, 30, 34, 'z', -1, 0, 1.3); ramp(-8, -4, 30, 34, 'z', -1, 0, 1.3);
-pad(-22, 0, -47); pad(15, 0, -20); pad(20, 0, 45);
-{
-  const mesaMat = new THREE.MeshPhongMaterial({ color: 0xb3825c, flatShading: true, shininess: 0 });
-  const mesaGeos = [];
+// Décor lointain : silhouettes regroupées en un seul maillage
+function farDecor(list, mat, shadow) {
+  const geos = list.map(([geo, x, y, z, ry]) => { const g = (geo.index ? geo.toNonIndexed() : geo); if (ry) g.rotateY(ry); return g.translate(x, y, z); });
+  const m = new THREE.Mesh(mergeGeos(geos, ['position', 'normal']), mat); m.castShadow = !!shadow; mapRoot.add(m);
+}
+
+/* ---------- Carte 1 : Canyon ---------- */
+function buildCanyon() {
+  box(0, -64, 132, 4, 0, 10, 'wall'); box(0, 64, 132, 4, 0, 10, 'wall');
+  box(-64, 0, 4, 124, 0, 10, 'wall'); box(64, 0, 4, 124, 0, 10, 'wall');
+  box(0, -5, 14, 14, 0, 4.5, 'concrete'); box(0, -5, 7, 7, 4.5, 4, 'teal');
+  ramp(-3, 3, 2, 12, 'z', -1, 0, 4.5);
+  box(-42, -47, 16, 14, 0, 10, 'concrete');
+  ramp(-50, -34, -40, -5, 'z', -1, 0, 10);
+  box(-29, -50, 6, 4, 0, 2.6, 'c-rust'); box(-29, -50, 6, 4, 2.6, 2.6, 'c-cream'); box(-27, -43, 2.4, 6, 0, 2.6, 'c-teal');
+  box(35, -43, 20, 14, 0, 6, 'concrete'); box(50, -27, 12, 10, 0, 3.5, 'teal'); box(20, -20, 1, 6, 0, 1.6, 'cream');
+  box(14, 6, 8, 8, 0, 3, 'concrete'); ramp(10, 18, 10, 24, 'z', -1, 0, 3);
+  box(25, 0, 6, 1, 0, 1.2, 'cream'); box(35, 8, 1, 6, 0, 1.2, 'cream'); box(45, -5, 6, 1, 0, 1.2, 'cream');
+  box(40, 20, 8, 8, 0, 2.5, 'teal'); ramp(36, 44, 24, 30, 'z', -1, 0, 2.5); box(52, 5, 6, 10, 0, 3.5, 'concrete');
+  box(-20, 20, 6, 2.4, 0, 2.6, 'c-rust'); box(-20, 20, 6, 2.4, 2.6, 2.6, 'c-teal');
+  box(-35, 30, 2.4, 6, 0, 2.6, 'c-cream'); box(-12, 40, 6, 2.4, 0, 2.6, 'c-teal'); box(15, 40, 2.4, 6, 0, 2.6, 'c-rust');
+  box(-45, 10, 2.4, 6, 0, 2.6, 'c-rust'); box(-45, 16.5, 2.4, 6, 0, 2.6, 'c-teal'); box(-45, 13.25, 2.4, 6, 2.6, 2.6, 'c-cream');
+  box(20, 30, 6, 2.4, 0, 2.6, 'c-cream'); box(-15, -40, 6, 2.4, 0, 2.6, 'c-rust'); box(30, 46, 6, 2.4, 0, 2.6, 'c-teal');
+  ramp(8, 12, 30, 34, 'z', -1, 0, 1.3); ramp(-8, -4, 30, 34, 'z', -1, 0, 1.3);
+  pad(-22, 0, -47); pad(15, 0, -20); pad(20, 0, 45);
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const mesas = [];
   for (let i = 0; i < 28; i++) {
     const a = i / 28 * Math.PI * 2 + rnd() * 0.2, d = 160 + rnd() * 140, r = 12 + rnd() * 28, h = 18 + rnd() * 55;
-    const g = new THREE.CylinderGeometry(r * 0.72, r, h, 6 + ((rnd() * 3) | 0)).toNonIndexed();
-    g.rotateY(rnd() * 3); g.translate(Math.cos(a) * d, h / 2 - 2, Math.sin(a) * d); mesaGeos.push(g);
+    mesas.push([new THREE.CylinderGeometry(r * 0.72, r, h, 6 + ((rnd() * 3) | 0)), Math.cos(a) * d, h / 2 - 2, Math.sin(a) * d, rnd() * 3]);
   }
-  scene.add(new THREE.Mesh(mergeGeos(mesaGeos, ['position', 'normal']), mesaMat));
-  const siloMat = new THREE.MeshLambertMaterial({ color: 0x6f8f92 });
-  const siloGeos = [];
+  farDecor(mesas, new THREE.MeshPhongMaterial({ color: 0xb3825c, flatShading: true, shininess: 0 }));
+  const silos = [];
   [[78, -70], [-80, 72], [84, 60], [-76, -82]].forEach(([x, z]) => {
-    siloGeos.push(new THREE.CylinderGeometry(6, 6, 24, 20).toNonIndexed().translate(x, 12, z));
-    siloGeos.push(new THREE.ConeGeometry(6.2, 4, 20).toNonIndexed().translate(x, 26, z));
+    silos.push([new THREE.CylinderGeometry(6, 6, 24, 20), x, 12, z]); silos.push([new THREE.ConeGeometry(6.2, 4, 20), x, 26, z]);
   });
-  const silos = new THREE.Mesh(mergeGeos(siloGeos, ['position', 'normal', 'uv']), siloMat); silos.castShadow = true; scene.add(silos);
+  farDecor(silos, new THREE.MeshLambertMaterial({ color: 0x6f8f92 }), true);
 }
-mergeStatic();
+
+/* ---------- Carte 2 : Raffinerie (crépuscule, couloirs de wall-jump, half-pipe, passerelles) ---------- */
+function buildRefinery() {
+  box(0, -64, 132, 4, 0, 12, 'navy'); box(0, 64, 132, 4, 0, 12, 'navy');
+  box(-64, 0, 4, 124, 0, 12, 'navy'); box(64, 0, 4, 124, 0, 12, 'navy');
+  // tour centrale : socle, pad, sommet
+  box(0, 0, 16, 16, 0, 3, 'deck'); box(0, 0, 8, 8, 3, 5, 'steel');
+  ramp(-3, 3, 8, 16, 'z', -1, 0, 3);
+  pad(0, 3, 6);
+  // half-pipe nord : deux pentes face à face, plateformes aux bouts
+  ramp(-20, -6, -40, -28, 'x', -1, 0, 6); ramp(6, 20, -40, -28, 'x', 1, 0, 6);
+  box(-28, -34, 16, 12, 0, 6, 'deck'); box(28, -34, 16, 12, 0, 6, 'deck');
+  // passerelles est et ouest, reliées par un pont au nord de la tour
+  box(-20, 5, 2, 40, 4, 0.4, 'hazard'); box(20, 5, 2, 40, 4, 0.4, 'hazard');
+  ramp(-21, -19, 25, 33, 'z', -1, 0, 4.4); ramp(19, 21, 25, 33, 'z', -1, 0, 4.4);
+  box(0, -14, 38, 2, 4, 0.4, 'hazard');
+  // couloir de wall-jump au sud : deux murs à 1,8 m
+  box(0, 40, 40, 1, 0, 7, 'steel'); box(0, 42.8, 40, 1, 0, 7, 'steel');
+  // réservoirs d'angle et caisses pour y grimper
+  box(-45, 45, 12, 12, 0, 9, 'tank'); box(45, 45, 12, 12, 0, 9, 'tank');
+  box(-36, 46, 4, 4, 0, 4, 'c-red'); box(36, 46, 4, 4, 0, 4, 'c-blue');
+  // conteneurs
+  box(-35, -10, 6, 2.4, 0, 2.6, 'c-red'); box(-35, -10, 6, 2.4, 2.6, 2.6, 'c-blue'); box(35, -12, 2.4, 6, 0, 2.6, 'c-white');
+  box(10, 25, 6, 2.4, 0, 2.6, 'c-blue'); box(-12, 28, 2.4, 6, 0, 2.6, 'c-red');
+  box(50, 10, 2.4, 6, 0, 2.6, 'c-red'); box(-52, 10, 2.4, 6, 0, 2.6, 'c-white');
+  // tremplin vers la tour
+  ramp(-4, 4, 20, 26, 'z', -1, 0, 1.5);
+  pad(-30, 0, 0); pad(30, 0, 0);
+  // silhouettes lointaines : cheminées, colonnes de distillation, hangars
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const far = [];
+  for (let i = 0; i < 34; i++) {
+    const a = i / 34 * Math.PI * 2 + rnd() * 0.15, d = 120 + rnd() * 110;
+    const x = Math.cos(a) * d, z = Math.sin(a) * d;
+    if (rnd() < 0.45) { const h = 30 + rnd() * 45, r = 1.5 + rnd() * 2.5; far.push([new THREE.CylinderGeometry(r * 0.8, r, h, 10), x, h / 2, z]); }
+    else { const w = 12 + rnd() * 26, h = 12 + rnd() * 26; far.push([new THREE.BoxGeometry(w, h, 10 + rnd() * 20), x, h / 2, z, a]); }
+  }
+  farDecor(far, new THREE.MeshLambertMaterial({ color: 0x3a3f4d }));
+  const tanks = [];
+  [[90, -40], [-95, -30], [70, 95], [-60, -100]].forEach(([x, z]) => { tanks.push([new THREE.CylinderGeometry(11, 11, 14, 24), x, 7, z]); });
+  farDecor(tanks, new THREE.MeshLambertMaterial({ color: 0x8c96a3 }), true);
+}
+
+const MAPS = {
+  canyon: {
+    build: buildCanyon,
+    theme: { top: 0x356a93, mid: 0xa9bfc8, hor: 0xf1c595, fog: 0xe8c7a1, fogFar: 340, hemiSky: 0xcfe0ea, hemiGround: 0xa47e55, hemiI: 0.72, sun: 0xffe6c2, sunI: 0.95, sunDir: [-0.62, 0.40, 0.34], ground: 0xd9c29b },
+    spawns: [[0, 0, 50, 0], [-30, 0, 45, -0.6], [40, 0, 40, 0.7], [-55, 0, 0, -1.57], [55, 0, -10, 1.57], [-20, 0, -55, 3.14], [10, 0, -55, 3.14], [-42, 10, -50, 0], [35, 6, -45, 3.14], [0, 8.5, -5, 0]],
+    dummies: [
+      [28, 0, -6, 'static'], [36, 0, -2, 'strafe', 'x'], [44, 0, 12, 'strafe', 'z'], [40, 2.5, 20, 'strafe', 'x'],
+      [52, 3.5, 5, 'static'], [30, 0, 20, 'jump'], [-10, 0, -25, 'strafe', 'x'], [0, 8.5, -5, 'static'],
+      [-42, 10, -47, 'strafe', 'x'], [35, 6, -43, 'jump'], [-25, 0, 25, 'circle'], [12, 0, -30, 'strafe', 'z']
+    ]
+  },
+  refinery: {
+    build: buildRefinery,
+    theme: { top: 0x14213d, mid: 0x4d5f80, hor: 0xe9875f, fog: 0x8a7f8e, fogFar: 300, hemiSky: 0x9fb4d6, hemiGround: 0x4a4048, hemiI: 0.82, sun: 0xffb58a, sunI: 0.85, sunDir: [0.7, 0.24, -0.55], ground: 0x7b828c },
+    spawns: [[0, 0, 32, 0], [-30, 0, 30, -0.6], [30, 0, 30, 0.6], [-55, 0, 0, -1.57], [55, 0, 0, 1.57], [0, 0, -55, 3.14], [-28, 6, -34, -1.57], [28, 6, -34, 1.57], [2, 8, 2, 0], [-20, 4.4, 20, 0]],
+    dummies: [
+      [0, 8, 0, 'static'], [-2, 0, -31, 'strafe', 'x'], [2, 0, -37, 'strafe', 'x'], [-28, 6, -34, 'static'],
+      [28, 6, -34, 'jump'], [-20, 4.4, 0, 'strafe', 'z'], [20, 4.4, 10, 'strafe', 'z'], [0, 4.4, -14, 'strafe', 'x'],
+      [-35, 0, 15, 'circle'], [35, 0, 15, 'jump'], [-45, 9, 45, 'static'], [30, 0, 52, 'strafe', 'x']
+    ]
+  }
+};
+const mapRoot = new THREE.Group(); scene.add(mapRoot);
+let SPAWNS = MAPS.canyon.spawns;
+function applyTheme(th) {
+  const u = sky.material.uniforms;
+  u.top.value.setHex(th.top); u.mid.value.setHex(th.mid); u.hor.value.setHex(th.hor);
+  sunDir.set(th.sunDir[0], th.sunDir[1], th.sunDir[2]).normalize();
+  scene.fog.color.setHex(th.fog); scene.fog.far = th.fogFar;
+  hemi.color.setHex(th.hemiSky); hemi.groundColor.setHex(th.hemiGround); hemi.intensity = th.hemiI;
+  sun.color.setHex(th.sun); sun.intensity = th.sunI;
+  groundMat.color.setHex(th.ground);
+}
+// Vide la carte courante puis construit la nouvelle (collisions, décor, apparitions, robots)
+function buildMap(id) {
+  if (!MAPS[id]) id = 'canyon';
+  mapRoot.traverse(o => { if (o.geometry) o.geometry.dispose(); });
+  mapRoot.clear();
+  BOXES.length = 1; RAMPS.length = 0; PADS.length = 0; WORLD.length = 1;
+  S.map = id;
+  MAPS[id].build();
+  mergeStatic();
+  applyTheme(MAPS[id].theme);
+  SPAWNS = MAPS[id].spawns;
+  if (typeof placeDummies === 'function') placeDummies(MAPS[id].dummies);
+  if (typeof refreshMinimapBoxes === 'function') refreshMinimapBoxes();
+  if (typeof rebuildShootable === 'function') rebuildShootable();
+}
 // Fusionne les blocs par matériau : ~130 appels de dessin deviennent une dizaine
 function mergeGeos(list, attrs) {
   let n = 0; for (const g of list) n += g.attributes.position.count;
@@ -907,19 +1008,15 @@ function mergeStatic() {
     if (!groups.has(m.material)) groups.set(m.material, []);
     groups.get(m.material).push(g);
     for (const c of m.children) if (c.isLineSegments) { const e = c.geometry.clone(); e.applyMatrix4(c.matrixWorld); edges.push(e); }
-    scene.remove(m);
+    mapRoot.remove(m); m.geometry.dispose();
   }
   WORLD.length = 0; WORLD.push(ground);
   for (const [mat, list] of groups) {
     const mesh = new THREE.Mesh(mergeGeos(list, ['position', 'normal', 'uv']), mat);
-    mesh.castShadow = mesh.receiveShadow = true; scene.add(mesh); WORLD.push(mesh);
+    mesh.castShadow = mesh.receiveShadow = true; mapRoot.add(mesh); WORLD.push(mesh);
   }
-  scene.add(new THREE.LineSegments(mergeGeos(edges, ['position']), edgeMat));
+  if (edges.length) mapRoot.add(new THREE.LineSegments(mergeGeos(edges, ['position']), edgeMat));
 }
-const SPAWNS = [
-  [0, 0, 50, 0], [-30, 0, 45, -0.6], [40, 0, 40, 0.7], [-55, 0, 0, -1.57], [55, 0, -10, 1.57],
-  [-20, 0, -55, 3.14], [10, 0, -55, 3.14], [-42, 10, -50, 0], [35, 6, -45, 3.14], [0, 8.5, -5, 0]
-];
 
 /* ================= Collisions ================= */
 function overlapAt(b, x, y, z, h) {
@@ -1076,7 +1173,7 @@ function climbStep(dt, fwdHeld, fx, fz, wx, wz, hasWish) {
 }
 // Mur proche dans n'importe quelle direction (pour le wall-jump en l'air)
 function wallNear() {
-  const p = P.pos, reach = R + 0.28;
+  const p = P.pos, reach = R + 0.55;
   for (const h of [0.5, 1.15]) for (let i = 0; i < 8; i++) {
     const a = i * Math.PI / 4, b = boxAtPoint(p.x + Math.cos(a) * reach, p.y + h, p.z + Math.sin(a) * reach);
     if (b) return faceNormal(b);
@@ -1462,11 +1559,7 @@ if (THREE.GLTFLoader) {
 }
 
 /* ================= Mannequins (robots) ================= */
-const DUMMY_DEF = [
-  [28, 0, -6, 'static'], [36, 0, -2, 'strafe', 'x'], [44, 0, 12, 'strafe', 'z'], [40, 2.5, 20, 'strafe', 'x'],
-  [52, 3.5, 5, 'static'], [30, 0, 20, 'jump'], [-10, 0, -25, 'strafe', 'x'], [0, 8.5, -5, 'static'],
-  [-42, 10, -47, 'strafe', 'x'], [35, 6, -43, 'jump'], [-25, 0, 25, 'circle'], [12, 0, -30, 'strafe', 'z']
-];
+const DUMMY_DEF = MAPS.canyon.dummies;
 const hitMat = new THREE.MeshBasicMaterial({ color: 0xff00ff, wireframe: true, visible: false });
 const HB = {
   legs: new THREE.BoxGeometry(.5, .66, .38), body: new THREE.BoxGeometry(.6, .5, .44),
@@ -1504,6 +1597,15 @@ DUMMY_DEF.forEach((def, i) => {
   d.vis = makeProcDummy(); g.add(d.vis.obj);
   dummies.push(d);
 });
+function placeDummies(defs) {
+  dummies.forEach((d, i) => {
+    const def = defs[i % defs.length];
+    d.base.set(def[0], def[1], def[2]); d.mode = def[3]; d.axis = def[4] || 'x';
+    d.off = 0; d.oy = 0; d.vy = 0; d.hp = MAX_HP; d.sh = MAX_SH; d.alive = true; d.dieT = 0; d.respawn = 0;
+    d.g.visible = true; d.g.position.copy(d.base); d.vis.obj.rotation.x = 0; if (!d.vis.mixer) d.vis.obj.position.y = 0;
+    playAnim(d.vis, 'Idle', 0);
+  });
+}
 function attachRobot(d) {
   if (!MODELS.robot) return;
   g_remove(d.g, d.vis.obj);
@@ -1658,13 +1760,42 @@ const carbonTex = canvasTex((g, s) => {
     g.fillStyle = ((x + y) / 8) % 2 ? '#1e1e1e' : '#2a2a2a'; g.fillRect(x, y + 4, 8, 4);
   }
 }, 64);
+const jungleTex = canvasTex((g, s) => {
+  g.fillStyle = '#4f5a2e'; g.fillRect(0, 0, s, s);
+  let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (const col of ['#2f3a1c', '#7a8a45', '#1d2412', '#5e6b36']) for (let i = 0; i < 24; i++) {
+    g.fillStyle = col; g.beginPath(); g.ellipse(rnd() * s, rnd() * s, 8 + rnd() * 24, 5 + rnd() * 14, rnd() * 3, 0, Math.PI * 2); g.fill();
+  }
+}, 128);
+const tigerTex = canvasTex((g, s) => {
+  g.fillStyle = '#e07b1a'; g.fillRect(0, 0, s, s);
+  g.fillStyle = '#141414';
+  for (let x = -20; x < s + 20; x += 18) {
+    g.beginPath(); g.moveTo(x, 0); g.quadraticCurveTo(x + 14, s * 0.35, x + 4, s * 0.55); g.quadraticCurveTo(x + 10, s * 0.75, x + 2, s);
+    g.lineTo(x - 5, s); g.quadraticCurveTo(x + 2, s * 0.75, x - 4, s * 0.55); g.quadraticCurveTo(x + 6, s * 0.35, x - 6, 0); g.fill();
+  }
+}, 128);
+const galaxyTex = canvasTex((g, s) => {
+  const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#1a0b3d'); gr.addColorStop(0.5, '#4a1a7a'); gr.addColorStop(1, '#0d1a4a');
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  let seed = 9; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(255,255,255,${0.4 + rnd() * 0.6})`; const r = rnd() < 0.1 ? 1.6 : 0.7; g.beginPath(); g.arc(rnd() * s, rnd() * s, r, 0, Math.PI * 2); g.fill(); }
+  for (let i = 0; i < 5; i++) { const nb = g.createRadialGradient(rnd() * s, rnd() * s, 0, rnd() * s, rnd() * s, 40); nb.addColorStop(0, 'rgba(255,90,200,.35)'); nb.addColorStop(1, 'rgba(255,90,200,0)'); g.fillStyle = nb; g.fillRect(0, 0, s, s); }
+}, 128);
 const SKINS = {
   std:    { dark: 0x2b3035, mid: 0x48505a, blk: 0x1b1e22, amb: [0xffb020, 0x3a2200], tan: 0xb8701c, teal: 0x3f7f86, steel: 0xc9d0d6 },
   gold:   { dark: 0xb88a2a, mid: 0xd8a83a, blk: 0x5a4214, amb: [0xfff0b8, 0x4a3a10], tan: 0xc99630, teal: 0xd8a83a, steel: 0xffd56a, glow: 0x2a1c00 },
-  desert: { dark: 0xffffff, mid: 0xffffff, blk: 0x4a3d2a, amb: [0xd9c29b, 0x000000], tan: 0x6f5a3a, teal: 0xffffff, steel: 0xb8a888, map: camoTex },
+  desert: { dark: 0xffffff, mid: 0xffffff, blk: 0x4a3d2a, amb: [0xd9c29b, 0x000000], tan: 0x6f5a3a, teal: 0xffffff, steel: 0xb8a888, map: camoTex, mapRoles: ['dark', 'mid', 'teal'] },
   neon:   { dark: 0x15161c, mid: 0x262836, blk: 0x0c0d11, amb: [0x00f0ff, 0x00b8c8], tan: [0xff2bd6, 0x8a0f72], teal: 0x5a1fd0, steel: 0x9ff8ff },
   carbon: { dark: 0xffffff, mid: 0x2b2b2b, blk: 0x0a0a0a, amb: [0xff3b30, 0x5a0d08], tan: 0x2a2a2a, teal: 0xffffff, steel: 0x8a8f94, map: carbonTex },
-  arctic: { dark: 0xdfe6ea, mid: 0xf2f5f7, blk: 0x6f7d86, amb: [0x2b9ad9, 0x0a2a40], tan: 0xb6c6cf, teal: 0xa8c3cf, steel: 0xe8f4ff }
+  arctic: { dark: 0xdfe6ea, mid: 0xf2f5f7, blk: 0x6f7d86, amb: [0x2b9ad9, 0x0a2a40], tan: 0xb6c6cf, teal: 0xa8c3cf, steel: 0xe8f4ff },
+  crimson: { dark: 0x7a1018, mid: 0xa3161f, blk: 0x2a0508, amb: [0xffd6d6, 0x400000], tan: 0x5c0c12, teal: 0xa3161f, steel: 0xe8c4c4 },
+  jungle: { dark: 0xffffff, mid: 0x4f5a2e, blk: 0x1f2416, amb: [0xb8c96a, 0x000000], tan: 0x3d4a22, teal: 0xffffff, steel: 0xa9b08a, map: jungleTex },
+  chrome: { dark: 0xc9ced3, mid: 0xe6e9ec, blk: 0x5b6066, amb: [0x9fd8ff, 0x10324a], tan: 0xaab0b6, teal: 0xd7dce0, steel: 0xffffff, glow: 0x1a1d20 },
+  lava: { dark: 0x1a1414, mid: 0x2a1d1a, blk: 0x0a0707, amb: [0xff6a00, 0xff3300], tan: [0xff3d00, 0x8a1a00], teal: 0x2a1d1a, steel: [0xffb070, 0x5a1a00] },
+  galaxy: { dark: 0xffffff, mid: 0xffffff, blk: 0x0c0618, amb: [0xc8a2ff, 0x5a2aa0], tan: 0x3a1f6e, teal: 0xffffff, steel: 0xd9c8ff, map: galaxyTex, mapRoles: ['dark', 'mid', 'teal'] },
+  tiger: { dark: 0xffffff, mid: 0x1a1a1a, blk: 0x111111, amb: [0xffffff, 0x222222], tan: 0xe07b1a, teal: 0xffffff, steel: 0xe0e0e0, map: tigerTex },
+  candy: { dark: 0xff9ec7, mid: 0x9ef0d8, blk: 0xffffff, amb: [0xfff27a, 0x3a3500], tan: 0xc6a6ff, teal: 0x9ef0d8, steel: 0xffe0f0 }
 };
 function applySkin(id) {
   const sk = SKINS[id] || SKINS.std;
@@ -1672,7 +1803,7 @@ function applySkin(id) {
     const m = vm.mats[role], v = sk[role];
     const [col, em] = Array.isArray(v) ? v : [v, sk.glow || 0];
     m.color.setHex(col); if (m.emissive) m.emissive.setHex(em);
-    const textured = sk.map && (role === 'dark' || role === 'teal' || (id === 'desert' && role === 'mid'));
+    const textured = !!sk.map && (sk.mapRoles || ['dark', 'teal']).includes(role);
     if (m.map !== (textured ? sk.map : null)) { m.map = textured ? sk.map : null; m.needsUpdate = true; }
   }
 }
@@ -1983,7 +2114,7 @@ function hostRecv(from, m) {
     const used = new Set([...NET.players.values()].map(p => p.color));
     const color = COLORS.find(c => !used.has(c)) || COLORS[NET.players.size % COLORS.length];
     NET.players.set(from, { name: String(m.name || 'Joueur').slice(0, 14), color, kills: 0, deaths: 0, st: null });
-    sendTo(from, { k: 'welcome', id: from, code: NET.code });
+    sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map });
     broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
     return;
   }
@@ -2001,13 +2132,14 @@ function hostRecv(from, m) {
 function snapshot() {
   const pl = [];
   for (const [id, p] of NET.players) pl.push([id, p.name, p.color, p.kills, p.deaths, p.st]);
-  return { k: 'snap', pl };
+  return { k: 'snap', pl, map: S.map };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; if (m.map && m.map !== S.map) switchMap(m.map, true); return; }
   if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
   if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
   if (m.k === 'snap') {
+    if (NET.mode === 'client' && m.map && m.map !== S.map) switchMap(m.map, true);
     const seen = new Set();
     for (const [id, name, color, kills, deaths, st] of m.pl) {
       seen.add(id);
@@ -2146,7 +2278,8 @@ function aimAssist(dt) {
 /* ---------- mini-carte qui tourne avec le joueur ---------- */
 const mmEl = $('minimap'), mmCtx = mmEl.getContext('2d');
 const MM_RANGE = 55;
-const MM_BOXES = BOXES.filter(b => !b.ground).map(b => ({ x: b.min.x, z: b.min.z, w: b.max.x - b.min.x, d: b.max.z - b.min.z, h: b.max.y }));
+let MM_BOXES = [];
+function refreshMinimapBoxes() { MM_BOXES = BOXES.filter(b => !b.ground).map(b => ({ x: b.min.x, z: b.min.z, w: b.max.x - b.min.x, d: b.max.z - b.min.z, h: b.max.y, y0: b.min.y })); }
 let mmAcc = 0;
 function syncMinimap() { mmEl.hidden = !S.minimap; const c = $('minimapOn'); if (c) c.checked = S.minimap; }
 function sizeMinimap() {
@@ -2161,7 +2294,7 @@ function drawMinimap() {
   c.fillStyle = 'rgba(14,18,22,.66)'; c.fillRect(0, 0, s, s);
   c.translate(half, half); c.rotate(P.yaw); c.scale(sc, sc); c.translate(-P.pos.x, -P.pos.z);
   for (const b of MM_BOXES) {
-    const tall = b.h >= 9.5 ? 0.42 : b.h > 4 ? 0.3 : b.h > 2 ? 0.22 : 0.15;
+    const tall = b.y0 > 1 ? 0.32 : b.h >= 9.5 ? 0.42 : b.h > 4 ? 0.3 : b.h > 2 ? 0.22 : 0.15;
     c.fillStyle = `rgba(244,239,230,${tall})`; c.fillRect(b.x, b.z, b.w, b.d);
   }
   c.fillStyle = 'rgba(244,239,230,.12)';
@@ -2246,6 +2379,7 @@ function updateNet(dt) {
 }
 function leaveNet() {
   try { if (NET.peer) NET.peer.destroy(); } catch (e) {}
+  mapSel.disabled = false;
   NET.mode = 'off'; NET.peer = null; NET.conns.clear(); NET.hostConn = null; NET.players.clear(); NET.selfId = ''; NET.board = null;
   for (const id of [...remotes.keys()]) removeRemote(id);
   $('netBadge').hidden = true; $('me').hidden = true; $('roomBox').hidden = true;
@@ -2306,7 +2440,7 @@ function joinGame(code) {
     const timeout = setTimeout(() => { if (NET.mode !== 'client') { setNetStatus(t('net.noAnswer'), 'err'); leaveNet(); } }, 12000);
     conn.on('open', () => {
       clearTimeout(timeout);
-      NET.mode = 'client';
+      NET.mode = 'client'; mapSel.disabled = true;
       conn.send({ k: 'hello', name: S.name });
       onlineReady(code);
       setNetStatus(t('net.connected', { code }), 'ok');
@@ -2735,6 +2869,19 @@ function bindRange(id, key, fmt) {
 bindRange('sens', 'sens', v => v.toFixed(1));
 bindRange('fov', 'fov', v => Math.round(v) + '°');
 bindRange('vol', 'vol', v => Math.round(v * 100) + '%');
+function switchMap(id, fromNet) {
+  if (!MAPS[id] || id === S.map) return;
+  buildMap(id); store.set('map', id);
+  $('mapSel').value = id;
+  for (const pd of PADS) pd.ph = Math.random();
+  if (fromNet || NET.mode !== 'off') spawnPlayer(true); else spawnPlayer(false);
+  stats.vmax = 0;
+}
+const mapSel = $('mapSel'); mapSel.value = S.map;
+mapSel.addEventListener('change', () => {
+  if (NET.mode === 'client') { mapSel.value = S.map; setNetStatus(t('map.hostOnly'), 'err'); return; }
+  switchMap(mapSel.value, false);
+});
 const skinSel = $('skin'); skinSel.value = S.skin;
 skinSel.addEventListener('change', () => { S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
 const sndSel = $('slideSnd'); sndSel.value = S.slideSnd;
@@ -2829,6 +2976,7 @@ function resize() {
 }
 addEventListener('resize', resize);
 resize();
+buildMap(S.map);
 spawnPlayer(false);
 rebuildShootable();
 

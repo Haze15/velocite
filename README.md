@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Arène de canyon, 5 armes et un couteau, skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Deux cartes (Canyon et Raffinerie), 5 armes et un couteau, skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -12,6 +12,13 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 18 m/s, plus si tu arrives lancé.
 - **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
+
+## Cartes
+
+- **Canyon** : désert au coucher du soleil, grande pente de glisse, tour centrale, arène de robots.
+- **Raffinerie** : zone industrielle au crépuscule, half-pipe, passerelles en hauteur reliées par un pont, couloir étroit pour enchaîner les wall-jumps, réservoirs à escalader.
+
+La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
 
 ## Multijoueur
 
@@ -54,7 +61,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Pistolet HX | 18 (tête ×1,6) | semi-auto | 14 |
 | Couteau | 50 (tête ×1,5), portée 2,7 m | 115 coups/min | — |
 
-Avec le couteau en main, tu cours 10 % plus vite. Six skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique.
+Avec le couteau en main, tu cours 10 % plus vite. Treize skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon.
 
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 
