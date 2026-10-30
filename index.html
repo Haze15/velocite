@@ -36,7 +36,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   padding-top:max(28px,env(safe-area-inset-top,0px));padding-bottom:max(32px,env(safe-area-inset-bottom,0px));
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .menu-inner{max-width:1040px;margin-left:clamp(0px,4vw,60px);display:grid;gap:30px}
-.kicker{font:600 13px/1 var(--f-display);letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin:0 0 14px}
+.kicker{font:600 13px/1 var(--f-display);letter-spacing:.24em;text-transform:uppercase;color:var(--amber);margin:0}
+.toprow{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 20px;margin:0 0 14px}
+.langsel select{font:600 14px var(--f-body);background:rgba(244,239,230,.06);color:var(--ink);border:1px solid rgba(244,239,230,.25);border-radius:3px;padding:6px 8px}
+.langsel select option{background:var(--night)}
+.langsel select:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .logo{display:flex;align-items:center;gap:.16em;margin:.14em 0 0;font:800 clamp(58px,10.5vw,136px)/.84 var(--f-display);letter-spacing:.01em;transform:skewX(-9deg);transform-origin:left bottom}
 .streak{display:flex;flex-direction:column;align-items:flex-end;gap:.06em;flex:none}
 .streak i{display:block;height:.065em;background:var(--amber)}
@@ -74,7 +79,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #bindMsg.warn{color:var(--amber)}
 .binds-hint kbd{font-size:11px;min-width:20px;padding:2px 5px 1px}
 .techs{list-style:none;margin:0;padding:0}
-.techs li{display:grid;grid-template-columns:62px minmax(0,1fr);gap:4px 14px;padding-block:10px;border-top:1px solid var(--ink-faint)}
+.techs li{display:grid;grid-template-columns:minmax(62px,auto) minmax(0,1fr);gap:4px 14px;padding-block:10px;border-top:1px solid var(--ink-faint)}
 .techs li:last-child{border-bottom:1px solid var(--ink-faint)}
 .tag{align-self:start;justify-self:start;margin-top:3px;font:700 11px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;padding:4px 6px 3px;border:1px solid var(--ink-faint);color:var(--ink-dim)}
 .tag.mid{border-color:rgba(102,212,226,.55);color:var(--shield)}
@@ -225,11 +230,11 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="hurtDir"><i></i></div>
   <div id="scope" hidden><i></i></div>
   <div id="stats">
-    <div><span class="lbl">Élim.</span><b id="stK">0</b></div>
-    <div><span class="lbl">Dégâts</span><b id="stD">0</b></div>
-    <div><span class="lbl">Précision</span><b id="stA">—</b></div>
-    <div><span class="lbl">V-max</span><b id="stV">0.0</b></div>
-    <div><span class="lbl">Chrono</span><b id="stT">0:00</b></div>
+    <div><span class="lbl" data-i18n="hud.kills">Élim.</span><b id="stK">0</b></div>
+    <div><span class="lbl" data-i18n="hud.dmg">Dégâts</span><b id="stD">0</b></div>
+    <div><span class="lbl" data-i18n="hud.acc">Précision</span><b id="stA">—</b></div>
+    <div><span class="lbl" data-i18n="hud.vmax">V-max</span><b id="stV">0.0</b></div>
+    <div><span class="lbl" data-i18n="hud.time">Chrono</span><b id="stT">0:00</b></div>
   </div>
   <div id="topright"><div id="fps">— IPS</div><div id="netBadge" hidden></div><div id="killfeed"></div></div>
   <div id="target"><div class="tname"><span id="tName">MANNEQUIN</span><span id="tVal">175</span></div><div class="bar sh"><i id="tSh"></i></div><div class="bar hp"><i id="tHp"></i></div></div>
@@ -238,11 +243,11 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="xh"><i class="d"></i><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
   <div id="hm"><i></i><i></i><i></i><i></i></div>
   <div id="feed"></div>
-  <div id="me" hidden><div class="tname"><span>TOI</span><span id="meVal">175</span></div><div class="bar sh"><i id="meSh"></i></div><div class="bar hp"><i id="meHp"></i></div></div>
+  <div id="me" hidden><div class="tname"><span data-i18n="hud.you">TOI</span><span id="meVal">175</span></div><div class="bar sh"><i id="meSh"></i></div><div class="bar hp"><i id="meHp"></i></div></div>
   <div id="speed">
     <div class="srow"><b id="spd">0.0</b><span class="unit">m/s</span><span id="kmh">0 km/h</span></div>
     <canvas id="spark" width="250" height="54"></canvas>
-    <div class="chips"><span id="state" class="chip">AU SOL</span><span id="boost" class="pip ready"><i></i>BOOST GLISSADE</span><span id="dj" class="pip dj" hidden>DOUBLE SAUT</span></div>
+    <div class="chips"><span id="state" class="chip">AU SOL</span><span id="boost" class="pip ready"><i></i><span data-i18n="hud.boost">BOOST GLISSADE</span></span><span id="dj" class="pip dj" hidden data-i18n="hud.dj">DOUBLE SAUT</span></div>
   </div>
   <div id="weapon">
     <div class="slots" id="slots"></div>
@@ -250,18 +255,21 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
     <div id="wname">CARABINE K-31</div>
     <div id="reloadBar"><i></i></div>
   </div>
-  <div id="death" hidden><b>ÉLIMINÉ</b><span id="deathBy"></span></div>
-  <div id="board" hidden><h3 id="boardTitle">PARTIE</h3><table><thead><tr><th>Joueur</th><th>Élim.</th><th>Morts</th></tr></thead><tbody id="boardBody"></tbody></table></div>
+  <div id="death" hidden><b data-i18n="state.dead">ÉLIMINÉ</b><span id="deathBy"></span></div>
+  <div id="board" hidden><h3 id="boardTitle">PARTIE</h3><table><thead><tr><th data-i18n="board.player">Joueur</th><th data-i18n="hud.kills">Élim.</th><th data-i18n="board.deaths">Morts</th></tr></thead><tbody id="boardBody"></tbody></table></div>
   <div id="toast"></div>
 </div>
 
 <section id="menu">
   <div class="menu-inner">
     <header>
-      <p class="kicker">Labo de mouvement · FPS navigateur</p>
+      <div class="toprow">
+        <p class="kicker" data-i18n="menu.kicker">Labo de mouvement · FPS navigateur</p>
+        <label class="langsel"><span class="sr" data-i18n="set.lang">Langue</span><select id="lang"><option value="fr">Français</option><option value="en">English</option><option value="af">Afrikaans</option><option value="zu">isiZulu</option></select></label>
+      </div>
       <h1 class="logo"><span class="streak" aria-hidden="true"><i></i><i></i><i></i></span>VÉLOCITÉ</h1>
-      <p class="lede">Une arène de canyon pour enchaîner glissades, bhops, tap-strafes et superglides. Entraîne-toi sur les robots, puis invite tes potes avec un code de partie.</p>
-      <p class="touch-note">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
+      <p class="lede" data-i18n="menu.lede">Une arène de canyon pour enchaîner glissades, bhops, tap-strafes et superglides. Entraîne-toi sur les robots, puis invite tes potes avec un code de partie.</p>
+      <p class="touch-note" data-i18n="menu.touch">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
@@ -269,48 +277,48 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
     </header>
 
     <div class="block">
-      <h2>Multijoueur</h2>
+      <h2 data-i18n="net.title">Multijoueur</h2>
       <div class="net">
         <div class="netrow">
-          <label for="pseudo">Pseudo<input id="pseudo" maxlength="14" autocomplete="off" spellcheck="false"></label>
-          <button class="btn2" id="hostBtn" type="button"><span>Créer une partie</span></button>
-          <span class="or">OU</span>
-          <label for="code">Code<input id="code" maxlength="5" autocomplete="off" spellcheck="false" placeholder="ABCDE"></label>
-          <button class="btn2" id="joinBtn" type="button"><span>Rejoindre</span></button>
+          <label for="pseudo"><span data-i18n="net.pseudo">Pseudo</span><input id="pseudo" maxlength="14" autocomplete="off" spellcheck="false"></label>
+          <button class="btn2" id="hostBtn" type="button"><span data-i18n="net.host">Créer une partie</span></button>
+          <span class="or" data-i18n="net.or">OU</span>
+          <label for="code"><span data-i18n="net.code">Code</span><input id="code" maxlength="5" autocomplete="off" spellcheck="false" placeholder="ABCDE"></label>
+          <button class="btn2" id="joinBtn" type="button"><span data-i18n="net.join">Rejoindre</span></button>
         </div>
-        <div id="roomBox" hidden><span id="roomCode"></span><button class="btn2" id="copyBtn" type="button"><span>Copier le lien</span></button><span id="roomLink"></span></div>
+        <div id="roomBox" hidden><span id="roomCode"></span><button class="btn2" id="copyBtn" type="button"><span data-i18n="net.copy">Copier le lien</span></button><span id="roomLink"></span></div>
         <div id="netStatus">Partie en pair-à-pair : celui qui crée la partie l'héberge, les autres entrent son code.</div>
       </div>
     </div>
 
     <div class="cols">
       <div class="block">
-        <h2>Commandes</h2>
-        <p class="hint binds-hint">Clique sur une touche pour la changer, puis appuie sur la nouvelle touche, un bouton de souris ou la molette. <kbd>Suppr</kbd> efface, <kbd>Échap</kbd> annule.</p>
+        <h2 data-i18n="ctl.title">Commandes</h2>
+        <p class="hint binds-hint" data-i18n-html="ctl.hint">Clique sur une touche pour la changer, puis appuie sur la nouvelle touche, un bouton de souris ou la molette. <kbd>Suppr</kbd> efface, <kbd>Échap</kbd> annule.</p>
         <div class="binds" id="binds"></div>
-        <div class="bind-actions"><button class="btn2" id="resetBinds" type="button"><span>Touches par défaut</span></button><span class="hint" id="bindMsg"></span></div>
+        <div class="bind-actions"><button class="btn2" id="resetBinds" type="button"><span data-i18n="ctl.reset">Touches par défaut</span></button><span class="hint" id="bindMsg"></span></div>
       </div>
       <div class="block">
-        <h2>Techniques</h2>
+        <h2 data-i18n="tech.title">Techniques</h2>
         <ul class="techs">
-          <li><span class="tag">Base</span><div><strong>Slide-jump</strong><p>Sprinte, puis <kbd data-act="crouch">C</kbd> pour glisser. La glissade donne un boost toutes les 2 s. Saute pendant la glissade pour garder la vitesse.</p></div></li>
-          <li><span class="tag">Base</span><div><strong>Jump pads</strong><p>Les disques ambre te projettent à 6 m et te donnent un double saut en l'air.</p></div></li>
-          <li><span class="tag mid">Inter</span><div><strong>Bhop</strong><p>Garde <kbd data-act="crouch">C</kbd> enfoncé en retombant pour reglisser, et saute quand tu touches le sol. Pas de friction, et chaque saut enchaîné ajoute un peu de vitesse, jusqu'à 17 m/s.</p></div></li>
-          <li><span class="tag mid">Inter</span><div><strong>Escalade et wall-jump</strong><p>Saute face à un mur en avançant pour grimper jusqu'à 6 m. En l'air contre n'importe quel mur, <kbd data-act="jump">Espace</kbd> te fait rebondir en gardant ton élan, trois fois avant de retoucher le sol.</p></div></li>
-          <li><span class="tag adv">Avancé</span><div><strong>Air-strafe et tap-strafe</strong><p>En l'air, tourne la souris du côté de <kbd data-act="left">Q</kbd> ou <kbd data-act="right">D</kbd>. Pour un virage sec juste après un saut, garde la touche, tourne et martèle <kbd data-act="forward" data-slot="1">Molette ↓</kbd>.</p></div></li>
-          <li><span class="tag adv">Avancé</span><div><strong>Superglide</strong><p>Quand tu te hisses sur un rebord, appuie sur <kbd data-act="jump">Espace</kbd> puis <kbd data-act="crouch">C</kbd> presque en même temps. Sortie à 14,5 m/s, plus si tu arrives lancé.</p></div></li>
+          <li><span class="tag" data-i18n="tag.base">Base</span><div><strong>Slide-jump</strong><p data-i18n-html="tech.slide"></p></div></li>
+          <li><span class="tag" data-i18n="tag.base">Base</span><div><strong>Jump pads</strong><p data-i18n-html="tech.pads"></p></div></li>
+          <li><span class="tag mid" data-i18n="tag.mid">Inter</span><div><strong>Bhop</strong><p data-i18n-html="tech.bhop"></p></div></li>
+          <li><span class="tag mid" data-i18n="tag.mid">Inter</span><div><strong data-i18n="tech.climbT">Escalade et wall-jump</strong><p data-i18n-html="tech.climb"></p></div></li>
+          <li><span class="tag adv" data-i18n="tag.adv">Avancé</span><div><strong data-i18n="tech.strafeT">Air-strafe et tap-strafe</strong><p data-i18n-html="tech.strafe"></p></div></li>
+          <li><span class="tag adv" data-i18n="tag.adv">Avancé</span><div><strong>Superglide</strong><p data-i18n-html="tech.sg"></p></div></li>
         </ul>
       </div>
     </div>
 
     <div class="block settings">
-      <h2>Réglages</h2>
+      <h2 data-i18n="set.title">Réglages</h2>
       <div class="grid">
-        <label class="field"><span class="lab">Sensibilité <output id="oSens"></output></span><input type="range" id="sens" min="0.4" max="6" step="0.1"></label>
-        <label class="field"><span class="lab">Champ de vision <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
-        <label class="field"><span class="lab">Volume <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
-        <label class="field"><span class="lab">Graphismes</span><select id="quality"><option value="auto">Auto (adapte la résolution)</option><option value="high">Élevés</option><option value="low">Rapides (sans ombres)</option></select></label>
-        <label class="check"><input type="checkbox" id="autoSprint"> Sprint automatique</label>
+        <label class="field"><span class="lab"><span data-i18n="set.sens">Sensibilité</span> <output id="oSens"></output></span><input type="range" id="sens" min="0.4" max="6" step="0.1"></label>
+        <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
+        <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
+        <label class="field"><span class="lab" data-i18n="set.quality">Graphismes</span><select id="quality"><option value="auto" data-i18n="q.auto">Auto (adapte la résolution)</option><option value="high" data-i18n="q.high">Élevés</option><option value="low" data-i18n="q.low">Rapides (sans ombres)</option></select></label>
+        <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
       </div>
     </div>
 
@@ -327,7 +335,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       </div>
       <p class="hint">Actif seulement dans ce navigateur. Retape le mot de passe dans ce menu pour masquer ce panneau.</p>
     </div>
-    <p class="credits">Modèles 3D : robot de Tomás Laulhé (Quaternius, CC0) et soldat Mixamo, tous deux issus des exemples de three.js. Moteur : three.js r128. Réseau : PeerJS.</p>
+    <p class="credits" data-i18n="menu.credits">Modèles 3D : robot de Tomás Laulhé (Quaternius, CC0) et soldat Mixamo, tous deux issus des exemples de three.js. Moteur : three.js r128. Réseau : PeerJS.</p>
   </div>
 </section>
 
@@ -357,6 +365,282 @@ const S = {
   autoSprint: store.get('autoSprint', true),
   name: store.get('name', 'Joueur' + Math.floor(100 + Math.random() * 900))
 };
+
+/* ================= Langues ================= */
+// fr, en, af (Afrikaans), zu (isiZulu). Les termes de jeu (bhop, superglide…) restent en anglais partout.
+const I18N = {
+  fr: {
+    'menu.kicker': 'Labo de mouvement · FPS navigateur',
+    'menu.lede': 'Une arène de canyon pour enchaîner glissades, bhops, tap-strafes et superglides. Entraîne-toi sur les robots, puis invite tes potes avec un code de partie.',
+    'menu.touch': 'Ce jeu se joue au clavier et à la souris, sur ordinateur.',
+    'menu.credits': 'Modèles 3D : robot de Tomás Laulhé (Quaternius, CC0) et soldat Mixamo, tous deux issus des exemples de three.js. Moteur : three.js r128. Réseau : PeerJS.',
+    'play.solo': 'Jouer en solo', 'play.resume': 'Reprendre', 'play.enter': 'Entrer dans l’arène', 'play.back': 'Retour dans l’arène',
+    'hint.default': 'Le clic verrouille la souris. Échap met en pause.',
+    'hint.wait': 'Le navigateur demande une seconde de pause avant de reprendre. Clique à nouveau.',
+    'net.title': 'Multijoueur', 'net.pseudo': 'Pseudo', 'net.host': 'Créer une partie', 'net.or': 'OU', 'net.code': 'Code', 'net.join': 'Rejoindre',
+    'net.copy': 'Copier le lien', 'net.copied': 'Lien copié',
+    'net.intro': 'Partie en pair-à-pair : celui qui crée la partie l’héberge, les autres entrent son code.',
+    'net.full': 'La partie est pleine (8 joueurs).',
+    'net.noRtc': 'Le multijoueur a besoin de WebRTC, bloqué dans cet aperçu. Ouvre la version GitHub Pages du jeu.',
+    'net.creating': 'Création de la partie…',
+    'net.created': 'Partie créée. Donne le code ou le lien à tes potes, puis entre dans l’arène.',
+    'net.createFail': 'Impossible de créer la partie ({err}). Réessaie.',
+    'net.codeLen': 'Le code fait 5 caractères.',
+    'net.connecting': 'Connexion à {code}…',
+    'net.noAnswer': 'Pas de réponse de l’hôte. Vérifie le code.',
+    'net.connected': 'Connecté à la partie {code}.',
+    'net.hostClosed': 'L’hôte a fermé la partie.',
+    'net.noMatch': 'Aucune partie avec le code {code}.',
+    'net.err': 'Erreur réseau ({err}).',
+    'net.fromLink': 'Code {code} repris du lien. Clique sur Rejoindre.',
+    'net.badge': 'EN LIGNE · {code}',
+    'toast.hostClosed': 'L’hôte a fermé la partie. Tu continues en solo.',
+    'toast.noLock': 'La souris ne peut pas être verrouillée ici, la visée suit le curseur dans la fenêtre. Échap pour la pause.',
+    'toast.respawnFull': 'Réapparition possible avec PV et bouclier pleins.',
+    'toast.muted': 'Son coupé', 'toast.unmuted': 'Son activé',
+    'sys.join': '{name} a rejoint la partie', 'sys.leave': '{name} a quitté la partie',
+    'ctl.title': 'Commandes',
+    'ctl.hint': 'Clique sur une touche pour la changer, puis appuie sur la nouvelle touche, un bouton de souris ou la molette. <kbd>Suppr</kbd> efface, <kbd>Échap</kbd> annule.',
+    'ctl.reset': 'Touches par défaut', 'ctl.resetDone': 'Touches par défaut rétablies.', 'ctl.press': 'Appuie…',
+    'ctl.removed': '« {key} » retirée de « {action} ».',
+    'ctl.ctrlWarn': 'Attention : Ctrl + une lettre peut déclencher un raccourci du navigateur (Ctrl+W ferme l’onglet en QWERTY).',
+    'ctl.aria': '{action}, touche {n} : {key}',
+    'act.forward': 'Avancer', 'act.back': 'Reculer', 'act.left': 'Gauche', 'act.right': 'Droite', 'act.jump': 'Sauter',
+    'act.crouch': 'S’accroupir, glisser', 'act.sprint': 'Sprint', 'act.fire': 'Tirer', 'act.ads': 'Viser', 'act.reload': 'Recharger',
+    'act.w1': 'Carabine', 'act.w2': 'Mitraillette', 'act.w3': 'Pompe', 'act.w4': 'Sniper', 'act.w5': 'Pistolet',
+    'act.next': 'Arme suivante', 'act.prev': 'Arme précédente', 'act.board': 'Scores (en ligne)', 'act.respawn': 'Réapparaître', 'act.mute': 'Couper le son',
+    'key.Space': 'Espace', 'key.ShiftLeft': 'Maj G', 'key.ShiftRight': 'Maj D', 'key.ControlLeft': 'Ctrl G', 'key.ControlRight': 'Ctrl D',
+    'key.Enter': 'Entrée', 'key.Backspace': 'Retour', 'key.CapsLock': 'Verr. maj', 'key.Numpad': 'Pavé ',
+    'key.Mouse0': 'Clic G', 'key.Mouse1': 'Clic molette', 'key.Mouse2': 'Clic D', 'key.Mouse3': 'Souris 4', 'key.Mouse4': 'Souris 5',
+    'key.WheelUp': 'Molette ↑', 'key.WheelDown': 'Molette ↓',
+    'tech.title': 'Techniques', 'tag.base': 'Base', 'tag.mid': 'Inter', 'tag.adv': 'Avancé',
+    'tech.climbT': 'Escalade et wall-jump', 'tech.strafeT': 'Air-strafe et tap-strafe',
+    'tech.slide': 'Sprinte, puis {crouch} pour glisser. La glissade donne un boost toutes les 2 s. Saute pendant la glissade pour garder la vitesse.',
+    'tech.pads': 'Les disques ambre te projettent à 6 m et te donnent un double saut en l’air.',
+    'tech.bhop': 'Garde {crouch} enfoncé en retombant pour reglisser, et saute quand tu touches le sol. Pas de friction, et chaque saut enchaîné ajoute un peu de vitesse, jusqu’à 17 m/s.',
+    'tech.climb': 'Saute face à un mur en avançant pour grimper jusqu’à 6 m. En l’air contre n’importe quel mur, {jump} te fait rebondir en gardant ton élan, trois fois avant de retoucher le sol.',
+    'tech.strafe': 'En l’air, tourne la souris du côté de {left} ou {right}. Pour un virage sec juste après un saut, garde la touche, tourne et martèle {forward:1}.',
+    'tech.sg': 'Quand tu te hisses sur un rebord, appuie sur {jump} puis {crouch} presque en même temps. Sortie à 14,5 m/s, plus si tu arrives lancé.',
+    'set.title': 'Réglages', 'set.sens': 'Sensibilité', 'set.fov': 'Champ de vision', 'set.vol': 'Volume', 'set.quality': 'Graphismes',
+    'set.autosprint': 'Sprint automatique', 'set.lang': 'Langue',
+    'q.auto': 'Auto (adapte la résolution)', 'q.high': 'Élevés', 'q.low': 'Rapides (sans ombres)',
+    'hud.kills': 'Élim.', 'hud.dmg': 'Dégâts', 'hud.acc': 'Précision', 'hud.vmax': 'V-max', 'hud.time': 'Chrono', 'hud.fps': 'IPS',
+    'hud.you': 'TOI', 'hud.boost': 'BOOST GLISSADE', 'hud.dj': 'DOUBLE SAUT', 'hud.by': 'par {name} · {w}',
+    'board.player': 'Joueur', 'board.deaths': 'Morts', 'board.one': 'PARTIE {code} · 1 JOUEUR', 'board.many': 'PARTIE {code} · {n} JOUEURS',
+    'state.dead': 'ÉLIMINÉ', 'state.mantle': 'REBORD', 'state.climb': 'ESCALADE', 'state.slide': 'GLISSADE', 'state.air': 'EN L’AIR',
+    'state.sprint': 'SPRINT', 'state.crouch': 'ACCROUPI', 'state.ground': 'AU SOL',
+    'feed.kill': 'ÉLIMINATION', 'feed.djReady': 'double saut prêt', 'feed.back': 'RETOUR', 'feed.start': 'point de départ',
+    'feed.respawn': 'RÉAPPARITION', 'feed.newPoint': 'nouveau point',
+    'w0': 'CARABINE K-31', 'w1': 'MITRAILLETTE VX', 'w2': 'POMPE KS-8', 'w3': 'ÉPERVIER .50', 'w4': 'PISTOLET HX',
+    'w0s': 'CARABINE', 'w1s': 'MITRAILL.', 'w2s': 'POMPE', 'w3s': 'SNIPER', 'w4s': 'PISTOLET'
+  },
+  en: {
+    'menu.kicker': 'Movement lab · Browser FPS',
+    'menu.lede': 'A canyon arena for chaining slides, bhops, tap-strafes and superglides. Warm up on the robots, then invite your friends with a match code.',
+    'menu.touch': 'This game is played with a keyboard and mouse on a computer.',
+    'menu.credits': '3D models: robot by Tomás Laulhé (Quaternius, CC0) and Mixamo soldier, both from the three.js examples. Engine: three.js r128. Networking: PeerJS.',
+    'play.solo': 'Play solo', 'play.resume': 'Resume', 'play.enter': 'Enter the arena', 'play.back': 'Back to the arena',
+    'hint.default': 'Clicking locks the mouse. Esc pauses.',
+    'hint.wait': 'The browser needs a second before you can resume. Click again.',
+    'net.title': 'Multiplayer', 'net.pseudo': 'Name', 'net.host': 'Host a match', 'net.or': 'OR', 'net.code': 'Code', 'net.join': 'Join',
+    'net.copy': 'Copy link', 'net.copied': 'Link copied',
+    'net.intro': 'Peer-to-peer match: whoever creates it hosts it, everyone else enters the code.',
+    'net.full': 'The match is full (8 players).',
+    'net.noRtc': 'Multiplayer needs WebRTC, which this preview blocks. Open the GitHub Pages version of the game.',
+    'net.creating': 'Creating the match…',
+    'net.created': 'Match created. Send the code or link to your friends, then enter the arena.',
+    'net.createFail': 'Couldn’t create the match ({err}). Try again.',
+    'net.codeLen': 'The code is 5 characters long.',
+    'net.connecting': 'Connecting to {code}…',
+    'net.noAnswer': 'No answer from the host. Check the code.',
+    'net.connected': 'Connected to match {code}.',
+    'net.hostClosed': 'The host closed the match.',
+    'net.noMatch': 'No match with code {code}.',
+    'net.err': 'Network error ({err}).',
+    'net.fromLink': 'Code {code} taken from the link. Click Join.',
+    'net.badge': 'ONLINE · {code}',
+    'toast.hostClosed': 'The host closed the match. You’re back to solo.',
+    'toast.noLock': 'The mouse can’t be locked here, so aiming follows the cursor inside the window. Esc to pause.',
+    'toast.respawnFull': 'You can only respawn with full health and shield.',
+    'toast.muted': 'Sound off', 'toast.unmuted': 'Sound on',
+    'sys.join': '{name} joined the match', 'sys.leave': '{name} left the match',
+    'ctl.title': 'Controls',
+    'ctl.hint': 'Click a key to change it, then press the new key, a mouse button or the wheel. <kbd>Del</kbd> clears, <kbd>Esc</kbd> cancels.',
+    'ctl.reset': 'Default keys', 'ctl.resetDone': 'Default keys restored.', 'ctl.press': 'Press…',
+    'ctl.removed': '“{key}” removed from “{action}”.',
+    'ctl.ctrlWarn': 'Careful: Ctrl + a letter can trigger a browser shortcut (Ctrl+W closes the tab).',
+    'ctl.aria': '{action}, key {n}: {key}',
+    'act.forward': 'Forward', 'act.back': 'Back', 'act.left': 'Left', 'act.right': 'Right', 'act.jump': 'Jump',
+    'act.crouch': 'Crouch, slide', 'act.sprint': 'Sprint', 'act.fire': 'Fire', 'act.ads': 'Aim', 'act.reload': 'Reload',
+    'act.w1': 'Carbine', 'act.w2': 'SMG', 'act.w3': 'Shotgun', 'act.w4': 'Sniper', 'act.w5': 'Pistol',
+    'act.next': 'Next weapon', 'act.prev': 'Previous weapon', 'act.board': 'Scoreboard (online)', 'act.respawn': 'Respawn', 'act.mute': 'Mute',
+    'key.Space': 'Space', 'key.ShiftLeft': 'L Shift', 'key.ShiftRight': 'R Shift', 'key.ControlLeft': 'L Ctrl', 'key.ControlRight': 'R Ctrl',
+    'key.Enter': 'Enter', 'key.Backspace': 'Backspace', 'key.CapsLock': 'Caps Lock', 'key.Numpad': 'Num ',
+    'key.Mouse0': 'L Click', 'key.Mouse1': 'Middle click', 'key.Mouse2': 'R Click', 'key.Mouse3': 'Mouse 4', 'key.Mouse4': 'Mouse 5',
+    'key.WheelUp': 'Wheel ↑', 'key.WheelDown': 'Wheel ↓',
+    'tech.title': 'Techniques', 'tag.base': 'Basic', 'tag.mid': 'Mid', 'tag.adv': 'Advanced',
+    'tech.climbT': 'Climb and wall-jump', 'tech.strafeT': 'Air-strafe and tap-strafe',
+    'tech.slide': 'Sprint, then {crouch} to slide. Sliding gives a boost every 2 s. Jump during the slide to keep your speed.',
+    'tech.pads': 'The amber discs launch you 6 m up and give you a double jump in the air.',
+    'tech.bhop': 'Hold {crouch} as you land to slide again, and jump as you touch the ground. No friction, and each chained jump adds a little speed, up to 17 m/s.',
+    'tech.climb': 'Jump at a wall while moving forward to climb up to 6 m. In the air next to any wall, {jump} bounces you off while keeping your momentum, three times before you touch the ground.',
+    'tech.strafe': 'In the air, turn the mouse towards {left} or {right}. For a sharp turn right after a jump, hold the key, turn and spam {forward:1}.',
+    'tech.sg': 'As you pull yourself onto a ledge, press {jump} then {crouch} almost at the same time. You exit at 14.5 m/s, faster if you arrive with speed.',
+    'set.title': 'Settings', 'set.sens': 'Sensitivity', 'set.fov': 'Field of view', 'set.vol': 'Volume', 'set.quality': 'Graphics',
+    'set.autosprint': 'Auto sprint', 'set.lang': 'Language',
+    'q.auto': 'Auto (adapts resolution)', 'q.high': 'High', 'q.low': 'Fast (no shadows)',
+    'hud.kills': 'Kills', 'hud.dmg': 'Damage', 'hud.acc': 'Accuracy', 'hud.vmax': 'Top speed', 'hud.time': 'Time', 'hud.fps': 'FPS',
+    'hud.you': 'YOU', 'hud.boost': 'SLIDE BOOST', 'hud.dj': 'DOUBLE JUMP', 'hud.by': 'by {name} · {w}',
+    'board.player': 'Player', 'board.deaths': 'Deaths', 'board.one': 'MATCH {code} · 1 PLAYER', 'board.many': 'MATCH {code} · {n} PLAYERS',
+    'state.dead': 'ELIMINATED', 'state.mantle': 'MANTLE', 'state.climb': 'CLIMBING', 'state.slide': 'SLIDING', 'state.air': 'AIRBORNE',
+    'state.sprint': 'SPRINT', 'state.crouch': 'CROUCHED', 'state.ground': 'GROUNDED',
+    'feed.kill': 'ELIMINATION', 'feed.djReady': 'double jump ready', 'feed.back': 'RESET', 'feed.start': 'start point',
+    'feed.respawn': 'RESPAWN', 'feed.newPoint': 'new spawn',
+    'w0': 'CARBINE K-31', 'w1': 'SMG VX', 'w2': 'SHOTGUN KS-8', 'w3': 'SPARROWHAWK .50', 'w4': 'PISTOL HX',
+    'w0s': 'CARBINE', 'w1s': 'SMG', 'w2s': 'SHOTGUN', 'w3s': 'SNIPER', 'w4s': 'PISTOL'
+  },
+  af: {
+    'menu.kicker': 'Bewegingslab · Blaaier-FPS',
+    'menu.lede': '’n Canyon-arena om glyse, bhops, tap-strafes en superglides aanmekaar te ryg. Oefen eers op die robotte en nooi dan jou vriende met ’n wedstrydkode.',
+    'menu.touch': 'Hierdie speletjie word op ’n rekenaar met ’n sleutelbord en muis gespeel.',
+    'menu.credits': '3D-modelle: robot deur Tomás Laulhé (Quaternius, CC0) en Mixamo-soldaat, albei uit die three.js-voorbeelde. Enjin: three.js r128. Netwerk: PeerJS.',
+    'play.solo': 'Speel alleen', 'play.resume': 'Gaan voort', 'play.enter': 'Betree die arena', 'play.back': 'Terug na die arena',
+    'hint.default': 'Klik sluit die muis. Esc pouseer.',
+    'hint.wait': 'Die blaaier het ’n sekonde nodig voordat jy kan voortgaan. Klik weer.',
+    'net.title': 'Multispeler', 'net.pseudo': 'Naam', 'net.host': 'Skep ’n wedstryd', 'net.or': 'OF', 'net.code': 'Kode', 'net.join': 'Sluit aan',
+    'net.copy': 'Kopieer skakel', 'net.copied': 'Skakel gekopieer',
+    'net.intro': 'Eweknie-wedstryd: wie dit skep, bied dit aan, en die ander voer die kode in.',
+    'net.full': 'Die wedstryd is vol (8 spelers).',
+    'net.noRtc': 'Multispeler het WebRTC nodig, wat hierdie voorskou blokkeer. Maak die GitHub Pages-weergawe van die speletjie oop.',
+    'net.creating': 'Skep die wedstryd…',
+    'net.created': 'Wedstryd geskep. Stuur die kode of skakel vir jou vriende en betree dan die arena.',
+    'net.createFail': 'Kon nie die wedstryd skep nie ({err}). Probeer weer.',
+    'net.codeLen': 'Die kode is 5 karakters lank.',
+    'net.connecting': 'Koppel aan {code}…',
+    'net.noAnswer': 'Geen antwoord van die gasheer nie. Kontroleer die kode.',
+    'net.connected': 'Gekoppel aan wedstryd {code}.',
+    'net.hostClosed': 'Die gasheer het die wedstryd gesluit.',
+    'net.noMatch': 'Geen wedstryd met kode {code} nie.',
+    'net.err': 'Netwerkfout ({err}).',
+    'net.fromLink': 'Kode {code} uit die skakel geneem. Klik Sluit aan.',
+    'net.badge': 'AANLYN · {code}',
+    'toast.hostClosed': 'Die gasheer het die wedstryd gesluit. Jy speel nou alleen.',
+    'toast.noLock': 'Die muis kan nie hier gesluit word nie, dus volg die mikpunt die wyser in die venster. Esc om te pouseer.',
+    'toast.respawnFull': 'Jy kan net herverskyn met volle lewe en skild.',
+    'toast.muted': 'Klank af', 'toast.unmuted': 'Klank aan',
+    'sys.join': '{name} het by die wedstryd aangesluit', 'sys.leave': '{name} het die wedstryd verlaat',
+    'ctl.title': 'Kontroles',
+    'ctl.hint': 'Klik op ’n sleutel om dit te verander en druk dan die nuwe sleutel, ’n muisknoppie of die wiel. <kbd>Del</kbd> vee uit, <kbd>Esc</kbd> kanselleer.',
+    'ctl.reset': 'Verstek-sleutels', 'ctl.resetDone': 'Verstek-sleutels herstel.', 'ctl.press': 'Druk…',
+    'ctl.removed': '“{key}” van “{action}” verwyder.',
+    'ctl.ctrlWarn': 'Pasop: Ctrl + ’n letter kan ’n blaaier-kortpad aktiveer (Ctrl+W maak die oortjie toe).',
+    'ctl.aria': '{action}, sleutel {n}: {key}',
+    'act.forward': 'Vorentoe', 'act.back': 'Agtertoe', 'act.left': 'Links', 'act.right': 'Regs', 'act.jump': 'Spring',
+    'act.crouch': 'Hurk, gly', 'act.sprint': 'Sprint', 'act.fire': 'Skiet', 'act.ads': 'Mik', 'act.reload': 'Herlaai',
+    'act.w1': 'Karabyn', 'act.w2': 'Masjienpistool', 'act.w3': 'Haelgeweer', 'act.w4': 'Skerpskutter', 'act.w5': 'Pistool',
+    'act.next': 'Volgende wapen', 'act.prev': 'Vorige wapen', 'act.board': 'Telbord (aanlyn)', 'act.respawn': 'Herverskyn', 'act.mute': 'Demp klank',
+    'key.Space': 'Spasie', 'key.Mouse0': 'L-klik', 'key.Mouse1': 'Middelklik', 'key.Mouse2': 'R-klik', 'key.Mouse3': 'Muis 4', 'key.Mouse4': 'Muis 5',
+    'key.WheelUp': 'Wiel ↑', 'key.WheelDown': 'Wiel ↓',
+    'tech.title': 'Tegnieke', 'tag.base': 'Basies', 'tag.mid': 'Middel', 'tag.adv': 'Gevorderd',
+    'tech.climbT': 'Klim en wall-jump', 'tech.strafeT': 'Air-strafe en tap-strafe',
+    'tech.slide': 'Sprint en druk dan {crouch} om te gly. Gly gee elke 2 s ’n hupstoot. Spring terwyl jy gly om jou spoed te behou.',
+    'tech.pads': 'Die amber skywe lanseer jou 6 m hoog en gee jou ’n dubbelsprong in die lug.',
+    'tech.bhop': 'Hou {crouch} in as jy land om weer te gly, en spring sodra jy die grond raak. Geen wrywing nie, en elke aaneenlopende sprong voeg ’n bietjie spoed by, tot 17 m/s.',
+    'tech.climb': 'Spring teen ’n muur terwyl jy vorentoe beweeg om tot 6 m hoog te klim. In die lug langs enige muur laat {jump} jou terugbons terwyl jy jou momentum behou, drie keer voordat jy weer die grond raak.',
+    'tech.strafe': 'In die lug, draai die muis na die kant van {left} of {right}. Vir ’n skerp draai net ná ’n sprong, hou die sleutel in, draai en druk herhaaldelik {forward:1}.',
+    'tech.sg': 'Terwyl jy jou op ’n rand optrek, druk {jump} en dan {crouch} amper gelyktydig. Jy kom uit teen 14,5 m/s, vinniger as jy met spoed aankom.',
+    'set.title': 'Instellings', 'set.sens': 'Sensitiwiteit', 'set.fov': 'Gesigsveld', 'set.vol': 'Volume', 'set.quality': 'Grafika',
+    'set.autosprint': 'Outomatiese sprint', 'set.lang': 'Taal',
+    'q.auto': 'Outo (pas resolusie aan)', 'q.high': 'Hoog', 'q.low': 'Vinnig (sonder skaduwees)',
+    'hud.kills': 'Uitgesk.', 'hud.dmg': 'Skade', 'hud.acc': 'Akkuraatheid', 'hud.vmax': 'Topspoed', 'hud.time': 'Tyd', 'hud.fps': 'FPS',
+    'hud.you': 'JY', 'hud.boost': 'GLYHUPSTOOT', 'hud.dj': 'DUBBELSPRONG', 'hud.by': 'deur {name} · {w}',
+    'board.player': 'Speler', 'board.deaths': 'Sterftes', 'board.one': 'WEDSTRYD {code} · 1 SPELER', 'board.many': 'WEDSTRYD {code} · {n} SPELERS',
+    'state.dead': 'UITGESKAKEL', 'state.mantle': 'OPTREK', 'state.climb': 'KLIM', 'state.slide': 'GLY', 'state.air': 'IN DIE LUG',
+    'state.sprint': 'SPRINT', 'state.crouch': 'GEHURK', 'state.ground': 'OP DIE GROND',
+    'feed.kill': 'UITSKAKELING', 'feed.djReady': 'dubbelsprong gereed', 'feed.back': 'TERUG', 'feed.start': 'beginpunt',
+    'feed.respawn': 'HERVERSKYN', 'feed.newPoint': 'nuwe punt',
+    'w0': 'KARABYN K-31', 'w1': 'MASJIENPISTOOL VX', 'w2': 'HAELGEWEER KS-8', 'w3': 'SPERWER .50', 'w4': 'PISTOOL HX',
+    'w0s': 'KARABYN', 'w1s': 'MASJIENP.', 'w2s': 'HAELGEW.', 'w3s': 'SKERPSKUT.', 'w4s': 'PISTOOL'
+  },
+  zu: {
+    'menu.kicker': 'Ilabhu yokunyakaza · I-FPS yesiphequluli',
+    'menu.lede': 'Inkundla esemhosheni lapho uxhumanisa ama-slide, ama-bhop, ama-tap-strafe nama-superglide. Ziqeqeshe kumarobhothi, bese umema abangane bakho ngekhodi yomdlalo.',
+    'menu.touch': 'Lo mdlalo udlalwa ngekhibhodi negundane kukhompyutha.',
+    'menu.credits': 'Amamodeli e-3D: irobhothi lika-Tomás Laulhé (Quaternius, CC0) nesosha le-Mixamo, kokubili kuvela ezibonelweni ze-three.js. Injini: three.js r128. Inethiwekhi: PeerJS.',
+    'play.solo': 'Dlala wedwa', 'play.resume': 'Qhubeka', 'play.enter': 'Ngena enkundleni', 'play.back': 'Buyela enkundleni',
+    'hint.default': 'Ukuchofoza kukhiya igundane. U-Esc uyamisa.',
+    'hint.wait': 'Isiphequluli sidinga umzuzwana ngaphambi kokuthi uqhubeke. Chofoza futhi.',
+    'net.title': 'Abadlali abaningi', 'net.pseudo': 'Igama', 'net.host': 'Yakha umdlalo', 'net.or': 'NOMA', 'net.code': 'Ikhodi', 'net.join': 'Joyina',
+    'net.copy': 'Kopisha isixhumanisi', 'net.copied': 'Isixhumanisi sikopishiwe',
+    'net.intro': 'Umdlalo wontanga nontanga: owakhayo uyawusingatha, abanye bafaka ikhodi yakhe.',
+    'net.full': 'Umdlalo ugcwele (abadlali abangu-8).',
+    'net.noRtc': 'Abadlali abaningi badinga i-WebRTC, evinjelwe kulokhu kubuka kuqala. Vula inguqulo ye-GitHub Pages yomdlalo.',
+    'net.creating': 'Kwakhiwa umdlalo…',
+    'net.created': 'Umdlalo wakhiwe. Thumela ikhodi noma isixhumanisi kubangane bakho, bese ungena enkundleni.',
+    'net.createFail': 'Akukwazekanga ukwakha umdlalo ({err}). Zama futhi.',
+    'net.codeLen': 'Ikhodi inezinhlamvu ezi-5.',
+    'net.connecting': 'Kuxhunywa ku-{code}…',
+    'net.noAnswer': 'Umsingathi akaphendulanga. Hlola ikhodi.',
+    'net.connected': 'Uxhumene nomdlalo {code}.',
+    'net.hostClosed': 'Umsingathi uvale umdlalo.',
+    'net.noMatch': 'Awukho umdlalo onekhodi {code}.',
+    'net.err': 'Iphutha lenethiwekhi ({err}).',
+    'net.fromLink': 'Ikhodi {code} ithathwe esixhumanisini. Chofoza u-Joyina.',
+    'net.badge': 'KU-INTHANETHI · {code}',
+    'toast.hostClosed': 'Umsingathi uvale umdlalo. Usudlala wedwa.',
+    'toast.noLock': 'Igundane alikwazi ukukhiywa lapha, ngakho ukuhlosa kulandela i-cursor ewindini. Cindezela u-Esc ukuze umise.',
+    'toast.respawnFull': 'Ungavela kabusha kuphela uma impilo nesihlangu kugcwele.',
+    'toast.muted': 'Umsindo uvaliwe', 'toast.unmuted': 'Umsindo uvuliwe',
+    'sys.join': 'U-{name} ujoyine umdlalo', 'sys.leave': 'U-{name} uphumile emdlalweni',
+    'ctl.title': 'Izilawuli',
+    'ctl.hint': 'Chofoza inkinobho ukuze uyishintshe, bese ucindezela inkinobho entsha, inkinobho yegundane noma isondo. <kbd>Del</kbd> iyasusa, <kbd>Esc</kbd> iyakhansela.',
+    'ctl.reset': 'Izinkinobho ezizenzakalelayo', 'ctl.resetDone': 'Izinkinobho ezizenzakalelayo zibuyisiwe.', 'ctl.press': 'Cindezela…',
+    'ctl.removed': '“{key}” isusiwe ku-“{action}”.',
+    'ctl.ctrlWarn': 'Qaphela: u-Ctrl kanye nohlamvu angaqalisa isinqamuleli sesiphequluli (u-Ctrl+W uvala ithebhu).',
+    'ctl.aria': '{action}, inkinobho {n}: {key}',
+    'act.forward': 'Phambili', 'act.back': 'Emuva', 'act.left': 'Kwesobunxele', 'act.right': 'Kwesokudla', 'act.jump': 'Gxuma',
+    'act.crouch': 'Goba, shelela', 'act.sprint': 'Gijima', 'act.fire': 'Dubula', 'act.ads': 'Hlosa', 'act.reload': 'Layisha kabusha',
+    'act.w1': 'Carbine', 'act.w2': 'SMG', 'act.w3': 'Shotgun', 'act.w4': 'Sniper', 'act.w5': 'Pistol',
+    'act.next': 'Isikhali esilandelayo', 'act.prev': 'Isikhali sangaphambili', 'act.board': 'Amaphuzu (ku-inthanethi)', 'act.respawn': 'Vela kabusha', 'act.mute': 'Thulisa',
+    'key.Mouse3': 'Igundane 4', 'key.Mouse4': 'Igundane 5', 'key.WheelUp': 'Isondo ↑', 'key.WheelDown': 'Isondo ↓',
+    'tech.title': 'Amasu', 'tag.base': 'Isisekelo', 'tag.mid': 'Maphakathi', 'tag.adv': 'Okuthuthukile',
+    'tech.climbT': 'Ukuqwala ne-wall-jump', 'tech.strafeT': 'I-air-strafe ne-tap-strafe',
+    'tech.slide': 'Gijima, bese ucindezela {crouch} ukuze ushelele. Ukushelela kukunikeza i-boost njalo emizuzwaneni emi-2. Gxuma ngesikhathi ushelela ukuze ugcine ijubane lakho.',
+    'tech.pads': 'Amadiski asawolintshi akuphonsa phezulu ngamamitha ayi-6 futhi akunike ukweqa kabili emoyeni.',
+    'tech.bhop': 'Bamba {crouch} lapho wehla ukuze ushelele futhi, bese ugxuma lapho uthinta phansi. Akukho kungquzulana, futhi ukugxuma ngakunye okulandelanayo kwengeza ijubane elincane, kuze kufike ku-17 m/s.',
+    'tech.climb': 'Gxumela odongeni ngenkathi uya phambili ukuze uqwale kuze kufike kumamitha ayi-6. Emoyeni eduze kwanoma yiluphi udonga, cindezela {jump} ukuze ugxume usuke odongeni ugcine umfutho wakho, kathathu ngaphambi kokuthi uthinte phansi.',
+    'tech.strafe': 'Emoyeni, jikisa igundane uye ngasohlangothini lwe-{left} noma lwe-{right}. Ukuze ujike kakhulu ngemuva nje kokugxuma, bamba inkinobho, jika bese ucindezela {forward:1} kaninginingi.',
+    'tech.sg': 'Lapho uzidonsela phezu konqenqema, cindezela {jump} bese u-{crouch} cishe ngesikhathi esisodwa. Uphuma ngo-14,5 m/s, ngaphezulu uma ufika ushesha.',
+    'set.title': 'Izilungiselelo', 'set.sens': 'Ukuzwela', 'set.fov': 'Umkhakha wokubona', 'set.vol': 'Ivolumu', 'set.quality': 'Imidwebo',
+    'set.autosprint': 'Ukugijima okuzenzakalelayo', 'set.lang': 'Ulimi',
+    'q.auto': 'Okuzenzakalelayo (kulungisa ukucaca)', 'q.high': 'Okuphezulu', 'q.low': 'Okusheshayo (akukho mithunzi)',
+    'hud.kills': 'Ababulewe', 'hud.dmg': 'Umonakalo', 'hud.acc': 'Ukunemba', 'hud.vmax': 'Ijubane eliphezulu', 'hud.time': 'Isikhathi', 'hud.fps': 'FPS',
+    'hud.you': 'WENA', 'hud.boost': 'SLIDE BOOST', 'hud.dj': 'UKWEQA KABILI', 'hud.by': 'ngu-{name} · {w}',
+    'board.player': 'Umdlali', 'board.deaths': 'Ukufa', 'board.one': 'UMDLALO {code} · ABADLALI: 1', 'board.many': 'UMDLALO {code} · ABADLALI: {n}',
+    'state.dead': 'UKHISHIWE', 'state.mantle': 'UKUKHUPHUKA', 'state.climb': 'UKUQWALA', 'state.slide': 'UKUSHELELA', 'state.air': 'EMOYENI',
+    'state.sprint': 'UKUGIJIMA', 'state.crouch': 'UGOBILE', 'state.ground': 'PHANSI',
+    'feed.kill': 'UKUKHISHWA', 'feed.djReady': 'ukweqa kabili kulungile', 'feed.back': 'BUYELA', 'feed.start': 'lapho uqale khona',
+    'feed.respawn': 'VELA KABUSHA', 'feed.newPoint': 'indawo entsha'
+  }
+};
+const LANGS = Object.keys(I18N);
+function detectLang() {
+  const saved = store.get('lang', null);
+  if (saved && I18N[saved]) return saved;
+  for (const l of (navigator.languages || [navigator.language || 'en'])) {
+    const c = String(l).toLowerCase().slice(0, 2);
+    if (I18N[c]) return c;
+  }
+  return 'en';
+}
+let LANG = detectLang();
+// repli : langue choisie, puis anglais, puis français
+function t(key, vars) {
+  let s = (I18N[LANG] && I18N[LANG][key]) ?? I18N.en[key] ?? I18N.fr[key] ?? key;
+  if (vars) s = s.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? vars[k] : m));
+  return s;
+}
+const wName = i => t('w' + i), wShort = i => t('w' + i + 's');
 
 /* ================= Mode secret ================= */
 const X_HASH = 'e20280a81b036e15986c488eeb27e598277b81b2f7735631e5824c22f217d34d';
@@ -902,7 +1186,7 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
     P.doubleJump = false; P.jumpBuf = 0; v.y = 7.4;
     const sp = Math.hypot(v.x, v.z);
     if (hasWish) { const ns = Math.max(sp, 6.5 * K); v.x = wx * ns; v.z = wz * ns; }
-    feed('DOUBLE SAUT', Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan'); sfx.pad(0.5);
+    feed(t('hud.dj'), Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan'); sfx.pad(0.5);
   }
   if (hasWish) {
     const cur = v.x * wx + v.z * wz, add = AIR_CAP - cur;
@@ -978,7 +1262,7 @@ function step(dt) {
     if (Math.hypot(P.pos.x - pd.x, P.pos.z - pd.z) < 1.35 && Math.abs(P.pos.y - pd.y) < 0.45 && v.y <= 0.5) {
       v.y = PAD_V; v.x += fx * 3; v.z += fz * 3;
       P.grounded = false; P.sliding = false; P.climbing = false; P.doubleJump = true; P.climbAvail = true; P.padCd = 0.6;
-      feed('JUMP PAD', 'double saut prêt', 'cyan'); sfx.pad(1);
+      feed('JUMP PAD', t('feed.djReady'), 'cyan'); sfx.pad(1);
     }
   }
 }
@@ -1262,7 +1546,9 @@ function buildViewmodel(kind) {
 const VM = WEAPONS.map((w, i) => buildViewmodel(i));
 VM[0].g.visible = true;
 const slotsEl = $('slots');
-WEAPONS.forEach((w, i) => { const s = document.createElement('span'); s.className = 'slot' + (i === 0 ? ' on' : ''); s.innerHTML = `<kbd>${i + 1}</kbd>${w.short}`; slotsEl.appendChild(s); });
+WEAPONS.forEach((w, i) => { const s = document.createElement('span'); s.className = 'slot' + (i === 0 ? ' on' : ''); s.innerHTML = `<kbd>${i + 1}</kbd><span></span>`; slotsEl.appendChild(s); });
+function renderSlots() { Array.from(slotsEl.children).forEach((s, i) => { s.lastChild.textContent = wShort(i); }); $('wname').textContent = wName(WS.cur); }
+renderSlots();
 
 const tracers = [], sparks = [];
 for (let i = 0; i < 24; i++) {
@@ -1319,7 +1605,7 @@ function damageDummy(d, amount, part) {
   if (d.hp <= 0) {
     d.alive = false; d.dieT = 0; d.respawn = 3.5; stats.kills++;
     playAnim(d.vis, 'Death', 0.1, true);
-    feed('ÉLIMINATION', d.name, 'kill'); sfx.kill();
+    feed(t('feed.kill'), d.name, 'kill'); sfx.kill();
     return 'kill';
   }
   return part === 'head' ? 'head' : 'hit';
@@ -1402,7 +1688,7 @@ function swapTo(i) {
   WS.reloading = false; WS.cur = i; WS.swapT = 0.32; WS.bloom = 0;
   VM.forEach((vm, k) => { vm.g.visible = k === i; });
   Array.from(slotsEl.children).forEach((s, k) => s.classList.toggle('on', k === i));
-  $('wname').textContent = WEAPONS[i].name; sfx.swap();
+  $('wname').textContent = wName(i); sfx.swap();
 }
 function updateWeapon(dt) {
   const W = WEAPONS[WS.cur];
@@ -1519,7 +1805,7 @@ function hostRecv(from, m) {
     const color = COLORS.find(c => !used.has(c)) || COLORS[NET.players.size % COLORS.length];
     NET.players.set(from, { name: String(m.name || 'Joueur').slice(0, 14), color, kills: 0, deaths: 0, st: null });
     sendTo(from, { k: 'welcome', id: from, code: NET.code });
-    broadcast({ k: 'sys', msg: String(m.name || 'Joueur').slice(0, 14) + ' a rejoint la partie' }, from);
+    broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
     return;
   }
   if (!pl) return;
@@ -1540,8 +1826,8 @@ function snapshot() {
 }
 function clientRecv(m) {
   if (m.k === 'welcome') { NET.selfId = m.id; return; }
-  if (m.k === 'full') { setNetStatus('La partie est pleine (8 joueurs).', 'err'); leaveNet(); return; }
-  if (m.k === 'sys') { toast(m.msg, 2.5); sfx.join(); return; }
+  if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
+  if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
   if (m.k === 'snap') {
     const seen = new Set();
     for (const [id, name, color, kills, deaths, st] of m.pl) {
@@ -1574,9 +1860,9 @@ function clientRecv(m) {
   if (m.k === 'hit') { applyHit(m); return; }
   if (m.k === 'kf') {
     const nameOf = id => id === NET.selfId ? S.name : (remotes.get(id) ? remotes.get(id).name : '?');
-    killfeed(nameOf(m.by), WEAPONS[m.w | 0] ? WEAPONS[m.w | 0].short : '', nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
+    killfeed(nameOf(m.by), WEAPONS[m.w | 0] ? wShort(m.w | 0) : '', nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
     if (m.by === NET.selfId && m.victim !== NET.selfId) {
-      stats.kills++; feed('ÉLIMINATION', nameOf(m.victim), 'kill'); sfx.kill();
+      stats.kills++; feed(t('feed.kill'), nameOf(m.victim), 'kill'); sfx.kill();
       hmEl.className = 'kill'; hmT = 0.4;
     }
     return;
@@ -1594,7 +1880,7 @@ function applyHit(m) {
   sfx.hurt(); if (shBefore > 0 && P.sh <= 0) sfx.shieldBreak();
   if (P.hp <= 0) {
     P.dead = true; P.respawnT = 3.5;
-    $('deathBy').textContent = 'par ' + (rp ? rp.name : '?') + ' · ' + (WEAPONS[m.w | 0] ? WEAPONS[m.w | 0].short.toLowerCase() : '');
+    $('deathBy').textContent = t('hud.by', { name: rp ? rp.name : '?', w: WEAPONS[m.w | 0] ? wShort(m.w | 0).toLowerCase() : '' });
     $('death').hidden = false;
     netSend({ k: 'dead', by: m.from, w: m.w | 0 });
   }
@@ -1719,22 +2005,22 @@ function leaveNet() {
   for (const id of [...remotes.keys()]) removeRemote(id);
   $('netBadge').hidden = true; $('me').hidden = true; $('roomBox').hidden = true;
   $('hostBtn').disabled = false; $('joinBtn').disabled = false;
-  $('playLbl').textContent = playing || everPlayed ? 'Reprendre' : 'Jouer en solo';
+  setPlayLbl(playing || everPlayed ? 'play.resume' : 'play.solo');
 }
 function onlineReady(code) {
   NET.code = code;
-  $('netBadge').hidden = false; $('netBadge').textContent = 'EN LIGNE · ' + code;
+  $('netBadge').hidden = false; $('netBadge').textContent = t('net.badge', { code });
   $('me').hidden = false;
-  $('playLbl').textContent = 'Entrer dans l’arène';
+  setPlayLbl('play.enter');
   const link = location.origin + location.pathname + '#' + code;
   $('roomCode').textContent = code; $('roomLink').textContent = link; $('roomBox').hidden = false;
   try { history.replaceState(null, '', '#' + code); } catch (e) {}
 }
 function hostGame() {
-  if (!peerSupported()) { setNetStatus('Le multijoueur a besoin de WebRTC, bloqué dans cet aperçu. Ouvre la version GitHub Pages du jeu.', 'err'); return; }
+  if (!peerSupported()) { setNetStatus(t('net.noRtc'), 'err'); return; }
   leaveNet(); saveName();
   const code = makeCode();
-  setNetStatus('Création de la partie…');
+  setNetStatus(t('net.creating'));
   $('hostBtn').disabled = true; $('joinBtn').disabled = true;
   const peer = new Peer(PREFIX + code, { debug: 0 });
   NET.peer = peer;
@@ -1742,7 +2028,7 @@ function hostGame() {
     NET.mode = 'host'; NET.selfId = 'host-' + code;
     NET.players.set(NET.selfId, { name: S.name, color: COLORS[0], kills: 0, deaths: 0, st: null });
     onlineReady(code);
-    setNetStatus('Partie créée. Donne le code ou le lien à tes potes, puis entre dans l’arène.', 'ok');
+    setNetStatus(t('net.created'), 'ok');
   });
   peer.on('connection', conn => {
     conn.on('open', () => { NET.conns.set(conn.peer, conn); });
@@ -1750,43 +2036,43 @@ function hostGame() {
     const bye = () => {
       NET.conns.delete(conn.peer);
       const p = NET.players.get(conn.peer);
-      if (p) { NET.players.delete(conn.peer); broadcast({ k: 'sys', msg: p.name + ' a quitté la partie' }); }
+      if (p) { NET.players.delete(conn.peer); broadcast({ k: 'sys', t: 'leave', name: p.name }); }
     };
     conn.on('close', bye); conn.on('error', bye);
   });
   peer.on('disconnected', () => { try { peer.reconnect(); } catch (e) {} });
   peer.on('error', err => {
     if (err.type === 'unavailable-id') { leaveNet(); hostGame(); return; }
-    if (NET.mode !== 'host') { setNetStatus('Impossible de créer la partie (' + err.type + '). Réessaie.', 'err'); leaveNet(); }
+    if (NET.mode !== 'host') { setNetStatus(t('net.createFail', { err: err.type }), 'err'); leaveNet(); }
   });
 }
 function joinGame(code) {
   code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
-  if (code.length !== 5) { setNetStatus('Le code fait 5 caractères.', 'err'); return; }
-  if (!peerSupported()) { setNetStatus('Le multijoueur a besoin de WebRTC, bloqué dans cet aperçu. Ouvre la version GitHub Pages du jeu.', 'err'); return; }
+  if (code.length !== 5) { setNetStatus(t('net.codeLen'), 'err'); return; }
+  if (!peerSupported()) { setNetStatus(t('net.noRtc'), 'err'); return; }
   leaveNet(); saveName();
-  setNetStatus('Connexion à ' + code + '…');
+  setNetStatus(t('net.connecting', { code }));
   $('hostBtn').disabled = true; $('joinBtn').disabled = true;
   const peer = new Peer(undefined, { debug: 0 });
   NET.peer = peer;
   peer.on('open', () => {
     const conn = peer.connect(PREFIX + code, { reliable: true, serialization: 'json' });
     NET.hostConn = conn;
-    const timeout = setTimeout(() => { if (NET.mode !== 'client') { setNetStatus('Pas de réponse de l’hôte. Vérifie le code.', 'err'); leaveNet(); } }, 12000);
+    const timeout = setTimeout(() => { if (NET.mode !== 'client') { setNetStatus(t('net.noAnswer'), 'err'); leaveNet(); } }, 12000);
     conn.on('open', () => {
       clearTimeout(timeout);
       NET.mode = 'client';
       conn.send({ k: 'hello', name: S.name });
       onlineReady(code);
-      setNetStatus('Connecté à la partie ' + code + '.', 'ok');
+      setNetStatus(t('net.connected', { code }), 'ok');
     });
     conn.on('data', m => { if (m && typeof m === 'object') clientRecv(m); });
     conn.on('close', () => {
-      if (NET.mode === 'client') { leaveNet(); setNetStatus('L’hôte a fermé la partie.', 'err'); toast('L’hôte a fermé la partie. Tu continues en solo.', 4); }
+      if (NET.mode === 'client') { leaveNet(); setNetStatus(t('net.hostClosed'), 'err'); toast(t('toast.hostClosed'), 4); }
     });
   });
   peer.on('error', err => {
-    const msg = err.type === 'peer-unavailable' ? 'Aucune partie avec le code ' + code + '.' : 'Erreur réseau (' + err.type + ').';
+    const msg = err.type === 'peer-unavailable' ? t('net.noMatch', { code }) : t('net.err', { err: err.type });
     setNetStatus(msg, 'err'); leaveNet();
   });
 }
@@ -1856,13 +2142,13 @@ function renderBoard() {
     for (const v of [r.name, r.k, r.d]) { const td = document.createElement('td'); td.textContent = v; tr.appendChild(td); }
     return tr;
   }));
-  $('boardTitle').textContent = 'PARTIE ' + NET.code + ' · ' + rows.length + ' JOUEUR' + (rows.length > 1 ? 'S' : '');
+  $('boardTitle').textContent = t(rows.length > 1 ? 'board.many' : 'board.one', { code: NET.code, n: rows.length });
 }
 function updateHUD(dt) {
   const hs = Math.hypot(P.vel.x, P.vel.z);
   stats.vmax = Math.max(stats.vmax, hs);
   setTxt(hudEls.spd, hs.toFixed(1)); setTxt(hudEls.kmh, Math.round(hs * 3.6) + ' km/h');
-  const st = P.dead ? 'ÉLIMINÉ' : P.mantle ? 'REBORD' : P.climbing ? 'ESCALADE' : P.sliding ? 'GLISSADE' : !P.grounded ? 'EN L’AIR' : P.sprinting ? 'SPRINT' : P.crouch ? 'ACCROUPI' : 'AU SOL';
+  const st = t(P.dead ? 'state.dead' : P.mantle ? 'state.mantle' : P.climbing ? 'state.climb' : P.sliding ? 'state.slide' : !P.grounded ? 'state.air' : P.sprinting ? 'state.sprint' : P.crouch ? 'state.crouch' : 'state.ground');
   setTxt(hudEls.state, st); hudEls.state.classList.toggle('fast', hs > SLIDE_BOOST_CAP - 0.3);
   const bk = Math.min(1, P.slideBoostT / SLIDE_CD);
   hudEls.boostI.style.width = (bk * 100).toFixed(1) + '%'; hudEls.boost.classList.toggle('ready', bk >= 1);
@@ -1922,7 +2208,7 @@ function updateHUD(dt) {
   while (sparkAcc > 1 / 30) { sparkAcc -= 1 / 30; sparkData.copyWithin(0, 1); sparkData[SPARK_N - 1] = hs; sparkNew = true; }
   if (sparkNew) drawSpark();
   fpsAcc += dt; fpsN++;
-  if (fpsAcc > 0.5) { const f = fpsN / fpsAcc; setTxt(hudEls.fps, Math.round(f) + ' IPS' + (xActive() ? ' · x' : '')); autoRes(f); fpsAcc = 0; fpsN = 0; }
+  if (fpsAcc > 0.5) { const f = fpsN / fpsAcc; setTxt(hudEls.fps, Math.round(f) + ' ' + t('hud.fps') + (xActive() ? ' · x' : '')); autoRes(f); fpsAcc = 0; fpsN = 0; }
   if (AC && slideGain) {
     const t = AC.currentTime;
     slideGain.gain.setTargetAtTime(P.sliding && P.grounded ? Math.min(1, hs / 12) * 0.22 : 0, t, 0.05);
@@ -1981,18 +2267,18 @@ let playing = false, everLocked = false, unlockedMode = false, everPlayed = fals
 function clearInput() { for (const k in keys) keys[k] = false; for (const k in wheelT) wheelT[k] = 0; mouse.left = mouse.right = false; }
 function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
-  $('hint').classList.remove('warn'); $('hint').textContent = 'Le clic verrouille la souris. Échap met en pause.';
+  $('hint').classList.remove('warn'); hintKey = 'hint.default'; $('hint').textContent = t(hintKey);
   lastFrame = performance.now(); acc = 0;
 }
 function pause() {
   playing = false; clearInput(); menu.hidden = false; hud.hidden = true;
-  $('playLbl').textContent = NET.mode !== 'off' ? 'Retour dans l’arène' : 'Reprendre';
+  setPlayLbl(NET.mode !== 'off' ? 'play.back' : 'play.resume');
   if (AC && slideGain) { slideGain.gain.value = 0; windGain.gain.value = 0; }
 }
 function startUnlocked() {
   if (playing) return;
   unlockedMode = true; startPlaying();
-  toast('La souris ne peut pas être verrouillée ici, la visée suit le curseur dans la fenêtre. Échap pour la pause.', 6);
+  toast(t('toast.noLock'), 6);
 }
 async function requestPlay() {
   audioInit(); saveName();
@@ -2002,7 +2288,7 @@ async function requestPlay() {
     try { r = canvas.requestPointerLock({ unadjustedMovement: true }); if (r && r.then) await r; }
     catch (e) { r = canvas.requestPointerLock(); if (r && r.then) await r; }
   } catch (err) {
-    if (everLocked) { $('hint').textContent = 'Le navigateur demande une seconde de pause avant de reprendre. Clique à nouveau.'; $('hint').classList.add('warn'); }
+    if (everLocked) { hintKey = 'hint.wait'; $('hint').textContent = t(hintKey); $('hint').classList.add('warn'); }
     else startUnlocked();
   }
 }
@@ -2049,11 +2335,11 @@ function onAction(id) {
   else if (id === 'next') swapTo((WS.cur + 1) % WEAPONS.length);
   else if (id === 'prev') swapTo((WS.cur + WEAPONS.length - 1) % WEAPONS.length);
   else if (id === 'respawn' && !P.dead) {
-    if (NET.mode === 'off') { spawnPlayer(false); feed('RETOUR', 'point de départ'); }
-    else if (P.hp >= MAX_HP && P.sh >= MAX_SH) { spawnPlayer(true); feed('RÉAPPARITION', 'nouveau point'); }
-    else toast('Réapparition possible avec PV et bouclier pleins.', 2);
+    if (NET.mode === 'off') { spawnPlayer(false); feed(t('feed.back'), t('feed.start')); }
+    else if (P.hp >= MAX_HP && P.sh >= MAX_SH) { spawnPlayer(true); feed(t('feed.respawn'), t('feed.newPoint')); }
+    else toast(t('toast.respawnFull'), 2);
   }
-  else if (id === 'mute') { muted = !muted; if (master) master.gain.value = muted ? 0 : S.vol; toast(muted ? 'Son coupé' : 'Son activé', 1.5); }
+  else if (id === 'mute') { muted = !muted; if (master) master.gain.value = muted ? 0 : S.vol; toast(muted ? t('toast.muted') : t('toast.unmuted'), 1.5); }
 }
 addEventListener('keydown', e => {
   if (capture) return;
@@ -2106,19 +2392,22 @@ const CODE_NAMES = {
 const FR_KEYS = { KeyW: 'Z', KeyA: 'Q', KeyQ: 'A', KeyZ: 'W', KeyM: ',', Semicolon: 'M' };
 function codeLabel(c) {
   if (!c) return '—';
+  const tk = 'key.' + c, tr = t(tk);
+  if (tr !== tk) return tr;
   if (CODE_NAMES[c]) return CODE_NAMES[c];
   const l = layoutMap && layoutMap.get ? layoutMap.get(c) : null;
   if (l) return l.toUpperCase();
   if (fr && FR_KEYS[c]) return FR_KEYS[c];
   if (c.startsWith('Key')) return c.slice(3);
   if (c.startsWith('Digit')) return c.slice(5);
-  if (c.startsWith('Numpad')) return 'Pavé ' + c.slice(6);
+  if (c.startsWith('Numpad')) return t('key.Numpad') + c.slice(6);
   return c;
 }
 const bindsEl = $('binds');
 let capture = null;
 function renderBinds() {
-  bindsEl.replaceChildren(...ACTIONS.map(([id, label]) => {
+  bindsEl.replaceChildren(...ACTIONS.map(([id]) => {
+    const label = t('act.' + id);
     const row = document.createElement('div'); row.className = 'bind';
     const name = document.createElement('span'); name.textContent = label; row.appendChild(name);
     for (let slot = 0; slot < 2; slot++) {
@@ -2126,8 +2415,8 @@ function renderBinds() {
       const c = BINDS[id][slot];
       const waiting = capture && capture.id === id && capture.slot === slot;
       b.className = 'kb' + (waiting ? ' wait' : c ? '' : ' empty');
-      b.textContent = waiting ? 'Appuie…' : codeLabel(c);
-      b.setAttribute('aria-label', label + ', touche ' + (slot + 1) + ' : ' + codeLabel(c));
+      b.textContent = waiting ? t('ctl.press') : codeLabel(c);
+      b.setAttribute('aria-label', t('ctl.aria', { action: label, n: slot + 1, key: codeLabel(c) }));
       b.addEventListener('click', ev => { ev.stopPropagation(); startCapture(id, slot); });
       row.appendChild(b);
     }
@@ -2150,11 +2439,10 @@ function finishCapture(code) {
     for (const other in BINDS) for (let k = 0; k < 2; k++) {
       if (BINDS[other][k] === code && !(other === id && k === slot)) {
         BINDS[other][k] = null;
-        const lab = ACTIONS.find(a => a[0] === other)[1];
-        bindMsg('« ' + codeLabel(code) + ' » retirée de « ' + lab + ' ».');
+        bindMsg(t('ctl.removed', { key: codeLabel(code), action: t('act.' + other) }));
       }
     }
-    if (code === 'ControlLeft' || code === 'ControlRight') bindMsg('Attention : Ctrl + une lettre peut déclencher un raccourci du navigateur (Ctrl+W ferme l’onglet en QWERTY).', true);
+    if (code === 'ControlLeft' || code === 'ControlRight') bindMsg(t('ctl.ctrlWarn'), true);
   }
   BINDS[id][slot] = code;
   store.set('binds', BINDS);
@@ -2181,7 +2469,7 @@ addEventListener('wheel', e => {
 }, { passive: false, capture: true });
 $('resetBinds').addEventListener('click', () => {
   for (const [id] of ACTIONS) BINDS[id] = DEFAULT_BINDS[id].slice();
-  store.set('binds', BINDS); capture = null; renderBinds(); bindMsg('Touches par défaut rétablies.');
+  store.set('binds', BINDS); capture = null; renderBinds(); bindMsg(t('ctl.resetDone'));
 });
 renderBinds();
 try {
@@ -2208,15 +2496,36 @@ $('hostBtn').addEventListener('click', () => { audioInit(); hostGame(); });
 $('joinBtn').addEventListener('click', () => { audioInit(); joinGame($('code').value); });
 $('code').addEventListener('keydown', e => { if (e.key === 'Enter') { audioInit(); joinGame($('code').value); } });
 $('copyBtn').addEventListener('click', () => {
-  const t = $('roomLink').textContent;
-  const done = () => { $('copyBtn').firstChild.textContent = 'Lien copié'; setTimeout(() => { $('copyBtn').firstChild.textContent = 'Copier le lien'; }, 1600); };
-  try { navigator.clipboard.writeText(t).then(done, () => selectLink()); } catch (e) { selectLink(); }
+  const link = $('roomLink').textContent;
+  const done = () => { $('copyBtn').firstChild.textContent = t('net.copied'); setTimeout(() => { $('copyBtn').firstChild.textContent = t('net.copy'); }, 1600); };
+  try { navigator.clipboard.writeText(link).then(done, () => selectLink()); } catch (e) { selectLink(); }
 });
 function selectLink() { const r = document.createRange(); r.selectNodeContents($('roomLink')); const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
 {
   const h = (location.hash || '').slice(1).toUpperCase();
-  if (/^[A-Z0-9]{5}$/.test(h)) { $('code').value = h; setNetStatus('Code ' + h + ' repris du lien. Clique sur Rejoindre.', 'ok'); }
+  if (/^[A-Z0-9]{5}$/.test(h)) { $('code').value = h; setNetStatus(t('net.fromLink', { code: h }), 'ok'); }
 }
+
+/* ================= Application de la langue ================= */
+let playKey = 'play.solo', hintKey = 'hint.default';
+function setPlayLbl(k) { playKey = k; $('playLbl').textContent = t(k); }
+function applyI18n() {
+  document.documentElement.lang = LANG;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    // {action} ou {action:slot} devient une touche affichée selon les réglages
+    el.innerHTML = t(el.dataset.i18nHtml).replace(/\{(\w+)(?::(\d))?\}/g, (m, a, slot) => `<kbd data-act="${a}"${slot ? ` data-slot="${slot}"` : ''}></kbd>`);
+  });
+  $('playLbl').textContent = t(playKey);
+  $('hint').textContent = t(hintKey);
+  if (NET.mode === 'off') { if (!netStatus.className) setNetStatus(t('net.intro')); }
+  else { $('netBadge').textContent = t('net.badge', { code: NET.code }); }
+  renderSlots(); renderBinds(); lastTxt.clear();
+}
+const langSel = $('lang');
+langSel.value = LANG;
+langSel.addEventListener('change', () => { LANG = langSel.value; store.set('lang', LANG); applyI18n(); });
+applyI18n();
 
 /* ================= Boucle ================= */
 function resize() {
