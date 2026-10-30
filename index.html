@@ -215,6 +215,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .clsinfo{display:grid;gap:6px;margin-top:4px}.clsinfo .cls{margin:0;font-size:13.5px;color:var(--ink-dim)}.clsinfo .cls strong{color:var(--amber);font:700 16px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase}
 .clsinfo div{display:grid;grid-template-columns:auto auto 1fr;gap:4px 8px;align-items:baseline;font-size:13px;color:var(--ink-dim)}.clsinfo b{font:700 13px/1 var(--f-display);letter-spacing:.08em;color:var(--ink)}
 .ab.ult b{color:#d9b8ff}
+.ab.gren b{color:var(--gc,#ffb020)}.ab.gren i{background:var(--gc,#ffb020)}
 .ab kbd{font-size:11px;min-width:18px;padding:2px 4px 1px;position:relative;z-index:1}
 .ab b{font:700 13px/1 var(--f-display);letter-spacing:.1em;color:var(--ink-dim);position:relative;z-index:1}
 .ab em{font:600 12px/1 var(--f-display);font-style:normal;color:var(--ink-dim);margin-left:auto;position:relative;z-index:1;font-variant-numeric:tabular-nums}
@@ -336,6 +337,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="abil">
     <div class="ab" id="abTac"><kbd data-act="tactical">Q</kbd><b>STIM</b><em></em><i></i></div>
     <div class="ab ult" id="abUlt"><kbd data-act="ultimate">F</kbd><b>DÔME</b><em></em><i></i></div>
+    <div class="ab gren" id="abGren"><kbd data-act="grenade">G</kbd><b>FRAG</b><em></em><i></i></div>
   </div>
   <div id="stimFx"></div>
   <div id="me" hidden><div class="tname"><span data-i18n="hud.you">TOI</span><span id="meVal">175</span></div><div class="bar sh"><i id="meSh"></i></div><div class="bar hp"><i id="meHp"></i></div></div>
@@ -387,7 +389,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <div class="charbox">
         <canvas id="charPrev" width="440" height="620" aria-hidden="true"></canvas>
         <div class="charopts">
-          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="robot" data-i18n="char.robot">Robot</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="robot" data-i18n="char.robot">Robot</option><option value="spectre" data-i18n="char.spectre">Spectre</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
           <div class="clsinfo" id="clsInfo"></div>
@@ -458,7 +460,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
           <label class="field"><span class="lab"><span data-i18n="pad.aim">Aide à la visée manette</span> <output id="oPadAim"></output></span><input type="range" id="padAim" min="0" max="1" step="0.05"></label>
           <label class="check"><input type="checkbox" id="padSnap"> <span data-i18n="pad.snap">Snap strafe facile à la manette</span></label>
           <label class="check"><input type="checkbox" id="padInvert"> <span data-i18n="pad.invert">Inverser la visée verticale</span></label>
-          <p class="hint" data-i18n="pad.help">Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause.</p>
+          <p class="hint" data-i18n="pad.help">Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes (haut), grenade (bas), arme précédente (gauche), type de grenade (droite) · Start : pause.</p>
         </div>
         <label class="check"><input type="checkbox" id="snapTap"> <span data-i18n="set.snapTap">Snap tap clavier (la dernière direction appuyée gagne)</span></label>
         <div class="field csfield"><span class="lab" data-i18n="cs.title">Sons personnalisés</span>
@@ -908,10 +910,10 @@ for (const l in I18N_ADD5) Object.assign(I18N[l], I18N_ADD5[l]);
 const I18N_ADD6 = {
   fr: { 'tab.play': 'Multijoueur', 'tab.char': 'Personnage', 'tab.arms': 'Armes', 'tab.settings': 'Réglages', 'tab.controls': 'Commandes', 'tab.admin': 'Admin', 'arms.title': 'Armes et skins',
     'pad.title': 'Manette', 'pad.sens': 'Sensibilité manette', 'pad.aim': 'Aide à la visée manette', 'pad.snap': 'Snap strafe facile à la manette', 'pad.invert': 'Inverser la visée verticale', 'pad.on': 'Manette détectée', 'set.snapTap': 'Snap tap clavier (la dernière direction appuyée gagne)',
-    'pad.help': 'Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause.' },
+    'pad.help': 'Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes (haut), grenade (bas), arme précédente (gauche), type de grenade (droite) · Start : pause.' },
   en: { 'tab.play': 'Multiplayer', 'tab.char': 'Character', 'tab.arms': 'Weapons', 'tab.settings': 'Settings', 'tab.controls': 'Controls', 'tab.admin': 'Admin', 'arms.title': 'Weapons and skins',
     'pad.title': 'Controller', 'pad.sens': 'Controller sensitivity', 'pad.aim': 'Controller aim assist', 'pad.snap': 'Easy snap strafe on controller', 'pad.invert': 'Invert vertical look', 'pad.on': 'Controller detected', 'set.snapTap': 'Keyboard snap tap (last direction pressed wins)',
-    'pad.help': 'Left stick: move · right stick: aim · A: jump · B: slide · X: reload or interact · Y: next weapon · LB/RB: abilities · LT/RT: aim/fire · L3: sprint · R3: knife · D-pad: emotes, inspect, previous weapon, minimap · Start: pause.' },
+    'pad.help': 'Left stick: move · right stick: aim · A: jump · B: slide · X: reload or interact · Y: next weapon · LB/RB: abilities · LT/RT: aim/fire · L3: sprint · R3: knife · D-pad: emotes (up), grenade (down), previous weapon (left), grenade type (right) · Start: pause.' },
   af: { 'tab.play': 'Multispeler', 'tab.char': 'Karakter', 'tab.arms': 'Wapens', 'tab.settings': 'Instellings', 'tab.controls': 'Kontroles', 'tab.admin': 'Admin', 'arms.title': 'Wapens en velle',
     'pad.title': 'Beheerder', 'pad.sens': 'Beheerder-sensitiwiteit', 'pad.aim': 'Mikhulp vir beheerder', 'pad.snap': 'Maklike snap strafe met beheerder', 'pad.invert': 'Keer vertikale mik om', 'pad.on': 'Beheerder bespeur', 'set.snapTap': 'Sleutelbord-snap tap (laaste rigting wen)',
     'pad.help': 'Linkerstok: beweeg · regterstok: mik · A: spring · B: gly · X: herlaai of gebruik · Y: volgende wapen · LB/RB: vermoëns · LT/RT: mik/skiet · L3: naelloop · R3: mes · rigtingblok: emotes, inspekteer, vorige wapen, minikaart · Start: pouse.' },
@@ -927,6 +929,25 @@ const I18N_ADD7 = {
   zu: { 'set.music': 'Umculo', 'mus.import': 'Ngenisa umculo wami', 'mus.reset': 'Umculo wokuqala', 'mus.default': 'Okudlalayo manje: “Celestial Butterfly”.', 'mus.custom': 'Okudlalayo manje: {name} (kudivayisi yakho kuphela).', 'mus.tooBig': 'Ifayela likhulu kakhulu (40 MB ubuningi).' }
 };
 for (const l in I18N_ADD7) Object.assign(I18N[l], I18N_ADD7[l]);
+const I18N_ADD8 = {
+  fr: { 'char.spectre': 'Spectre', 'cls.phantom': 'Fantôme', 'ab.dash': 'DASH', 'ab.blink': 'TÉLÉPORT', 'abd.dash': 'propulsion éclair dans la direction choisie (sol ou air)', 'abd.blink': 'téléportation à 50 m droit devant, en gardant l’élan', 'ab.blinkBlocked': 'Pas de place devant toi.',
+    'gr.frag': 'FRAG', 'gr.thermite': 'THERMITE', 'gr.arc': 'ARC', 'gr.smoke': 'FUMÉE', 'gr.impulse': 'IMPULSION', 'gr.empty': 'Plus de grenade {g} : elle revient en 12 s.',
+    'grd.frag': 'explose après 2,4 s, jusqu’à 115 dégâts', 'grd.thermite': 'mur de feu au contact, 25 dégâts/s pendant 7 s', 'grd.arc': 'colle à la surface et électrocute 1,2 s plus tard', 'grd.smoke': 'nuage épais pendant 13 s', 'grd.impulse': 'propulse tout le monde sans blesser (saut géant)',
+    'w10s': 'GRENADE', 'act.grenade': 'Grenade', 'act.grenType': 'Type de grenade' },
+  en: { 'char.spectre': 'Spectre', 'cls.phantom': 'Phantom', 'ab.dash': 'DASH', 'ab.blink': 'BLINK', 'abd.dash': 'lightning burst in the chosen direction (ground or air)', 'abd.blink': 'teleports 50 m straight ahead, keeping momentum', 'ab.blinkBlocked': 'No room in front of you.',
+    'gr.frag': 'FRAG', 'gr.thermite': 'THERMITE', 'gr.arc': 'ARC', 'gr.smoke': 'SMOKE', 'gr.impulse': 'IMPULSE', 'gr.empty': 'No {g} grenade left: it comes back in 12 s.',
+    'grd.frag': 'explodes after 2.4 s, up to 115 damage', 'grd.thermite': 'fire wall on impact, 25 damage/s for 7 s', 'grd.arc': 'sticks to surfaces and shocks 1.2 s later', 'grd.smoke': 'thick cloud for 13 s', 'grd.impulse': 'launches everyone without damage (giant jump)',
+    'w10s': 'GRENADE', 'act.grenade': 'Grenade', 'act.grenType': 'Grenade type' },
+  af: { 'char.spectre': 'Spektrum', 'cls.phantom': 'Spook', 'ab.dash': 'STORMLOOP', 'ab.blink': 'TELEPORTEER', 'abd.dash': 'blitsige stoot in die gekose rigting (grond of lug)', 'abd.blink': 'teleporteer 50 m reguit vorentoe en hou die momentum', 'ab.blinkBlocked': 'Geen plek voor jou nie.',
+    'gr.frag': 'FRAG', 'gr.thermite': 'TERMIET', 'gr.arc': 'BOOG', 'gr.smoke': 'ROOK', 'gr.impulse': 'IMPULS', 'gr.empty': 'Geen {g}-granaat oor nie: dit kom oor 12 s terug.',
+    'grd.frag': 'ontplof na 2,4 s, tot 115 skade', 'grd.thermite': 'vuurmuur by impak, 25 skade/s vir 7 s', 'grd.arc': 'kleef aan oppervlakke en skok 1,2 s later', 'grd.smoke': 'dik wolk vir 13 s', 'grd.impulse': 'lanseer almal sonder skade (reuse sprong)',
+    'w10s': 'GRANAAT', 'act.grenade': 'Granaat', 'act.grenType': 'Granaattipe' },
+  zu: { 'char.spectre': 'I-Spectre', 'cls.phantom': 'Isipoki', 'ab.dash': 'GIJIMA', 'ab.blink': 'NYAMALALA', 'abd.dash': 'ukusuka okusheshayo endaweni oyikhethile (phansi noma emoyeni)', 'abd.blink': 'ugxumela phambili amamitha angama-50 ugcine umfutho', 'ab.blinkBlocked': 'Ayikho indawo phambi kwakho.',
+    'gr.frag': 'I-FRAG', 'gr.thermite': 'I-THERMITE', 'gr.arc': 'I-ARC', 'gr.smoke': 'INTUTHU', 'gr.impulse': 'I-IMPULSE', 'gr.empty': 'Alikho ibhomu le-{g}: lizobuya emizuzwaneni engu-12.',
+    'grd.frag': 'liqhuma ngemva kwemizuzwana engu-2,4, umonakalo ofika ku-115', 'grd.thermite': 'udonga lomlilo, umonakalo ongu-25/s imizuzwana engu-7', 'grd.arc': 'linamathela bese lishaqisa ngemva kwemizuzwana engu-1,2', 'grd.smoke': 'ifu elikhulu imizuzwana engu-13', 'grd.impulse': 'liphonsa wonke umuntu ngaphandle komonakalo',
+    'w10s': 'IBHOMU', 'act.grenade': 'Ibhomu', 'act.grenType': 'Uhlobo lwebhomu' }
+};
+for (const l in I18N_ADD8) Object.assign(I18N[l], I18N_ADD8[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1842,7 +1863,7 @@ function spawnPlayer(random) {
   P.pos.set(s[0], s[1], s[2]); P.prev.copy(P.pos); P.vel.set(0, 0, 0);
   P.yaw = s[3]; P.pitch = -0.03; P.grounded = true; P.sliding = false; P.climbing = false; P.mantle = null;
   P.crouch = false; P.height = STAND_H; P.doubleJump = false; P.climbAvail = true;
-  P.hp = MAX_HP; P.sh = MAX_SH; P.dead = false; P.sgT = 0;
+  P.hp = MAX_HP; P.sh = MAX_SH; P.dead = false; P.sgT = 0; if (typeof grenFull === 'function') grenFull();
   for (let i = 0; i < WEAPONS.length; i++) WS.ammo[i] = WEAPONS[i].mag;
   WS.reloading = false;
 }
@@ -2128,20 +2149,22 @@ function onLand(vy) {
 }
 /* ================= Capacités : stim, dôme, portail ================= */
 const STIM_MUL = 1.35;
-const AB = { stimT: 0, stimCd: 0, domeCd: 0, portalCd: 0, grappleCd: 0, scanCd: 0, launchpadCd: 0, scanT: 0, portalA: null, portalAT: 0, portT: 0, marker: null };
-const AB_CD = { stim: 9, dome: 25, portal: 30, grapple: 6, scan: 18, launchpad: 22 };
+const AB = { dashT: 0, dashDir: new V3(), dashCd: 0, blinkCd: 0, stimT: 0, stimCd: 0, domeCd: 0, portalCd: 0, grappleCd: 0, scanCd: 0, launchpadCd: 0, scanT: 0, portalA: null, portalAT: 0, portT: 0, marker: null };
+const AB_CD = { stim: 9, dome: 25, portal: 30, grapple: 6, scan: 18, launchpad: 22, dash: 3.5, blink: 20 };
 const AB_KEYS = Object.keys(AB_CD);
 // classes : chaque personnage a une capacité tactique (Q) et une ultime (F)
 const CLASSES = {
   soldier: { id: 'assault', tac: 'stim', ult: 'dome' },
   xbot: { id: 'scout', tac: 'grapple', ult: 'portal' },
-  robot: { id: 'sentinel', tac: 'scan', ult: 'launchpad' }
+  robot: { id: 'sentinel', tac: 'scan', ult: 'launchpad' },
+  spectre: { id: 'phantom', tac: 'dash', ult: 'blink' }
 };
 const myClass = () => CLASSES[S.char] || CLASSES.soldier;
 function useAbility(k) {
   if (P.veh || EDIT.on) return;
   if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
   else if (k === 'grapple') useGrapple(); else if (k === 'scan') useScan(); else if (k === 'launchpad') useLaunchpad();
+  else if (k === 'dash') useDash(); else if (k === 'blink') useBlink();
 }
 const DOMES = [], PORTALS = [];
 const domeGeo = new THREE.SphereGeometry(5, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -2246,6 +2269,7 @@ function abilityStep(dt) {
 }
 function updateAbilityFx(dt) {
   updateClassFx(dt);
+  updateGhosts(dt);
   for (let i = DOMES.length - 1; i >= 0; i--) {
     const dm = DOMES[i]; dm.t -= dt;
     const k = Math.min(1, (12 - dm.t) * 3, dm.t * 1.5);
@@ -2263,6 +2287,77 @@ function updateAbilityFx(dt) {
     if (pt.t <= 0) { scene.remove(pt.ma.g); scene.remove(pt.mb.g); PORTALS.splice(i, 1); }
   }
   if (AB.marker) AB.marker.rotation.z += dt * 2;
+}
+/* ---------- Spectre : dash (Q) et téléportation à 50 m droit devant (F) ---------- */
+const ghostMat = new THREE.MeshBasicMaterial({ color: 0x66e8ff, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending });
+const GHOSTS = [];
+function spawnGhost(p, col) {
+  const g = new THREE.Group(); g.position.set(p[0], p[1], p[2]);
+  const m = ghostMat.clone(); if (col) m.color.setHex(col);
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.22, 1.25, 12), m); body.position.y = 0.95; g.add(body);
+  const head = new THREE.Mesh(new THREE.SphereGeometry(0.17, 12, 8), m); head.position.y = 1.72; g.add(head);
+  const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.14, 0.6, 10), m); legs.position.y = 0.3; g.add(legs);
+  scene.add(g); GHOSTS.push({ g, m, t: 0.6 });
+}
+function spawnBlinkTrail(a, b) {
+  const geo = new THREE.BufferGeometry().setFromPoints([new V3(a[0], a[1] + 1, a[2]), new V3(b[0], b[1] + 1, b[2])]);
+  const ln = new THREE.Line(geo, new THREE.LineBasicMaterial({ color: 0x9ff8ff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending }));
+  scene.add(ln); GHOSTS.push({ g: ln, m: ln.material, t: 0.5, line: true });
+  spawnGhost(a); spawnGhost(b, 0xffffff);
+}
+function updateGhosts(dt) {
+  for (let i = GHOSTS.length - 1; i >= 0; i--) {
+    const gh = GHOSTS[i]; gh.t -= dt;
+    gh.m.opacity = Math.max(0, gh.t / 0.6) * (gh.line ? 0.9 : 0.5);
+    if (gh.blast) { const k = 1 - gh.t / 0.45; gh.g.scale.setScalar(gh.blast * (0.3 + easeOut(clamp(k, 0, 1)) * 0.9)); gh.m.opacity = clamp(gh.t * 2.2, 0, 1); }
+    else if (!gh.line) gh.g.scale.set(1 + (0.6 - gh.t) * 0.6, 1, 1 + (0.6 - gh.t) * 0.6);
+    if (gh.t <= 0) { scene.remove(gh.g); GHOSTS.splice(i, 1); }
+  }
+}
+function useDash() {
+  if (P.dead || !abReady('dash')) { sfx.empty(); return; }
+  const sy = Math.sin(P.yaw), cy = Math.cos(P.yaw);
+  let iz = (act('forward') ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
+  if (PAD.active && Math.hypot(PAD.mx, PAD.my) > 0.2) { ix = PAD.mx; iz = -PAD.my; }
+  let dx = -sy * iz + cy * ix, dz = -cy * iz - sy * ix;
+  const l = Math.hypot(dx, dz); if (l < 0.01) { dx = -sy; dz = -cy; } else { dx /= l; dz /= l; }
+  AB.dashDir.set(dx, 0, dz); AB.dashT = 0.2;
+  P.mantle = null; P.climbing = false; P.sliding = false;
+  spawnGhost([P.pos.x, P.pos.y, P.pos.z]); setCd('dash'); sfx.dash(); camKick(7);
+  netSend({ k: 'blink', a: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)] });
+}
+// pendant le dash : 26 m/s dans la direction choisie, puis sortie à 14 m/s (l'élan se garde en l'air)
+function dashStep(dt) {
+  AB.dashT -= dt;
+  P.vel.x = AB.dashDir.x * 26; P.vel.z = AB.dashDir.z * 26; P.vel.y = Math.max(P.vel.y, 0);
+  const wasG = P.grounded;
+  moveAndCollide(dt);
+  if (wasG && !P.grounded) P.vel.y = 0;
+  if (AB.dashT <= 0) { P.vel.x = AB.dashDir.x * 14; P.vel.z = AB.dashDir.z * 14; }
+}
+function useBlink() {
+  if (P.dead || !abReady('blink')) { sfx.empty(); return; }
+  const pitch = clamp(P.pitch, -0.35, 0.35), cp = Math.cos(pitch);
+  _d.set(-Math.sin(P.yaw) * cp, Math.sin(pitch), -Math.cos(P.yaw) * cp);
+  _o.set(P.pos.x, P.pos.y + 1.1, P.pos.z);
+  raycaster.set(_o, _d); raycaster.far = 50;
+  const hit = raycaster.intersectObjects(WORLD, false)[0];
+  let dist = hit ? Math.max(0, hit.distance - 0.9) : 50;
+  const a = [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)];
+  // recule jusqu'à une place libre ; pose au sol si on finit dans le décor
+  let tx = 0, ty = 0, tz = 0, ok = false;
+  for (; dist >= 0; dist -= 0.75) {
+    tx = _o.x + _d.x * dist; ty = _o.y + _d.y * dist - 1.1; tz = _o.z + _d.z * dist;
+    const gnd = rampAt(tx, tz).h; if (ty < gnd) ty = gnd; if (ty < 0 && !TERRAIN) ty = 0;
+    const L = MAP_LIM - 0.5; tx = clamp(tx, -L, L); tz = clamp(tz, -L, L);
+    if (freeAt(tx, ty + 0.02, tz, STAND_H)) { ok = true; break; }
+  }
+  if (!ok || dist < 1) { toast(t('ab.blinkBlocked'), 1.4); return; }
+  P.pos.set(tx, ty + 0.02, tz); P.prev.copy(P.pos); P.grounded = false; P.mantle = null; P.climbing = false; P.sliding = false;
+  const b = [r2(tx), r2(ty), r2(tz)];
+  spawnBlinkTrail(a, b); setCd('blink'); sfx.blink(); camKick(14); camShake(0.3);
+  feed(t('ab.blink'), Math.round(Math.hypot(b[0] - a[0], b[1] - a[1], b[2] - a[2])) + ' m', 'cyan');
+  netSend({ k: 'blink', a, b });
 }
 /* ---------- grappin : accroche un point visé (45 m) et tire le joueur vers lui en gardant l'élan ---------- */
 const HOOK = { p: null, t: 0 };
@@ -2357,6 +2452,7 @@ function updateClassFx(dt) {
 function clearAbilityFx() {
   for (const tp of TEMP_PADS) { scene.remove(tp.g); scene.remove(tp.pd.ring); const k = PADS.indexOf(tp.pd); if (k >= 0) PADS.splice(k, 1); } TEMP_PADS.length = 0;
   HOOK.p = null;
+  clearGrenades();
   for (const dm of DOMES) scene.remove(dm.g); DOMES.length = 0;
   for (const pt of PORTALS) { scene.remove(pt.ma.g); scene.remove(pt.mb.g); } PORTALS.length = 0;
   if (AB.marker) scene.remove(AB.marker); AB.marker = null; AB.portalA = null;
@@ -2367,6 +2463,7 @@ function step(dt) {
   abilityStep(dt);
   if (EDIT.on) { editorStep(dt); return; }
   if (X.fly && xUnlocked && !P.dead && !P.veh && !P.zip) { flyStep(dt); return; }
+  if (AB.dashT > 0 && !P.dead && !P.veh && !P.zip) { dashStep(dt); return; }
   if (P.dead) { if (P.veh) exitVehicle(true); if (P.zip) { P.zip = null; zipSound(false); } P.vel.set(0, 0, 0); return; }
   if (P.veh) { vehStep(P.veh, dt); return; }
   if (P.zip) { zipStep(dt); return; }
@@ -2562,6 +2659,15 @@ const sfx = {
   sizzle: snd(t => { nz(t, { dur: .3, f: 3200, q: .8, gain: .12, f2: 1400 }); tn(t, { f: 90, f2: 60, dur: .2, type: 'triangle', gain: .08 }); }),
   grapple: snd(t => { nz(t, { dur: .18, f: 1800, q: 2, gain: .16, f2: 4200 }); tn(t + .02, { f: 220, f2: 90, dur: .25, type: 'sawtooth', gain: .05 }); }),
   scan: snd(t => { tn(t, { f: 420, f2: 1400, dur: .5, type: 'sine', gain: .1 }); tn(t + .1, { f: 840, f2: 2800, dur: .4, gain: .05 }); nz(t, { dur: .6, f: 3000, q: 4, gain: .06 }); }),
+  boom: snd((t, v = 1) => { nz(t, { dur: .9, f: 1400, f2: 120, type: 'lowpass', q: .6, gain: .9, dest: gunBus }, v); tn(t, { f: 70, f2: 24, dur: .7, type: 'triangle', gain: .9, dest: gunBus }, v); nz(t, { dur: .12, f: 2400, q: .8, gain: .4, dest: gunBus }, v); nz(t + .25, { dur: 1.2, f: 500, f2: 120, type: 'lowpass', gain: .2, dest: gunBus }, v); }),
+  zap: snd((t, v = 1) => { for (let i = 0; i < 5; i++) nz(t + i * .04, { dur: .08, f: 3000 + Math.random() * 3000, q: 4, gain: .3 }, v); tn(t, { f: 120, f2: 60, dur: .3, type: 'sawtooth', gain: .2 }, v); }),
+  zapStick: snd(t => { tn(t, { f: 1800, f2: 2600, dur: .08, type: 'square', gain: .04 }); }),
+  impulse: snd((t, v = 1) => { tn(t, { f: 90, f2: 300, dur: .35, type: 'sine', gain: .6 }, v); nz(t, { dur: .4, f: 800, f2: 3000, q: 1, gain: .3 }, v); }),
+  fireG: snd((t, v = 1) => { nz(t, { dur: 1.2, f: 600, f2: 1800, type: 'lowpass', gain: .5 }, v); tn(t, { f: 80, f2: 50, dur: .4, type: 'triangle', gain: .4 }, v); }),
+  smokeG: snd((t, v = 1) => { nz(t, { dur: 1.6, f: 2500, f2: 900, q: .7, gain: .3 }, v); }),
+  throwG: snd(t => { nz(t, { dur: .14, f: 900, f2: 2400, q: 1, gain: .12 }); nz(t, { dur: .03, f: 3800, q: 5, gain: .06 }); }),
+  dash: snd(t => { nz(t, { dur: .22, f: 600, f2: 4000, q: .9, gain: .3 }); tn(t, { f: 300, f2: 900, dur: .15, type: 'triangle', gain: .08 }); }),
+  blink: snd(t => { tn(t, { f: 1600, f2: 200, dur: .3, type: 'sine', gain: .15 }); nz(t, { dur: .35, f: 5000, f2: 800, q: 2, gain: .2 }); tn(t + .2, { f: 300, f2: 1200, dur: .25, type: 'triangle', gain: .1 }); }),
   zipGrab: snd(t => { nz(t, { dur: .12, f: 2600, q: 5, gain: .12 }); tn(t, { f: 900, f2: 1400, dur: .1, type: 'triangle', gain: .05 }); }),
   outfit: snd(t => { [1320, 1660, 1980, 2640].forEach((f, i) => tn(t + i * .07, { f, dur: .18, gain: .06 })); nz(t, { dur: .4, f: 6000, q: 2, gain: .05 }); })
 };
@@ -2664,6 +2770,7 @@ const MODELS = { robot: null, soldier: null, chars: {} };
 const CHARS = {
   soldier: { file: 'Soldier.glb', h: 1.8, yaw: 0, anim: { idle: 'Idle', walk: 'Walk', run: 'Run' }, hand: /RightHand$/ },
   xbot: { file: 'Xbot.glb', h: 1.8, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i },
+  spectre: { file: 'Xbot.glb', h: 1.84, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ },
   robot: { file: 'RobotExpressive.glb', h: 1.85, yaw: Math.PI, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2R$/, tintMat: /^Main$/ }
 };
 const TINTS = { amber: 0xffb020, cyan: 0x66d4e2, red: 0xff5a44, green: 0x9be36a, violet: 0xc78cff, pink: 0xff8fc7, white: 0xf4efe6, blue: 0x5f8cff, black: 0x2a2a2e,
@@ -2673,7 +2780,11 @@ function tintChar(vis, ch, col) {
   vis.obj.traverse(o => {
     if (!o.isMesh) return;
     const m = o.material;
-    if (ch === 'soldier') {
+    if (ch === 'spectre') {
+      // Spectre : carrosserie noire laquée, articulations qui brillent de la couleur choisie
+      if (/Joints/i.test(m.name)) { m.color.setHex(0x1a1c22); if (m.emissive) { m.emissive.setHex(col); m.emissiveIntensity = 1; } m.userData.keep = true; }
+      else { m.color.setHex(0x15161b); if (m.shininess !== undefined) m.shininess = 80; }
+    } else if (ch === 'soldier') {
       if (/visor/i.test(o.name)) { m.emissive.setHex(col); m.emissiveIntensity = 0.8; m.userData.keep = true; }
       else m.color.setHex(col).lerp(white, 0.7);
     } else if (c.tintMat && c.tintMat.test(m.name)) m.color.setHex(col);
@@ -2723,7 +2834,7 @@ if (THREE.GLTFLoader) {
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
   loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
   loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); charLoaded(); }, undefined, () => {});
 }
 
 /* ================= Mannequins (robots) ================= */
@@ -3789,6 +3900,9 @@ function hostRecv(from, m) {
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, a: m.a, e: m.e }, from);
   else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'lpad' && Array.isArray(m.p)) broadcast({ k: 'lpad', p: m.p.slice(0, 3).map(Number), o: from }, from);
+  else if (m.k === 'blink' && Array.isArray(m.a)) broadcast({ k: 'blink', a: m.a.slice(0, 3).map(Number), b: Array.isArray(m.b) ? m.b.slice(0, 3).map(Number) : undefined }, from);
+  else if (m.k === 'gren' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'gren', t: String(m.t), p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
+  else if (m.k === 'push' && Array.isArray(m.v)) { if (NET.players.has(m.to)) sendTo(m.to, { k: 'push', v: m.v.slice(0, 3).map(v => clamp(+v || 0, -30, 30)) }); }
   else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'hit') { if (NET.players.has(m.to)) sendTo(m.to, { k: 'hit', from, dmg: m.dmg, head: m.head, w: m.w, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
   else if (m.k === 'dead') {
@@ -3845,6 +3959,9 @@ function clientRecv(m) {
   if (m.k === 'hit') { applyHit(m); return; }
   if (m.k === 'dome') { SND_OWNER = m.o || null; spawnDome(m.p); SND_OWNER = null; return; }
   if (m.k === 'lpad') { spawnLaunchpad(m.p); return; }
+  if (m.k === 'blink') { if (m.b) spawnBlinkTrail(m.a, m.b); else spawnGhost(m.a); return; }
+  if (m.k === 'gren') { if (GREN_TYPES.includes(m.t)) spawnGrenade(m.t, m.p, m.v, m.o, false); return; }
+  if (m.k === 'push') { if (!P.dead && !P.veh) { P.vel.x += m.v[0]; P.vel.y += m.v[1]; P.vel.z += m.v[2]; P.grounded = false; P.zip = null; } return; }
   if (m.k === 'portal') { SND_OWNER = m.o || null; spawnPortal(m.a, m.b); SND_OWNER = null; return; }
   if (m.k === 'kick') { leaveNet(); setNetStatus(t('net.kicked'), 'err'); toast(t('net.kicked'), 4); if (playing) pause(); return; }
   if (m.k === 'kf') {
@@ -3879,7 +3996,7 @@ function applyHit(m) {
   }
 }
 // 8 = lave, 9 = buggy (dégâts qui ne viennent pas d'une arme)
-function wLabel(i) { return WEAPONS[i] || i === 8 || i === 9 ? wShort(i) : ''; }
+function wLabel(i) { return WEAPONS[i] || i === 8 || i === 9 || i === 10 ? wShort(i) : ''; }
 // dégâts de l'environnement (lave) : marche aussi hors ligne
 function hurtSelf(dmg, w) {
   if (P.dead || X.god) return;
@@ -3958,7 +4075,7 @@ S.padSens = clamp(+store.get('padSens', 1), 0.3, 3); S.padAim = clamp(+store.get
 S.padSnap = store.get('padSnap', true) !== false; S.padInvert = store.get('padInvert', false) === true; S.snapTap = store.get('snapTap', true) !== false;
 // boutons → actions maintenues (A=0, B=1, X=2, Y=3, LB=4, RB=5, LT=6, RT=7, Select=8, Start=9, L3=10, R3=11, croix=12..15)
 const PAD_HOLD = { 0: 'jump', 1: 'crouch', 6: 'ads', 7: 'fire', 10: 'sprint', 8: 'board' };
-const PAD_PRESS = { 0: 'jump', 1: 'crouch', 3: 'next', 4: 'tactical', 5: 'ultimate', 11: 'w6', 12: 'emote', 13: 'inspect', 14: 'prev', 15: 'map' };
+const PAD_PRESS = { 0: 'jump', 1: 'crouch', 3: 'next', 4: 'tactical', 5: 'ultimate', 11: 'w6', 12: 'emote', 13: 'grenade', 14: 'prev', 15: 'grenType' };
 const padDz = v => Math.abs(v) < 0.14 ? 0 : (v - Math.sign(v) * 0.14) / 0.86;
 function pollPad(dt) {
   const list = navigator.getGamepads ? navigator.getGamepads() : [];
@@ -4283,7 +4400,7 @@ function makeOutfit() {
   return { head, hip };
 }
 // tailles par perso (mètres) : largeur de tête, hanches, décalage de la jupe sous l'os du bassin
-const MG_FIT = { soldier: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.05 }, xbot: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.02 }, robot: { hr: 0.36, hipR: 0.22, hipY: 0.1, earY: -0.1 } };
+const MG_FIT = { spectre: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.02 }, soldier: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.05 }, xbot: { hr: 0.13, hipR: 0.27, hipY: -0.02, earY: -0.02 }, robot: { hr: 0.36, hipR: 0.22, hipY: 0.1, earY: -0.1 } };
 function setOutfit(vis, root, on, tint) {
   if (!vis || !vis.mixer) return;
   if (on && !vis.outfit) {
@@ -4699,6 +4816,190 @@ function edApplyMeta() {
     });
   });
   edRenderPanel();
+}
+/* ================= Grenades : G lance, H change de type ================= */
+const GREN_TYPES = ['frag', 'thermite', 'arc', 'smoke', 'impulse'];
+const GREN_MAX = 2, GREN_REGEN = 12;
+const GREN = { type: GREN_TYPES.includes(store.get('gren', 'frag')) ? store.get('gren', 'frag') : 'frag', charges: {}, regen: {}, list: [], fires: [], smokes: [] };
+for (const k of GREN_TYPES) { GREN.charges[k] = GREN_MAX; GREN.regen[k] = 0; }
+const GREN_COL = { frag: 0x8a9a4a, thermite: 0xd8642a, arc: 0x40e8ff, smoke: 0xc8ccd0, impulse: 0xc78cff };
+const grenGeo = new THREE.SphereGeometry(0.11, 12, 8), grenBand = new THREE.TorusGeometry(0.11, 0.025, 6, 16), arcGeo = new THREE.OctahedronGeometry(0.16);
+const blastLight = new THREE.PointLight(0xffa040, 0, 26, 2); scene.add(blastLight);
+function grenFull() { for (const k of GREN_TYPES) { GREN.charges[k] = GREN_MAX; GREN.regen[k] = 0; } }
+function cycleGrenade() {
+  GREN.type = GREN_TYPES[(GREN_TYPES.indexOf(GREN.type) + 1) % GREN_TYPES.length]; store.set('gren', GREN.type);
+  toast(t('gr.' + GREN.type) + ' · ' + t('grd.' + GREN.type), 1.8); sfx.swap();
+}
+function throwGrenade() {
+  if (P.dead || P.veh || EDIT.on || !playing) return;
+  const k = GREN.type, free = X.nocd && xUnlocked;
+  if (GREN.charges[k] <= 0 && !free) { sfx.empty(); toast(t('gr.empty', { g: t('gr.' + k) }), 1.4); return; }
+  if (!free) GREN.charges[k]--;
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]); _r.set(e[0], e[1], e[2]);
+  const p = [_o.x + _f.x * 0.6 + _r.x * 0.18, _o.y + _f.y * 0.6 - 0.12, _o.z + _f.z * 0.6 + _r.z * 0.18];
+  const v = [_f.x * 21 + P.vel.x * 0.5, _f.y * 21 + 3.5 + Math.max(0, P.vel.y) * 0.3, _f.z * 21 + P.vel.z * 0.5];
+  spawnGrenade(k, p.map(r2), v.map(r2), NET.selfId || 'me', true);
+  netSend({ k: 'gren', t: k, p: p.map(r2), v: v.map(r2) });
+  sfx.throwG(); WS.kickRot += 0.05;
+}
+function spawnGrenade(type, p, v, owner, mine) {
+  const col = GREN_COL[type];
+  const mesh = new THREE.Group();
+  const glowy = type === 'arc' || type === 'impulse';
+  const body = new THREE.Mesh(type === 'arc' ? arcGeo : grenGeo, new THREE.MeshLambertMaterial({ color: col, emissive: glowy ? col : 0x000000, emissiveIntensity: 0.6 }));
+  mesh.add(body);
+  if (type !== 'arc') { const band = new THREE.Mesh(grenBand, new THREE.MeshLambertMaterial({ color: 0x222222 })); band.rotation.x = Math.PI / 2; mesh.add(band); }
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending })); glow.scale.setScalar(0.6); mesh.add(glow);
+  mesh.position.set(p[0], p[1], p[2]); scene.add(mesh);
+  GREN.list.push({ type, pos: new V3(p[0], p[1], p[2]), vel: new V3(v[0], v[1], v[2]), t: 0, stuckT: -1, owner, mine, mesh, glow });
+}
+// rebonds : boîtes (sortie par la face la plus proche), sol, rampes et relief
+function grenCollide(g) {
+  const p = g.pos, v = g.vel, rr = 0.1;
+  let hit = false;
+  for (const b of BOXES) {
+    if (b.ground) continue;
+    if (p.x < b.min.x - rr || p.x > b.max.x + rr || p.y < b.min.y - rr || p.y > b.max.y + rr || p.z < b.min.z - rr || p.z > b.max.z + rr) continue;
+    const pen = [[p.x - (b.min.x - rr), 'x', -1], [(b.max.x + rr) - p.x, 'x', 1], [p.y - (b.min.y - rr), 'y', -1], [(b.max.y + rr) - p.y, 'y', 1], [p.z - (b.min.z - rr), 'z', -1], [(b.max.z + rr) - p.z, 'z', 1]].sort((a, c) => a[0] - c[0])[0];
+    p[pen[1]] += pen[2] * pen[0];
+    if (v[pen[1]] * pen[2] < 0) v[pen[1]] *= -0.38;
+    for (const ax of ['x', 'y', 'z']) if (ax !== pen[1]) v[ax] *= 0.72;
+    hit = true;
+  }
+  const gh = Math.max(TERRAIN ? -Infinity : 0, rampAt(p.x, p.z).h);
+  if (p.y < gh + rr) { p.y = gh + rr; if (v.y < 0) v.y *= -0.35; v.x *= 0.7; v.z *= 0.7; if (Math.abs(v.y) < 1) v.y = 0; hit = true; }
+  const L = MAP_LIM + 2;
+  if (Math.abs(p.x) > L) { p.x = clamp(p.x, -L, L); v.x *= -0.4; hit = true; }
+  if (Math.abs(p.z) > L) { p.z = clamp(p.z, -L, L); v.z *= -0.4; hit = true; }
+  return hit;
+}
+function grenStep(dt) {
+  for (const k of GREN_TYPES) if (GREN.charges[k] < GREN_MAX && (GREN.regen[k] += dt) >= GREN_REGEN) { GREN.charges[k]++; GREN.regen[k] = 0; }
+  for (let i = GREN.list.length - 1; i >= 0; i--) {
+    const g = GREN.list[i]; g.t += dt;
+    if (g.stuckT < 0) {
+      const n = Math.max(1, Math.ceil(dt * 120));
+      for (let s2 = 0; s2 < n; s2++) {
+        const h = dt / n;
+        g.vel.y -= G * h; g.pos.addScaledVector(g.vel, h);
+        if (grenCollide(g)) {
+          if (g.type === 'arc') { g.stuckT = 0; g.vel.set(0, 0, 0); sfx.zapStick(); break; }
+          if (g.type === 'thermite' || g.type === 'impulse') { g.t = 99; break; }
+        }
+      }
+      g.mesh.rotation.x += dt * 9; g.mesh.rotation.z += dt * 5;
+    } else g.stuckT += dt;
+    g.mesh.position.copy(g.pos);
+    g.glow.material.opacity = 0.4 + 0.3 * Math.sin(g.t * (g.type === 'frag' ? 8 + g.t * 8 : 12));
+    const boom = g.type === 'frag' ? g.t > 2.4 : g.type === 'smoke' ? g.t > 1.4 : g.type === 'arc' ? (g.stuckT > 1.2 || g.t > 5) : g.t > 6;
+    if (boom) { scene.remove(g.mesh); GREN.list.splice(i, 1); grenExplode(g.type, g.pos.clone(), g.mine, g.owner); }
+  }
+  // zones de thermite : 25 dégâts/s à l'intérieur
+  for (let i = GREN.fires.length - 1; i >= 0; i--) {
+    const f = GREN.fires[i]; f.t -= dt; f.tick -= dt;
+    for (const sp of f.sprites) { sp.material.opacity = Math.min(1, f.t) * (0.55 + 0.35 * Math.sin(performance.now() / 70 + sp.id)); sp.scale.y = sp.userData.h * (0.85 + 0.25 * Math.sin(performance.now() / 90 + sp.id * 2)); }
+    if (f.tick <= 0) { f.tick = 0.25; grenDamage(f.pos, 3.6, 6.25, f.mine, true); }
+    if (f.t <= 0) { f.sprites.forEach(sp => scene.remove(sp)); GREN.fires.splice(i, 1); }
+  }
+  for (let i = GREN.smokes.length - 1; i >= 0; i--) {
+    const sm = GREN.smokes[i]; sm.t -= dt;
+    const k = Math.min(1, (13 - sm.t) * 1.5, sm.t / 2);
+    for (const sp of sm.sprites) { sp.material.opacity = 0.85 * k; sp.position.y += dt * 0.15; }
+    if (sm.t <= 0) { sm.sprites.forEach(sp => scene.remove(sp)); GREN.smokes.splice(i, 1); }
+  }
+  blastLight.intensity = Math.max(0, blastLight.intensity - dt * 30);
+}
+function losClear(a, b) {
+  _d.copy(b).sub(a); const d = _d.length(); if (d < 0.05) return true; _d.divideScalar(d);
+  raycaster.set(a, _d); raycaster.far = d - 0.1;
+  return raycaster.intersectObjects(WORLD, false).length === 0;
+}
+// dégâts de zone : le lanceur les applique aux robots et aux autres joueurs, et à lui-même
+const _gp = new V3(), _gt = new V3();
+function grenDamage(c, radius, dmgMax, mine, flat) {
+  if (!mine) return;
+  _gp.copy(c); _gp.y += 0.3;
+  const amount = dist => Math.round(flat ? dmgMax : dmgMax * Math.pow(1 - dist / radius, 0.7)) * (X.oneshot && xUnlocked ? 10 : 1);
+  for (const d of dummies) {
+    if (!d.alive || !RULES.bots) continue;
+    _gt.set(d.g.position.x, d.g.position.y + 1, d.g.position.z);
+    const dist = _gt.distanceTo(_gp); if (dist > radius || !losClear(_gp, _gt)) continue;
+    const dmg = amount(dist);
+    if (dmg > 0) { const r = damageDummy(d, dmg, 'body'); if (r === 'kill') { hmEl.className = 'kill'; hmT = 0.35; } }
+  }
+  for (const rp of remotes.values()) {
+    if (!rp.st || rp.st.dead) continue;
+    _gt.set(rp.pos.x, rp.pos.y + 1, rp.pos.z);
+    const dist = _gt.distanceTo(_gp); if (dist > radius || !losClear(_gp, _gt)) continue;
+    const dmg = amount(dist);
+    if (dmg > 0) { rp.flash = 1; netSend({ k: 'hit', to: rp.id, dmg, head: false, w: 10 }); }
+  }
+  _gt.set(P.pos.x, P.pos.y + 1, P.pos.z);
+  const dist = _gt.distanceTo(_gp);
+  if (dist < radius && losClear(_gp, _gt)) hurtSelf((flat ? dmgMax : dmgMax * Math.pow(1 - dist / radius, 0.7)) * 0.7, 10);
+}
+function blastFx(c, col, size, dur = 0.45) {
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+  sp.position.copy(c); sp.position.y += 0.4; scene.add(sp);
+  GHOSTS.push({ g: sp, m: sp.material, t: dur, blast: size, line: true });
+  blastLight.color.setHex(col); blastLight.position.copy(sp.position); blastLight.intensity = 9;
+  for (let i = 0; i < 6; i++) { _gt.set(c.x + (Math.random() - 0.5) * size * 0.5, c.y + 0.3 + Math.random() * size * 0.3, c.z + (Math.random() - 0.5) * size * 0.5); spawnSpark(_gt, true); }
+  const dist = camera.position.distanceTo(c);
+  if (dist < size * 4) camShake(clamp(1.2 - dist / (size * 4), 0, 1));
+  if (PAD.active && dist < size * 3) PAD.rumble = 0.8;
+}
+function grenExplode(type, c, mine) {
+  const dist = camera.position.distanceTo(c), vol = clamp(1.6 / (1 + dist * 0.05), 0.1, 1);
+  if (type === 'frag') { blastFx(c, 0xffa040, 9); sfx.boom(vol); grenDamage(c, 7, 115, mine, false); grenPushSelf(c, 7, 9, 3); }
+  else if (type === 'arc') { blastFx(c, 0x40e8ff, 6, 0.35); sfx.zap(vol); grenDamage(c, 4.2, 72, mine, false); }
+  else if (type === 'impulse') { blastFx(c, 0xc78cff, 7, 0.35); sfx.impulse(vol); grenImpulse(c, mine); }
+  else if (type === 'thermite') {
+    blastFx(c, 0xff6a20, 5, 0.35); sfx.fireG(vol);
+    const sprites = [];
+    for (let i = 0; i < 14; i++) {
+      const a = i / 14 * Math.PI * 2, r = 1 + Math.random() * 2.4;
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: i % 2 ? 0xff7a20 : 0xffc040, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+      const h = 1.4 + Math.random() * 1.2; sp.userData.h = h; sp.scale.set(1.3, h, 1);
+      const x = c.x + Math.cos(a) * r, z = c.z + Math.sin(a) * r, y = Math.max(TERRAIN ? -Infinity : 0, rampAt(x, z).h, c.y - 0.6);
+      sp.position.set(x, y + h * 0.4, z); scene.add(sp); sprites.push(sp);
+    }
+    GREN.fires.push({ pos: c.clone(), t: 7, tick: 0, mine, sprites });
+  }
+  else if (type === 'smoke') {
+    sfx.smokeG(vol);
+    const sprites = [];
+    for (let i = 0; i < 16; i++) {
+      const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x9a9ea4, transparent: true, opacity: 0, depthWrite: false }));
+      const a = Math.random() * Math.PI * 2, r = Math.random() * 4.5;
+      sp.position.set(c.x + Math.cos(a) * r, c.y + 0.6 + Math.random() * 3, c.z + Math.sin(a) * r); sp.scale.setScalar(5 + Math.random() * 3);
+      scene.add(sp); sprites.push(sp);
+    }
+    GREN.smokes.push({ t: 13, sprites });
+  }
+}
+// souffle : propulse loin sans dégâts (impulsion) ou un peu (fragmentation)
+function grenPushSelf(c, radius, power, up) {
+  if (P.dead || P.veh) return;
+  _gt.set(P.pos.x, P.pos.y + 1, P.pos.z); const d = _gt.distanceTo(c); if (d > radius) return;
+  const k = 1 - d / radius; _d.copy(_gt).sub(c).normalize();
+  P.vel.addScaledVector(_d, power * k); P.vel.y += up * k; P.grounded = false; P.zip = null;
+}
+function grenImpulse(c, mine) {
+  grenPushSelf(c, 6.5, 15, 10);
+  if (!mine) return;
+  for (const d of dummies) if (d.alive && d.g.position.distanceTo(c) < 6.5) { d.vy = 9; d.oy = Math.max(d.oy, 0.05); }
+  for (const rp of remotes.values()) {
+    if (!rp.st || rp.st.dead) continue;
+    _gt.set(rp.pos.x, rp.pos.y + 1, rp.pos.z); const d = _gt.distanceTo(c); if (d > 6.5) continue;
+    const k = 1 - d / 6.5; _d.copy(_gt).sub(c).normalize();
+    netSend({ k: 'push', to: rp.id, v: [r2(_d.x * 15 * k), r2(_d.y * 15 * k + 10 * k), r2(_d.z * 15 * k)] });
+  }
+}
+function clearGrenades() {
+  for (const g of GREN.list) scene.remove(g.mesh); GREN.list.length = 0;
+  for (const f of GREN.fires) f.sprites.forEach(sp => scene.remove(sp)); GREN.fires.length = 0;
+  for (const sm of GREN.smokes) sm.sprites.forEach(sp => scene.remove(sp)); GREN.smokes.length = 0;
 }
 /* ================= Véhicules : buggys (E pour monter / descendre) ================= */
 var VEH_READY = false;
@@ -5445,6 +5746,12 @@ function updateHUD(dt) {
     el.lastChild.style.width = ready ? '100%' : ((1 - cd / AB_CD[k]) * 100).toFixed(1) + '%';
     setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active && k === 'scan' ? Math.ceil(AB.scanT) + ' s' : active && k === 'portal' ? Math.ceil(AB.portalAT) + ' s' : ready || active ? '' : Math.ceil(cd) + ' s');
   }
+  {
+    const el = abEls.abGren, k = GREN.type, n = GREN.charges[k];
+    setTxt(el.children[1], t('gr.' + k)); setTxt(el.children[2], '×' + n);
+    el.classList.toggle('ready', n > 0); el.lastChild.style.width = n >= GREN_MAX ? '100%' : ((GREN.regen[k] / GREN_REGEN) * 100).toFixed(1) + '%';
+    el.style.setProperty('--gc', '#' + GREN_COL[k].toString(16).padStart(6, '0'));
+  }
   stimFxEl.style.opacity = AB.stimT > 0 ? Math.min(1, AB.stimT).toFixed(2) : '0';
   mmAcc += dt;
   if (S.minimap && mmAcc > 1 / 30) { mmAcc = 0; drawMinimap(); }
@@ -5513,7 +5820,7 @@ function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.cl
 /* ================= Entrées ================= */
 let playing = false, everLocked = false, unlockedMode = false, everPlayed = false;
 function clearInput() { for (const k in keys) keys[k] = false; for (const k in wheelT) wheelT[k] = 0; mouse.left = mouse.right = false; }
-const abEls = { abTac: $('abTac'), abUlt: $('abUlt') }, stimFxEl = $('stimFx');
+const abEls = { abTac: $('abTac'), abUlt: $('abUlt'), abGren: $('abGren') }, stimFxEl = $('stimFx');
 function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
   $('hint').classList.remove('warn'); hintKey = 'hint.default'; $('hint').textContent = t(hintKey);
@@ -5558,7 +5865,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['mute', 'Couper le son', ['KeyP', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -5598,6 +5905,8 @@ function onAction(id) {
     else { const zh = zipNear(), v = nearVehicle(); if (zh && (!v || zh.z)) grabZip(zh); else enterVehicle(v); }
   }
   else if (id === 'back' && P.zip) { P.zip.d *= -1; }
+  else if (id === 'grenade') throwGrenade();
+  else if (id === 'grenType') cycleGrenade();
   else if (id === 'tactical') useAbility(myClass().tac);
   else if (id === 'ultimate') useAbility(myClass().ult);
   else if (id === 'map') { S.minimap = !S.minimap; store.set('minimap', S.minimap); syncMinimap(); }
@@ -6150,6 +6459,7 @@ function frame(now) {
   updateSelfAvatar(dt);
   updateFpLegs(dt);
   updateVehicles(dt);
+  grenStep(dt);
   updateEditor();
   drawEsp();
   if (MAP_TICK) MAP_TICK(dt);

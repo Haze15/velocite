@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Six cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion), des buggys à conduire, 5 armes, 6 couteaux et la hache double Morgane, trois personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Six cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion), des buggys à conduire, 5 armes, 6 couteaux et la hache double Morgane, quatre personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -23,6 +23,7 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | Soldat | Assaut | Stim : +35 % de vitesse 6 s (recharge 9 s) | Dôme-bouclier : bulle de 5 m qui arrête les balles 12 s (recharge 25 s) |
 | X-Bot | Éclaireur | Grappin : accroche un point visé jusqu'à 45 m et te tire vers lui ; Espace pour lâcher avec un saut (recharge 6 s) | Portail : pose l'entrée, va à au moins 6 m, réappuie pour la sortie (40 s, recharge 30 s) |
 | Robot | Sentinelle | Scan : révèle robots et joueurs à travers les murs et sur la mini-carte 7 s (recharge 18 s) | Tremplin : pad violet posé au sol que tout le monde peut utiliser, 30 s (recharge 22 s) |
+| Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
 
 
 Soldat, X-Bot ou Robot, avec dix-huit couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
@@ -66,6 +67,20 @@ La connexion passe par WebRTC avec [PeerJS](https://peerjs.com/) et son serveur 
 
 Sur certains réseaux (4G, réseaux d'entreprise), la connexion directe entre deux joueurs peut échouer faute de serveur TURN.
 
+## Grenades
+
+**G** lance la grenade choisie, **H** change de type. Deux grenades de chaque type, une revient toutes les 12 s (toutes à la réapparition) :
+
+| Grenade | Effet |
+| --- | --- |
+| Frag | rebondit et explose après 2,4 s : jusqu'à 115 dégâts dans 7 m, souffle |
+| Thermite | s'enflamme au contact : zone de feu de 3,5 m, 25 dégâts/s pendant 7 s |
+| Arc | se colle à la première surface et électrocute 1,2 s plus tard : 72 dégâts dans 4 m |
+| Fumée | nuage épais pendant 13 s |
+| Impulsion | explose au contact et propulse tout le monde sans dégâts : à tes pieds, c'est un saut géant |
+
+Les grenades ne traversent pas les murs (pas de dégâts derrière un obstacle) et tes propres grenades te blessent un peu. En ligne, tout le monde voit les lancers et les explosions.
+
 ## Manette
 
 Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie sur un bouton pour qu'elle soit détectée, Start ou A pour lancer depuis le menu). Stick gauche : bouger · stick droit : viser · A : sauter · B : s'accroupir, glisser · X : recharger ou interagir (buggy, tyrolienne) · Y : arme suivante · LB / RB : capacités tactique et ultime · LT / RT : viser / tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause. Vibrations au tir.
@@ -90,6 +105,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
 | J | Emotes (puis 1 à 6) |
 | E | S'accrocher à une tyrolienne, monter dans un buggy / en descendre |
+| G / H | Lancer une grenade / changer de type |
 | F | Capacité ultime de ta classe |
 | M | Mini-carte |
 | R | Recharger |
