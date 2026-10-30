@@ -128,6 +128,8 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #netStatus.err{color:var(--hostile)}
 #roomBox{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
 #hud.emoting #xh,#hud.emoting #hm{display:none}
+.xsub{margin:16px 0 8px;font:700 13px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
+#espCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
 .edpanel{margin-top:18px;padding-top:14px;border-top:1px solid var(--ink-faint);display:grid;gap:10px}.edpanel h3{margin:0;font:700 16px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
 .edbtns{display:flex;flex-wrap:wrap;gap:8px}.edrow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--ink-faint)}.edrow b{flex:1;font:600 15px/1.2 var(--f-display)}
 #editHud{position:absolute;left:50%;top:14px;transform:translateX(-50%);max-width:min(1100px,94vw);padding:8px 12px;background:rgba(14,18,22,.8);border:1px solid rgba(255,176,32,.45);display:grid;gap:6px;font-size:12.5px;color:var(--ink-dim)}
@@ -326,6 +328,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="topright"><div id="fps">— IPS</div><div id="netBadge" hidden></div><div id="killfeed"></div></div>
   <div id="target"><div class="tname"><span id="tName">MANNEQUIN</span><span id="tVal">175</span></div><div class="bar sh"><i id="tSh"></i></div><div class="bar hp"><i id="tHp"></i></div></div>
   <div id="tags"></div>
+  <canvas id="espCv"></canvas>
   <div id="nums"></div>
   <div id="xh"><i class="d"></i><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
   <div id="hm"><i></i><i></i><i></i><i></i></div>
@@ -508,7 +511,24 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="check"><input type="checkbox" data-x="snap"> Snap strafe facile</label>
         <label class="check"><input type="checkbox" data-x="nocd"> Capacités sans recharge</label>
       </div>
-      <p class="hint">Actif seulement dans ce navigateur. Retape le mot de passe dans ce menu pour masquer ce panneau.</p>
+      <h3 class="xsub">Aimbot</h3>
+      <div class="grid xgrid">
+        <label class="check"><input type="checkbox" data-x="aimbot"> Aimbot (verrouille en visant ou en tirant)</label>
+        <label class="check"><input type="checkbox" data-x="head"> Viser la tête</label>
+        <label class="check"><input type="checkbox" data-x="vis"> Seulement les cibles visibles</label>
+        <label class="check"><input type="checkbox" data-x="trigger"> Triggerbot (tir automatique sur cible)</label>
+        <label class="field"><span class="lab">Champ de l’aimbot <output id="oXFov"></output></span><input type="range" id="xFov" min="5" max="180" step="1"></label>
+        <label class="field"><span class="lab">Douceur <output id="oXSmooth"></output></span><input type="range" id="xSmooth" min="0" max="0.9" step="0.05"></label>
+      </div>
+      <h3 class="xsub">Vision et mouvement</h3>
+      <div class="grid xgrid">
+        <label class="check"><input type="checkbox" data-x="esp"> ESP (boîtes, vie, distance, lignes, radar)</label>
+        <label class="check"><input type="checkbox" data-x="rapid"> Cadence ×3 et rechargement instantané</label>
+        <label class="check"><input type="checkbox" data-x="fly"> Vol libre (Espace monte, C descend)</label>
+        <label class="check"><input type="checkbox" data-x="superjump"> Super saut</label>
+        <label class="check"><input type="checkbox" data-x="tp"> Téléportation au viseur (touche B)</label>
+      </div>
+      <p class="hint">Actif seulement dans ce navigateur. Retape le mot de passe dans ce menu (hors champ de saisie, majuscules comprises) pour masquer ce panneau.</p>
     </div>
     <p class="credits" data-i18n="menu.credits">Modèles 3D : robot de Tomás Laulhé (Quaternius, CC0) et soldat Mixamo, tous deux issus des exemples de three.js. Moteur : three.js r128. Réseau : PeerJS.</p>
   </div>
@@ -917,8 +937,9 @@ function t(key, vars) {
 const wName = i => i === 5 ? t('knife.' + (S.knife || 'combat')).toUpperCase() : t('w' + i), wShort = i => t('w' + i + 's');
 
 /* ================= Mode secret ================= */
-const X_HASH = '52a515b30b2a484cfa5de4a841b74b5386a9170f647be3fad100eea59ca21574';
-const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false };
+const X_HASH = 'e99ca6495c4f655f8314f7af87026b5acca4978bed48525edfc8c05c16e5b8d3';
+const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false, aimbot: false, head: true, vis: true, trigger: false, esp: false, rapid: false, fly: false, superjump: false, tp: false };
+const XV = Object.assign({ fov: 30, smooth: 0.15 }, store.get('xv', {}));
 const RULES = { g: 1, s: 1, bots: true };
 const LOCAL_RULES = Object.assign({}, RULES, store.get('rules', {}));
 Object.assign(RULES, LOCAL_RULES);
@@ -2021,7 +2042,7 @@ function slideStep(dt, wx, wz, hasWish, crouchHeld) {
   if (!crouchHeld || ns < SLIDE_END) P.sliding = false;
 }
 function doJump(hs) {
-  P.vel.y = JUMP_V; P.grounded = false; P.jumpBuf = 0; P.airT = 0;
+  P.vel.y = JUMP_V * (X.superjump && xUnlocked ? 2.3 : 1); P.grounded = false; P.jumpBuf = 0; P.airT = 0;
   if (simTime - P.landT < BHOP_WIN && P.landSpeed > 6 * K) {
     // rend la vitesse perdue au sol et ajoute un petit gain à chaque saut enchaîné
     const v = P.vel, base = Math.max(hs, P.landSpeed);
@@ -2335,6 +2356,7 @@ function step(dt) {
   P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
   abilityStep(dt);
   if (EDIT.on) { editorStep(dt); return; }
+  if (X.fly && xUnlocked && !P.dead && !P.veh && !P.zip) { flyStep(dt); return; }
   if (P.dead) { if (P.veh) exitVehicle(true); if (P.zip) { P.zip = null; zipSound(false); } P.vel.set(0, 0, 0); return; }
   if (P.veh) { vehStep(P.veh, dt); return; }
   if (P.zip) { zipStep(dt); return; }
@@ -3431,7 +3453,7 @@ function fire() {
   WS.inspT = 0;
   if (W.melee) return melee();
   if (!X.ammo) WS.ammo[WS.cur]--;
-  WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm;
+  WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm / (X.rapid && xUnlocked ? 3 : 1);
   WS.flashT = 0.045; WS.kick += W.kick; WS.kickRot += W.kickRot;
   camShake(W.pellets > 1 ? 0.5 : W.scope ? 0.55 : W.kick * 6);
   if (PAD.active) PAD.rumble = Math.min(1, W.pellets > 1 || W.scope ? 0.8 : 0.25);
@@ -3496,7 +3518,7 @@ function fire() {
 function startReload() {
   const W = WEAPONS[WS.cur];
   if (W.melee || WS.reloading || WS.ammo[WS.cur] >= W.mag || WS.swapT > 0) return;
-  WS.reloading = true; WS.reloadDur = WS.ammo[WS.cur] > 0 ? W.reload * 0.85 : W.reload; WS.reloadT = WS.reloadDur;
+  WS.reloading = true; WS.reloadDur = X.rapid && xUnlocked ? 0.05 : WS.ammo[WS.cur] > 0 ? W.reload * 0.85 : W.reload; WS.reloadT = WS.reloadDur;
   sfx.reload(WS.reloadDur);
 }
 function swapTo(i) {
@@ -4051,7 +4073,7 @@ function drawMinimap() {
   c.fillStyle = '#E88A4A';
   for (const d of dummies) if (d.alive && RULES.bots) { c.beginPath(); c.arc(d.g.position.x, d.g.position.z, 1.1, 0, Math.PI * 2); c.fill(); }
   for (const rp of remotes.values()) {
-    if (!rp.st || rp.st.dead || !(rp.pingT > 0 || AB.scanT > 0 || (X.wall && xUnlocked))) continue;
+    if (!rp.st || rp.st.dead || !(rp.pingT > 0 || AB.scanT > 0 || ((X.wall || X.esp) && xUnlocked))) continue;
     c.fillStyle = '#FF5A44'; c.beginPath(); c.arc(rp.pos.x, rp.pos.z, 1.6, 0, Math.PI * 2); c.fill();
   }
   c.restore();
@@ -4062,6 +4084,102 @@ function drawMinimap() {
   const nx = half + (half - 10) * Math.sin(P.yaw), ny = half - (half - 10) * Math.cos(P.yaw);
   c.font = '700 11px "Saira Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
   c.fillStyle = '#FFB020'; c.fillText('N', nx, ny);
+}
+/* ================= Mode secret : aimbot, triggerbot, ESP, vol, téléportation ================= */
+function flyStep(dt) {
+  P.mantle = null; P.climbing = false; P.sliding = false; P.grounded = false;
+  const sp = act('sprint') ? 34 : 16, cp = Math.cos(P.pitch);
+  const fx = -Math.sin(P.yaw) * cp, fy = Math.sin(P.pitch), fz = -Math.cos(P.yaw) * cp, rx = Math.cos(P.yaw), rz = -Math.sin(P.yaw);
+  let iz = (act('forward') ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
+  if (PAD.active && Math.hypot(PAD.mx, PAD.my) > 0.2) { ix = PAD.mx; iz = -PAD.my; }
+  const iy = (act('jump') ? 1 : 0) - (act('crouch') ? 1 : 0);
+  P.vel.set((fx * iz + rx * ix) * sp, (fy * iz + iy) * sp, (fz * iz + rz * ix) * sp);
+  P.pos.addScaledVector(P.vel, dt);
+  const L = MAP_LIM; P.pos.x = clamp(P.pos.x, -L, L); P.pos.z = clamp(P.pos.z, -L, L); P.pos.y = clamp(P.pos.y, -1, 300);
+}
+function xTargets() {
+  const out = [];
+  for (const d of dummies) if (d.alive && RULES.bots && d.g.visible) { const p = d.g.position; out.push({ x: p.x, y: p.y, z: p.z, head: 1.5, body: 1.0, h: 1.9, hp: d.hp + d.sh, max: MAX_HP + MAX_SH, name: d.name, bot: true }); }
+  for (const rp of remotes.values()) if (rp.st && !rp.st.dead) { const k = 1 - rp.crouchK * 0.36; out.push({ x: rp.pos.x, y: rp.pos.y, z: rp.pos.z, head: 1.6 * k, body: 1.15 * k, h: 1.85 * k, hp: (rp.pHp || 0) + (rp.pSh || 0), max: MAX_HP + MAX_SH, name: rp.name, rp }); }
+  return out;
+}
+function xVisible(eye, x, y, z) {
+  _d.set(x - eye.x, y - eye.y, z - eye.z); const d = _d.length(); _d.divideScalar(d);
+  raycaster.set(eye, _d); raycaster.far = d - 0.3;
+  return raycaster.intersectObjects(WORLD, false).length === 0;
+}
+function xAimbot(dt) {
+  if (!xUnlocked || !playing || P.dead || EDIT.on || P.veh) return;
+  const eye = camera.position;
+  if (X.aimbot && (mouse.right || mouse.left || PAD.act.ads)) {
+    const cp = Math.cos(P.pitch), fx = -Math.sin(P.yaw) * cp, fy = Math.sin(P.pitch), fz = -Math.cos(P.yaw) * cp;
+    let best = null, bestAng = XV.fov / 2 * DEG;
+    for (const tg of xTargets()) {
+      const ty = tg.y + (X.head ? tg.head : tg.body), dx = tg.x - eye.x, dy = ty - eye.y, dz = tg.z - eye.z, d = Math.hypot(dx, dy, dz);
+      if (d < 0.5 || d > 400) continue;
+      const ang = Math.acos(clamp((dx * fx + dy * fy + dz * fz) / d, -1, 1));
+      if (ang >= bestAng) continue;
+      if (X.vis && !xVisible(eye, tg.x, ty, tg.z)) continue;
+      bestAng = ang; best = { dx, dy, dz };
+    }
+    if (best) {
+      const ty = Math.atan2(-best.dx, -best.dz), tp = Math.atan2(best.dy, Math.hypot(best.dx, best.dz));
+      let dyaw = ty - P.yaw; while (dyaw > Math.PI) dyaw -= 2 * Math.PI; while (dyaw < -Math.PI) dyaw += 2 * Math.PI;
+      const k = XV.smooth <= 0.01 ? 1 : 1 - Math.exp(-dt * 30 * (1 - XV.smooth));
+      P.yaw += dyaw * k; P.pitch = clamp(P.pitch + (tp - P.pitch) * k, -1.55, 1.55);
+    }
+  }
+  // triggerbot : tire tout seul quand le viseur est sur une cible
+  if (X.trigger) {
+    const cp = Math.cos(P.pitch);
+    _d.set(-Math.sin(P.yaw) * cp, Math.sin(P.pitch), -Math.cos(P.yaw) * cp);
+    raycaster.set(eye, _d); raycaster.far = WEAPONS[WS.cur].melee ? WEAPONS[WS.cur].range : 400;
+    const h = raycaster.intersectObjects(SHOOTABLE, false)[0], ud = h && h.object.userData;
+    if (ud && ((ud.d && ud.d.alive && RULES.bots) || (ud.rp && ud.rp.st && !ud.rp.st.dead))) mouse.left = true;
+  }
+}
+// téléportation au point visé (touche B)
+addEventListener('keydown', e => {
+  if (!playing || e.code !== 'KeyB' || !xUnlocked || !X.tp || P.dead || EDIT.on) return;
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const el = camera.matrixWorld.elements; _f.set(-el[8], -el[9], -el[10]);
+  raycaster.set(_o, _f); raycaster.far = 600;
+  const h = raycaster.intersectObjects(WORLD, false)[0]; if (!h) return;
+  const n = h.face ? h.face.normal.clone().transformDirection(h.object.matrixWorld) : UP;
+  P.pos.copy(h.point).addScaledVector(n, 0.6); if (n.y < 0.5) P.pos.y = Math.max(P.pos.y, h.point.y); P.pos.y += 0.05;
+  P.prev.copy(P.pos); P.vel.set(0, 0, 0); P.grounded = false; sfx.portal();
+});
+// ESP : dessin 2D par-dessus la scène
+const espCv = $('espCv'), espCtx = espCv.getContext('2d');
+const _ep = new V3();
+function drawEsp() {
+  const on = xUnlocked && playing && (X.esp || X.aimbot);
+  if (!on) { if (espCv.dataset.on) { espCtx.clearRect(0, 0, espCv.width, espCv.height); delete espCv.dataset.on; } return; }
+  espCv.dataset.on = '1';
+  const W = window.innerWidth, H = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  if (espCv.width !== Math.round(W * dpr)) { espCv.width = Math.round(W * dpr); espCv.height = Math.round(H * dpr); }
+  const c = espCtx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+  if (X.aimbot) {
+    // cercle du champ de l'aimbot
+    const r = Math.tan(Math.min(89, XV.fov / 2) * DEG) / Math.tan(camera.fov * DEG / 2) * H / 2;
+    c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 1; c.beginPath(); c.arc(W / 2, H / 2, r, 0, Math.PI * 2); c.stroke();
+  }
+  if (!X.esp) return;
+  c.font = '600 12px "Saira Condensed", sans-serif'; c.textAlign = 'center';
+  for (const tg of xTargets()) {
+    _ep.set(tg.x, tg.y + tg.h + 0.15, tg.z).project(camera); if (_ep.z > 1) continue;
+    const tx = (_ep.x * 0.5 + 0.5) * W, ty = (-_ep.y * 0.5 + 0.5) * H;
+    _ep.set(tg.x, tg.y, tg.z).project(camera); if (_ep.z > 1) continue;
+    const by = (-_ep.y * 0.5 + 0.5) * H, bx = (_ep.x * 0.5 + 0.5) * W, bh = Math.max(6, by - ty), bw = bh * 0.45;
+    const col = tg.bot ? '#ffb020' : '#ff3b30', dist = Math.hypot(tg.x - P.pos.x, tg.y - P.pos.y, tg.z - P.pos.z);
+    c.strokeStyle = col; c.lineWidth = 1.5; c.strokeRect(bx - bw / 2, ty, bw, bh);
+    const k = clamp(tg.hp / tg.max, 0, 1);
+    c.fillStyle = 'rgba(0,0,0,.55)'; c.fillRect(bx - bw / 2 - 6, ty, 3, bh);
+    c.fillStyle = k > 0.5 ? '#9be36a' : k > 0.25 ? '#ffb020' : '#ff5a44'; c.fillRect(bx - bw / 2 - 6, ty + bh * (1 - k), 3, bh * k);
+    c.fillStyle = col; c.fillText(tg.name + ' · ' + Math.round(dist) + ' m', bx, ty - 4);
+    c.strokeStyle = tg.bot ? 'rgba(255,176,32,.35)' : 'rgba(255,59,48,.5)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(W / 2, H); c.lineTo(bx, by); c.stroke();
+  }
 }
 /* ================= Avatars : poses procédurales, emotes, tenue Morgane ================= */
 const RIGS = {
@@ -5350,8 +5468,8 @@ let xBuf = '';
 addEventListener('keydown', e => {
   if (playing || !e.key || e.key.length !== 1) return;
   const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
-  xBuf = (xBuf + e.key.toLowerCase()).slice(-5);
-  if (xBuf.length < 5 || !(window.crypto && crypto.subtle)) return;
+  xBuf = (xBuf + e.key).slice(-6);
+  if (xBuf.length < 6 || !(window.crypto && crypto.subtle)) return;
   const tried = xBuf;
   crypto.subtle.digest('SHA-256', new TextEncoder().encode(tried)).then(buf => {
     const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
@@ -5370,6 +5488,13 @@ function renderX() {
 document.querySelectorAll('[data-x]').forEach(el => el.addEventListener('change', () => {
   X[el.dataset.x] = el.checked; store.set('xs', X);
 }));
+{
+  const f = $('xFov'), sm = $('xSmooth');
+  const sync = () => { $('oXFov').textContent = XV.fov + '°'; $('oXSmooth').textContent = XV.smooth <= 0 ? 'instant' : Math.round(XV.smooth * 100) + ' %'; };
+  f.value = XV.fov; sm.value = XV.smooth; sync();
+  f.addEventListener('input', () => { XV.fov = +f.value; store.set('xv', XV); sync(); });
+  sm.addEventListener('input', () => { XV.smooth = +sm.value; store.set('xv', XV); sync(); });
+}
 renderX();
 let toastT = 0;
 function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.classList.add('on'); toastT = sec; }
@@ -5960,12 +6085,14 @@ function frame(now) {
   pollPad(dt);
   padAimAssist(dt);
   aimAssist(dt);
+  xAimbot(dt);
   updateCamera(dt, playing || NET.mode !== 'off' ? acc / STEP : 1);
   updateRemotes(dt);
   updateSelfAvatar(dt);
   updateFpLegs(dt);
   updateVehicles(dt);
   updateEditor();
+  drawEsp();
   if (MAP_TICK) MAP_TICK(dt);
   if (playing) updateHazards(dt);
   updateAbilityFx(dt);
