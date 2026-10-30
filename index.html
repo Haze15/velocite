@@ -2953,7 +2953,9 @@ function onlineReady(code) {
   $('netBadge').hidden = false; $('netBadge').textContent = t('net.badge', { code });
   $('me').hidden = false;
   setPlayLbl('play.enter');
-  const link = location.origin + location.pathname + '#' + code;
+  // depuis l'appli Windows (serveur local), le lien à partager pointe vers la version en ligne
+  const local = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+  const link = (local ? 'https://haze15.github.io/velocite/' : location.origin + location.pathname) + '#' + code;
   $('roomCode').textContent = code; $('roomLink').textContent = link; $('roomBox').hidden = false;
   try { history.replaceState(null, '', '#' + code); } catch (e) {}
 }

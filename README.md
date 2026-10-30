@@ -81,6 +81,12 @@ Avec le couteau en main, tu cours 10 % plus vite. Dix-neuf skins d'arme au choix
 
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 
+## Appli Windows
+
+`Velocite.exe` ouvre le jeu dans sa propre fenêtre, sans barre d'adresse, avec Chrome, Edge ou Brave (sinon dans le navigateur par défaut). Le jeu et ses modèles sont dans l'exécutable : le solo marche hors ligne, le multijoueur demande internet. Les liens de partie partagés depuis l'appli pointent vers la version en ligne. L'appli se ferme toute seule quand on ferme la fenêtre du jeu.
+
+Pour la reconstruire : `launcher/build-exe.sh` (Go 1.21+, et [rsrc](https://github.com/akavel/rsrc) pour l'icône). Le résultat arrive dans `dist/Velocite.exe`.
+
 ## Lancer en local
 
 Les modèles 3D sont chargés depuis `assets/`, il faut donc un petit serveur :
@@ -99,4 +105,4 @@ python3 -m http.server 8000
 
 - Robot : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
 - Soldat et X-Bot : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js.
-- Moteur : [three.js](https://threejs.org/) r128 (MIT). Réseau : [PeerJS](https://peerjs.com/) (MIT).
+- Moteur : [three.js](https://threejs.org/) r128 (MIT), copié dans `launcher/vendor/` pour l'appli Windows. Réseau : [PeerJS](https://peerjs.com/) (MIT).

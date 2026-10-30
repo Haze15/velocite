@@ -1,0 +1,3 @@
+launcher/game/
+launcher/*.syso
+dist/
