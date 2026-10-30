@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Trois cartes (Canyon, Raffinerie, Forêt), 5 armes et 6 couteaux, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Quatre cartes (Canyon, Raffinerie, Forêt, Château), 5 armes et 6 couteaux, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -15,7 +15,7 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 
 ## Personnages
 
-Soldat, X-Bot ou Robot, avec dix couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+Soldat, X-Bot ou Robot, avec dix-huit couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
 ## Cartes
 
@@ -23,6 +23,7 @@ Soldat, X-Bot ou Robot, avec dix couleurs. Le choix se fait dans le menu avec un
 - **Raffinerie** : zone industrielle au crépuscule, half-pipe, passerelles en hauteur reliées par un pont, couloir étroit pour enchaîner les wall-jumps, réservoirs à escalader.
 
 - **Forêt** : pins, ruisseau, cabane avec toit accessible, mirador sur pilotis, colline de glisse de 9 m.
+- **Château** : forteresse originale avec douves, pont-levis, cour intérieure, chemin de ronde crénelé, tours d'angle, donjon avec grand escalier de glisse et pad vers la tour haute.
 
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
 
@@ -76,7 +77,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Papillon | 46, portée 2,5 m | 135 coups/min | — |
 | Katana | 70, portée 3,6 m | 80 coups/min | — |
 
-Avec le couteau en main, tu cours 10 % plus vite. Treize skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon.
+Avec le couteau en main, tu cours 10 % plus vite. Dix-neuf skins d'arme au choix dans les réglages : standard, or, camo désert, néon, carbone, arctique, rouge sang, jungle, chrome, lave, galaxie, tigre, bonbon, sakura, océan, toxique, royal, camo urbain, coucher de soleil.
 
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 

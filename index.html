@@ -310,7 +310,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <p class="touch-note" data-i18n="menu.touch">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
-        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option></select></label>
+        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option></select></label>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
       </div>
     </header>
@@ -321,7 +321,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <canvas id="charPrev" width="150" height="200" aria-hidden="true"></canvas>
         <div class="charopts">
           <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="robot" data-i18n="char.robot">Robot</option></select></label>
-          <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
         </div>
       </div>
@@ -369,7 +369,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
         <label class="field"><span class="lab" data-i18n="set.quality">Graphismes</span><select id="quality"><option value="auto" data-i18n="q.auto">Auto (adapte la résolution)</option><option value="high" data-i18n="q.high">Élevés</option><option value="low" data-i18n="q.low">Rapides (sans ombres)</option></select></label>
-        <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option><option value="crimson" data-i18n="skin.crimson">Rouge sang</option><option value="jungle" data-i18n="skin.jungle">Jungle</option><option value="chrome" data-i18n="skin.chrome">Chrome</option><option value="lava" data-i18n="skin.lava">Lave</option><option value="galaxy" data-i18n="skin.galaxy">Galaxie</option><option value="tiger" data-i18n="skin.tiger">Tigre</option><option value="candy" data-i18n="skin.candy">Bonbon</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.skin">Skin d’arme</span><select id="skin"><option value="std" data-i18n="skin.std">Standard</option><option value="gold" data-i18n="skin.gold">Or</option><option value="desert" data-i18n="skin.desert">Camo désert</option><option value="neon" data-i18n="skin.neon">Néon</option><option value="carbon" data-i18n="skin.carbon">Carbone</option><option value="arctic" data-i18n="skin.arctic">Arctique</option><option value="crimson" data-i18n="skin.crimson">Rouge sang</option><option value="jungle" data-i18n="skin.jungle">Jungle</option><option value="chrome" data-i18n="skin.chrome">Chrome</option><option value="lava" data-i18n="skin.lava">Lave</option><option value="galaxy" data-i18n="skin.galaxy">Galaxie</option><option value="tiger" data-i18n="skin.tiger">Tigre</option><option value="candy" data-i18n="skin.candy">Bonbon</option><option value="sakura" data-i18n="skin.sakura">Sakura</option><option value="ocean" data-i18n="skin.ocean">Océan</option><option value="toxic" data-i18n="skin.toxic">Toxique</option><option value="royal" data-i18n="skin.royal">Royal</option><option value="urban" data-i18n="skin.urban">Camo urbain</option><option value="sunset" data-i18n="skin.sunset">Coucher de soleil</option></select></label>
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
@@ -505,7 +505,7 @@ const I18N = {
     'feed.respawn': 'RÉAPPARITION', 'feed.newPoint': 'nouveau point',
     'w0': 'CARABINE K-31', 'w1': 'MITRAILLETTE VX', 'w2': 'POMPE KS-8', 'w3': 'ÉPERVIER .50', 'w4': 'PISTOLET HX',
     'w0s': 'CARABINE', 'w1s': 'MITRAILL.', 'w2s': 'POMPE', 'w3s': 'SNIPER', 'w4s': 'PISTOLET',
-    'w5': 'COUTEAU', 'w5s': 'COUTEAU', 'act.w6': 'Couteau', 'act.map': 'Mini-carte', 'set.minimap': 'Mini-carte', 'set.skin': 'Skin d’arme', 'skin.std': 'Standard', 'skin.gold': 'Or', 'skin.desert': 'Camo désert', 'skin.neon': 'Néon', 'skin.carbon': 'Carbone', 'skin.arctic': 'Arctique', 'skin.crimson': 'Rouge sang', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lave', 'skin.galaxy': 'Galaxie', 'skin.tiger': 'Tigre', 'skin.candy': 'Bonbon', 'map.label': 'Carte', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinerie', 'map.hostOnly': 'Seul l’hôte choisit la carte.', 'char.title': 'Personnage', 'set.char': 'Personnage', 'char.soldier': 'Soldat', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Couleur', 'tint.auto': 'Auto (couleur de partie)', 'tint.amber': 'Ambre', 'tint.cyan': 'Cyan', 'tint.red': 'Rouge', 'tint.green': 'Vert', 'tint.violet': 'Violet', 'tint.pink': 'Rose', 'tint.white': 'Blanc', 'tint.blue': 'Bleu', 'tint.black': 'Noir', 'char.hint': 'C’est le personnage que les autres joueurs voient en ligne.', 'act.stim': 'Stim', 'act.dome': 'Dôme-bouclier', 'act.portal': 'Portail', 'ab.stim': 'STIM', 'ab.dome': 'DÔME', 'ab.portal': 'PORTAIL', 'ab.portalA': 'entrée posée, va plus loin et réappuie', 'ab.portalOpen': 'ouvert 40 s', 'ab.tooClose': 'Éloigne-toi d’au moins 6 m pour poser la sortie.', 'set.knife': 'Couteau', 'knife.combat': 'Couteau de combat', 'knife.karambit': 'Karambit', 'knife.machete': 'Machette', 'knife.dagger': 'Dague', 'knife.butterfly': 'Papillon', 'knife.katana': 'Katana', 'act.inspect': 'Inspecter', 'map.forest': 'Forêt', 'net.kicked': 'L’hôte t’a expulsé de la partie.', 'set.slideSnd': 'Son de glissade', 'snd.gravel': 'Gravier', 'snd.metal': 'Métal', 'snd.wind': 'Souffle', 'snd.electric': 'Électrique', 'snd.off': 'Aucun', 'snd.custom': 'Mon fichier', 'snd.import': 'Importer un son', 'snd.test': 'Écouter', 'snd.loaded': 'Son « {name} » chargé et mémorisé.', 'snd.tooBig': 'Son chargé pour cette session seulement : trop lourd pour être mémorisé (2 Mo max).', 'snd.bad': 'Ce fichier n’est pas un son lisible.', 'snd.need': 'Importe d’abord un fichier son.'
+    'w5': 'COUTEAU', 'w5s': 'COUTEAU', 'act.w6': 'Couteau', 'act.map': 'Mini-carte', 'set.minimap': 'Mini-carte', 'set.skin': 'Skin d’arme', 'skin.std': 'Standard', 'skin.gold': 'Or', 'skin.desert': 'Camo désert', 'skin.neon': 'Néon', 'skin.carbon': 'Carbone', 'skin.arctic': 'Arctique', 'skin.crimson': 'Rouge sang', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lave', 'skin.galaxy': 'Galaxie', 'skin.tiger': 'Tigre', 'skin.candy': 'Bonbon', 'map.label': 'Carte', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinerie', 'map.hostOnly': 'Seul l’hôte choisit la carte.', 'char.title': 'Personnage', 'set.char': 'Personnage', 'char.soldier': 'Soldat', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Couleur', 'tint.auto': 'Auto (couleur de partie)', 'tint.amber': 'Ambre', 'tint.cyan': 'Cyan', 'tint.red': 'Rouge', 'tint.green': 'Vert', 'tint.violet': 'Violet', 'tint.pink': 'Rose', 'tint.white': 'Blanc', 'tint.blue': 'Bleu', 'tint.black': 'Noir', 'char.hint': 'C’est le personnage que les autres joueurs voient en ligne.', 'act.stim': 'Stim', 'act.dome': 'Dôme-bouclier', 'act.portal': 'Portail', 'ab.stim': 'STIM', 'ab.dome': 'DÔME', 'ab.portal': 'PORTAIL', 'ab.portalA': 'entrée posée, va plus loin et réappuie', 'ab.portalOpen': 'ouvert 40 s', 'ab.tooClose': 'Éloigne-toi d’au moins 6 m pour poser la sortie.', 'set.knife': 'Couteau', 'knife.combat': 'Couteau de combat', 'knife.karambit': 'Karambit', 'knife.machete': 'Machette', 'knife.dagger': 'Dague', 'knife.butterfly': 'Papillon', 'knife.katana': 'Katana', 'act.inspect': 'Inspecter', 'map.forest': 'Forêt', 'map.castle': 'Château', 'tint.orange': 'Orange', 'tint.yellow': 'Jaune', 'tint.mint': 'Menthe', 'tint.crimson': 'Pourpre', 'tint.gold': 'Doré', 'tint.navy': 'Marine', 'tint.lime': 'Citron vert', 'tint.silver': 'Argent', 'skin.sakura': 'Sakura', 'skin.ocean': 'Océan', 'skin.toxic': 'Toxique', 'skin.royal': 'Royal', 'skin.urban': 'Camo urbain', 'skin.sunset': 'Coucher de soleil', 'net.kicked': 'L’hôte t’a expulsé de la partie.', 'set.slideSnd': 'Son de glissade', 'snd.gravel': 'Gravier', 'snd.metal': 'Métal', 'snd.wind': 'Souffle', 'snd.electric': 'Électrique', 'snd.off': 'Aucun', 'snd.custom': 'Mon fichier', 'snd.import': 'Importer un son', 'snd.test': 'Écouter', 'snd.loaded': 'Son « {name} » chargé et mémorisé.', 'snd.tooBig': 'Son chargé pour cette session seulement : trop lourd pour être mémorisé (2 Mo max).', 'snd.bad': 'Ce fichier n’est pas un son lisible.', 'snd.need': 'Importe d’abord un fichier son.'
   },
   en: {
     'menu.kicker': 'Movement lab · Browser FPS',
@@ -571,7 +571,7 @@ const I18N = {
     'feed.respawn': 'RESPAWN', 'feed.newPoint': 'new spawn',
     'w0': 'CARBINE K-31', 'w1': 'SMG VX', 'w2': 'SHOTGUN KS-8', 'w3': 'SPARROWHAWK .50', 'w4': 'PISTOL HX',
     'w0s': 'CARBINE', 'w1s': 'SMG', 'w2s': 'SHOTGUN', 'w3s': 'SNIPER', 'w4s': 'PISTOL',
-    'w5': 'KNIFE', 'w5s': 'KNIFE', 'act.w6': 'Knife', 'act.map': 'Minimap', 'set.minimap': 'Minimap', 'set.skin': 'Weapon skin', 'skin.std': 'Standard', 'skin.gold': 'Gold', 'skin.desert': 'Desert camo', 'skin.neon': 'Neon', 'skin.carbon': 'Carbon', 'skin.arctic': 'Arctic', 'skin.crimson': 'Crimson', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lava', 'skin.galaxy': 'Galaxy', 'skin.tiger': 'Tiger', 'skin.candy': 'Candy', 'map.label': 'Map', 'map.canyon': 'Canyon', 'map.refinery': 'Refinery', 'map.hostOnly': 'Only the host picks the map.', 'char.title': 'Character', 'set.char': 'Character', 'char.soldier': 'Soldier', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Color', 'tint.auto': 'Auto (match color)', 'tint.amber': 'Amber', 'tint.cyan': 'Cyan', 'tint.red': 'Red', 'tint.green': 'Green', 'tint.violet': 'Purple', 'tint.pink': 'Pink', 'tint.white': 'White', 'tint.blue': 'Blue', 'tint.black': 'Black', 'char.hint': 'This is the character other players see online.', 'act.stim': 'Stim', 'act.dome': 'Dome shield', 'act.portal': 'Portal', 'ab.stim': 'STIM', 'ab.dome': 'DOME', 'ab.portal': 'PORTAL', 'ab.portalA': 'entrance placed, move away and press again', 'ab.portalOpen': 'open for 40 s', 'ab.tooClose': 'Move at least 6 m away to place the exit.', 'set.knife': 'Knife', 'knife.combat': 'Combat knife', 'knife.karambit': 'Karambit', 'knife.machete': 'Machete', 'knife.dagger': 'Dagger', 'knife.butterfly': 'Butterfly', 'knife.katana': 'Katana', 'act.inspect': 'Inspect', 'map.forest': 'Forest', 'net.kicked': 'The host removed you from the match.', 'set.slideSnd': 'Slide sound', 'snd.gravel': 'Gravel', 'snd.metal': 'Metal', 'snd.wind': 'Whoosh', 'snd.electric': 'Electric', 'snd.off': 'None', 'snd.custom': 'My file', 'snd.import': 'Import a sound', 'snd.test': 'Listen', 'snd.loaded': 'Sound “{name}” loaded and saved.', 'snd.tooBig': 'Sound loaded for this session only: too large to save (2 MB max).', 'snd.bad': 'This file isn’t a playable sound.', 'snd.need': 'Import a sound file first.'
+    'w5': 'KNIFE', 'w5s': 'KNIFE', 'act.w6': 'Knife', 'act.map': 'Minimap', 'set.minimap': 'Minimap', 'set.skin': 'Weapon skin', 'skin.std': 'Standard', 'skin.gold': 'Gold', 'skin.desert': 'Desert camo', 'skin.neon': 'Neon', 'skin.carbon': 'Carbon', 'skin.arctic': 'Arctic', 'skin.crimson': 'Crimson', 'skin.jungle': 'Jungle', 'skin.chrome': 'Chrome', 'skin.lava': 'Lava', 'skin.galaxy': 'Galaxy', 'skin.tiger': 'Tiger', 'skin.candy': 'Candy', 'map.label': 'Map', 'map.canyon': 'Canyon', 'map.refinery': 'Refinery', 'map.hostOnly': 'Only the host picks the map.', 'char.title': 'Character', 'set.char': 'Character', 'char.soldier': 'Soldier', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Color', 'tint.auto': 'Auto (match color)', 'tint.amber': 'Amber', 'tint.cyan': 'Cyan', 'tint.red': 'Red', 'tint.green': 'Green', 'tint.violet': 'Purple', 'tint.pink': 'Pink', 'tint.white': 'White', 'tint.blue': 'Blue', 'tint.black': 'Black', 'char.hint': 'This is the character other players see online.', 'act.stim': 'Stim', 'act.dome': 'Dome shield', 'act.portal': 'Portal', 'ab.stim': 'STIM', 'ab.dome': 'DOME', 'ab.portal': 'PORTAL', 'ab.portalA': 'entrance placed, move away and press again', 'ab.portalOpen': 'open for 40 s', 'ab.tooClose': 'Move at least 6 m away to place the exit.', 'set.knife': 'Knife', 'knife.combat': 'Combat knife', 'knife.karambit': 'Karambit', 'knife.machete': 'Machete', 'knife.dagger': 'Dagger', 'knife.butterfly': 'Butterfly', 'knife.katana': 'Katana', 'act.inspect': 'Inspect', 'map.forest': 'Forest', 'map.castle': 'Castle', 'tint.orange': 'Orange', 'tint.yellow': 'Yellow', 'tint.mint': 'Mint', 'tint.crimson': 'Crimson', 'tint.gold': 'Gold', 'tint.navy': 'Navy', 'tint.lime': 'Lime', 'tint.silver': 'Silver', 'skin.sakura': 'Sakura', 'skin.ocean': 'Ocean', 'skin.toxic': 'Toxic', 'skin.royal': 'Royal', 'skin.urban': 'Urban camo', 'skin.sunset': 'Sunset', 'net.kicked': 'The host removed you from the match.', 'set.slideSnd': 'Slide sound', 'snd.gravel': 'Gravel', 'snd.metal': 'Metal', 'snd.wind': 'Whoosh', 'snd.electric': 'Electric', 'snd.off': 'None', 'snd.custom': 'My file', 'snd.import': 'Import a sound', 'snd.test': 'Listen', 'snd.loaded': 'Sound “{name}” loaded and saved.', 'snd.tooBig': 'Sound loaded for this session only: too large to save (2 MB max).', 'snd.bad': 'This file isn’t a playable sound.', 'snd.need': 'Import a sound file first.'
   },
   af: {
     'menu.kicker': 'Bewegingslab · Blaaier-FPS',
@@ -635,7 +635,7 @@ const I18N = {
     'feed.respawn': 'HERVERSKYN', 'feed.newPoint': 'nuwe punt',
     'w0': 'KARABYN K-31', 'w1': 'MASJIENPISTOOL VX', 'w2': 'HAELGEWEER KS-8', 'w3': 'SPERWER .50', 'w4': 'PISTOOL HX',
     'w0s': 'KARABYN', 'w1s': 'MASJIENP.', 'w2s': 'HAELGEW.', 'w3s': 'SKERPSKUT.', 'w4s': 'PISTOOL',
-    'w5': 'MES', 'w5s': 'MES', 'act.w6': 'Mes', 'act.map': 'Minikaart', 'set.minimap': 'Minikaart', 'set.skin': 'Wapenvel', 'skin.std': 'Standaard', 'skin.gold': 'Goud', 'skin.desert': 'Woestynkamoeflering', 'skin.neon': 'Neon', 'skin.carbon': 'Koolstof', 'skin.arctic': 'Arkties', 'skin.crimson': 'Bloedrooi', 'skin.jungle': 'Oerwoud', 'skin.chrome': 'Chroom', 'skin.lava': 'Lawa', 'skin.galaxy': 'Sterrestelsel', 'skin.tiger': 'Tier', 'skin.candy': 'Lekkergoed', 'map.label': 'Kaart', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinadery', 'map.hostOnly': 'Net die gasheer kies die kaart.', 'char.title': 'Karakter', 'set.char': 'Karakter', 'char.soldier': 'Soldaat', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Kleur', 'tint.auto': 'Outo (wedstrydkleur)', 'tint.amber': 'Amber', 'tint.cyan': 'Siaan', 'tint.red': 'Rooi', 'tint.green': 'Groen', 'tint.violet': 'Pers', 'tint.pink': 'Pienk', 'tint.white': 'Wit', 'tint.blue': 'Blou', 'tint.black': 'Swart', 'char.hint': 'Dit is die karakter wat ander spelers aanlyn sien.', 'act.stim': 'Stim', 'act.dome': 'Koepelskild', 'act.portal': 'Portaal', 'ab.stim': 'STIM', 'ab.dome': 'KOEPEL', 'ab.portal': 'PORTAAL', 'ab.portalA': 'ingang geplaas, beweeg weg en druk weer', 'ab.portalOpen': '40 s oop', 'ab.tooClose': 'Beweeg minstens 6 m weg om die uitgang te plaas.', 'set.knife': 'Mes', 'knife.combat': 'Gevegsmes', 'knife.karambit': 'Karambit', 'knife.machete': 'Kapmes', 'knife.dagger': 'Dolk', 'knife.butterfly': 'Skoenlapper', 'knife.katana': 'Katana', 'act.inspect': 'Inspekteer', 'map.forest': 'Woud', 'net.kicked': 'Die gasheer het jou uit die wedstryd verwyder.', 'set.slideSnd': 'Glyklank', 'snd.gravel': 'Gruis', 'snd.metal': 'Metaal', 'snd.wind': 'Wind', 'snd.electric': 'Elektries', 'snd.off': 'Geen', 'snd.custom': 'My lêer', 'snd.import': 'Voer ’n klank in', 'snd.test': 'Luister', 'snd.loaded': 'Klank “{name}” gelaai en gestoor.', 'snd.tooBig': 'Klank net vir hierdie sessie gelaai: te groot om te stoor (maks. 2 MB).', 'snd.bad': 'Hierdie lêer is nie ’n speelbare klank nie.', 'snd.need': 'Voer eers ’n klanklêer in.'
+    'w5': 'MES', 'w5s': 'MES', 'act.w6': 'Mes', 'act.map': 'Minikaart', 'set.minimap': 'Minikaart', 'set.skin': 'Wapenvel', 'skin.std': 'Standaard', 'skin.gold': 'Goud', 'skin.desert': 'Woestynkamoeflering', 'skin.neon': 'Neon', 'skin.carbon': 'Koolstof', 'skin.arctic': 'Arkties', 'skin.crimson': 'Bloedrooi', 'skin.jungle': 'Oerwoud', 'skin.chrome': 'Chroom', 'skin.lava': 'Lawa', 'skin.galaxy': 'Sterrestelsel', 'skin.tiger': 'Tier', 'skin.candy': 'Lekkergoed', 'map.label': 'Kaart', 'map.canyon': 'Canyon', 'map.refinery': 'Raffinadery', 'map.hostOnly': 'Net die gasheer kies die kaart.', 'char.title': 'Karakter', 'set.char': 'Karakter', 'char.soldier': 'Soldaat', 'char.xbot': 'X-Bot', 'char.robot': 'Robot', 'set.tint': 'Kleur', 'tint.auto': 'Outo (wedstrydkleur)', 'tint.amber': 'Amber', 'tint.cyan': 'Siaan', 'tint.red': 'Rooi', 'tint.green': 'Groen', 'tint.violet': 'Pers', 'tint.pink': 'Pienk', 'tint.white': 'Wit', 'tint.blue': 'Blou', 'tint.black': 'Swart', 'char.hint': 'Dit is die karakter wat ander spelers aanlyn sien.', 'act.stim': 'Stim', 'act.dome': 'Koepelskild', 'act.portal': 'Portaal', 'ab.stim': 'STIM', 'ab.dome': 'KOEPEL', 'ab.portal': 'PORTAAL', 'ab.portalA': 'ingang geplaas, beweeg weg en druk weer', 'ab.portalOpen': '40 s oop', 'ab.tooClose': 'Beweeg minstens 6 m weg om die uitgang te plaas.', 'set.knife': 'Mes', 'knife.combat': 'Gevegsmes', 'knife.karambit': 'Karambit', 'knife.machete': 'Kapmes', 'knife.dagger': 'Dolk', 'knife.butterfly': 'Skoenlapper', 'knife.katana': 'Katana', 'act.inspect': 'Inspekteer', 'map.forest': 'Woud', 'map.castle': 'Kasteel', 'tint.orange': 'Oranje', 'tint.yellow': 'Geel', 'tint.mint': 'Kruisement', 'tint.crimson': 'Karmosyn', 'tint.gold': 'Goud', 'tint.navy': 'Vlootblou', 'tint.lime': 'Lemmetjie', 'tint.silver': 'Silwer', 'skin.sakura': 'Sakura', 'skin.ocean': 'Oseaan', 'skin.toxic': 'Giftig', 'skin.royal': 'Koninklik', 'skin.urban': 'Stedelike kamoeflering', 'skin.sunset': 'Sonsondergang', 'net.kicked': 'Die gasheer het jou uit die wedstryd verwyder.', 'set.slideSnd': 'Glyklank', 'snd.gravel': 'Gruis', 'snd.metal': 'Metaal', 'snd.wind': 'Wind', 'snd.electric': 'Elektries', 'snd.off': 'Geen', 'snd.custom': 'My lêer', 'snd.import': 'Voer ’n klank in', 'snd.test': 'Luister', 'snd.loaded': 'Klank “{name}” gelaai en gestoor.', 'snd.tooBig': 'Klank net vir hierdie sessie gelaai: te groot om te stoor (maks. 2 MB).', 'snd.bad': 'Hierdie lêer is nie ’n speelbare klank nie.', 'snd.need': 'Voer eers ’n klanklêer in.'
   },
   zu: {
     'menu.kicker': 'Ilabhu yokunyakaza · I-FPS yesiphequluli',
@@ -696,7 +696,7 @@ const I18N = {
     'state.sprint': 'UKUGIJIMA', 'state.crouch': 'UGOBILE', 'state.ground': 'PHANSI',
     'feed.kill': 'UKUKHISHWA', 'feed.djReady': 'ukweqa kabili kulungile', 'feed.back': 'BUYELA', 'feed.start': 'lapho uqale khona',
     'feed.respawn': 'VELA KABUSHA', 'feed.newPoint': 'indawo entsha',
-    'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'skin.crimson': 'Okubomvu klebhu', 'skin.jungle': 'Ihlathi', 'skin.chrome': 'I-chrome', 'skin.lava': 'I-lava', 'skin.galaxy': 'Umthala', 'skin.tiger': 'Ingwe', 'skin.candy': 'Uswidi', 'map.label': 'Imephu', 'map.canyon': 'Umhosha', 'map.refinery': 'Ifekthri kawoyela', 'map.hostOnly': 'Umsingathi kuphela okhetha imephu.', 'char.title': 'Umlingiswa', 'set.char': 'Umlingiswa', 'char.soldier': 'Isosha', 'char.xbot': 'X-Bot', 'char.robot': 'Irobhothi', 'set.tint': 'Umbala', 'tint.auto': 'Okuzenzakalelayo (umbala womdlalo)', 'tint.amber': 'Ompofu', 'tint.cyan': 'Okwesibhakabhaka okukhanyayo', 'tint.red': 'Okubomvu', 'tint.green': 'Okuluhlaza', 'tint.violet': 'Okunsomi', 'tint.pink': 'Okubomvana', 'tint.white': 'Okumhlophe', 'tint.blue': 'Okwesibhakabhaka', 'tint.black': 'Okumnyama', 'char.hint': 'Lona ngumlingiswa abanye abadlali abambona ku-inthanethi.', 'act.stim': 'I-stim', 'act.dome': 'Isihlangu sedome', 'act.portal': 'Isango', 'ab.stim': 'I-STIM', 'ab.dome': 'IDOME', 'ab.portal': 'ISANGO', 'ab.portalA': 'umnyango ubekiwe, suka bese ucindezela futhi', 'ab.portalOpen': 'livuliwe imizuzwana engama-40', 'ab.tooClose': 'Suka okungenani amamitha ayi-6 ukuze ubeke indawo yokuphuma.', 'set.knife': 'Ummese', 'knife.combat': 'Ummese wempi', 'knife.karambit': 'I-karambit', 'knife.machete': 'Ipanga', 'knife.dagger': 'Inkemba encane', 'knife.butterfly': 'Uvemvane', 'knife.katana': 'I-katana', 'act.inspect': 'Hlola', 'map.forest': 'Ihlathi', 'net.kicked': 'Umsingathi ukukhiphile emdlalweni.', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
+    'w5': 'UMMESE', 'w5s': 'UMMESE', 'act.w6': 'Ummese', 'act.map': 'Imephu encane', 'set.minimap': 'Imephu encane', 'set.skin': 'Isikhumba sesikhali', 'skin.std': 'Okujwayelekile', 'skin.gold': 'Igolide', 'skin.desert': 'Ukufihla kwasogwadule', 'skin.neon': 'I-neon', 'skin.carbon': 'I-carbon', 'skin.arctic': 'I-Arctic', 'skin.crimson': 'Okubomvu klebhu', 'skin.jungle': 'Ihlathi', 'skin.chrome': 'I-chrome', 'skin.lava': 'I-lava', 'skin.galaxy': 'Umthala', 'skin.tiger': 'Ingwe', 'skin.candy': 'Uswidi', 'map.label': 'Imephu', 'map.canyon': 'Umhosha', 'map.refinery': 'Ifekthri kawoyela', 'map.hostOnly': 'Umsingathi kuphela okhetha imephu.', 'char.title': 'Umlingiswa', 'set.char': 'Umlingiswa', 'char.soldier': 'Isosha', 'char.xbot': 'X-Bot', 'char.robot': 'Irobhothi', 'set.tint': 'Umbala', 'tint.auto': 'Okuzenzakalelayo (umbala womdlalo)', 'tint.amber': 'Ompofu', 'tint.cyan': 'Okwesibhakabhaka okukhanyayo', 'tint.red': 'Okubomvu', 'tint.green': 'Okuluhlaza', 'tint.violet': 'Okunsomi', 'tint.pink': 'Okubomvana', 'tint.white': 'Okumhlophe', 'tint.blue': 'Okwesibhakabhaka', 'tint.black': 'Okumnyama', 'char.hint': 'Lona ngumlingiswa abanye abadlali abambona ku-inthanethi.', 'act.stim': 'I-stim', 'act.dome': 'Isihlangu sedome', 'act.portal': 'Isango', 'ab.stim': 'I-STIM', 'ab.dome': 'IDOME', 'ab.portal': 'ISANGO', 'ab.portalA': 'umnyango ubekiwe, suka bese ucindezela futhi', 'ab.portalOpen': 'livuliwe imizuzwana engama-40', 'ab.tooClose': 'Suka okungenani amamitha ayi-6 ukuze ubeke indawo yokuphuma.', 'set.knife': 'Ummese', 'knife.combat': 'Ummese wempi', 'knife.karambit': 'I-karambit', 'knife.machete': 'Ipanga', 'knife.dagger': 'Inkemba encane', 'knife.butterfly': 'Uvemvane', 'knife.katana': 'I-katana', 'act.inspect': 'Hlola', 'map.forest': 'Ihlathi', 'map.castle': 'Inqaba', 'tint.orange': 'Owolintshi', 'tint.yellow': 'Ophuzi', 'tint.mint': 'Oluhlaza okukhanyayo', 'tint.crimson': 'Okubomvu okujulile', 'tint.gold': 'Igolide', 'tint.navy': 'Okwesibhakabhaka okumnyama', 'tint.lime': 'Okuluhlaza okukhazimulayo', 'tint.silver': 'Isiliva', 'skin.sakura': 'I-sakura', 'skin.ocean': 'Ulwandle', 'skin.toxic': 'Ubuthi', 'skin.royal': 'Kobukhosi', 'skin.urban': 'Ukufihla kwasedolobheni', 'skin.sunset': 'Ukushona kwelanga', 'net.kicked': 'Umsingathi ukukhiphile emdlalweni.', 'set.slideSnd': 'Umsindo wokushelela', 'snd.gravel': 'Amatshe', 'snd.metal': 'Insimbi', 'snd.wind': 'Umoya', 'snd.electric': 'Ugesi', 'snd.off': 'Akukho', 'snd.custom': 'Ifayela lami', 'snd.import': 'Ngenisa umsindo', 'snd.test': 'Lalela', 'snd.loaded': 'Umsindo othi “{name}” ulayishiwe futhi wagcinwa.', 'snd.tooBig': 'Umsindo ulayishelwe le seshini kuphela: mkhulu kakhulu ukuthi ugcinwe (2 MB ubuningi).', 'snd.bad': 'Leli fayela akuwona umsindo odlalekayo.', 'snd.need': 'Qala ngokungenisa ifayela lomsindo.'
   }
 };
 const LANGS = Object.keys(I18N);
@@ -852,7 +852,8 @@ const flashTex = canvasTex((g, s) => {
 /* ================= Monde ================= */
 const PAL = { concrete: 0xc8c1b2, teal: 0x4f8a8c, wall: 0x9a9081, ramp: 0xd4c8b3, ground: 0xd9c29b, rust: 0xbd5b34, cream: 0xe5d8bb,
   navy: 0x3d4b60, deck: 0x9aa3ad, steel: 0x66737f, hazard: 0xe0b23a, tank: 0xc9ced4, red: 0xb23a2e, blue: 0x2f5f9e, white: 0xdfe3e6,
-  rock: 0x8d8f88, wood: 0x9a6a3f, bark: 0x5e4129, moss: 0x6b8a45 };
+  rock: 0x8d8f88, wood: 0x9a6a3f, bark: 0x5e4129, moss: 0x6b8a45,
+  stone: 0xbdb7aa, keep: 0xa39d90, hay: 0xd9b75a, roofred: 0xa8382e };
 const matCache = {};
 function M(key) {
   if (matCache[key]) return matCache[key];
@@ -1061,6 +1062,67 @@ function buildForest() {
   farDecor(hills, new THREE.MeshPhongMaterial({ color: 0x4d6b48, flatShading: true, shininess: 0 }));
 }
 
+/* ---------- Carte 4 : Château (forteresse originale : douves, pont-levis, cour, remparts, donjon) ---------- */
+const CASTLE_SPAWNS = [[0, 0, 52, 0], [-25, 0, 46, -0.5], [25, 0, 46, 0.5], [-14, 0, 12, 0.3], [10, 0, 16, -0.3], [-40, 0, -52, -2.36], [50, 0, -50, 2.36], [5, 10, -26, 0], [-52, 0, 5, -1.57], [52, 0, 5, 1.57]];
+const CASTLE_DUMMIES = [
+  [-10, 0, 9, 'strafe', 'x'], [10, 0, 8, 'strafe', 'x'], [0, 0, 16, 'static'], [-5.5, 10, -26, 'static'],
+  [-28.6, 8, -15, 'strafe', 'z'], [28.6, 8, -5, 'strafe', 'z'], [0, 16, -20, 'static'], [-40, 0, 32, 'circle'],
+  [40, 0, 32, 'jump'], [0, 0, -50, 'strafe', 'x'], [-46, 0, -20, 'jump'], [46, 0, -20, 'static']
+];
+function buildCastle() {
+  box(0, -64, 132, 4, 0, 20, 'rock'); box(0, 64, 132, 4, 0, 20, 'rock');
+  box(-64, 0, 4, 124, 0, 20, 'rock'); box(64, 0, 4, 124, 0, 20, 'rock');
+  // enceinte : murs de 8 m, porte au sud sous une arche
+  box(0, -37, 60, 2, 0, 8, 'stone');
+  box(-29, -8, 2, 60, 0, 8, 'stone'); box(29, -8, 2, 60, 0, 8, 'stone');
+  box(-16.5, 21, 27, 2, 0, 8, 'stone'); box(16.5, 21, 27, 2, 0, 8, 'stone');
+  box(0, 21, 6, 2, 5, 3, 'stone');
+  // créneaux sur le bord extérieur du chemin de ronde
+  for (let x = -26; x <= 26; x += 3) { box(x, -37.6, 1, 0.8, 8, 1, 'stone'); if (Math.abs(x) > 4) box(x, 21.6, 1, 0.8, 8, 1, 'stone'); }
+  for (let z = -34; z <= 18; z += 3) { box(-29.6, z, 0.8, 1, 8, 1, 'stone'); box(29.6, z, 0.8, 1, 8, 1, 'stone'); }
+  // tours d'angle et tours de la porte
+  for (const [x, z] of [[-29, -37], [29, -37], [-29, 21], [29, 21]]) box(x, z, 7, 7, 0, 14, 'keep');
+  box(-5.5, 23, 4, 4, 0, 11, 'keep'); box(5.5, 23, 4, 4, 0, 11, 'keep');
+  // pont-levis
+  box(0, 27, 6, 10, 0, 0.4, 'wood');
+  // donjon, tour haute, grand escalier de glisse et pad
+  box(0, -20, 16, 16, 0, 10, 'keep'); box(0, -20, 7, 7, 10, 6, 'stone');
+  for (const x of [-7.5, 7.5]) for (let z = -27; z <= -13; z += 2.8) box(x, z, 1, 0.8, 10, 0.9, 'keep');
+  ramp(-4, 4, -12, 6, 'z', -1, 0, 10);
+  pad(5.5, 10, -14);
+  // rampes vers le chemin de ronde le long des murs est et ouest
+  ramp(-28, -24, -30, -10, 'z', -1, 0, 8); ramp(24, 28, -30, -10, 'z', -1, 0, 8);
+  // cour : puits, étals, bottes de foin
+  box(-14, 6, 2.4, 2.4, 0, 1, 'stone');
+  box(-17, -3, 5, 3, 0, 2.4, 'wood'); box(-17, -3, 6, 4, 2.4, 0.3, 'roofred');
+  box(17, -3, 5, 3, 0, 2.4, 'wood'); box(17, -3, 6, 4, 2.4, 0.3, 'roofred');
+  box(15, 12, 2, 1.4, 0, 1.2, 'hay'); box(17, 14, 1.4, 2, 0, 1.2, 'hay'); box(16, 13, 1.4, 1.4, 1.2, 1.2, 'hay');
+  // dehors : collines de glisse, rochers, pads
+  ramp(-60, -46, -58, -36, 'x', -1, 0, 6); box(-61, -47, 2, 22, 0, 6, 'moss');
+  ramp(46, 60, 34, 56, 'x', 1, 0, 6); box(61, 45, 2, 22, 0, 6, 'moss');
+  for (const [x, z, w, d, h] of [[-38, 46, 5, 4, 2.2], [38, -48, 6, 5, 2.8], [-50, 18, 4, 4, 1.6], [50, -5, 3, 5, 2]]) box(x, z, w, d, 0, h, 'rock');
+  pad(-40, 0, 5); pad(40, 0, 5); pad(0, 0, 40);
+  // douves (décor) tout autour de l'enceinte
+  const wmat = new THREE.MeshPhongMaterial({ color: 0x3f7f9a, shininess: 90, specular: 0x88bbdd, transparent: true, opacity: 0.85 });
+  for (const [x, z, w, d] of [[0, -42.5, 74, 5], [0, 26.5, 74, 5], [-34.5, -8, 5, 64], [34.5, -8, 5, 64]]) {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), wmat); m.rotation.x = -Math.PI / 2; m.position.set(x, 0.03, z); mapRoot.add(m);
+  }
+  // drapeaux sur les tours (décor)
+  const poleM = new THREE.MeshLambertMaterial({ color: 0x3a3a3a }), flagM = new THREE.MeshLambertMaterial({ color: 0xffb020, side: THREE.DoubleSide });
+  for (const [x, y, z] of [[-29, 14, -37], [29, 14, -37], [-29, 14, 21], [29, 14, 21], [0, 16, -20]]) {
+    const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, 3.2, 6), poleM); pole.position.set(x, y + 1.6, z); mapRoot.add(pole);
+    const fl = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1), flagM); fl.position.set(x + 0.8, y + 2.7, z); mapRoot.add(fl);
+  }
+  // arbres et collines au loin
+  let seed = 23; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const trees = [];
+  for (let i = 0; i < 60; i++) { const a = rnd() * Math.PI * 2, d = 80 + rnd() * 110, h = 9 + rnd() * 8; trees.push([new THREE.ConeGeometry(2.5 + rnd() * 2, h, 7), Math.cos(a) * d, h / 2, Math.sin(a) * d]); }
+  farDecor(trees, new THREE.MeshPhongMaterial({ color: 0x2f5f2c, flatShading: true, shininess: 0 }));
+  const hills = [];
+  for (let i = 0; i < 12; i++) { const a = i / 12 * Math.PI * 2 + 0.2, d = 220 + rnd() * 60, r = 45 + rnd() * 40; hills.push([new THREE.SphereGeometry(r, 10, 6, 0, Math.PI * 2, 0, Math.PI / 2), Math.cos(a) * d, -4, Math.sin(a) * d]); }
+  farDecor(hills, new THREE.MeshPhongMaterial({ color: 0x5e8a4a, flatShading: true, shininess: 0 }));
+}
+
 const MAPS = {
   canyon: {
     build: buildCanyon,
@@ -1087,6 +1149,12 @@ const MAPS = {
     theme: { top: 0x5f8fc7, mid: 0xb9d1e0, hor: 0xdfe8d4, fog: 0xb4c4ad, fogFar: 230, hemiSky: 0xd6e8ff, hemiGround: 0x4a5a32, hemiI: 0.85, sun: 0xfff2d6, sunI: 0.95, sunDir: [0.35, 0.72, 0.42], ground: 0x6a8a44 },
     spawns: FOREST_SPAWNS,
     dummies: FOREST_DUMMIES
+  },
+  castle: {
+    build: buildCastle,
+    theme: { top: 0x3f7fd0, mid: 0xa8cdf0, hor: 0xe9f2f7, fog: 0xcfe0ea, fogFar: 300, hemiSky: 0xe6f0ff, hemiGround: 0x7a7466, hemiI: 0.85, sun: 0xfff6e0, sunI: 1.0, sunDir: [0.5, 0.7, 0.3], ground: 0x6c9a48 },
+    spawns: CASTLE_SPAWNS,
+    dummies: CASTLE_DUMMIES
   }
 };
 const mapRoot = new THREE.Group(); scene.add(mapRoot);
@@ -1781,11 +1849,12 @@ const sfx = {
 const MODELS = { robot: null, soldier: null, chars: {} };
 // Persos jouables : fichier, animations de déplacement, matériau teintable
 const CHARS = {
-  soldier: { file: 'Soldier.glb', h: 1.8, anim: { idle: 'Idle', walk: 'Walk', run: 'Run' }, hand: /RightHand$/ },
-  xbot: { file: 'Xbot.glb', h: 1.8, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i },
-  robot: { file: 'RobotExpressive.glb', h: 1.85, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2\.R$/, tintMat: /^Main$/ }
+  soldier: { file: 'Soldier.glb', h: 1.8, yaw: 0, anim: { idle: 'Idle', walk: 'Walk', run: 'Run' }, hand: /RightHand$/ },
+  xbot: { file: 'Xbot.glb', h: 1.8, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i },
+  robot: { file: 'RobotExpressive.glb', h: 1.85, yaw: Math.PI, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2\.R$/, tintMat: /^Main$/ }
 };
-const TINTS = { amber: 0xffb020, cyan: 0x66d4e2, red: 0xff5a44, green: 0x9be36a, violet: 0xc78cff, pink: 0xff8fc7, white: 0xf4efe6, blue: 0x5f8cff, black: 0x2a2a2e };
+const TINTS = { amber: 0xffb020, cyan: 0x66d4e2, red: 0xff5a44, green: 0x9be36a, violet: 0xc78cff, pink: 0xff8fc7, white: 0xf4efe6, blue: 0x5f8cff, black: 0x2a2a2e,
+  orange: 0xff7a1a, yellow: 0xffe14d, mint: 0x7ef0c8, crimson: 0x9e1b2c, gold: 0xd4a62a, navy: 0x1f3a6e, lime: 0xb6ff3a, silver: 0xb8c0c8 };
 function tintChar(vis, ch, col) {
   const c = CHARS[ch] || CHARS.soldier, white = new THREE.Color(1, 1, 1);
   vis.obj.traverse(o => {
@@ -1802,8 +1871,13 @@ function prepModel(gltf, height) {
   const root = gltf.scene;
   root.updateMatrixWorld(true);
   const bb = new THREE.Box3().setFromObject(root);
-  const h = Math.max(0.01, bb.max.y - bb.min.y);
-  return { scene: root, anims: gltf.animations, scale: height / h, minY: bb.min.y };
+  let h = Math.max(0.01, bb.max.y - bb.min.y), minY = bb.min.y;
+  // certains modèles Mixamo (X-Bot) ont des maillages en centimètres posés sous un squelette réduit : la boîte est 100 fois trop grande
+  let bMin = Infinity, bMax = -Infinity; const v = new THREE.Vector3();
+  root.traverse(o => { if (o.isBone) { o.getWorldPosition(v); bMin = Math.min(bMin, v.y); bMax = Math.max(bMax, v.y); } });
+  const boneH = bMax - bMin;
+  if (boneH > 0 && (h / boneH > 5 || h / boneH < 0.2)) { h = boneH * 1.06; minY = bMin - boneH * 0.02; }
+  return { scene: root, anims: gltf.animations, scale: height / h, minY };
 }
 function cloneModel(m) {
   const obj = THREE.SkeletonUtils ? THREE.SkeletonUtils.clone(m.scene) : m.scene.clone(true);
@@ -2196,6 +2270,30 @@ const galaxyTex = canvasTex((g, s) => {
   for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(255,255,255,${0.4 + rnd() * 0.6})`; const r = rnd() < 0.1 ? 1.6 : 0.7; g.beginPath(); g.arc(rnd() * s, rnd() * s, r, 0, Math.PI * 2); g.fill(); }
   for (let i = 0; i < 5; i++) { const nb = g.createRadialGradient(rnd() * s, rnd() * s, 0, rnd() * s, rnd() * s, 40); nb.addColorStop(0, 'rgba(255,90,200,.35)'); nb.addColorStop(1, 'rgba(255,90,200,0)'); g.fillStyle = nb; g.fillRect(0, 0, s, s); }
 }, 128);
+const sakuraTex = canvasTex((g, s) => {
+  g.fillStyle = '#f3e6ea'; g.fillRect(0, 0, s, s);
+  let seed = 21; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 26; i++) {
+    const x = rnd() * s, y = rnd() * s, r = 4 + rnd() * 5;
+    g.fillStyle = rnd() < 0.5 ? '#ff8fb1' : '#ffc3d3';
+    for (let k = 0; k < 5; k++) { const a = k / 5 * Math.PI * 2 + rnd(); g.beginPath(); g.ellipse(x + Math.cos(a) * r, y + Math.sin(a) * r, r * 0.75, r * 0.45, a, 0, Math.PI * 2); g.fill(); }
+    g.fillStyle = '#ffe36a'; g.beginPath(); g.arc(x, y, r * 0.35, 0, Math.PI * 2); g.fill();
+  }
+}, 128);
+const oceanTex = canvasTex((g, s) => {
+  const gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, '#0d3a5c'); gr.addColorStop(1, '#1f7aa8'); g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  g.strokeStyle = 'rgba(160,230,255,.55)'; g.lineWidth = 2;
+  for (let y = 6; y < s; y += 12) { g.beginPath(); for (let x = 0; x <= s; x += 4) { const yy = y + Math.sin(x / 9 + y) * 3; x ? g.lineTo(x, yy) : g.moveTo(x, yy); } g.stroke(); }
+}, 128);
+const urbanTex = canvasTex((g, s) => {
+  const cols = ['#5c6066', '#7a7f86', '#3a3d42', '#9aa0a6'];
+  for (let y = 0; y < s; y += 8) for (let x = 0; x < s; x += 8) { g.fillStyle = cols[((x * 7 + y * 13 + (x ^ y)) >> 3) % 4]; g.fillRect(x, y, 8, 8); }
+}, 64);
+const sunsetTex = canvasTex((g, s) => {
+  const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#ff5e62'); gr.addColorStop(0.5, '#ff9966'); gr.addColorStop(1, '#5b2a86');
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  g.fillStyle = 'rgba(255,240,200,.35)'; g.beginPath(); g.arc(s * 0.3, s * 0.35, s * 0.18, 0, Math.PI * 2); g.fill();
+}, 128);
 const SKINS = {
   std:    { dark: 0x2b3035, mid: 0x48505a, blk: 0x1b1e22, amb: [0xffb020, 0x3a2200], tan: 0xb8701c, teal: 0x3f7f86, steel: 0xc9d0d6 },
   gold:   { dark: 0xb88a2a, mid: 0xd8a83a, blk: 0x5a4214, amb: [0xfff0b8, 0x4a3a10], tan: 0xc99630, teal: 0xd8a83a, steel: 0xffd56a, glow: 0x2a1c00 },
@@ -2209,7 +2307,13 @@ const SKINS = {
   lava: { dark: 0x1a1414, mid: 0x2a1d1a, blk: 0x0a0707, amb: [0xff6a00, 0xff3300], tan: [0xff3d00, 0x8a1a00], teal: 0x2a1d1a, steel: [0xffb070, 0x5a1a00] },
   galaxy: { dark: 0xffffff, mid: 0xffffff, blk: 0x0c0618, amb: [0xc8a2ff, 0x5a2aa0], tan: 0x3a1f6e, teal: 0xffffff, steel: 0xd9c8ff, map: galaxyTex, mapRoles: ['dark', 'mid', 'teal'] },
   tiger: { dark: 0xffffff, mid: 0x1a1a1a, blk: 0x111111, amb: [0xffffff, 0x222222], tan: 0xe07b1a, teal: 0xffffff, steel: 0xe0e0e0, map: tigerTex },
-  candy: { dark: 0xff9ec7, mid: 0x9ef0d8, blk: 0xffffff, amb: [0xfff27a, 0x3a3500], tan: 0xc6a6ff, teal: 0x9ef0d8, steel: 0xffe0f0 }
+  candy: { dark: 0xff9ec7, mid: 0x9ef0d8, blk: 0xffffff, amb: [0xfff27a, 0x3a3500], tan: 0xc6a6ff, teal: 0x9ef0d8, steel: 0xffe0f0 },
+  sakura: { dark: 0xf3e6ea, mid: 0xffb7c9, blk: 0x3a2a30, amb: [0xff6f9c, 0x40101e], tan: 0xffffff, teal: 0xffb7c9, steel: 0xffe9f0, map: sakuraTex, mapRoles: ['dark'] },
+  ocean: { dark: 0xffffff, mid: 0x123a5c, blk: 0x081a2a, amb: [0x5fe3ff, 0x0a4a5c], tan: 0x1e5f8a, teal: 0xffffff, steel: 0xbfe9ff, map: oceanTex },
+  toxic: { dark: 0x1a1f14, mid: 0x2a3320, blk: 0x0d100a, amb: [0x9cff2e, 0x4aa000], tan: [0x6cff00, 0x2a6000], teal: 0x2a3320, steel: [0xd8ffb0, 0x203a00] },
+  royal: { dark: 0x3a1a6e, mid: 0x5a2a9e, blk: 0x1a0c33, amb: [0xffd24a, 0x4a3500], tan: 0xd4a62a, teal: 0x5a2a9e, steel: 0xfff0c0 },
+  urban: { dark: 0xffffff, mid: 0x5c6066, blk: 0x1f2124, amb: [0xe6e8ea, 0x000000], tan: 0x44484d, teal: 0xffffff, steel: 0xc0c4c8, map: urbanTex, mapRoles: ['dark', 'mid', 'teal'] },
+  sunset: { dark: 0xffffff, mid: 0x3a1f3a, blk: 0x1a0e1a, amb: [0xffd27a, 0x5a2000], tan: 0xff7a4a, teal: 0xffffff, steel: 0xffe0c8, map: sunsetTex }
 };
 function applySkin(id) {
   const sk = SKINS[id] || SKINS.std;
@@ -2684,7 +2788,7 @@ function attachChar(rp) {
   if (!model) return;
   const used = MODELS.chars[ch] ? ch : 'soldier';
   if (rp.vis) g_remove(rp.g, rp.vis.obj);
-  rp.vis = cloneModel(model); rp.vis.ch = used; rp.vis.base = model.scale;
+  rp.vis = cloneModel(model); rp.vis.ch = used; rp.vis.base = model.scale; rp.vis.obj.rotation.y = CHARS[used].yaw;
   rp.g.add(rp.vis.obj);
   tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
   // arme dans la main droite
