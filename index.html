@@ -105,6 +105,11 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #netStatus.err{color:var(--hostile)}
 #roomBox{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center}
 #hud.emoting #xh,#hud.emoting #hm{display:none}
+.edpanel{margin-top:18px;padding-top:14px;border-top:1px solid var(--ink-faint);display:grid;gap:10px}.edpanel h3{margin:0;font:700 16px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--amber)}
+.edbtns{display:flex;flex-wrap:wrap;gap:8px}.edrow{display:flex;gap:10px;align-items:center;padding:6px 0;border-top:1px solid var(--ink-faint)}.edrow b{flex:1;font:600 15px/1.2 var(--f-display)}
+#editHud{position:absolute;left:50%;top:14px;transform:translateX(-50%);max-width:min(1100px,94vw);padding:8px 12px;background:rgba(14,18,22,.8);border:1px solid rgba(255,176,32,.45);display:grid;gap:6px;font-size:12.5px;color:var(--ink-dim)}
+.edtools{display:flex;flex-wrap:wrap;gap:6px}.edtools span{display:flex;gap:5px;align-items:center;padding:3px 7px;border:1px solid var(--ink-faint);font:600 13px/1 var(--f-display);letter-spacing:.04em;color:var(--ink-dim)}.edtools span.on{border-color:var(--amber);color:var(--amber)}.edtools kbd{font-size:10px;min-width:14px;padding:1px 3px}
+.edinfo b{color:var(--ink)}.edhelp{font-size:11.5px}
 #usePrompt{position:absolute;left:50%;top:55%;transform:translateX(-50%);padding:7px 12px 6px;background:rgba(14,18,22,.72);border:1px solid rgba(255,176,32,.4);font:600 15px/1 var(--f-display);letter-spacing:.06em;color:var(--ink);white-space:nowrap}
 #usePrompt kbd{margin-right:6px}
 #emoteWheel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:330px;padding:16px 18px 12px;background:rgba(14,18,22,.82);border:1px solid rgba(255,176,32,.45);backdrop-filter:blur(4px)}
@@ -135,6 +140,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .check{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
 #dcId{font:600 14px/1 var(--f-body);letter-spacing:.04em;color:var(--ink);background:rgba(10,13,16,.7);border:1px solid rgba(244,239,230,.25);border-radius:3px;padding:8px 9px 7px;width:100%;box-sizing:border-box}
 #dcId:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
+.csfield{grid-column:1/-1}.csfield .sndrow{display:flex;flex-wrap:wrap;gap:8px}#csMsg{font-size:12.5px;color:var(--ink-dim)}#csMsg.ok{color:var(--shield)}#csMsg.err{color:var(--hostile)}
 .dcmsg{font-size:12.5px;line-height:1.35;color:var(--ink-dim)}
 .dcmsg.ok{color:var(--shield)}.dcmsg.err{color:var(--hostile)}
 .check input{accent-color:var(--amber);width:17px;height:17px}
@@ -181,6 +187,9 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .bar.sh::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(33.333% - 2px),rgba(10,12,14,.8) calc(33.333% - 2px) 33.333%)}
 #abil{position:absolute;left:50%;bottom:calc(76px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);display:flex;gap:6px}
 .ab{position:relative;display:flex;align-items:center;gap:6px;padding:6px 10px 5px 6px;background:rgba(14,18,22,.62);overflow:hidden;min-width:96px}
+.clsinfo{display:grid;gap:6px;margin-top:4px}.clsinfo .cls{margin:0;font-size:13.5px;color:var(--ink-dim)}.clsinfo .cls strong{color:var(--amber);font:700 16px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase}
+.clsinfo div{display:grid;grid-template-columns:auto auto 1fr;gap:4px 8px;align-items:baseline;font-size:13px;color:var(--ink-dim)}.clsinfo b{font:700 13px/1 var(--f-display);letter-spacing:.08em;color:var(--ink)}
+.ab.ult b{color:#d9b8ff}
 .ab kbd{font-size:11px;min-width:18px;padding:2px 4px 1px;position:relative;z-index:1}
 .ab b{font:700 13px/1 var(--f-display);letter-spacing:.1em;color:var(--ink-dim);position:relative;z-index:1}
 .ab em{font:600 12px/1 var(--f-display);font-style:normal;color:var(--ink-dim);margin-left:auto;position:relative;z-index:1;font-variant-numeric:tabular-nums}
@@ -299,9 +308,8 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="hm"><i></i><i></i><i></i><i></i></div>
   <div id="feed"></div>
   <div id="abil">
-    <div class="ab" id="abStim"><kbd data-act="stim">Q</kbd><b data-i18n="ab.stim">STIM</b><em></em><i></i></div>
-    <div class="ab" id="abDome"><kbd data-act="dome">G</kbd><b data-i18n="ab.dome">DÔME</b><em></em><i></i></div>
-    <div class="ab" id="abPortal"><kbd data-act="portal">F</kbd><b data-i18n="ab.portal">PORTAIL</b><em></em><i></i></div>
+    <div class="ab" id="abTac"><kbd data-act="tactical">Q</kbd><b>STIM</b><em></em><i></i></div>
+    <div class="ab ult" id="abUlt"><kbd data-act="ultimate">F</kbd><b>DÔME</b><em></em><i></i></div>
   </div>
   <div id="stimFx"></div>
   <div id="me" hidden><div class="tname"><span data-i18n="hud.you">TOI</span><span id="meVal">175</span></div><div class="bar sh"><i id="meSh"></i></div><div class="bar hp"><i id="meHp"></i></div></div>
@@ -320,6 +328,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   <div id="board" hidden><h3 id="boardTitle">PARTIE</h3><table><thead><tr><th data-i18n="board.player">Joueur</th><th data-i18n="hud.kills">Élim.</th><th data-i18n="board.deaths">Morts</th></tr></thead><tbody id="boardBody"></tbody></table></div>
   <div id="toast"></div>
   <div id="usePrompt" hidden></div>
+  <div id="editHud" hidden></div>
   <div id="emoteWheel" hidden>
     <p class="ew-title" data-i18n="em.title">Emotes</p>
     <div class="ew-grid">
@@ -355,6 +364,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
           <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="robot" data-i18n="char.robot">Robot</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
+          <div class="clsinfo" id="clsInfo"></div>
         </div>
       </div>
     </div>
@@ -413,6 +423,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
+        <label class="field"><span class="lab"><span data-i18n="set.camFx">Effets de caméra</span> <output id="oCamFx"></output></span><input type="range" id="camFx" min="0" max="1.5" step="0.05"></label>
+        <div class="field csfield"><span class="lab" data-i18n="cs.title">Sons personnalisés</span>
+          <div class="sndrow"><select id="csSlot"></select><button class="btn3" id="csImport" type="button" data-i18n="snd.import">Importer un son</button><button class="btn3" id="csTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="csReset" type="button" data-i18n="cs.reset">Son d’origine</button><input type="file" id="csFile" accept="audio/*" hidden></div>
+          <label class="check"><input type="checkbox" id="csShare"> <span data-i18n="cs.share">Les autres joueurs entendent mes sons</span></label>
+          <label class="check"><input type="checkbox" id="csHear"> <span data-i18n="cs.hear">Entendre les sons perso des autres</span></label>
+          <span id="csMsg"></span></div>
         <div class="field dcfield"><span class="lab" data-i18n="dc.title">Statut Discord</span>
           <label class="check"><input type="checkbox" id="dcOn"> <span data-i18n="dc.on">Afficher mon jeu sur Discord</span></label>
           <input id="dcId" inputmode="numeric" maxlength="22" autocomplete="off" spellcheck="false" data-i18n-ph="dc.idPh" placeholder="ID d’application Discord">
@@ -431,6 +447,21 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <div class="netrow" style="margin-top:12px"><label for="admMsg">Message à tous<input id="admMsg" maxlength="80" autocomplete="off" style="width:280px"></label><button class="btn3" id="admSay" type="button">Envoyer</button></div>
       <table class="admtab"><tbody id="admPlayers"></tbody></table>
       <p class="hint" id="admNote">Les règles s’appliquent à toute la partie quand tu l’héberges.</p>
+      <div class="edpanel" id="edPanel">
+        <h3>Éditeur de cartes</h3>
+        <p class="hint" id="edState"></p>
+        <div class="netrow">
+          <label for="edName">Nom<input id="edName" maxlength="24" autocomplete="off" style="width:200px"></label>
+          <label for="edSize">Taille<select id="edSize"><option value="32">Mini (64 m)</option><option value="48">Petite (96 m)</option><option value="64">Moyenne (128 m)</option><option value="96">Grande (192 m)</option><option value="140">Énorme (280 m)</option><option value="200">Géante (400 m)</option></select></label>
+          <label for="edTheme">Ambiance<select id="edTheme"><option value="canyon">Canyon</option><option value="refinery">Raffinerie</option><option value="forest">Forêt</option><option value="castle">Château</option><option value="volcano">Volcan</option><option value="mega">Fusion</option></select></label>
+          <label class="check"><input type="checkbox" id="edOpenMap"> Sans murs d’enceinte</label>
+        </div>
+        <div class="edbtns">
+          <button class="btn3" id="edNew" type="button">Nouvelle carte</button><button class="btn3" id="edSave" type="button">Enregistrer</button><button class="btn3" id="edTest" type="button">Tester en jeu</button><button class="btn3" id="edQuit" type="button">Quitter l’éditeur</button><button class="btn3" id="edExport" type="button">Exporter (.json)</button><button class="btn3" id="edImport" type="button">Importer</button><input type="file" id="edFile" accept=".json,application/json" hidden>
+        </div>
+        <div id="edList"></div>
+        <p class="hint" id="edMsg">Pour continuer une carte, clique sur Éditer. Clique sur Jouer pour revenir dans l’éditeur après Échap. Les cartes enregistrées apparaissent dans la liste des cartes (★) et partent chez les invités quand tu les héberges.</p>
+      </div>
     </div>
     <div class="block xlock" id="xlockBlock" hidden>
       <h2>Mode xlock</h2>
@@ -793,6 +824,33 @@ const I18N_ADD4 = {
   zu: { 'zip.grab': '{key} Bamba intambo yokushelela', 'zip.ride': 'Space: gxuma · C: yeka · S: buyela emuva', 'zip.jump': 'ukugxuma entanjeni' }
 };
 for (const l in I18N_ADD4) Object.assign(I18N[l], I18N_ADD4[l]);
+const I18N_ADD5 = {
+  fr: { 'set.camFx': 'Effets de caméra', 'set.off': 'aucun', 'act.tactical': 'Capacité tactique', 'act.ultimate': 'Capacité ultime',
+    'ab.grapple': 'GRAPPIN', 'ab.scan': 'SCAN', 'ab.launchpad': 'TREMPLIN', 'ab.grappleMiss': 'Rien à accrocher à moins de 45 m.', 'ab.needGround': 'Pose le tremplin au sol.',
+    'cls.label': 'Classe :', 'cls.assault': 'Assaut', 'cls.scout': 'Éclaireur', 'cls.sentinel': 'Sentinelle',
+    'abd.stim': '+35 % de vitesse pendant 6 s', 'abd.dome': 'bulle de 5 m qui arrête les balles 12 s', 'abd.portal': 'deux portails reliés pendant 40 s', 'abd.grapple': 'accroche un point à 45 m et te tire vers lui', 'abd.scan': 'révèle robots et joueurs à travers les murs 7 s', 'abd.launchpad': 'pose un pad violet pour tout le monde (30 s)',
+    'cs.title': 'Sons personnalisés', 'cs.reset': 'Son d’origine', 'cs.share': 'Les autres joueurs entendent mes sons', 'cs.hear': 'Entendre les sons perso des autres', 'cs.shot': 'Tir : {w}', 'cs.jump': 'Saut', 'cs.land': 'Atterrissage', 'cs.kill': 'Élimination', 'cs.hit': 'Touché', 'cs.superglide': 'Superglide', 'cs.stim': 'Stim', 'cs.dome': 'Dôme', 'cs.portal': 'Portail', 'cs.grapple': 'Grappin',
+    'cs.tooBig': 'Fichier trop lourd : {kb} Ko maximum (un son court en MP3 ou OGG).', 'cs.tooLong': 'Son trop long : 4 secondes maximum.', 'cs.saved': 'Son « {name} » enregistré. En ligne, les autres l’entendent aussi.', 'cs.session': 'Son « {name} » chargé pour cette session (stockage plein).', 'cs.resetDone': 'Son d’origine remis.', 'dc.editor': 'Construit une carte' },
+  en: { 'set.camFx': 'Camera effects', 'set.off': 'off', 'act.tactical': 'Tactical ability', 'act.ultimate': 'Ultimate ability',
+    'ab.grapple': 'GRAPPLE', 'ab.scan': 'SCAN', 'ab.launchpad': 'LAUNCH PAD', 'ab.grappleMiss': 'Nothing to hook within 45 m.', 'ab.needGround': 'Place the pad on the ground.',
+    'cls.label': 'Class:', 'cls.assault': 'Assault', 'cls.scout': 'Scout', 'cls.sentinel': 'Sentinel',
+    'abd.stim': '+35% speed for 6 s', 'abd.dome': '5 m bubble that stops bullets for 12 s', 'abd.portal': 'two linked portals for 40 s', 'abd.grapple': 'hooks a point up to 45 m away and pulls you in', 'abd.scan': 'reveals bots and players through walls for 7 s', 'abd.launchpad': 'drops a purple jump pad anyone can use (30 s)',
+    'cs.title': 'Custom sounds', 'cs.reset': 'Original sound', 'cs.share': 'Other players hear my sounds', 'cs.hear': 'Hear other players’ custom sounds', 'cs.shot': 'Shot: {w}', 'cs.jump': 'Jump', 'cs.land': 'Landing', 'cs.kill': 'Elimination', 'cs.hit': 'Hit', 'cs.superglide': 'Superglide', 'cs.stim': 'Stim', 'cs.dome': 'Dome', 'cs.portal': 'Portal', 'cs.grapple': 'Grapple',
+    'cs.tooBig': 'File too large: {kb} KB max (a short MP3 or OGG sound).', 'cs.tooLong': 'Sound too long: 4 seconds max.', 'cs.saved': 'Sound “{name}” saved. Online, other players hear it too.', 'cs.session': 'Sound “{name}” loaded for this session (storage full).', 'cs.resetDone': 'Original sound restored.', 'dc.editor': 'Building a map' },
+  af: { 'set.camFx': 'Kamera-effekte', 'set.off': 'af', 'act.tactical': 'Taktiese vermoë', 'act.ultimate': 'Uiterste vermoë',
+    'ab.grapple': 'GRYPHAAK', 'ab.scan': 'SKANDEER', 'ab.launchpad': 'LANSEERBLAD', 'ab.grappleMiss': 'Niks om binne 45 m aan te haak nie.', 'ab.needGround': 'Plaas die blad op die grond.',
+    'cls.label': 'Klas:', 'cls.assault': 'Aanval', 'cls.scout': 'Verkenner', 'cls.sentinel': 'Wag',
+    'abd.stim': '+35% spoed vir 6 s', 'abd.dome': '5 m-borrel wat koeëls 12 s keer', 'abd.portal': 'twee gekoppelde portale vir 40 s', 'abd.grapple': 'haak ’n punt tot 45 m ver en trek jou nader', 'abd.scan': 'wys robotte en spelers deur mure vir 7 s', 'abd.launchpad': 'sit ’n pers springblad neer vir almal (30 s)',
+    'cs.title': 'Eie klanke', 'cs.reset': 'Oorspronklike klank', 'cs.share': 'Ander spelers hoor my klanke', 'cs.hear': 'Hoor ander spelers se eie klanke', 'cs.shot': 'Skoot: {w}', 'cs.jump': 'Sprong', 'cs.land': 'Landing', 'cs.kill': 'Uitskakeling', 'cs.hit': 'Raak', 'cs.superglide': 'Superglide', 'cs.stim': 'Stim', 'cs.dome': 'Koepel', 'cs.portal': 'Portaal', 'cs.grapple': 'Gryphaak',
+    'cs.tooBig': 'Lêer te groot: maks. {kb} KB (’n kort MP3- of OGG-klank).', 'cs.tooLong': 'Klank te lank: maks. 4 sekondes.', 'cs.saved': 'Klank “{name}” gestoor. Aanlyn hoor ander dit ook.', 'cs.session': 'Klank “{name}” net vir hierdie sessie gelaai (berging vol).', 'cs.resetDone': 'Oorspronklike klank teruggesit.', 'dc.editor': 'Bou ’n kaart' },
+  zu: { 'set.camFx': 'Imiphumela yekhamera', 'set.off': 'kuvaliwe', 'act.tactical': 'Ikhono lamaqhinga', 'act.ultimate': 'Ikhono eliphezulu',
+    'ab.grapple': 'IHUKU', 'ab.scan': 'SKENA', 'ab.launchpad': 'IPHEDI', 'ab.grappleMiss': 'Akukho okungabanjwa ngaphakathi kwamamitha angama-45.', 'ab.needGround': 'Beka iphedi phansi.',
+    'cls.label': 'Isigaba:', 'cls.assault': 'Ukuhlasela', 'cls.scout': 'Inhloli', 'cls.sentinel': 'Unogada',
+    'abd.stim': 'ijubane elingu-+35% imizuzwana engu-6', 'abd.dome': 'ibhamuza lamamitha angu-5 elivimba izinhlamvu imizuzwana engu-12', 'abd.portal': 'amasango amabili axhunyiwe imizuzwana engama-40', 'abd.grapple': 'ibamba indawo eqhele ngamamitha angama-45 ikudonsele kuyo', 'abd.scan': 'iveza amarobhothi nabadlali ngemuva kwezindonga imizuzwana engu-7', 'abd.launchpad': 'ibeka iphedi elinsomi lawo wonke umuntu (imizuzwana engama-30)',
+    'cs.title': 'Imisindo yakho', 'cs.reset': 'Umsindo wokuqala', 'cs.share': 'Abanye abadlali bezwa imisindo yami', 'cs.hear': 'Zwa imisindo yabanye abadlali', 'cs.shot': 'Ukudubula: {w}', 'cs.jump': 'Ukugxuma', 'cs.land': 'Ukwehla', 'cs.kill': 'Ukukhipha', 'cs.hit': 'Ukushaya', 'cs.superglide': 'I-superglide', 'cs.stim': 'I-stim', 'cs.dome': 'Idome', 'cs.portal': 'Isango', 'cs.grapple': 'Ihuku',
+    'cs.tooBig': 'Ifayela likhulu kakhulu: {kb} KB ubuningi (umsindo omfushane we-MP3 noma we-OGG).', 'cs.tooLong': 'Umsindo mude kakhulu: imizuzwana engu-4 ubuningi.', 'cs.saved': 'Umsindo othi “{name}” ugciniwe. Ku-inthanethi abanye bayawuzwa.', 'cs.session': 'Umsindo othi “{name}” ulayishelwe le seshini (isitoreji sigcwele).', 'cs.resetDone': 'Umsindo wokuqala ubuyisiwe.', 'dc.editor': 'Wakha imephu' }
+};
+for (const l in I18N_ADD5) Object.assign(I18N[l], I18N_ADD5[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -825,6 +883,7 @@ S.quality = store.get('quality', 'auto');
 S.skin = store.get('skin', 'std');
 S.slideSnd = store.get('slideSnd', 'gravel');
 S.minimap = store.get('minimap', true);
+S.camFx = clamp(+store.get('camFx', 1), 0, 1.5);
 S.map = store.get('map', 'canyon');
 S.char = store.get('char', 'soldier');
 S.tint = store.get('tint', 'auto');
@@ -1548,6 +1607,46 @@ const MAPS = {
     spawns: [[0, 2, 0, 0]], dummies: []
   }
 };
+/* ---------- cartes perso (éditeur) : définitions JSON enregistrées dans le navigateur ---------- */
+const EDIT_MATS = ['concrete', 'teal', 'wall', 'rust', 'cream', 'navy', 'deck', 'steel', 'hazard', 'red', 'blue', 'white', 'rock', 'wood', 'bark', 'moss', 'stone', 'keep', 'hay', 'roofred', 'obsid', 'basalt', 'ash', 'c-rust', 'c-teal', 'c-cream'];
+const THEME_IDS = ['canyon', 'refinery', 'forest', 'castle', 'volcano', 'mega'];
+const CUSTOM = (() => { const c = store.get('customMaps', {}); return c && typeof c === 'object' ? c : {}; })();
+const num = (v, lo, hi, d = 0) => { v = +v; return Number.isFinite(v) ? clamp(v, lo, hi) : d; };
+function sanitizeDef(d) {
+  if (!d || typeof d !== 'object') return null;
+  const size = num(d.size, 24, 220, 64), L = size + 30, arr = (a, n) => Array.isArray(a) ? a.slice(0, n).filter(Array.isArray) : [];
+  return {
+    v: 1, name: String(d.name || 'Carte perso').slice(0, 24), size, theme: THEME_IDS.includes(d.theme) ? d.theme : 'canyon', open: !!d.open,
+    boxes: arr(d.boxes, 2000).map(b => [num(b[0], -L, L), num(b[1], -L, L), num(b[2], 0.2, 200, 1), num(b[3], 0.2, 200, 1), num(b[4], -20, 150), num(b[5], 0.1, 150, 1), EDIT_MATS.includes(b[6]) ? b[6] : 'concrete']),
+    ramps: arr(d.ramps, 500).map(r => [num(r[0], -L, L), num(r[1], -L, L), num(r[2], -L, L), num(r[3], -L, L), r[4] === 'x' ? 'x' : 'z', r[5] < 0 ? -1 : 1, num(r[6], -20, 150), num(r[7], -20, 150)]).filter(r => r[1] > r[0] && r[3] > r[2]),
+    pads: arr(d.pads, 200).map(p => [num(p[0], -L, L), num(p[1], -20, 150), num(p[2], -L, L)]),
+    zips: arr(d.zips, 100).map(z => [0, 1, 2, 3, 4, 5].map(i => num(z[i], i % 3 === 1 ? -20 : -L, i % 3 === 1 ? 200 : L))).filter(z => Math.hypot(z[0] - z[3], z[1] - z[4], z[2] - z[5]) > 2),
+    spawns: arr(d.spawns, 40).map(p => [num(p[0], -L, L), num(p[1], -20, 150), num(p[2], -L, L), num(p[3], -10, 10)]),
+    vehs: arr(d.vehs, 16).map(p => [num(p[0], -L, L), num(p[1], -20, 150), num(p[2], -L, L), num(p[3], -10, 10)]),
+    bots: arr(d.bots, 12).map(p => [num(p[0], -L, L), num(p[1], -20, 150), num(p[2], -L, L), 'static'])
+  };
+}
+function buildCustom(id) {
+  const M = MAPS[id], d = M.custom, S2 = d.size;
+  if (!d.open) { box(0, -S2 - 2, 2 * S2 + 8, 4, 0, 20, 'wall'); box(0, S2 + 2, 2 * S2 + 8, 4, 0, 20, 'wall'); box(-S2 - 2, 0, 4, 2 * S2, 0, 20, 'wall'); box(S2 + 2, 0, 4, 2 * S2, 0, 20, 'wall'); }
+  for (const b of d.boxes) box(...b);
+  for (const r of d.ramps) ramp(...r);
+  for (const p of d.pads) pad(...p);
+  for (const z of d.zips) zipline(...z);
+  for (const v of d.vehs) VEH_SPAWNS.push(v.slice());
+  M.spawns = d.spawns.length ? d.spawns : [[0, 0, 0, 0]];
+  M.dummies = d.bots.slice(); M.dummies.noRepeat = true;
+  M.theme = (MAPS[d.theme] || MAPS.canyon).theme; M.lim = S2 - 0.4 + (d.open ? 30 : 0);
+}
+function registerCustom(id, def) {
+  const old = MAPS[id];
+  MAPS[id] = { build: () => buildCustom(id), custom: def, theme: (MAPS[def.theme] || MAPS.canyon).theme, lim: def.size - 0.4, spawns: [[0, 0, 0, 0]], dummies: [], vehicles: true };
+  const sel = document.getElementById('mapSel');
+  if (sel) { let o = [...sel.options].find(x => x.value === id); if (!o) { o = document.createElement('option'); o.value = id; sel.appendChild(o); } o.textContent = '★ ' + def.name; }
+  return old;
+}
+const mapName = id => MAPS[id] && MAPS[id].custom ? MAPS[id].custom.name : t('map.' + id);
+for (const id in CUSTOM) { const d = sanitizeDef(CUSTOM[id]); if (d && /^c_[a-z0-9]{4,12}$/.test(id)) registerCustom(id, d); else delete CUSTOM[id]; }
 const mapRoot = new THREE.Group(); scene.add(mapRoot);
 let SPAWNS = MAPS.canyon.spawns;
 function applyTheme(th) {
@@ -1800,7 +1899,7 @@ function superglide(wx, wz, hasWish) {
   const sp = Math.min(23, Math.max(SG_SPEED, m.inSpeed + 4.5));
   P.vel.set(d.x * sp, 4.6, d.z * sp);
   P.grounded = false; P.crouch = true; P.climbAvail = false;
-  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide(); P.sgT = 0.75;
+  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide(); P.sgT = 0.75; camKick(9);
 }
 function mantleJump(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
@@ -1945,13 +2044,27 @@ function onLand(vy) {
   P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.snapAcc = 0; P.doubleJump = false; P.airT = 0;
   const impact = clamp(-vy / 16, 0, 1);
   P.dip = Math.max(P.dip, impact * 0.16);
+  if (impact > 0.45) camShake(impact * 0.6);
   sfx.land(impact);
   if (act('crouch') && P.landSpeed > SLIDE_MIN - 0.8) startSlide();
 }
 /* ================= Capacités : stim, dôme, portail ================= */
 const STIM_MUL = 1.35;
-const AB = { stimT: 0, stimCd: 0, domeCd: 0, portalCd: 0, portalA: null, portalAT: 0, portT: 0, marker: null };
-const AB_CD = { stim: 9, dome: 25, portal: 30 };
+const AB = { stimT: 0, stimCd: 0, domeCd: 0, portalCd: 0, grappleCd: 0, scanCd: 0, launchpadCd: 0, scanT: 0, portalA: null, portalAT: 0, portT: 0, marker: null };
+const AB_CD = { stim: 9, dome: 25, portal: 30, grapple: 6, scan: 18, launchpad: 22 };
+const AB_KEYS = Object.keys(AB_CD);
+// classes : chaque personnage a une capacité tactique (Q) et une ultime (F)
+const CLASSES = {
+  soldier: { id: 'assault', tac: 'stim', ult: 'dome' },
+  xbot: { id: 'scout', tac: 'grapple', ult: 'portal' },
+  robot: { id: 'sentinel', tac: 'scan', ult: 'launchpad' }
+};
+const myClass = () => CLASSES[S.char] || CLASSES.soldier;
+function useAbility(k) {
+  if (P.veh || EDIT.on) return;
+  if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
+  else if (k === 'grapple') useGrapple(); else if (k === 'scan') useScan(); else if (k === 'launchpad') useLaunchpad();
+}
 const DOMES = [], PORTALS = [];
 const domeGeo = new THREE.SphereGeometry(5, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2);
 const domeWire = new THREE.IcosahedronGeometry(5.02, 2);
@@ -2032,7 +2145,9 @@ function usePortal() {
 }
 function abilityStep(dt) {
   AB.stimT = Math.max(0, AB.stimT - dt);
-  for (const k of ['stim', 'dome', 'portal']) AB[k + 'Cd'] = Math.max(0, AB[k + 'Cd'] - dt);
+  for (const k of AB_KEYS) AB[k + 'Cd'] = Math.max(0, AB[k + 'Cd'] - dt);
+  AB.scanT = Math.max(0, AB.scanT - dt);
+  grappleStep(dt);
   AB.portT = Math.max(0, AB.portT - dt);
   if (AB.portalA && (AB.portalAT -= dt) <= 0) { scene.remove(AB.marker); AB.marker = null; AB.portalA = null; AB.portalCd = Math.max(AB.portalCd, 5); }
   // traverser un portail : téléportation en gardant l'élan
@@ -2052,6 +2167,7 @@ function abilityStep(dt) {
   }
 }
 function updateAbilityFx(dt) {
+  updateClassFx(dt);
   for (let i = DOMES.length - 1; i >= 0; i--) {
     const dm = DOMES[i]; dm.t -= dt;
     const k = Math.min(1, (12 - dm.t) * 3, dm.t * 1.5);
@@ -2070,7 +2186,99 @@ function updateAbilityFx(dt) {
   }
   if (AB.marker) AB.marker.rotation.z += dt * 2;
 }
+/* ---------- grappin : accroche un point visé (45 m) et tire le joueur vers lui en gardant l'élan ---------- */
+const HOOK = { p: null, t: 0 };
+const hookLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V3(), new V3()]), new THREE.LineBasicMaterial({ color: 0x1c1f23 }));
+hookLine.frustumCulled = false; hookLine.visible = false; scene.add(hookLine);
+const hookClaw = new THREE.Mesh(new THREE.OctahedronGeometry(0.16), new THREE.MeshLambertMaterial({ color: 0xffb020, emissive: 0x3a2400 }));
+hookClaw.visible = false; scene.add(hookClaw);
+function useGrapple() {
+  if (P.dead) return;
+  if (HOOK.p) { releaseHook(0); return; }
+  if (!abReady('grapple')) { sfx.empty(); return; }
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]);
+  raycaster.set(_o, _f); raycaster.far = 45;
+  const hit = raycaster.intersectObjects(WORLD, false)[0];
+  if (!hit) { AB.grappleCd = 1.2; sfx.empty(); toast(t('ab.grappleMiss'), 1.2); return; }
+  HOOK.p = hit.point.clone(); HOOK.t = 0; setCd('grapple');
+  P.mantle = null; P.climbing = false; P.sliding = false;
+  if (P.grounded) { P.grounded = false; P.vel.y = Math.max(P.vel.y, 5); P.pos.y += 0.05; }
+  sfx.grapple(); camKick(4);
+}
+function releaseHook(up) {
+  if (!HOOK.p) return;
+  HOOK.p = null; if (up) P.vel.y = Math.max(P.vel.y, 0) + up;
+}
+function grappleStep(dt) {
+  if (!HOOK.p) return;
+  HOOK.t += dt;
+  if (P.dead || P.veh || P.zip || HOOK.t > 2.2) { releaseHook(0); return; }
+  _d.set(HOOK.p.x - P.pos.x, HOOK.p.y - (P.pos.y + 1.1), HOOK.p.z - P.pos.z);
+  const dist = _d.length();
+  if (dist < 2.2 || (_d.y < -0.2 * dist && dist < 4.5)) { releaseHook(4); return; }
+  if (P.jumpBuf > 0) { P.jumpBuf = 0; releaseHook(JUMP_V * 0.9); sfx.jump(); return; }
+  _d.divideScalar(dist);
+  const v = P.vel, along = v.dot(_d);
+  // traction forte vers le point, frottement latéral léger pour garder un balancement
+  v.addScaledVector(_d, (along < 22 ? 46 : 10) * dt);
+  v.y += G * 0.55 * dt;
+  const sp = v.length(); if (sp > 27) v.multiplyScalar(27 / sp);
+  if (P.grounded && _d.y > -0.2) { P.grounded = false; P.pos.y += 0.02; }
+}
+/* ---------- scan : révèle robots et joueurs à travers les murs pendant 7 s ---------- */
+const scanWave = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 16), new THREE.MeshBasicMaterial({ color: 0xff5a44, transparent: true, opacity: 0, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending, wireframe: true }));
+scanWave.visible = false; scene.add(scanWave);
+function useScan() {
+  if (P.dead || !abReady('scan')) { sfx.empty(); return; }
+  AB.scanT = 7; setCd('scan'); scanWave.visible = true; scanWave.userData.t = 0; scanWave.position.copy(P.pos);
+  feed(t('ab.scan'), '7 s', 'kill'); sfx.scan();
+  for (const rp of remotes.values()) rp.pingT = Math.max(rp.pingT, 7);
+}
+/* ---------- tremplin : pad violet posé au sol pendant 30 s (visible et utilisable par tous) ---------- */
+const TEMP_PADS = [];
+const lpadMat = new THREE.MeshBasicMaterial({ color: 0xc78cff });
+function spawnLaunchpad(p) {
+  const g = new THREE.Group(); g.position.set(p[0], p[1], p[2]);
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(1.35, 1.5, 0.22, 24), padBaseMat); base.position.y = 0.11; g.add(base);
+  const disc = new THREE.Mesh(new THREE.CylinderGeometry(1.0, 1.0, 0.04, 24), lpadMat); disc.position.y = 0.24; g.add(disc);
+  const ring = new THREE.Mesh(new THREE.RingGeometry(0.85, 1.05, 32), new THREE.MeshBasicMaterial({ color: 0xc78cff, transparent: true, side: THREE.DoubleSide, depthWrite: false, blending: THREE.AdditiveBlending }));
+  ring.rotation.x = -Math.PI / 2; scene.add(ring);
+  scene.add(g);
+  const pd = { x: p[0], y: p[1] + 0.06, z: p[2], ring, ph: 0, temp: true };
+  PADS.push(pd); TEMP_PADS.push({ pd, g, t: 30 });
+  sfx.dome();
+}
+function useLaunchpad() {
+  if (P.dead || !abReady('launchpad')) { sfx.empty(); return; }
+  if (!P.grounded) { toast(t('ab.needGround'), 1.4); return; }
+  const g = groundBelow(), p = [r2(P.pos.x), r2(Number.isFinite(g.h) ? g.h : P.pos.y), r2(P.pos.z)];
+  spawnLaunchpad(p); setCd('launchpad'); feed(t('ab.launchpad'), '30 s', 'gold');
+  netSend({ k: 'lpad', p });
+}
+function updateClassFx(dt) {
+  for (let i = TEMP_PADS.length - 1; i >= 0; i--) {
+    const tp = TEMP_PADS[i]; tp.t -= dt;
+    if (tp.t <= 0) { scene.remove(tp.g); scene.remove(tp.pd.ring); const k = PADS.indexOf(tp.pd); if (k >= 0) PADS.splice(k, 1); TEMP_PADS.splice(i, 1); }
+  }
+  if (scanWave.visible) {
+    const w = scanWave.userData.t = (scanWave.userData.t || 0) + dt;
+    scanWave.scale.setScalar(2 + w * 70); scanWave.material.opacity = Math.max(0, 0.5 * (1 - w / 0.9));
+    if (w > 0.9) scanWave.visible = false;
+  }
+  // corde du grappin : de la main droite (sous la caméra) jusqu'au point accroché
+  hookLine.visible = hookClaw.visible = !!HOOK.p;
+  if (HOOK.p) {
+    _m.set(0.22, -0.28, -0.45); camera.localToWorld(_m);
+    const pa = hookLine.geometry.attributes.position; pa.setXYZ(0, _m.x, _m.y, _m.z); pa.setXYZ(1, HOOK.p.x, HOOK.p.y, HOOK.p.z); pa.needsUpdate = true;
+    hookClaw.position.copy(HOOK.p); hookClaw.rotation.y += dt * 6;
+  }
+  // robots révélés par le scan
+  for (const d of dummies) if (d.vis && d.alive) d.scanned = AB.scanT > 0 && d.g.position.distanceTo(P.pos) < 70;
+}
 function clearAbilityFx() {
+  for (const tp of TEMP_PADS) { scene.remove(tp.g); scene.remove(tp.pd.ring); const k = PADS.indexOf(tp.pd); if (k >= 0) PADS.splice(k, 1); } TEMP_PADS.length = 0;
+  HOOK.p = null;
   for (const dm of DOMES) scene.remove(dm.g); DOMES.length = 0;
   for (const pt of PORTALS) { scene.remove(pt.ma.g); scene.remove(pt.mb.g); } PORTALS.length = 0;
   if (AB.marker) scene.remove(AB.marker); AB.marker = null; AB.portalA = null;
@@ -2079,6 +2287,7 @@ function step(dt) {
   simTime += dt; P.prev.copy(P.pos);
   P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
   abilityStep(dt);
+  if (EDIT.on) { editorStep(dt); return; }
   if (P.dead) { if (P.veh) exitVehicle(true); if (P.zip) { P.zip = null; zipSound(false); } P.vel.set(0, 0, 0); return; }
   if (P.veh) { vehStep(P.veh, dt); return; }
   if (P.zip) { zipStep(dt); return; }
@@ -2121,7 +2330,7 @@ function step(dt) {
 
   if (P.padCd <= 0) for (const pd of PADS) {
     if (Math.hypot(P.pos.x - pd.x, P.pos.z - pd.z) < 1.35 && Math.abs(P.pos.y - pd.y) < 0.45 && v.y <= 0.5) {
-      v.y = PAD_V; v.x += fx * 3; v.z += fz * 3;
+      v.y = PAD_V; v.x += fx * 3; v.z += fz * 3; camKick(7);
       P.grounded = false; P.sliding = false; P.climbing = false; P.doubleJump = true; P.climbAvail = true; P.padCd = 0.6;
       feed('JUMP PAD', t('feed.djReady'), 'cyan'); sfx.pad(1);
     }
@@ -2159,6 +2368,7 @@ function audioInit() {
   const saved = store.get('slideCustom', null);
   if (saved && !customSlideBuf) loadCustomSlide(dataUrlToBuf(saved), null, false);
   buildSlideVoice();
+  setTimeout(() => { try { csEnsure(); } catch (e) {} }, 0);
 }
 /* ---------- voix de glissade : préréglages ou fichier importé ---------- */
 let slideVoice = null, customSlideBuf = null, customSlidePending = null;
@@ -2266,9 +2476,103 @@ const sfx = {
   unsheathe: snd((t, heavy) => { if (heavy) { nz(t, { dur: .35, f: 500, q: 1, gain: .2, f2: 2600 }); tn(t + .05, { f: 220, f2: 520, dur: .3, type: 'triangle', gain: .06 }); return; }
     nz(t, { dur: .32, f: 2600, q: 6, gain: .14, f2: 6800 }); tn(t + .26, { f: 2960, dur: .7, gain: .03 }); tn(t + .26, { f: 4410, dur: .5, gain: .015 }); }),
   sizzle: snd(t => { nz(t, { dur: .3, f: 3200, q: .8, gain: .12, f2: 1400 }); tn(t, { f: 90, f2: 60, dur: .2, type: 'triangle', gain: .08 }); }),
+  grapple: snd(t => { nz(t, { dur: .18, f: 1800, q: 2, gain: .16, f2: 4200 }); tn(t + .02, { f: 220, f2: 90, dur: .25, type: 'sawtooth', gain: .05 }); }),
+  scan: snd(t => { tn(t, { f: 420, f2: 1400, dur: .5, type: 'sine', gain: .1 }); tn(t + .1, { f: 840, f2: 2800, dur: .4, gain: .05 }); nz(t, { dur: .6, f: 3000, q: 4, gain: .06 }); }),
   zipGrab: snd(t => { nz(t, { dur: .12, f: 2600, q: 5, gain: .12 }); tn(t, { f: 900, f2: 1400, dur: .1, type: 'triangle', gain: .05 }); }),
   outfit: snd(t => { [1320, 1660, 1980, 2640].forEach((f, i) => tn(t + i * .07, { f, dur: .18, gain: .06 })); nz(t, { dur: .4, f: 6000, q: 2, gain: .05 }); })
 };
+
+/* ================= Sons personnalisés : chaque joueur peut remplacer ses sons, les autres les entendent ================= */
+const CS_SLOTS = ['shot0', 'shot1', 'shot2', 'shot3', 'shot4', 'shot5', 'jump', 'land', 'kill', 'hit', 'superglide', 'stim', 'dome', 'portal', 'grapple'];
+const CS_MAX = 300 * 1024, CS_CHUNK = 15000;
+const CS = { data: {}, mine: {}, remote: new Map(), host: new Map() };
+let SND_OWNER = null;
+S.csShare = store.get('csShare', true) !== false; S.csHear = store.get('csHear', true) !== false;
+for (const sl of CS_SLOTS) { const d = store.get('cs_' + sl, null); if (typeof d === 'string' && d.startsWith('data:audio')) CS.data[sl] = d; }
+function csDecode(dataUrl) {
+  return new Promise(res => { try { AC.decodeAudioData(dataUrlToBuf(dataUrl), b => res(b), () => res(null)); } catch (e) { res(null); } });
+}
+// décode ce qui attend (au premier son joué, quand le contexte audio existe)
+function csEnsure() {
+  if (!AC) return;
+  for (const sl in CS.data) if (!CS.mine[sl]) { CS.mine[sl] = 'pending'; csDecode(CS.data[sl]).then(b => { if (CS.data[sl]) CS.mine[sl] = b; else delete CS.mine[sl]; }); }
+  for (const r of CS.remote.values()) for (const sl in r.data) if (!r.buf[sl]) { r.buf[sl] = 'pending'; const d = r.data[sl]; csDecode(d).then(b => { if (r.data[sl] === d) r.buf[sl] = b; }); }
+}
+function csBuf(slot) {
+  if (!AC) return null;
+  const owner = SND_OWNER;
+  let b;
+  if (owner && owner !== NET.selfId) { if (!S.csHear) return null; const r = CS.remote.get(owner); b = r && r.buf[slot]; }
+  else b = CS.mine[slot];
+  return b && b !== 'pending' ? b : null;
+}
+function csPlay(b, vol = 1, dest) {
+  const s = AC.createBufferSource(); s.buffer = b; s.playbackRate.value = 0.97 + Math.random() * 0.06;
+  const g = AC.createGain(); g.gain.value = vol; s.connect(g); g.connect(dest || master); s.start();
+}
+// les sons existants passent d'abord par le son perso de leur propriétaire
+{
+  const shot = sfx.shot;
+  sfx.shot = (i, vol = 1) => { if (AC && AC.state === 'running') { const b = csBuf('shot' + i); if (b) { csPlay(b, vol, gunBus); return; } } shot(i, vol); };
+  for (const name of ['jump', 'land', 'kill', 'hit', 'superglide', 'stim', 'dome', 'portal', 'grapple']) {
+    const orig = sfx[name];
+    sfx[name] = (...a) => { if (AC && AC.state === 'running') { const b = csBuf(name); if (b) { csPlay(b, name === 'land' ? clamp(0.25 + (a[0] || 0), 0.25, 1) : 1); return; } } orig(...a); };
+  }
+}
+function csMsg(m, cls = '') { const el = $('csMsg'); if (el) { el.textContent = m; el.className = cls; } }
+function csSet(slot, dataUrl) {
+  if (dataUrl) CS.data[slot] = dataUrl; else delete CS.data[slot];
+  delete CS.mine[slot];
+  let saved = true;
+  try { if (dataUrl) localStorage.setItem('velocite_cs_' + slot, JSON.stringify(dataUrl)); else localStorage.removeItem('velocite_cs_' + slot); } catch (e) { saved = false; }
+  csEnsure(); csShareSlot(slot);
+  return saved;
+}
+// partage en ligne : morceaux de 15 000 caractères relayés par l'hôte
+function csChunks(o, slot, d, send) {
+  const n = Math.max(1, Math.ceil(d.length / CS_CHUNK)), id = Math.random().toString(36).slice(2, 8);
+  for (let i = 0; i < n; i++) send({ k: 'snd', o, slot, id, i, n, d: d.slice(i * CS_CHUNK, (i + 1) * CS_CHUNK) });
+}
+function csShareSlot(slot, toId) {
+  if (NET.mode === 'off') return;
+  const d = S.csShare ? CS.data[slot] || '' : '';
+  if (NET.mode === 'client') csChunks(undefined, slot, d, m => netSend(m));
+  else csChunks(NET.selfId, slot, d, m => toId ? sendTo(toId, m) : broadcast(m, NET.selfId));
+}
+function csShareAll(toId) { for (const sl of CS_SLOTS) if (CS.data[sl] || !toId) csShareSlot(sl, toId); }
+function csAssemble(store2, key, m) {
+  if (!CS_SLOTS.includes(m.slot) || typeof m.d !== 'string' || m.d.length > CS_CHUNK || !(m.n >= 1 && m.n <= 40) || !(m.i >= 0 && m.i < m.n)) return null;
+  let a = store2.get(key);
+  if (!a || a.id !== m.id) { a = { id: m.id, n: m.n, parts: [], got: 0 }; store2.set(key, a); }
+  if (a.parts[m.i] === undefined) { a.parts[m.i] = m.d; a.got++; }
+  if (a.got < a.n) return null;
+  store2.delete(key);
+  const full = a.parts.join('');
+  return full === '' || (full.startsWith('data:audio') && full.length <= 450000) ? full : null;
+}
+const csPend = new Map();
+function csHostRecv(from, m) {
+  // relais immédiat vers les autres, copie gardée pour ceux qui arriveront plus tard
+  const relay = Object.assign({}, m, { o: from });
+  broadcast(relay, from);
+  const full = csAssemble(csPend, 'h' + from + m.slot, m);
+  if (full === null) return;
+  if (!CS.host.has(from)) CS.host.set(from, {});
+  if (full) CS.host.get(from)[m.slot] = full; else delete CS.host.get(from)[m.slot];
+}
+function csHostWelcome(to) {
+  csShareAll(to);
+  for (const [pid, slots] of CS.host) if (pid !== to && NET.players.has(pid)) for (const sl in slots) csChunks(pid, sl, slots[sl], m => sendTo(to, m));
+}
+function csClientRecv(m) {
+  if (!m.o || m.o === NET.selfId) return;
+  const full = csAssemble(csPend, 'c' + m.o + m.slot, m);
+  if (full === null) return;
+  if (!CS.remote.has(m.o)) CS.remote.set(m.o, { data: {}, buf: {} });
+  const r = CS.remote.get(m.o);
+  if (full) { r.data[m.slot] = full; delete r.buf[m.slot]; } else { delete r.data[m.slot]; delete r.buf[m.slot]; }
+  csEnsure();
+}
 
 /* ================= Modèles 3D ================= */
 const MODELS = { robot: null, soldier: null, chars: {} };
@@ -2379,6 +2683,8 @@ DUMMY_DEF.forEach((def, i) => {
 });
 function placeDummies(defs) {
   dummies.forEach((d, i) => {
+    // carte perso avec peu de robots : les robots en trop sont rangés
+    if (i >= defs.length && (defs.length === 0 || defs.noRepeat)) { d.alive = false; d.respawn = Infinity; d.dieT = 99; d.g.visible = false; return; }
     const def = defs[i % defs.length];
     d.base.set(def[0], def[1], def[2]); d.mode = def[3]; d.axis = def[4] || 'x';
     d.off = 0; d.oy = 0; d.vy = 0; d.hp = MAX_HP; d.sh = MAX_SH; d.alive = true; d.dieT = 0; d.respawn = 0;
@@ -2447,15 +2753,15 @@ function updateDummy(d, dt) {
   if (vis.mixer) playAnim(vis, air ? 'Jump' : moving ? 'Running' : 'Idle', 0.2);
   d.pop = Math.min(1, d.pop + dt * 4); const s = easeOut(d.pop); g.scale.set(s, s, s);
   d.flash = Math.max(0, d.flash - dt * 8); d.shFlash = Math.max(0, d.shFlash - dt * 5);
-  setEmissive(vis, d.flash * 0.6);
+  if (d.scanned) setEmissive(vis, 0.55 + Math.sin(performance.now() / 120) * 0.2, 0xff3a20); else setEmissive(vis, d.flash * 0.6);
   d.shell.material.opacity = d.shFlash * 0.4;
 }
 
 /* ================= Armes ================= */
 const WEAPONS = [
   { name: 'CARABINE K-31', short: 'CARABINE', auto: true, rpm: 780, mag: 28, reload: 1.9, dmg: 14, head: 1.75, legs: 0.8, pellets: 1, hip: 0.9, ads: 0.04, bloom: 0.12, rv: 0.30, rh: 0.12, zoom: 0.8, kick: 0.025, kickRot: 0.05, move: 1 },
-  { name: 'MITRAILLETTE VX', short: 'MITRAILL.', auto: true, rpm: 1080, mag: 25, reload: 1.6, dmg: 11, head: 1.5, legs: 0.85, pellets: 1, hip: 1.25, ads: 0.14, bloom: 0.07, rv: 0.17, rh: 0.2, zoom: 0.88, kick: 0.016, kickRot: 0.035, move: 0.55 },
-  { name: 'POMPE KS-8', short: 'POMPE', auto: false, rpm: 72, mag: 6, reload: 2.3, dmg: 11, head: 1.5, legs: 0.9, pellets: 8, hip: 3.6, ads: 2.5, bloom: 0, rv: 2.6, rh: 0.6, zoom: 0.88, kick: 0.09, kickRot: 0.22, move: 0.8 },
+  { name: 'MITRAILLETTE VX', short: 'MITRAILL.', auto: true, rpm: 950, mag: 24, reload: 1.8, dmg: 9, head: 1.35, legs: 0.8, pellets: 1, hip: 1.5, ads: 0.2, bloom: 0.09, rv: 0.22, rh: 0.24, zoom: 0.88, kick: 0.016, kickRot: 0.035, move: 0.55 },
+  { name: 'POMPE KS-8', short: 'POMPE', auto: false, rpm: 82, mag: 6, reload: 2.0, dmg: 13, head: 1.6, legs: 0.95, pellets: 9, hip: 3.1, ads: 2.1, bloom: 0, rv: 2.6, rh: 0.6, zoom: 0.88, kick: 0.09, kickRot: 0.22, move: 0.8 },
   { name: 'ÉPERVIER .50', short: 'SNIPER', auto: false, rpm: 46, mag: 5, reload: 2.6, dmg: 85, head: 2.1, legs: 0.8, pellets: 1, hip: 6, ads: 0.02, bloom: 0, rv: 3.4, rh: 0.4, zoom: 0.27, kick: 0.12, kickRot: 0.3, move: 1.4, scope: true },
   { name: 'PISTOLET HX', short: 'PISTOLET', auto: false, rpm: 420, mag: 14, reload: 1.2, dmg: 18, head: 1.6, legs: 0.85, pellets: 1, hip: 0.8, ads: 0.12, bloom: 0.25, rv: 0.9, rh: 0.15, zoom: 0.85, kick: 0.03, kickRot: 0.12, move: 0.7 },
   { name: 'COUTEAU', short: 'COUTEAU', melee: true, auto: true, rpm: 115, mag: 1, reload: 0, dmg: 50, head: 1.5, legs: 1, pellets: 1, hip: 0, ads: 0, bloom: 0, rv: 0, rh: 0, zoom: 1, kick: 0, kickRot: 0, move: 0, range: 2.7 }
@@ -2993,7 +3299,7 @@ function melee() {
       if (S.knife === 'morgane') { ud.d.mgT = 90; feed('MORGANE', t('mg.feed'), 'gold'); sfx.outfit(); } else ud.d.mgT = 0;
     }
   }
-  if (S.knife === 'katana') sfx.katana(); else if (S.knife === 'morgane') sfx.axe(); else sfx.shot(5);
+  if (csBuf('shot5')) sfx.shot(5); else if (S.knife === 'katana') sfx.katana(); else if (S.knife === 'morgane') sfx.axe(); else sfx.shot(5);
   netSend({ k: 'shot', w: 5, a: [r2(_o.x), r2(_o.y), r2(_o.z)], e: [] });
   if (result) {
     sfx.hit(result === 'head');
@@ -3072,6 +3378,7 @@ function fire() {
   if (!X.ammo) WS.ammo[WS.cur]--;
   WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm;
   WS.flashT = 0.045; WS.kick += W.kick; WS.kickRot += W.kickRot;
+  camShake(W.pellets > 1 ? 0.5 : W.scope ? 0.55 : W.kick * 6);
   const spread = X.norecoil ? 0 : currentSpread();
   if (!X.norecoil) WS.bloom = Math.min(WS.bloom + W.bloom, 1.4);
   camera.updateMatrixWorld();
@@ -3150,7 +3457,7 @@ function updateWeapon(dt) {
   WS.cool -= dt; WS.bloom = Math.max(0, WS.bloom - dt * 2.2);
   if (WS.swapT > 0) WS.swapT -= dt;
   if (WS.reloading) { WS.reloadT -= dt; if (WS.reloadT <= 0) { WS.reloading = false; WS.ammo[WS.cur] = W.mag; } }
-  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh) {
+  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !EDIT.on) {
     if (WS.ammo[WS.cur] > 0) { if (W.auto || !WS.trigger) fire(); }
     else if (!WS.trigger) { sfx.empty(); startReload(); }
   }
@@ -3166,6 +3473,10 @@ function updateWeapon(dt) {
 const rPos = new V3();
 let baseVfov = 80, curVfov = 80;
 function hToV(h) { return clamp(2 * Math.atan(Math.tan(h * DEG / 2) / camera.aspect) / DEG, 8, 110); }
+// petits effets de caméra (réglables, 0 = aucun) : secousse au tir et à l'atterrissage, coup de champ de vision
+const CAM = { shake: 0, kick: 0, t: 0 };
+function camShake(a) { CAM.shake = Math.min(1, CAM.shake + a); }
+function camKick(a) { CAM.kick = Math.min(14, CAM.kick + a); }
 function updateCamera(dt, alpha) {
   rPos.copy(P.prev).lerp(P.pos, alpha);
   const hs = Math.hypot(P.vel.x, P.vel.z);
@@ -3173,18 +3484,21 @@ function updateCamera(dt, alpha) {
   P.eye = lerp(P.eye, eyeT, 1 - Math.exp(-14 * dt));
   P.dip = lerp(P.dip, 0, 1 - Math.exp(-9 * dt));
   let bobY = 0;
+  const fx = S.camFx;
   if (P.grounded && !P.sliding && hs > 1 && !P.mantle) {
     P.bob += hs * dt * 1.55;
-    bobY = Math.sin(P.bob * 2) * 0.028 * Math.min(1, hs / SPRINT) * (1 - WS.ads * 0.8);
+    bobY = Math.sin(P.bob * 2) * 0.028 * fx * Math.min(1, hs / SPRINT) * (1 - WS.ads * 0.8);
     P.stepDist += hs * dt;
     if (P.stepDist > (P.sprinting ? 2.4 : 1.9)) { P.stepDist = 0; sfx.step(); }
   }
   const strafe = ((act('right') ? 1 : 0) - (act('left') ? 1 : 0));
-  const rollT = P.dead ? 0.3 : P.sliding ? -0.05 : P.climbing ? 0 : -strafe * 0.012 * Math.min(1, hs / 5);
+  const rollT = P.dead ? 0.3 : (P.sliding ? -0.05 : P.climbing ? 0 : -strafe * 0.012 * Math.min(1, hs / 5)) * fx;
   P.roll = lerp(P.roll, rollT, 1 - Math.exp(-8 * dt));
-  camera.position.set(rPos.x, rPos.y + P.eye - P.dip + bobY, rPos.z);
-  camera.rotation.set(P.pitch + WS.kickRot * 0.06, P.yaw, P.roll);
-  const speedFov = clamp((hs - 7.5) / 8, 0, 1) * 8 + (AB.stimT > 0 ? 5 : 0);
+  CAM.t += dt; CAM.shake = Math.max(0, CAM.shake - dt * 3.2); CAM.kick = Math.max(0, CAM.kick - dt * 18);
+  const sh = CAM.shake * CAM.shake * fx, sx = (Math.sin(CAM.t * 71) + Math.sin(CAM.t * 43.7)) * 0.5 * sh, sy = (Math.sin(CAM.t * 63.1) + Math.cos(CAM.t * 37.3)) * 0.5 * sh;
+  camera.position.set(rPos.x, rPos.y + P.eye - P.dip * fx + bobY + sy * 0.03, rPos.z);
+  camera.rotation.set(P.pitch + WS.kickRot * 0.06 * fx + sy * 0.012, P.yaw + sx * 0.012, P.roll + sx * 0.01);
+  const speedFov = (clamp((hs - 7.5) / 8, 0, 1) * 8 + (AB.stimT > 0 ? 5 : 0) + CAM.kick) * Math.min(1, fx);
   baseVfov = hToV(S.fov);
   const target = hToV(S.fov + speedFov) * lerp(1, WEAPONS[WS.cur].zoom, easeOut(WS.ads));
   curVfov = lerp(curVfov, target, 1 - Math.exp(-14 * dt));
@@ -3199,7 +3513,7 @@ function updateViewmodel(dt) {
   const vm = VM[WS.cur], g = vm.g, a = easeOut(WS.ads), hs = Math.hypot(P.vel.x, P.vel.z);
   let swingP = -1, viewSpin = 0;
   const scoped = WEAPONS[WS.cur].scope && WS.ads > 0.85;
-  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh;
+  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on;
   WS.sprintK = approach(WS.sprintK, P.sprinting && P.grounded && !mouse.left && !WS.reloading ? 1 : 0, dt * 6);
   WS.slideK = approach(WS.slideK, P.sliding ? 1 : 0, dt * 6);
   WS.swayX *= Math.exp(-10 * dt); WS.swayY *= Math.exp(-10 * dt);
@@ -3208,14 +3522,15 @@ function updateViewmodel(dt) {
   let x = lerp(vm.hip[0], 0, a), y = lerp(vm.hip[1], -vm.sightY, a), z = lerp(vm.hip[2], -vm.adsZ, a);
   let rx = 0, ry = lerp(0.04, 0, a), rz = 0;
   const bobAmt = P.grounded && !P.sliding ? Math.min(1, hs / SPRINT) : 0;
-  x += Math.sin(P.bob) * 0.01 * bobAmt * (1 - a * 0.85);
-  y += -Math.abs(Math.cos(P.bob)) * 0.008 * bobAmt * (1 - a * 0.85);
-  x += clamp(WS.swayX * 0.25, -0.03, 0.03) * hipK; y += clamp(-WS.swayY * 0.25, -0.03, 0.03) * hipK;
-  ry += clamp(WS.swayX * 0.6, -0.08, 0.08); rx += clamp(WS.swayY * 0.5, -0.06, 0.06);
-  if (!P.grounded) y += clamp(-P.vel.y * 0.003, -0.025, 0.025);
+  // arme plus posée : balancement, inertie et inclinaisons réduits
+  x += Math.sin(P.bob) * 0.004 * bobAmt * (1 - a * 0.9);
+  y += -Math.abs(Math.cos(P.bob)) * 0.003 * bobAmt * (1 - a * 0.9);
+  x += clamp(WS.swayX * 0.1, -0.012, 0.012) * hipK; y += clamp(-WS.swayY * 0.1, -0.012, 0.012) * hipK;
+  ry += clamp(WS.swayX * 0.25, -0.03, 0.03); rx += clamp(WS.swayY * 0.2, -0.025, 0.025);
+  if (!P.grounded) y += clamp(-P.vel.y * 0.0012, -0.01, 0.01);
   const sk = easeOut(WS.sprintK) * hipK;
-  x -= 0.03 * sk; y -= 0.04 * sk; z += 0.02 * sk; rx -= 0.2 * sk; ry += 0.55 * sk; rz += 0.15 * sk;
-  rz += 0.3 * WS.slideK * hipK; x -= 0.02 * WS.slideK * hipK;
+  x -= 0.012 * sk; y -= 0.018 * sk; z += 0.01 * sk; rx -= 0.08 * sk; ry += 0.2 * sk; rz += 0.05 * sk;
+  rz += 0.12 * WS.slideK * hipK; x -= 0.01 * WS.slideK * hipK;
   if (WS.reloading) {
     const p = 1 - WS.reloadT / WS.reloadDur, k = Math.sin(Math.PI * clamp(p, 0, 1));
     rx -= 0.55 * k; rz += 0.45 * k; y -= 0.06 * k;
@@ -3268,7 +3583,7 @@ function updateViewmodel(dt) {
       ry += 0.9 * up; rz += 0.45 * up; rx += 0.12 * Math.sin(e(0.15, 0.85) * Math.PI * 2) * up; x -= 0.05 * up; z += 0.04 * up;
     }
   }
-  z += WS.kick; rx += WS.kickRot;
+  z += WS.kick * 0.7; rx += WS.kickRot * 0.6;
   g.position.set(x, y, z); g.rotation.set(rx, ry, rz);
   if (viewSpin) g.quaternion.premultiply(_vq.setFromAxisAngle(_zAxis, viewSpin));
   swFin[0] = x; swFin[1] = y; swFin[2] = z; swFin[3] = rx; swFin[4] = ry; swFin[5] = rz;
@@ -3300,6 +3615,7 @@ function myState() {
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (P.veh) { st.vh = P.veh.i + 1; st.vy = r2(P.veh.yaw); st.y = st.vy; st.a = P.veh.grounded ? 'ground' : 'air'; }
   if (P.mgT > 0) st.mg = 1;
+  if (HOOK.p) st.gp = [r2(HOOK.p.x), r2(HOOK.p.y), r2(HOOK.p.z)];
   return st;
 }
 // -- envoi : le client parle à l'hôte ; l'hôte se traite lui-même comme un client local
@@ -3322,22 +3638,25 @@ function hostRecv(from, m) {
     sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map });
     broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
     lobbyShow();
+    setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); } }, 400);
     return;
   }
   if (!pl) return;
   if (m.k === 'bye') {
     if (from === NET.selfId) return;
     const c = NET.conns.get(from);
-    NET.players.delete(from); NET.conns.delete(from);
+    NET.players.delete(from); NET.conns.delete(from); CS.host.delete(from);
     broadcast({ k: 'sys', t: 'leave', name: pl.name });
     try { if (c) c.close(); } catch (e) {}
     lobbyShow();
     return;
   }
+  if (m.k === 'snd') { csHostRecv(from, m); return; }
   if (m.k === 'st') pl.st = m.s;
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, a: m.a, e: m.e }, from);
-  else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number) }, from);
-  else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number) }, from);
+  else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number), o: from }, from);
+  else if (m.k === 'lpad' && Array.isArray(m.p)) broadcast({ k: 'lpad', p: m.p.slice(0, 3).map(Number), o: from }, from);
+  else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'hit') { if (NET.players.has(m.to)) sendTo(m.to, { k: 'hit', from, dmg: m.dmg, head: m.head, w: m.w, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
   else if (m.k === 'dead') {
     pl.deaths++;
@@ -3352,7 +3671,9 @@ function snapshot() {
   return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; if (m.map && m.map !== S.map) switchMap(m.map, true); return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); return; }
+  if (m.k === 'snd') { csClientRecv(m); return; }
+  if (m.k === 'mapdef') { recvMapdef(m); return; }
   if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
   if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
   if (m.k === 'snap') {
@@ -3385,12 +3706,13 @@ function clientRecv(m) {
     const a = new V3(m.a[0], m.a[1], m.a[2]);
     for (const e of m.e || []) spawnTracer(a, new V3(e[0], e[1], e[2]), 0xff9a7a);
     const dist = camera.position.distanceTo(a);
-    sfx.shot(m.w | 0, clamp(1.4 / (1 + dist * 0.06), 0.05, 0.8));
+    SND_OWNER = m.from; sfx.shot(m.w | 0, clamp(1.4 / (1 + dist * 0.06), 0.05, 0.8)); SND_OWNER = null;
     return;
   }
   if (m.k === 'hit') { applyHit(m); return; }
-  if (m.k === 'dome') { spawnDome(m.p); return; }
-  if (m.k === 'portal') { spawnPortal(m.a, m.b); return; }
+  if (m.k === 'dome') { SND_OWNER = m.o || null; spawnDome(m.p); SND_OWNER = null; return; }
+  if (m.k === 'lpad') { spawnLaunchpad(m.p); return; }
+  if (m.k === 'portal') { SND_OWNER = m.o || null; spawnPortal(m.a, m.b); SND_OWNER = null; return; }
   if (m.k === 'kick') { leaveNet(); setNetStatus(t('net.kicked'), 'err'); toast(t('net.kicked'), 4); if (playing) pause(); return; }
   if (m.k === 'kf') {
     const nameOf = id => id === NET.selfId ? S.name : (remotes.get(id) ? remotes.get(id).name : '?');
@@ -3501,6 +3823,7 @@ function attachChar(rp) {
   playAnim(rp.vis, CHARS[used].anim.idle, 0);
 }
 function removeRemote(id) {
+  CS.remote.delete(id);
   const rp = remotes.get(id); if (!rp) return;
   scene.remove(rp.g); rp.tag.remove(); rp.el.remove(); remotes.delete(id); rebuildShootable();
 }
@@ -3558,7 +3881,7 @@ function drawMinimap() {
   c.fillStyle = '#E88A4A';
   for (const d of dummies) if (d.alive && RULES.bots) { c.beginPath(); c.arc(d.g.position.x, d.g.position.z, 1.1, 0, Math.PI * 2); c.fill(); }
   for (const rp of remotes.values()) {
-    if (!rp.st || rp.st.dead || !(rp.pingT > 0 || (X.wall && xUnlocked))) continue;
+    if (!rp.st || rp.st.dead || !(rp.pingT > 0 || AB.scanT > 0 || (X.wall && xUnlocked))) continue;
     c.fillStyle = '#FF5A44'; c.beginPath(); c.arc(rp.pos.x, rp.pos.z, 1.6, 0, Math.PI * 2); c.fill();
   }
   c.restore();
@@ -3841,6 +4164,243 @@ function updateZipFx() {
   zipVoice.g.gain.setTargetAtTime(0.04 + sp * 0.012, AC.currentTime, 0.05);
   zipVoice.f.frequency.setTargetAtTime(900 + sp * 120, AC.currentTime, 0.05);
 }
+/* ================= Éditeur de cartes (réservé au mode zlock) ================= */
+const EDIT = { on: false, id: null, def: null, tool: 'box', w: 4, d: 4, h: 3, mat: 'concrete', rot: 0, zipA: null, undo: [], hit: null, msgT: 0 };
+const EDIT_TOOLS = ['box', 'ramp', 'pad', 'zip', 'spawn', 'veh', 'bot', 'erase'];
+const edGhost = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.MeshBasicMaterial({ color: 0xffb020, transparent: true, opacity: 0.28, depthWrite: false }));
+edGhost.add(new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(1, 1, 1)), new THREE.LineBasicMaterial({ color: 0xffd27a })));
+const edArrow = new THREE.Mesh(new THREE.ConeGeometry(0.5, 1.2, 12), new THREE.MeshBasicMaterial({ color: 0xffd27a }));
+const edZipLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V3(), new V3()]), new THREE.LineBasicMaterial({ color: 0xffb020 }));
+const edMarkers = new THREE.Group();
+[edGhost, edArrow, edZipLine].forEach(o => { o.visible = false; o.frustumCulled = false; scene.add(o); });
+scene.add(edMarkers);
+const edHud = $('editHud');
+function edSaveAll() { try { localStorage.setItem('velocite_customMaps', JSON.stringify(CUSTOM)); return true; } catch (e) { return false; } }
+function edNewDef() { return { v: 1, name: 'Ma carte', size: 64, theme: 'canyon', open: false, boxes: [], ramps: [], pads: [], zips: [], spawns: [[0, 0, 40, 0]], vehs: [], bots: [] }; }
+function edOpen(id, def) {
+  if (!xUnlocked) return;
+  EDIT.id = id; EDIT.def = def; EDIT.on = true; EDIT.undo = []; EDIT.zipA = null;
+  registerCustom(id, def);
+  if (S.map === id) buildMap(id); else switchMap(id);
+  P.pos.set(0, 8, def.size * 0.6); P.prev.copy(P.pos); P.vel.set(0, 0, 0); P.yaw = 0; P.pitch = -0.35; P.dead = false;
+  edRefreshMarkers(); edRenderPanel();
+}
+function edRebuild() {
+  const pos = P.pos.clone(), yaw = P.yaw, pitch = P.pitch;
+  MAPS[EDIT.id].custom = EDIT.def;
+  buildMap(EDIT.id);
+  P.pos.copy(pos); P.prev.copy(pos); P.yaw = yaw; P.pitch = pitch;
+  edRefreshMarkers();
+}
+function edRefreshMarkers() {
+  edMarkers.clear();
+  if (!EDIT.on || !EDIT.def) return;
+  const mk = (list, col, h) => { for (const p of list) { const m = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, h, 10), new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.7 })); m.position.set(p[0], p[1] + h / 2, p[2]); edMarkers.add(m);
+    const ar = new THREE.Mesh(new THREE.ConeGeometry(0.25, 0.6, 8), m.material); ar.rotation.x = -Math.PI / 2; ar.position.set(p[0] - Math.sin(p[3] || 0) * 0.6, p[1] + h, p[2] - Math.cos(p[3] || 0) * 0.6); ar.rotation.z = 0; ar.lookAt(p[0] - Math.sin(p[3] || 0) * 2, p[1] + h, p[2] - Math.cos(p[3] || 0) * 2); ar.rotateX(Math.PI / 2); edMarkers.add(ar); } };
+  mk(EDIT.def.spawns, 0x9be36a, 1.8); mk(EDIT.def.vehs, 0xffd24a, 1.0); mk(EDIT.def.bots, 0xff5a44, 2.0);
+}
+function edPush() { EDIT.undo.push(JSON.stringify(EDIT.def)); if (EDIT.undo.length > 80) EDIT.undo.shift(); }
+function edToast(m) { toast(m, 1.6); }
+// point visé : surface touchée et normale, en coordonnées monde
+function edAim() {
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]);
+  raycaster.set(_o, _f); raycaster.far = 160;
+  const h = raycaster.intersectObjects(WORLD, false)[0];
+  if (!h) return null;
+  const n = h.face ? h.face.normal.clone().transformDirection(h.object.matrixWorld) : UP.clone();
+  return { p: h.point.clone(), n, dist: h.distance };
+}
+const snap = (v, step = 0.5) => Math.round(v / step) * step;
+// pose calculée de l'objet selon l'outil
+function edPlan(hit) {
+  const T = EDIT.tool, q = hit.p.clone().addScaledVector(hit.n, 0.01);
+  const sw = EDIT.rot % 2 ? EDIT.d : EDIT.w, sd = EDIT.rot % 2 ? EDIT.w : EDIT.d;
+  if (T === 'box' || T === 'ramp') {
+    const up = hit.n.y > 0.6, down = hit.n.y < -0.6;
+    let cx = q.x + (up || down ? 0 : hit.n.x * sw / 2), cz = q.z + (up || down ? 0 : hit.n.z * sd / 2);
+    cx = Math.round(cx - sw / 2) + sw / 2; cz = Math.round(cz - sd / 2) + sd / 2;
+    const y0 = up ? snap(q.y) : down ? snap(q.y - EDIT.h) : Math.floor(q.y + 0.01);
+    return { cx, cz, sw, sd, y0 };
+  }
+  return { x: snap(q.x), y: snap(q.y, 0.05), z: snap(q.z) };
+}
+function edPlace() {
+  const hit = EDIT.hit = edAim(); if (!hit) return;
+  const d = EDIT.def, T = EDIT.tool, pl = edPlan(hit);
+  if (T === 'erase') { edErase(); return; }
+  if (T === 'zip') {
+    const pt = [pl.x, pl.y + 2.3, pl.z];
+    if (!EDIT.zipA) { EDIT.zipA = pt; edToast('Tyrolienne : vise l’autre bout et clique'); return; }
+    if (Math.hypot(pt[0] - EDIT.zipA[0], pt[1] - EDIT.zipA[1], pt[2] - EDIT.zipA[2]) < 3) { edToast('Trop court'); return; }
+    edPush(); d.zips.push(EDIT.zipA.concat(pt)); EDIT.zipA = null; edRebuild(); return;
+  }
+  edPush();
+  if (T === 'box') d.boxes.push([pl.cx, pl.cz, pl.sw, pl.sd, pl.y0, EDIT.h, EDIT.mat]);
+  else if (T === 'ramp') {
+    const axis = EDIT.rot % 2 ? 'x' : 'z', hi = EDIT.rot < 2 ? -1 : 1;
+    d.ramps.push([pl.cx - pl.sw / 2, pl.cx + pl.sw / 2, pl.cz - pl.sd / 2, pl.cz + pl.sd / 2, axis, hi, pl.y0, pl.y0 + EDIT.h]);
+  }
+  else if (T === 'pad') d.pads.push([pl.x, pl.y, pl.z]);
+  else if (T === 'spawn') d.spawns.push([pl.x, pl.y, pl.z, r2(P.yaw)]);
+  else if (T === 'veh') { if (d.vehs.length >= 16) { EDIT.undo.pop(); edToast('16 buggys maximum'); return; } d.vehs.push([pl.x, pl.y, pl.z, r2(P.yaw)]); }
+  else if (T === 'bot') { if (d.bots.length >= 12) { EDIT.undo.pop(); edToast('12 robots maximum'); return; } d.bots.push([pl.x, pl.y, pl.z, 'static']); }
+  edRebuild(); sfx.swap();
+}
+function edErase() {
+  const hit = EDIT.hit = edAim(); if (!hit) return;
+  const d = EDIT.def, p = hit.p, inside = p.clone().addScaledVector(hit.n, -0.05);
+  const near = (list, r) => list.findIndex(q => Math.hypot(q[0] - p.x, q[1] - p.y, q[2] - p.z) < r);
+  let i;
+  // câbles : distance entre le rayon de visée et le segment
+  for (let k = 0; k < d.zips.length; k++) {
+    const z = d.zips[k], a = new V3(z[0], z[1], z[2]), b = new V3(z[3], z[4], z[5]);
+    const dist = raycaster.ray.distanceSqToSegment(a, b);
+    if (dist < 0.8) { edPush(); d.zips.splice(k, 1); edRebuild(); return; }
+  }
+  for (const [list, r] of [[d.spawns, 1.6], [d.vehs, 2.4], [d.bots, 1.6], [d.pads, 1.8]]) if ((i = near(list, r)) >= 0) { edPush(); list.splice(i, 1); edRebuild(); return; }
+  i = d.boxes.findIndex(b => Math.abs(inside.x - b[0]) <= b[2] / 2 + 0.02 && Math.abs(inside.z - b[1]) <= b[3] / 2 + 0.02 && inside.y >= b[4] - 0.02 && inside.y <= b[4] + b[5] + 0.02);
+  if (i >= 0) { edPush(); d.boxes.splice(i, 1); edRebuild(); return; }
+  i = d.ramps.findIndex(r => p.x >= r[0] - 0.05 && p.x <= r[1] + 0.05 && p.z >= r[2] - 0.05 && p.z <= r[3] + 0.05 && p.y <= Math.max(r[6], r[7]) + 0.1);
+  if (i >= 0) { edPush(); d.ramps.splice(i, 1); edRebuild(); return; }
+}
+// pipette : reprend la taille et la matière du bloc visé
+function edPick() {
+  const hit = EDIT.hit = edAim(); if (!hit) return;
+  const q = hit.p.clone().addScaledVector(hit.n, -0.05);
+  const b = EDIT.def.boxes.find(b => Math.abs(q.x - b[0]) <= b[2] / 2 + 0.02 && Math.abs(q.z - b[1]) <= b[3] / 2 + 0.02 && q.y >= b[4] - 0.02 && q.y <= b[4] + b[5] + 0.02);
+  if (b) { EDIT.tool = 'box'; EDIT.w = b[2]; EDIT.d = b[3]; EDIT.h = b[5]; EDIT.mat = b[6]; EDIT.rot = 0; }
+}
+function edUndo() { const u = EDIT.undo.pop(); if (!u) return; EDIT.def = JSON.parse(u); edRebuild(); }
+function editorStep(dt) {
+  P.vel.set(0, 0, 0); P.grounded = false; P.mantle = null; P.climbing = false; P.sliding = false; P.dead = false;
+  const sp = act('sprint') ? 32 : 13, cp = Math.cos(P.pitch);
+  const fx = -Math.sin(P.yaw) * cp, fy = Math.sin(P.pitch), fz = -Math.cos(P.yaw) * cp, rx = Math.cos(P.yaw), rz = -Math.sin(P.yaw);
+  const iz = (act('forward') ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0), iy = (act('jump') ? 1 : 0) - (act('crouch') ? 1 : 0);
+  P.pos.x += (fx * iz + rx * ix) * sp * dt; P.pos.y += (fy * iz + iy) * sp * dt; P.pos.z += (fz * iz + rz * ix) * sp * dt;
+  const L = EDIT.def.size + 40; P.pos.x = clamp(P.pos.x, -L, L); P.pos.z = clamp(P.pos.z, -L, L); P.pos.y = clamp(P.pos.y, -1.6, 160);
+}
+function updateEditor() {
+  const on = EDIT.on && playing;
+  edHud.hidden = !on; edMarkers.visible = EDIT.on;
+  if (!on) { edGhost.visible = edArrow.visible = edZipLine.visible = false; return; }
+  const hit = EDIT.hit = edAim(), T = EDIT.tool;
+  edGhost.visible = edArrow.visible = edZipLine.visible = false;
+  if (hit && T !== 'erase') {
+    const pl = edPlan(hit);
+    if (T === 'box' || T === 'ramp') {
+      edGhost.visible = true; edGhost.scale.set(pl.sw, EDIT.h, pl.sd); edGhost.position.set(pl.cx, pl.y0 + EDIT.h / 2, pl.cz);
+      edGhost.material.color.setHex(T === 'box' ? 0xffb020 : 0x66d4e2);
+      if (T === 'ramp') {
+        // flèche vers le haut de la pente
+        const ang = [0, Math.PI / 2, Math.PI, -Math.PI / 2][EDIT.rot];
+        edArrow.visible = true; edArrow.position.set(pl.cx, pl.y0 + EDIT.h + 0.8, pl.cz); edArrow.rotation.set(Math.PI / 2, 0, 0); edArrow.rotation.z = 0;
+        edArrow.rotation.set(-Math.PI / 2, 0, 0); edArrow.rotateOnWorldAxis(UP, ang);
+      }
+    } else {
+      edGhost.visible = true; edGhost.material.color.setHex(T === 'bot' ? 0xff5a44 : T === 'veh' ? 0xffd24a : T === 'spawn' ? 0x9be36a : 0xffb020);
+      const hh = T === 'pad' ? 0.25 : T === 'zip' ? 0.4 : 1.8;
+      edGhost.scale.set(T === 'pad' ? 2.6 : T === 'veh' ? 2 : 0.8, hh, T === 'pad' ? 2.6 : T === 'veh' ? 3.4 : 0.8); edGhost.position.set(pl.x, pl.y + hh / 2 + (T === 'zip' ? 2.1 : 0), pl.z);
+      if (T === 'zip' && EDIT.zipA) {
+        edZipLine.visible = true; const pa = edZipLine.geometry.attributes.position;
+        pa.setXYZ(0, EDIT.zipA[0], EDIT.zipA[1], EDIT.zipA[2]); pa.setXYZ(1, pl.x, pl.y + 2.3, pl.z); pa.needsUpdate = true;
+      }
+    }
+  }
+  const d = EDIT.def, names = { box: 'Bloc', ramp: 'Rampe', pad: 'Pad', zip: 'Tyrolienne', spawn: 'Apparition', veh: 'Buggy', bot: 'Robot', erase: 'Gomme' };
+  const tools = EDIT_TOOLS.map((k, i) => `<span class="${k === T ? 'on' : ''}"><kbd>${i + 1}</kbd>${names[k]}</span>`).join('');
+  const size = T === 'box' || T === 'ramp' ? `${EDIT.w} × ${EDIT.d} × ${EDIT.h} m` + (T === 'ramp' ? ` · monte vers le ${['nord', 'ouest', 'sud', 'est'][EDIT.rot]}` : EDIT.rot % 2 ? ' · tourné' : '') : '';
+  const html = `<div class="edtools">${tools}</div><div class="edinfo"><b>${d.name}</b> · ${d.boxes.length} blocs · ${d.ramps.length} rampes · ${d.zips.length} tyroliennes${size ? ' · <b>' + size + '</b>' : ''}${T === 'box' ? ' · ' + EDIT.mat : ''}</div>` +
+    `<div class="edhelp">Clic gauche : poser · clic droit : effacer · clic molette : copier un bloc · molette : hauteur · Maj+molette : largeur · Ctrl+molette : profondeur · R : tourner · M : matière · U : annuler · ZQSD + Espace/C : voler (Maj : vite) · Échap : menu de l’éditeur</div>`;
+  if (edHud.dataset.h !== html) { edHud.dataset.h = html; edHud.innerHTML = html; }
+}
+function editorKey(c, e) {
+  const m = /^Digit([1-8])$/.exec(c) || /^Numpad([1-8])$/.exec(c);
+  if (m) { EDIT.tool = EDIT_TOOLS[+m[1] - 1]; if (EDIT.tool !== 'zip') EDIT.zipA = null; return true; }
+  if (c === 'KeyR') { EDIT.rot = (EDIT.rot + 1) % 4; return true; }
+  if (c === 'KeyM') { EDIT.mat = EDIT_MATS[(EDIT_MATS.indexOf(EDIT.mat) + (e.shiftKey ? EDIT_MATS.length - 1 : 1)) % EDIT_MATS.length]; return true; }
+  if (c === 'KeyU' || (c === 'KeyZ' && (e.ctrlKey || e.metaKey)) || (c === 'KeyW' && e.ctrlKey)) { edUndo(); return true; }
+  return false;
+}
+function editorWheel(e) {
+  const dir = e.deltaY < 0 ? 1 : -1, stepH = EDIT.tool === 'ramp' ? 0.5 : 1;
+  if (e.shiftKey) EDIT.w = clamp(EDIT.w + dir, 1, 80);
+  else if (e.ctrlKey) EDIT.d = clamp(EDIT.d + dir, 1, 80);
+  else EDIT.h = clamp(EDIT.h + dir * stepH, 0.5, 60);
+}
+// envoi de la carte perso aux joueurs (hôte)
+function mapdefTo(to) { const M = MAPS[S.map]; if (NET.mode === 'host' && M && M.custom) sendTo(to, { k: 'mapdef', id: S.map, def: M.custom }); }
+function mapdefAll() { const M = MAPS[S.map]; if (NET.mode === 'host' && M && M.custom) broadcast({ k: 'mapdef', id: S.map, def: M.custom }, NET.selfId); }
+function recvMapdef(m) {
+  if (NET.mode !== 'client' || !/^c_[a-z0-9]{4,12}$/.test(m.id)) return;
+  const def = sanitizeDef(m.def); if (!def) return;
+  registerCustom(m.id, def);
+  if (S.map === m.id) { buildMap(m.id); spawnPlayer(true); } else switchMap(m.id, true);
+}
+/* ---------- panneau de l'éditeur dans le menu ---------- */
+function edMsg(m) { const el = $('edMsg'); if (el) el.textContent = m; }
+function edRenderPanel() {
+  const box2 = $('edPanel'); if (!box2) return;
+  box2.hidden = !xUnlocked;
+  const d = EDIT.def;
+  $('edName').value = d ? d.name : ''; $('edSize').value = d ? String(d.size) : '64'; $('edTheme').value = d ? d.theme : 'canyon'; $('edOpenMap').checked = !!(d && d.open);
+  for (const id of ['edName', 'edSize', 'edTheme', 'edOpenMap', 'edSave', 'edTest', 'edQuit', 'edExport']) $(id).disabled = !d;
+  $('edState').textContent = d ? (EDIT.on ? 'En édition : ' : 'Carte chargée : ') + d.name : 'Aucune carte ouverte.';
+  const list = $('edList');
+  list.replaceChildren(...Object.keys(CUSTOM).map(id => {
+    const row = document.createElement('div'); row.className = 'edrow';
+    const n = document.createElement('b'); n.textContent = '★ ' + (CUSTOM[id].name || id);
+    const a = document.createElement('button'); a.className = 'btn3'; a.type = 'button'; a.textContent = 'Éditer';
+    a.addEventListener('click', () => { const def = sanitizeDef(CUSTOM[id]); if (!def) return; edOpen(id, def); $('play').click(); });
+    const del = document.createElement('button'); del.className = 'btn3'; del.type = 'button'; del.textContent = 'Supprimer';
+    del.addEventListener('click', () => {
+      if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Confirmer ?'; return; }
+      delete CUSTOM[id]; edSaveAll();
+      const o = [...$('mapSel').options].find(x => x.value === id); if (o) o.remove();
+      if (EDIT.id === id) { EDIT.on = false; EDIT.def = null; EDIT.id = null; }
+      if (S.map === id) switchMap('canyon');
+      delete MAPS[id]; edRenderPanel();
+    });
+    row.append(n, a, del); return row;
+  }));
+  if (!list.children.length) { const p = document.createElement('p'); p.className = 'hint'; p.textContent = 'Aucune carte enregistrée.'; list.appendChild(p); }
+}
+function edApplyMeta() {
+  if (!EDIT.def) return;
+  const d = EDIT.def;
+  d.name = ($('edName').value || 'Ma carte').slice(0, 24); d.size = +$('edSize').value; d.theme = $('edTheme').value; d.open = $('edOpenMap').checked;
+  registerCustom(EDIT.id, d);
+  if (S.map === EDIT.id) edRebuild();
+}
+{
+  $('edNew').addEventListener('click', () => { const id = 'c_' + Math.random().toString(36).slice(2, 10); edOpen(id, edNewDef()); $('play').click(); });
+  $('edSave').addEventListener('click', () => {
+    edApplyMeta(); CUSTOM[EDIT.id] = EDIT.def;
+    edMsg(edSaveAll() ? 'Carte « ' + EDIT.def.name + ' » enregistrée. Elle est dans la liste des cartes (★).' : 'Stockage du navigateur plein : exporte la carte pour la garder.');
+    if (S.map === EDIT.id) mapdefAll();
+    edRenderPanel();
+  });
+  $('edTest').addEventListener('click', () => { edApplyMeta(); EDIT.on = false; buildMap(EDIT.id); spawnPlayer(false); edRenderPanel(); $('play').click(); });
+  $('edQuit').addEventListener('click', () => { EDIT.on = false; edRefreshMarkers(); if (S.map === EDIT.id) { buildMap(EDIT.id); spawnPlayer(false); } edRenderPanel(); });
+  for (const id of ['edName', 'edSize', 'edTheme', 'edOpenMap']) $(id).addEventListener('change', edApplyMeta);
+  $('edExport').addEventListener('click', () => {
+    edApplyMeta();
+    const blob = new Blob([JSON.stringify(EDIT.def, null, 1)], { type: 'application/json' }), a = document.createElement('a');
+    a.href = URL.createObjectURL(blob); a.download = (EDIT.def.name || 'carte').replace(/[^a-z0-9_-]+/gi, '_') + '.velocite.json'; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
+  $('edImport').addEventListener('click', () => $('edFile').click());
+  $('edFile').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = ''; if (!f) return;
+    f.text().then(txt => {
+      let def = null; try { def = sanitizeDef(JSON.parse(txt)); } catch (er) {}
+      if (!def) { edMsg('Ce fichier n’est pas une carte Vélocité.'); return; }
+      const id = 'c_' + Math.random().toString(36).slice(2, 10);
+      CUSTOM[id] = def; edSaveAll(); registerCustom(id, def); edMsg('Carte « ' + def.name + ' » importée.'); edRenderPanel();
+    });
+  });
+  edRenderPanel();
+}
 /* ================= Véhicules : buggys (E pour monter / descendre) ================= */
 var VEH_READY = false;
 const VEHICLES = [];
@@ -4113,14 +4673,15 @@ function updateRemotes(dt) {
     if (!st.dead) {
       _p.set(rp.pos.x, rp.pos.y + (low ? 1.45 : 2.05), rp.pos.z);
       const dist = camera.position.distanceTo(_p);
-      if (dist < 90 || X.wall) {
+      const seeAll = X.wall || AB.scanT > 0;
+      if (dist < 90 || seeAll) {
         _d.copy(_p).sub(camera.position).normalize();
         raycaster.set(camera.position, _d); raycaster.far = dist;
-        const blocked = !X.wall && raycaster.intersectObjects(WORLD, false).length > 0;
+        const blocked = !seeAll && raycaster.intersectObjects(WORLD, false).length > 0;
         if (!blocked) {
           _p.project(camera);
           if (_p.z < 1) {
-            rp.tag.hidden = false; rp.tag.firstChild.textContent = X.wall ? rp.name + ' · ' + Math.round(dist) + ' m' : rp.name;
+            rp.tag.hidden = false; rp.tag.firstChild.textContent = seeAll ? rp.name + ' · ' + Math.round(dist) + ' m' : rp.name;
             rp.tag.style.transform = `translate(${((_p.x * .5 + .5) * W).toFixed(1)}px,${((-_p.y * .5 + .5) * H).toFixed(1)}px) translate(-50%,-100%)`;
           }
         }
@@ -4300,12 +4861,12 @@ function lobbyMsg(topic, payload) {
   let d; try { d = JSON.parse(payload); } catch (e) { return; }
   if (!d || typeof d !== 'object') return;
   LOBBY.list.set(code, {
-    code, host: String(d.h || '?').slice(0, 14), map: MAPS[d.m] ? d.m : 'canyon',
+    code, host: String(d.h || '?').slice(0, 14), map: MAPS[d.m] ? d.m : 'canyon', mname: MAPS[d.m] ? '' : String(d.mn || '').slice(0, 24),
     n: clamp(d.n | 0, 1, 8), t: +d.t || 0, seen: Date.now()
   });
   renderLobbies();
 }
-function lobbyPayload() { return JSON.stringify({ v: 1, h: S.name, m: S.map, n: NET.players.size || 1, t: Date.now() }); }
+function lobbyPayload() { return JSON.stringify({ v: 1, h: S.name, m: S.map, mn: mapName(S.map), n: NET.players.size || 1, t: Date.now() }); }
 // annonce (ou met à jour) la partie hébergée ; rien si la case « publique » est décochée
 function lobbyShow() {
   if (NET.mode !== 'host' || !NET.code) return;
@@ -4348,7 +4909,7 @@ function renderLobbies() {
   box.replaceChildren(...rows.map(l => {
     const el = document.createElement('div'); el.className = 'lob';
     const b = document.createElement('b'); b.textContent = l.host;
-    const m = document.createElement('span'); m.className = 'map'; m.textContent = t('map.' + l.map);
+    const m = document.createElement('span'); m.className = 'map'; m.textContent = l.mname || mapName(l.map);
     const n = document.createElement('span'); n.textContent = l.n + '/8'; if (l.n >= 8) n.className = 'full';
     const c = document.createElement('code'); c.textContent = l.code;
     const j = document.createElement('button'); j.className = 'btn3'; j.type = 'button'; j.textContent = t('net.join');
@@ -4368,7 +4929,7 @@ function dcPayload() {
   const what = P.veh ? t('dc.driving') : EMOTE.on ? t('dc.emote') : wName(WS.cur).toLowerCase().replace(/(^|[\s-])\S/g, c => c.toUpperCase());
   const p = {
     on: S.dcOn && /^[0-9]{15,22}$/.test(S.dcId), cid: S.dcId, start: DC.start,
-    details: playing ? t('map.' + S.map) + ' · ' + mode : online ? t('dc.lobby', { map: t('map.' + S.map) }) : t('dc.menu'),
+    details: EDIT.on ? t('dc.editor') : playing ? mapName(S.map) + ' · ' + mode : online ? t('dc.lobby', { map: mapName(S.map) }) : t('dc.menu'),
     state: playing ? (P.dead ? t('dc.dead') : what) + ' · ' + t('dc.kills', { k: kills }) : t('dc.menuState'),
     buttons: [{ label: t('dc.play'), url: SITE_URL }]
   };
@@ -4531,12 +5092,14 @@ function updateHUD(dt) {
   let sparkNew = false;
   while (sparkAcc > 1 / 30) { sparkAcc -= 1 / 30; sparkData.copyWithin(0, 1); sparkData[SPARK_N - 1] = hs; sparkNew = true; }
   if (sparkNew) drawSpark();
-  const abs = [['abStim', 'stim', AB.stimT > 0], ['abDome', 'dome', false], ['abPortal', 'portal', !!AB.portalA]];
-  for (const [elId, k, active] of abs) {
+  const cls = myClass(), isActive = k => k === 'stim' ? AB.stimT > 0 : k === 'portal' ? !!AB.portalA : k === 'scan' ? AB.scanT > 0 : k === 'grapple' ? !!HOOK.p : false;
+  for (const [elId, k] of [['abTac', cls.tac], ['abUlt', cls.ult]]) {
+    const active = isActive(k);
     const el = abEls[elId], cd = AB[k + 'Cd'], ready = abReady(k);
+    setTxt(el.children[1], t('ab.' + k));
     el.classList.toggle('ready', ready && !active); el.classList.toggle('active', active);
     el.lastChild.style.width = ready ? '100%' : ((1 - cd / AB_CD[k]) * 100).toFixed(1) + '%';
-    setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active ? Math.ceil(AB.portalAT) + ' s' : ready ? '' : Math.ceil(cd) + ' s');
+    setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active && k === 'scan' ? Math.ceil(AB.scanT) + ' s' : active && k === 'portal' ? Math.ceil(AB.portalAT) + ' s' : ready || active ? '' : Math.ceil(cd) + ' s');
   }
   stimFxEl.style.opacity = AB.stimT > 0 ? Math.min(1, AB.stimT).toFixed(2) : '0';
   mmAcc += dt;
@@ -4599,7 +5162,7 @@ function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.cl
 /* ================= Entrées ================= */
 let playing = false, everLocked = false, unlockedMode = false, everPlayed = false;
 function clearInput() { for (const k in keys) keys[k] = false; for (const k in wheelT) wheelT[k] = 0; mouse.left = mouse.right = false; }
-const abEls = { abStim: $('abStim'), abDome: $('abDome'), abPortal: $('abPortal') }, stimFxEl = $('stimFx');
+const abEls = { abTac: $('abTac'), abUlt: $('abUlt') }, stimFxEl = $('stimFx');
 function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
   $('hint').classList.remove('warn'); hintKey = 'hint.default'; $('hint').textContent = t(hintKey);
@@ -4644,7 +5207,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['stim', 'Stim', ['KeyQ', null]], ['dome', 'Dôme', ['KeyG', null]], ['portal', 'Portail', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['mute', 'Couper le son', ['KeyP', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['mute', 'Couper le son', ['KeyP', null]]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -4682,9 +5245,8 @@ function onAction(id) {
     else { const zh = zipNear(), v = nearVehicle(); if (zh && (!v || zh.z)) grabZip(zh); else enterVehicle(v); }
   }
   else if (id === 'back' && P.zip) { P.zip.d *= -1; }
-  else if (id === 'stim') useStim();
-  else if (id === 'dome') useDome();
-  else if (id === 'portal') usePortal();
+  else if (id === 'tactical') useAbility(myClass().tac);
+  else if (id === 'ultimate') useAbility(myClass().ult);
   else if (id === 'map') { S.minimap = !S.minimap; store.set('minimap', S.minimap); syncMinimap(); }
   else if (id === 'mute') { muted = !muted; if (master) master.gain.value = muted ? 0 : S.vol; toast(muted ? t('toast.muted') : t('toast.unmuted'), 1.5); }
 }
@@ -4693,6 +5255,7 @@ addEventListener('keydown', e => {
   if (!playing) return;
   const c = e.code;
   if (c === 'Escape') { if (EMOTE.menu) { openEmoteMenu(false); return; } if (unlockedMode) pause(); return; }
+  if (EDIT.on && editorKey(c, e)) { e.preventDefault(); keys[c] = true; return; }
   if (EMOTE.menu) {
     const m = /^(?:Digit|Numpad)([1-6])$/.exec(c);
     if (m) { e.preventDefault(); keys[c] = true; startEmote(+m[1] - 1); return; }
@@ -4715,6 +5278,7 @@ addEventListener('mousemove', e => {
 });
 addEventListener('mousedown', e => {
   if (!playing || capture) return;
+  if (EDIT.on) { e.preventDefault(); if (e.button === 0) edPlace(); else if (e.button === 2) { const t0 = EDIT.tool; EDIT.tool = 'erase'; edErase(); EDIT.tool = t0; } else if (e.button === 1) edPick(); return; }
   const c = 'Mouse' + e.button;
   if (e.button > 2) e.preventDefault();
   if (!keys[c]) pressCode(c);
@@ -4726,6 +5290,7 @@ addEventListener('wheel', e => {
   if (!playing || capture) return;
   e.preventDefault();
   if (!e.deltaY) return;
+  if (EDIT.on) { editorWheel(e); return; }
   const c = e.deltaY > 0 ? 'WheelDown' : 'WheelUp';
   pressCode(c); wheelT[c] = 0.08;
 }, { passive: false });
@@ -4839,7 +5404,9 @@ bindRange('fov', 'fov', v => Math.round(v) + '°');
 bindRange('vol', 'vol', v => Math.round(v * 100) + '%');
 function switchMap(id, fromNet) {
   if (!MAPS[id] || id === S.map) return;
+  if (EDIT.on && id !== EDIT.id) { EDIT.on = false; edRefreshMarkers(); }
   buildMap(id); store.set('map', id);
+  if (NET.mode === 'host') mapdefAll();
   $('mapSel').value = id;
   for (const pd of PADS) pd.ph = Math.random();
   if (fromNet || NET.mode !== 'off') spawnPlayer(true); else spawnPlayer(false);
@@ -4927,7 +5494,13 @@ function renderPreview(dt) {
 }
 const charSel = $('charSel'), tintSel = $('tintSel');
 charSel.value = S.char; tintSel.value = S.tint;
-charSel.addEventListener('change', () => { S.char = charSel.value; store.set('char', S.char); refreshPreview(); });
+charSel.addEventListener('change', () => { S.char = charSel.value; store.set('char', S.char); refreshPreview(); renderClassInfo(); releaseHook(0); });
+function renderClassInfo() {
+  const c = myClass(), el = $('clsInfo'); if (!el) return;
+  const row = (k, slot, act) => `<div><kbd data-act="${act}">${codeLabel(BINDS[act][0] || BINDS[act][1] || '')}</kbd><b>${t('ab.' + k)}</b><span>${t('abd.' + k)}</span></div>`;
+  el.innerHTML = `<p class="cls">${t('cls.label')} <strong>${t('cls.' + c.id)}</strong></p>` + row(c.tac, 'tac', 'tactical') + row(c.ult, 'ult', 'ultimate');
+}
+renderClassInfo();
 tintSel.addEventListener('change', () => { S.tint = tintSel.value; store.set('tint', S.tint); refreshPreview(); });
 const knifeSel = $('knifeSel'); knifeSel.value = S.knife;
 knifeSel.addEventListener('change', () => {
@@ -4984,6 +5557,46 @@ mmOn.addEventListener('change', () => { S.minimap = mmOn.checked; store.set('min
 syncMinimap();
 const qSel = $('quality'); qSel.value = S.quality;
 qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quality', S.quality); applyQuality(); });
+{
+  const sel = $('csSlot');
+  const label = sl => (sl.startsWith('shot') ? t('cs.shot', { w: sl === 'shot5' ? t('knife.' + S.knife) : t('w' + sl[4]) }) : t('cs.' + sl)) + (CS.data[sl] ? ' ★' : '');
+  const fill = () => { const v = sel.value || 'shot0'; sel.replaceChildren(...CS_SLOTS.map(sl => { const o = document.createElement('option'); o.value = sl; o.textContent = label(sl); return o; })); sel.value = v; };
+  window.__csFill = fill; fill();
+  $('csShare').checked = S.csShare; $('csHear').checked = S.csHear;
+  $('csShare').addEventListener('change', e => { S.csShare = e.target.checked; store.set('csShare', S.csShare); csShareAll(); });
+  $('csHear').addEventListener('change', e => { S.csHear = e.target.checked; store.set('csHear', S.csHear); });
+  $('csImport').addEventListener('click', () => $('csFile').click());
+  $('csTest').addEventListener('click', () => {
+    audioInit(); csEnsure();
+    const sl = sel.value;
+    setTimeout(() => { const b = csBuf(sl); if (b) csPlay(b, 1, sl.startsWith('shot') ? gunBus : master); else if (sl.startsWith('shot')) sfx.shot(+sl[4]); else if (sfx[sl]) sfx[sl](1); }, 60);
+  });
+  $('csReset').addEventListener('click', () => { csSet(sel.value, null); fill(); csMsg(t('cs.resetDone')); });
+  $('csFile').addEventListener('change', e => {
+    const f = e.target.files && e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    if (f.size > CS_MAX) { csMsg(t('cs.tooBig', { kb: Math.round(CS_MAX / 1024) }), 'err'); return; }
+    const rd = new FileReader();
+    rd.onload = () => {
+      const url = String(rd.result || '');
+      audioInit();
+      if (!AC || !url.startsWith('data:')) { csMsg(t('snd.bad'), 'err'); return; }
+      const fixed = url.startsWith('data:audio') ? url : url.replace(/^data:[^;]*/, 'data:audio/mpeg');
+      csDecode(fixed).then(b => {
+        if (!b) { csMsg(t('snd.bad'), 'err'); return; }
+        if (b.duration > 4) { csMsg(t('cs.tooLong'), 'err'); return; }
+        const ok = csSet(sel.value, fixed); fill();
+        csMsg(t(ok ? 'cs.saved' : 'cs.session', { name: f.name.slice(0, 40) }), ok ? 'ok' : '');
+        csPlay(b, 1, sel.value.startsWith('shot') ? gunBus : master);
+      });
+    };
+    rd.readAsDataURL(f);
+  });
+}
+const camFxEl = $('camFx'); camFxEl.value = S.camFx;
+const syncCamFx = () => { $('oCamFx').textContent = S.camFx <= 0 ? t('set.off') : Math.round(S.camFx * 100) + ' %'; };
+syncCamFx();
+camFxEl.addEventListener('input', () => { S.camFx = +camFxEl.value; store.set('camFx', S.camFx); syncCamFx(); });
 const asEl = $('autoSprint'); asEl.checked = S.autoSprint;
 asEl.addEventListener('change', () => { S.autoSprint = asEl.checked; store.set('autoSprint', S.autoSprint); });
 $('pseudo').value = S.name;
@@ -5022,6 +5635,8 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   try { dcRender(); } catch (e) {}
+  try { renderClassInfo(); } catch (e) {}
+  try { window.__csFill && window.__csFill(); } catch (e) {}
   document.querySelectorAll('[data-i18n-html]').forEach(el => {
     // {action} ou {action:slot} devient une touche affichée selon les réglages
     el.innerHTML = t(el.dataset.i18nHtml).replace(/\{(\w+)(?::(\d))?\}/g, (m, a, slot) => `<kbd data-act="${a}"${slot ? ` data-slot="${slot}"` : ''}></kbd>`);
@@ -5076,6 +5691,7 @@ function frame(now) {
   updateSelfAvatar(dt);
   updateFpLegs(dt);
   updateVehicles(dt);
+  updateEditor();
   if (MAP_TICK) MAP_TICK(dt);
   if (playing) updateHazards(dt);
   updateAbilityFx(dt);

@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Six cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion), des buggys à conduire, 5 armes, 6 couteaux et la hache double Morgane, trois personnages jouables avec couleurs, capacités (stim, dôme-bouclier, portail), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Six cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion), des buggys à conduire, 5 armes, 6 couteaux et la hache double Morgane, trois personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -14,7 +14,16 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
 
-## Personnages
+## Personnages et classes
+
+Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) et une ultime (**F**) :
+
+| Personnage | Classe | Tactique (Q) | Ultime (F) |
+| --- | --- | --- | --- |
+| Soldat | Assaut | Stim : +35 % de vitesse 6 s (recharge 9 s) | Dôme-bouclier : bulle de 5 m qui arrête les balles 12 s (recharge 25 s) |
+| X-Bot | Éclaireur | Grappin : accroche un point visé jusqu'à 45 m et te tire vers lui ; Espace pour lâcher avec un saut (recharge 6 s) | Portail : pose l'entrée, va à au moins 6 m, réappuie pour la sortie (40 s, recharge 30 s) |
+| Robot | Sentinelle | Scan : révèle robots et joueurs à travers les murs et sur la mini-carte 7 s (recharge 18 s) | Tremplin : pad violet posé au sol que tout le monde peut utiliser, 30 s (recharge 22 s) |
+
 
 Soldat, X-Bot ou Robot, avec dix-huit couleurs. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
@@ -71,12 +80,11 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Clic gauche / droit | Tirer / viser |
 | 1 à 5 | Carabine, mitraillette, pompe, sniper, pistolet |
 | 6 ou V | Couteau |
-| Q / A en AZERTY | Stim : +35 % de vitesse pendant 6 s (recharge 9 s) |
+| Q / A en AZERTY | Capacité tactique de ta classe |
 | X | Inspecter l'arme ou le couteau (chaque couteau a sa manipulation) |
 | J | Emotes (puis 1 à 6) |
 | E | S'accrocher à une tyrolienne, monter dans un buggy / en descendre |
-| G | Dôme-bouclier : bulle de 5 m qui arrête les balles pendant 12 s (recharge 25 s) |
-| F | Portail : pose l'entrée, va à au moins 6 m, réappuie pour ouvrir la sortie (40 s) |
+| F | Capacité ultime de ta classe |
 | M | Mini-carte |
 | R | Recharger |
 | Tab | Tableau des scores en ligne |
@@ -88,8 +96,8 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Arme | Dégâts | Cadence | Chargeur |
 | --- | --- | --- | --- |
 | Carabine K-31 | 14 (tête ×1,75) | 780 coups/min | 28 |
-| Mitraillette VX | 11 (tête ×1,5) | 1080 coups/min | 25 |
-| Pompe KS-8 | 8 × 11 | 72 coups/min | 6 |
+| Mitraillette VX | 9 (tête ×1,35) | 950 coups/min | 24 |
+| Pompe KS-8 | 9 × 13 | 82 coups/min | 6 |
 | Épervier .50 (sniper, lunette ×4) | 85 (tête ×2,1) | 46 coups/min | 5 |
 | Pistolet HX | 18 (tête ×1,6) | semi-auto | 14 |
 | Couteau de combat | 50, portée 2,7 m | 115 coups/min | — |
@@ -105,6 +113,10 @@ Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au c
 **Katana :** combo de trois coups (diagonale, remontée, horizontal) avec une traînée lumineuse, moulinet en sortant la lame et inspection dédiée. Il a ses propres skins : tamahagane, Damas, lame de sang, dragon, énergie, sakura, obsidienne, éclair et néant (dragon, énergie, éclair et néant sont animés). La traînée prend la couleur du skin.
 
 **Morgane :** hache double à lames argent-violet et runes roses. Coup vertical puis diagonal, lents mais lourds. Un joueur éliminé à la Morgane réapparaît en tenue Morgane (rose, oreilles de chat, nœud et jupe plissée) jusqu'à sa prochaine mort ; les robots d'entraînement la gardent 90 s.
+
+**Sons personnalisés :** dans les réglages, tu peux remplacer le son de chaque arme, du couteau, du saut, de l'atterrissage, des éliminations, des touches, du superglide et des capacités par ton propre fichier (300 Ko et 4 s maximum). En ligne, les autres joueurs entendent tes sons quand c'est toi qui tires ou qui utilises la capacité (chacun peut couper ça dans ses réglages).
+
+**Effets de caméra :** légère secousse au tir et aux atterrissages lourds, coup de champ de vision au superglide et sur les pads, balancement de la marche. Un curseur dans les réglages les règle de 0 (aucun) à 150 %. L'arme en main bouge beaucoup moins qu'avant.
 
 Les bruitages des armes ont été refaits pour être moins agressifs : un coup grave, un claquement court, une légère réverbération et une petite variation de hauteur à chaque tir.
 
