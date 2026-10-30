@@ -32,7 +32,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 
 /* ---------- Menu ---------- */
 #menu{position:fixed;inset:0;z-index:20;overflow-y:auto;overflow-x:hidden;
-  background:linear-gradient(100deg,rgba(13,17,21,.95) 0%,rgba(13,17,21,.88) 46%,rgba(13,17,21,.42) 78%,rgba(13,17,21,.2) 100%);
+  background:linear-gradient(100deg,rgba(13,17,21,.96) 0%,rgba(13,17,21,.9) 50%,rgba(13,17,21,.72) 80%,rgba(13,17,21,.55) 100%);
   padding-top:max(28px,env(safe-area-inset-top,0px));padding-bottom:max(32px,env(safe-area-inset-bottom,0px));
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .menu-inner{max-width:1040px;margin-left:clamp(0px,4vw,60px);display:grid;gap:30px}
@@ -57,7 +57,30 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .btn2:hover{border-color:var(--amber);color:var(--amber)}
 .btn2:disabled{opacity:.4;cursor:default}
 .charbox{display:flex;flex-wrap:wrap;gap:18px;align-items:center;max-width:760px}
-#charPrev{width:150px;height:200px;background:radial-gradient(ellipse at 50% 80%,rgba(255,176,32,.14),rgba(244,239,230,.03) 70%);border:1px solid var(--ink-faint)}
+#charPrev{display:block;width:100%;height:auto;aspect-ratio:22/31;background:radial-gradient(ellipse at 50% 92%,rgba(255,176,32,.2),rgba(255,176,32,0) 55%),linear-gradient(180deg,rgba(244,239,230,.06),rgba(244,239,230,0) 75%);border:1px solid var(--ink-faint);clip-path:polygon(7% 0,100% 0,93% 100%,0 100%)}
+/* menu à onglets : colonne principale + grand personnage à droite */
+.menu-inner.shell{max-width:1500px;margin:0 auto;grid-template-columns:minmax(0,1fr) clamp(280px,30vw,470px);gap:22px clamp(24px,3.5vw,64px);align-items:start;padding-left:clamp(0px,2vw,30px)}
+.menu-main{display:grid;grid-template-columns:minmax(0,1fr);gap:22px;min-width:0;max-width:1000px}
+.tabpanel>*{min-width:0}
+.shell .logo{font-size:clamp(46px,6.6vw,104px)}
+.shell .lede{font-size:16px;margin-top:12px}
+.tabs{display:flex;flex-wrap:wrap;gap:2px;border-bottom:1px solid var(--ink-faint);position:sticky;top:calc(-1 * max(28px,env(safe-area-inset-top,0px)));z-index:3;background:rgba(13,17,21,.94);backdrop-filter:blur(6px);padding-top:8px}
+.tabs button{position:relative;font:700 15px/1 var(--f-display);letter-spacing:.14em;text-transform:uppercase;color:var(--ink-dim);background:none;border:0;padding:12px 15px 12px;cursor:pointer}
+.tabs button:hover{color:var(--ink)}
+.tabs button[aria-selected="true"]{color:var(--ink)}
+.tabs button[aria-selected="true"]::after{content:"";position:absolute;left:10px;right:10px;bottom:-1px;height:3px;background:var(--amber);transform:skewX(-20deg)}
+.tabs button:focus-visible{outline:2px solid var(--amber);outline-offset:-2px}
+.tabpanel{display:grid;gap:28px;animation:tabin .18s ease-out}
+@keyframes tabin{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.armsgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 26px;align-items:start;max-width:760px}
+.stage{position:sticky;top:0;display:grid;justify-items:center;gap:6px;padding-top:6px;text-align:center}
+.stagebox{position:relative;width:100%}
+.sname{font:800 clamp(36px,4vw,62px)/.9 var(--f-display);letter-spacing:.03em;text-transform:uppercase;transform:skewX(-9deg);margin-top:-4px}
+.sclass{font:700 14px/1 var(--f-display);letter-spacing:.28em;text-transform:uppercase;color:var(--amber)}
+.sabil{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:6px}
+.sabil span{display:flex;gap:6px;align-items:center;padding:5px 9px 4px;border:1px solid var(--ink-faint);background:rgba(13,17,21,.5);font:600 13px/1 var(--f-display);letter-spacing:.08em;color:var(--ink)}
+.sabil kbd{font-size:11px;min-width:18px;padding:2px 4px 1px}
+@media (max-width:980px){.menu-inner.shell{grid-template-columns:minmax(0,1fr)}.stage{position:static;order:-1;grid-template-columns:130px minmax(0,1fr);justify-items:start;align-items:center;text-align:left;column-gap:16px}.stagebox{grid-row:span 3}.sabil{justify-content:flex-start}}
 .charopts{display:grid;gap:12px;flex:1 1 220px;min-width:0}
 .mapsel{display:grid;gap:5px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-dim)}
 .mapsel select{font:600 16px/1 var(--f-display);letter-spacing:.06em;text-transform:none;background:rgba(10,13,16,.7);color:var(--ink);border:1px solid rgba(244,239,230,.3);border-radius:3px;padding:8px 10px}
@@ -140,7 +163,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .check{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
 #dcId{font:600 14px/1 var(--f-body);letter-spacing:.04em;color:var(--ink);background:rgba(10,13,16,.7);border:1px solid rgba(244,239,230,.25);border-radius:3px;padding:8px 9px 7px;width:100%;box-sizing:border-box}
 #dcId:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
-.csfield{grid-column:1/-1}.csfield .sndrow{display:flex;flex-wrap:wrap;gap:8px}#csMsg{font-size:12.5px;color:var(--ink-dim)}#csMsg.ok{color:var(--shield)}#csMsg.err{color:var(--hostile)}
+.csfield,.padfield{grid-column:1/-1}.padfield{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 26px;align-items:end}.padfield>.lab,.padfield>.hint{grid-column:1/-1;max-width:none}.csfield .sndrow{display:flex;flex-wrap:wrap;gap:8px}#csMsg{font-size:12.5px;color:var(--ink-dim)}#csMsg.ok{color:var(--shield)}#csMsg.err{color:var(--hostile)}
 .dcmsg{font-size:12.5px;line-height:1.35;color:var(--ink-dim)}
 .dcmsg.ok{color:var(--shield)}.dcmsg.err{color:var(--hostile)}
 .check input{accent-color:var(--amber);width:17px;height:17px}
@@ -359,7 +382,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
     <div class="block">
       <h2 data-i18n="char.title">Personnage</h2>
       <div class="charbox">
-        <canvas id="charPrev" width="150" height="200" aria-hidden="true"></canvas>
+        <canvas id="charPrev" width="440" height="620" aria-hidden="true"></canvas>
         <div class="charopts">
           <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="robot" data-i18n="char.robot">Robot</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
@@ -424,6 +447,14 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
         <label class="field"><span class="lab"><span data-i18n="set.camFx">Effets de caméra</span> <output id="oCamFx"></output></span><input type="range" id="camFx" min="0" max="1.5" step="0.05"></label>
+        <div class="field padfield"><span class="lab" data-i18n="pad.title">Manette</span>
+          <label class="field"><span class="lab"><span data-i18n="pad.sens">Sensibilité manette</span> <output id="oPadSens"></output></span><input type="range" id="padSens" min="0.3" max="3" step="0.05"></label>
+          <label class="field"><span class="lab"><span data-i18n="pad.aim">Aide à la visée manette</span> <output id="oPadAim"></output></span><input type="range" id="padAim" min="0" max="1" step="0.05"></label>
+          <label class="check"><input type="checkbox" id="padSnap"> <span data-i18n="pad.snap">Snap strafe facile à la manette</span></label>
+          <label class="check"><input type="checkbox" id="padInvert"> <span data-i18n="pad.invert">Inverser la visée verticale</span></label>
+          <p class="hint" data-i18n="pad.help">Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause.</p>
+        </div>
+        <label class="check"><input type="checkbox" id="snapTap"> <span data-i18n="set.snapTap">Snap tap clavier (la dernière direction appuyée gagne)</span></label>
         <div class="field csfield"><span class="lab" data-i18n="cs.title">Sons personnalisés</span>
           <div class="sndrow"><select id="csSlot"></select><button class="btn3" id="csImport" type="button" data-i18n="snd.import">Importer un son</button><button class="btn3" id="csTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="csReset" type="button" data-i18n="cs.reset">Son d’origine</button><input type="file" id="csFile" accept="audio/*" hidden></div>
           <label class="check"><input type="checkbox" id="csShare"> <span data-i18n="cs.share">Les autres joueurs entendent mes sons</span></label>
@@ -851,6 +882,21 @@ const I18N_ADD5 = {
     'cs.tooBig': 'Ifayela likhulu kakhulu: {kb} KB ubuningi (umsindo omfushane we-MP3 noma we-OGG).', 'cs.tooLong': 'Umsindo mude kakhulu: imizuzwana engu-4 ubuningi.', 'cs.saved': 'Umsindo othi “{name}” ugciniwe. Ku-inthanethi abanye bayawuzwa.', 'cs.session': 'Umsindo othi “{name}” ulayishelwe le seshini (isitoreji sigcwele).', 'cs.resetDone': 'Umsindo wokuqala ubuyisiwe.', 'dc.editor': 'Wakha imephu' }
 };
 for (const l in I18N_ADD5) Object.assign(I18N[l], I18N_ADD5[l]);
+const I18N_ADD6 = {
+  fr: { 'tab.play': 'Multijoueur', 'tab.char': 'Personnage', 'tab.arms': 'Armes', 'tab.settings': 'Réglages', 'tab.controls': 'Commandes', 'tab.admin': 'Admin', 'arms.title': 'Armes et skins',
+    'pad.title': 'Manette', 'pad.sens': 'Sensibilité manette', 'pad.aim': 'Aide à la visée manette', 'pad.snap': 'Snap strafe facile à la manette', 'pad.invert': 'Inverser la visée verticale', 'pad.on': 'Manette détectée', 'set.snapTap': 'Snap tap clavier (la dernière direction appuyée gagne)',
+    'pad.help': 'Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause.' },
+  en: { 'tab.play': 'Multiplayer', 'tab.char': 'Character', 'tab.arms': 'Weapons', 'tab.settings': 'Settings', 'tab.controls': 'Controls', 'tab.admin': 'Admin', 'arms.title': 'Weapons and skins',
+    'pad.title': 'Controller', 'pad.sens': 'Controller sensitivity', 'pad.aim': 'Controller aim assist', 'pad.snap': 'Easy snap strafe on controller', 'pad.invert': 'Invert vertical look', 'pad.on': 'Controller detected', 'set.snapTap': 'Keyboard snap tap (last direction pressed wins)',
+    'pad.help': 'Left stick: move · right stick: aim · A: jump · B: slide · X: reload or interact · Y: next weapon · LB/RB: abilities · LT/RT: aim/fire · L3: sprint · R3: knife · D-pad: emotes, inspect, previous weapon, minimap · Start: pause.' },
+  af: { 'tab.play': 'Multispeler', 'tab.char': 'Karakter', 'tab.arms': 'Wapens', 'tab.settings': 'Instellings', 'tab.controls': 'Kontroles', 'tab.admin': 'Admin', 'arms.title': 'Wapens en velle',
+    'pad.title': 'Beheerder', 'pad.sens': 'Beheerder-sensitiwiteit', 'pad.aim': 'Mikhulp vir beheerder', 'pad.snap': 'Maklike snap strafe met beheerder', 'pad.invert': 'Keer vertikale mik om', 'pad.on': 'Beheerder bespeur', 'set.snapTap': 'Sleutelbord-snap tap (laaste rigting wen)',
+    'pad.help': 'Linkerstok: beweeg · regterstok: mik · A: spring · B: gly · X: herlaai of gebruik · Y: volgende wapen · LB/RB: vermoëns · LT/RT: mik/skiet · L3: naelloop · R3: mes · rigtingblok: emotes, inspekteer, vorige wapen, minikaart · Start: pouse.' },
+  zu: { 'tab.play': 'Abadlali abaningi', 'tab.char': 'Umlingiswa', 'tab.arms': 'Izikhali', 'tab.settings': 'Izilungiselelo', 'tab.controls': 'Izilawuli', 'tab.admin': 'Umphathi', 'arms.title': 'Izikhali nezikhumba',
+    'pad.title': 'Isilawuli', 'pad.sens': 'Ukuzwela kwesilawuli', 'pad.aim': 'Usizo lokuqondisa lwesilawuli', 'pad.snap': 'I-snap strafe elula ngesilawuli', 'pad.invert': 'Phendula ukuqondisa okuqondile', 'pad.on': 'Isilawuli sitholakele', 'set.snapTap': 'I-snap tap yekhibhodi (indlela yokugcina iyawina)',
+    'pad.help': 'Induku yesobunxele: hamba · induku yesokudla: qondisa · A: gxuma · B: shelela · X: layisha kabusha noma sebenzisa · Y: isikhali esilandelayo · LB/RB: amakhono · LT/RT: qondisa/dubula · L3: gijima · R3: ummese · izinkinobho zezinkomba: ama-emote, hlola, isikhali sangaphambili, imephu · Start: misa.' }
+};
+for (const l in I18N_ADD6) Object.assign(I18N[l], I18N_ADD6[l]);
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -900,7 +946,7 @@ const CLIMB_TIME = 1.05, CLIMB_V0 = 6.4, CLIMB_V1 = 3.0;
 const WJ_OUT = 6.6 * K, WJ_UP = 7.0, WJ_SIDE = 4.0, WJ_MAX = 3;
 const BHOP_WIN = 0.12, BHOP_CAP = 17.5;
 const SG_WIN = 0.14, SG_SPEED = 15.5 * K;
-const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15, MANTLE_JUMP_V = 12.2;
+const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15, MANTLE_JUMP_V = 16.5;
 const MAX_SH = 75, MAX_HP = 100;
 
 /* ================= Rendu ================= */
@@ -1029,14 +1075,14 @@ function boxGeo(sx, sy, sz) {
 let SKIP_PERIM = false, FAR_CLIP = 0;
 /* ---------- tyroliennes : câble entre deux points (les mains du joueur s'y accrochent) ---------- */
 const ZIPS = [];
-const zipCableMat = new THREE.MeshLambertMaterial({ color: 0x2a2d31 });
+const zipCableMat = new THREE.MeshBasicMaterial({ color: 0xffb020 });
 const zipPostMat = new THREE.MeshLambertMaterial({ color: 0x5b636b });
 const zipLightMat = new THREE.MeshBasicMaterial({ color: 0xffb020 });
 function zipline(ax, ay, az, bx, by, bz) {
   const a = new V3(ax, ay, az), b = new V3(bx, by, bz), d = b.clone().sub(a), len = d.length();
   d.divideScalar(len);
   ZIPS.push({ a, b, dir: d, len });
-  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, len, 6), zipCableMat);
+  const cable = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, len, 8), zipCableMat);
   cable.position.copy(a).add(b).multiplyScalar(0.5);
   cable.quaternion.setFromUnitVectors(UP, d); mapRoot.add(cable);
   for (const e of [a, b]) {
@@ -1046,7 +1092,8 @@ function zipline(ax, ay, az, bx, by, bz) {
     const h = e.y + 0.5 - g;
     const post = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, h, 8), zipPostMat); post.position.set(e.x, g + h / 2, e.z); post.castShadow = true; mapRoot.add(post);
     const cap = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.22, 0.34), zipPostMat); cap.position.set(e.x, e.y + 0.4, e.z); mapRoot.add(cap);
-    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.12, 10, 8), zipLightMat); lamp.position.set(e.x, e.y + 0.62, e.z); mapRoot.add(lamp);
+    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8), zipLightMat); lamp.position.set(e.x, e.y + 0.72, e.z); mapRoot.add(lamp);
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffb020, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); halo.scale.setScalar(2.4); halo.position.copy(lamp.position); mapRoot.add(halo);
   }
 }
 function box(cx, cz, sx, sz, y0, h, key) {
@@ -2020,10 +2067,10 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
     }
     // snap strafe facile : la trajectoire suit tes touches presque instantanément, sans perte de vitesse
     const sp2 = Math.hypot(v.x, v.z);
-    if (X.snap && xUnlocked && sp2 > 2) {
+    if (((X.snap && xUnlocked) || (PAD.active && S.padSnap)) && sp2 > 2) {
       const a1 = Math.atan2(v.z, v.x), a2 = Math.atan2(wz, wx);
       let d = a2 - a1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
-      const lim = Math.min(Math.abs(d), 900 * DEG * dt);
+      const lim = Math.min(Math.abs(d), (X.snap && xUnlocked ? 900 : 520) * DEG * dt);
       if (lim > 0.002) {
         const na = a1 + Math.sign(d) * lim;
         v.x = Math.cos(na) * sp2; v.z = Math.sin(na) * sp2;
@@ -2292,7 +2339,11 @@ function step(dt) {
   if (P.veh) { vehStep(P.veh, dt); return; }
   if (P.zip) { zipStep(dt); return; }
   const fwdHeld = act('forward');
-  const iz = (fwdHeld ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
+  let iz = (fwdHeld ? 1 : 0) - (act('back') ? 1 : 0), ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0);
+  // snap tap : deux directions opposées enfoncées, la dernière appuyée gagne
+  if (S.snapTap) { if (act('left') && act('right')) ix = SOCD.x; if (fwdHeld && act('back')) iz = SOCD.z; }
+  // manette : direction analogique du stick gauche
+  if (PAD.active && Math.hypot(PAD.mx, PAD.my) > 0.2) { ix = PAD.mx; iz = -PAD.my; }
   const sy = Math.sin(P.yaw), cy = Math.cos(P.yaw);
   const fx = -sy, fz = -cy, rx = cy, rz = -sy;
   let wx = fx * iz + rx * ix, wz = fz * iz + rz * ix;
@@ -2969,7 +3020,11 @@ function buildViewmodel(kind, knifeType) {
   fl.position.copy(muzzle); fl.visible = false; g.add(fl);
   const VS = 0.82; g.scale.setScalar(VS);
   g.visible = false; wScene.add(g);
-  return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind };
+  // points de prise des mains (repère de l'arme) : main droite sur la poignée, gauche sur le garde-main
+  const HANDS = { 0: { r: [0, -.095, .09], l: [0, -.035, -.3] }, 1: { r: [0, -.1, .105], l: [0, -.17, -.07] }, 2: { r: [0, -.09, .12], l: [0, -.06, -.38] }, 3: { r: [0, -.09, .16], l: [0, -.07, -.3] }, 4: { r: [0, -.075, .045], l: [-.025, -.1, .06] } };
+  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] } };
+  const hands = kind === 5 ? KHANDS[knifeType] || KHANDS.combat : HANDS[kind] || HANDS[4];
+  return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind, hands };
 }
 S.knife = store.get('knife', 'combat');
 const KNIVES = {
@@ -3379,6 +3434,7 @@ function fire() {
   WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm;
   WS.flashT = 0.045; WS.kick += W.kick; WS.kickRot += W.kickRot;
   camShake(W.pellets > 1 ? 0.5 : W.scope ? 0.55 : W.kick * 6);
+  if (PAD.active) PAD.rumble = Math.min(1, W.pellets > 1 || W.scope ? 0.8 : 0.25);
   const spread = X.norecoil ? 0 : currentSpread();
   if (!X.norecoil) WS.bloom = Math.min(WS.bloom + W.bloom, 1.4);
   camera.updateMatrixWorld();
@@ -3508,6 +3564,47 @@ function updateCamera(dt, alpha) {
   sun.target.position.set(Math.round(rPos.x / 2) * 2, 0, Math.round(rPos.z / 2) * 2);
   sun.position.copy(sun.target.position).addScaledVector(sunDir, 150);
 }
+/* ---------- bras à la première personne : gants, avant-bras et manches qui suivent l'arme ---------- */
+const armMats = { glove: new THREE.MeshPhongMaterial({ color: 0x25282c, shininess: 30, specular: 0x333333 }), sleeve: new THREE.MeshPhongMaterial({ color: 0x4a5560, shininess: 8 }), cuff: new THREE.MeshPhongMaterial({ color: 0x17191c, shininess: 12 }) };
+function makeArm(side) {
+  const hand = new THREE.Group();
+  const add = (w, h, d, x, y, z, m = armMats.glove) => { const me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); me.position.set(x, y, z); hand.add(me); return me; };
+  add(0.078, 0.05, 0.095, 0, 0, 0.01);
+  add(0.074, 0.032, 0.06, 0, -0.012, -0.06);
+  add(0.024, 0.026, 0.06, side * 0.045, 0.012, -0.025);
+  add(0.05, 0.012, 0.06, 0, 0.03, 0.02, armMats.cuff);
+  const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.042, 1, 10), armMats.sleeve);
+  const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.041, 0.041, 0.05, 10), armMats.cuff);
+  const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.047, 0.052, 1, 10), armMats.sleeve);
+  for (const o of [hand, fore, cuff, upper]) { o.visible = false; wScene.add(o); }
+  return { hand, fore, cuff, upper };
+}
+const ARMS = { r: makeArm(1), l: makeArm(-1) };
+const SHOULDER = { r: new V3(0.3, -0.64, 0.22), l: new V3(-0.32, -0.66, 0.18) };
+const _ha = new V3(), _el = new V3(), _wr = new V3(), _ad = new V3(), _sd = new V3(), _negZ = new V3(0, 0, -1);
+function placeSeg(mesh, a, b) {
+  mesh.position.copy(a).add(b).multiplyScalar(0.5); _sd.copy(b).sub(a);
+  const L = _sd.length(); mesh.scale.set(1, Math.max(0.01, L), 1); mesh.quaternion.setFromUnitVectors(UP, _sd.divideScalar(L || 1));
+}
+let armTintT = 0;
+function updateArms(vm, dt) {
+  if ((armTintT -= dt) <= 0) { armTintT = 0.5; armMats.sleeve.color.setHex(myColor()).multiplyScalar(0.5).addScalar(0.06); }
+  const show = vm.g.visible && !!vm.hands;
+  if (show) vm.g.updateMatrixWorld(true);
+  for (const side of ['r', 'l']) {
+    const A = ARMS[side], h = show && vm.hands[side];
+    A.hand.visible = A.fore.visible = A.cuff.visible = A.upper.visible = !!h;
+    if (!h) continue;
+    _ha.set(h[0], h[1], h[2]).applyMatrix4(vm.g.matrixWorld);
+    const sh = SHOULDER[side];
+    _el.copy(_ha).lerp(sh, 0.5); _el.y -= 0.1; _el.x += side === 'r' ? 0.08 : -0.08;
+    _ad.copy(_el).sub(_ha).normalize();
+    _wr.copy(_ha).addScaledVector(_ad, 0.07);
+    placeSeg(A.fore, _wr, _el); placeSeg(A.upper, _el, sh);
+    A.cuff.position.copy(_wr); A.cuff.quaternion.copy(A.fore.quaternion);
+    A.hand.position.copy(_ha); A.hand.quaternion.setFromUnitVectors(_negZ, _ad.negate());
+  }
+}
 const swPose = [0, 0, 0, 0, 0, 0], swFin = [0, 0, 0, 0, 0, 0], _vq = new THREE.Quaternion(), _zAxis = new V3(0, 0, 1), FLOUR_DUR = 0.62;
 function updateViewmodel(dt) {
   const vm = VM[WS.cur], g = vm.g, a = easeOut(WS.ads), hs = Math.hypot(P.vel.x, P.vel.z);
@@ -3589,6 +3686,7 @@ function updateViewmodel(dt) {
   swFin[0] = x; swFin[1] = y; swFin[2] = z; swFin[3] = rx; swFin[4] = ry; swFin[5] = rz;
   if (viewSpin) trailMesh.visible = false; else updateTrail(vm, g.visible ? swingP : -1, swFin, swPose);
   animSkin(vm, vmSkin(WS.cur), performance.now() / 1000);
+  updateArms(vm, dt);
   WS.flashT -= dt;
   vm.flash.visible = WS.flashT > 0;
   if (vm.flash.visible) { vm.flash.rotation.z = Math.random() * 6; const s = 0.8 + Math.random() * 0.6; vm.flash.scale.set(s, s, s); }
@@ -3616,6 +3714,8 @@ function myState() {
   if (P.veh) { st.vh = P.veh.i + 1; st.vy = r2(P.veh.yaw); st.y = st.vy; st.a = P.veh.grounded ? 'ground' : 'air'; }
   if (P.mgT > 0) st.mg = 1;
   if (HOOK.p) st.gp = [r2(HOOK.p.x), r2(HOOK.p.y), r2(HOOK.p.z)];
+  st.sk = S.skin; if (WS.cur === 5) { st.kt = S.knife; if (S.knife === 'katana') st.ks = S.kskin; }
+  if (WS.cur === 3 && WS.ads > 0.6) st.ads = 1;
   return st;
 }
 // -- envoi : le client parle à l'hôte ; l'hôte se traite lui-même comme un client local
@@ -3702,7 +3802,7 @@ function clientRecv(m) {
   if (m.k === 'shot') {
     const rp = remotes.get(m.from);
     if (!rp) return;
-    rp.pingT = 2.5;
+    rp.pingT = 2.5; if (rp.gun) rp.gun.flashT = 0.06;
     const a = new V3(m.a[0], m.a[1], m.a[2]);
     for (const e of m.e || []) spawnTracer(a, new V3(e[0], e[1], e[2]), 0xff9a7a);
     const dist = camera.position.distanceTo(a);
@@ -3807,25 +3907,93 @@ function attachChar(rp) {
   rp.g.add(rp.vis.obj);
   tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
   // arme dans la main droite
-  let hand = null; rp.vis.obj.traverse(o => { if (!hand && CHARS[used].hand.test(o.name)) hand = o; });
-  if (hand) {
-    const gun = new THREE.Group();
-    const gm = new THREE.MeshLambertMaterial({ color: 0x2b3035 });
-    const b1 = new THREE.Mesh(new THREE.BoxGeometry(.06, .08, .42), gm); b1.position.set(0, 0, .12); gun.add(b1);
-    const b2 = new THREE.Mesh(new THREE.BoxGeometry(.04, .12, .06), gm); b2.position.set(0, -.08, 0); gun.add(b2);
-    rp.vis.obj.updateMatrixWorld(true);
-    const ws = new V3(); hand.getWorldScale(ws);
-    gun.scale.setScalar(1 / Math.max(1e-4, ws.x) * rp.g.scale.x);
-    const inv = 1 / Math.max(1e-4, ws.x);
-    gun.position.set(0, 0.09 * inv, 0.04 * inv); gun.rotation.set(Math.PI / 2, 0, 0);
-    hand.add(gun);
-  }
+  // la vraie arme du joueur est placée à chaque image sur cet os (voir updateRemoteGun)
+  let hand = null; rp.vis.obj.traverse(o => { if (!hand && o.isBone && CHARS[used].hand.test(o.name)) hand = o; });
+  if (!hand) rp.vis.obj.traverse(o => { if (!hand && CHARS[used].hand.test(o.name)) hand = o; });
+  rp.hand = hand;
   playAnim(rp.vis, CHARS[used].anim.idle, 0);
 }
 function removeRemote(id) {
   CS.remote.delete(id);
   const rp = remotes.get(id); if (!rp) return;
+  if (rp.glint) rp.glint.forEach(sp => scene.remove(sp));
   scene.remove(rp.g); rp.tag.remove(); rp.el.remove(); remotes.delete(id); rebuildShootable();
+}
+/* ================= Manette (API Gamepad, disposition standard Xbox / PlayStation) ================= */
+const PAD = { active: false, act: {}, prev: [], mx: 0, my: 0, lx: 0, ly: 0, id: '' };
+S.padSens = clamp(+store.get('padSens', 1), 0.3, 3); S.padAim = clamp(+store.get('padAim', 0.6), 0, 1);
+S.padSnap = store.get('padSnap', true) !== false; S.padInvert = store.get('padInvert', false) === true; S.snapTap = store.get('snapTap', true) !== false;
+// boutons → actions maintenues (A=0, B=1, X=2, Y=3, LB=4, RB=5, LT=6, RT=7, Select=8, Start=9, L3=10, R3=11, croix=12..15)
+const PAD_HOLD = { 0: 'jump', 1: 'crouch', 6: 'ads', 7: 'fire', 10: 'sprint', 8: 'board' };
+const PAD_PRESS = { 0: 'jump', 1: 'crouch', 3: 'next', 4: 'tactical', 5: 'ultimate', 11: 'w6', 12: 'emote', 13: 'inspect', 14: 'prev', 15: 'map' };
+const padDz = v => Math.abs(v) < 0.14 ? 0 : (v - Math.sign(v) * 0.14) / 0.86;
+function pollPad(dt) {
+  const list = navigator.getGamepads ? navigator.getGamepads() : [];
+  let gp = null; for (const g of list) if (g && g.connected) { gp = g; break; }
+  if (!gp) { if (PAD.active) { PAD.active = false; PAD.act = {}; } return; }
+  const btn = i => !!gp.buttons[i] && (gp.buttons[i].pressed || gp.buttons[i].value > 0.4);
+  const lx = padDz(gp.axes[0] || 0), ly = padDz(gp.axes[1] || 0), rx = padDz(gp.axes[2] || 0), ry = padDz(gp.axes[3] || 0);
+  const anyBtn = gp.buttons.some((b, i) => btn(i));
+  if (!PAD.active && (anyBtn || Math.hypot(lx, ly) > 0.3 || Math.hypot(rx, ry) > 0.3)) { PAD.active = true; PAD.id = gp.id; toast(t('pad.on'), 2.5); }
+  if (!PAD.active) return;
+  const now = gp.buttons.map((b, i) => btn(i));
+  const edge = i => now[i] && !PAD.prev[i];
+  // dans le menu : Start ou A relance la partie (sans verrouiller la souris)
+  if (!playing) {
+    if (edge(9) || edge(0)) { audioInit(); if (!menu.hidden) { unlockedMode = true; startPlaying(); } }
+    PAD.prev = now; PAD.act = {}; return;
+  }
+  if (edge(9)) { PAD.prev = now; PAD.act = {}; if (document.pointerLockElement) document.exitPointerLock(); pause(); return; }
+  PAD.mx = lx; PAD.my = ly;
+  const a = {};
+  for (const i in PAD_HOLD) if (now[i]) a[PAD_HOLD[i]] = true;
+  if (ly < -0.35) a.forward = true; if (ly > 0.35) a.back = true; if (lx < -0.35) a.left = true; if (lx > 0.35) a.right = true;
+  PAD.act = a;
+  if (EMOTE.menu) { const map = [0, 1, 2, 3, 4, 5]; for (let k = 0; k < 6; k++) if (edge(map[k])) { startEmote(k); PAD.prev = now; return; } }
+  for (const i in PAD_PRESS) if (edge(+i)) onAction(PAD_PRESS[i]);
+  // X : interagir (buggy, tyrolienne) si possible, sinon recharger
+  if (edge(2)) { if (P.veh || P.zip || zipNear() || nearVehicle()) onAction('use'); else onAction('reload'); }
+  PAD.prev = now;
+  // visée au stick droit : courbe progressive, ralentie près d'une cible (aide à la visée)
+  if (!P.dead) {
+    const mag = Math.hypot(rx, ry), curve = mag > 0 ? Math.pow(mag, 1.7) / mag : 0;
+    const zoom = Math.tan(curVfov * DEG / 2) / Math.tan(baseVfov * DEG / 2);
+    const slow = padAimTarget ? 1 - 0.42 * S.padAim : 1;
+    const yawRate = 3.4 * S.padSens * zoom * slow, pitchRate = 2.5 * S.padSens * zoom * slow;
+    P.yaw -= rx * curve * yawRate * dt; P.pitch = clamp(P.pitch - ry * curve * pitchRate * dt * (S.padInvert ? -1 : 1), -1.55, 1.55);
+    WS.swayX += rx * curve * yawRate * dt * 0.5; WS.swayY += ry * curve * pitchRate * dt * 0.5;
+    PAD.lx = mag;
+  }
+  if (gp.vibrationActuator && PAD.rumble > 0) { try { gp.vibrationActuator.playEffect('dual-rumble', { duration: 60, strongMagnitude: PAD.rumble, weakMagnitude: PAD.rumble * 0.6 }); } catch (e) {} PAD.rumble = 0; }
+}
+// aide à la visée manette : cible dans un cône de 10°, ralentissement + traction quand le joueur bouge ou vise
+let padAimTarget = null;
+function padAimAssist(dt) {
+  padAimTarget = null;
+  if (!PAD.active || S.padAim <= 0 || !playing || P.dead || EDIT.on || P.veh) return;
+  const eye = camera.position, cp = Math.cos(P.pitch);
+  const fx = -Math.sin(P.yaw) * cp, fy = Math.sin(P.pitch), fz = -Math.cos(P.yaw) * cp;
+  const range = WEAPONS[WS.cur].melee ? 6 : 140;
+  let best = null, bestAng = (mouse.right ? 7 : 10) * DEG;
+  const consider = (x, y, z) => {
+    const dx = x - eye.x, dy = y - eye.y, dz = z - eye.z, d = Math.hypot(dx, dy, dz);
+    if (d < 0.6 || d > range) return;
+    const ang = Math.acos(clamp((dx * fx + dy * fy + dz * fz) / d, -1, 1));
+    if (ang >= bestAng) return;
+    _d.set(dx / d, dy / d, dz / d); raycaster.set(eye, _d); raycaster.far = d - 0.4;
+    if (raycaster.intersectObjects(WORLD, false).length) return;
+    bestAng = ang; best = { dx, dy, dz };
+  };
+  for (const d of dummies) if (d.alive && RULES.bots) consider(d.g.position.x, d.g.position.y + 1.15, d.g.position.z);
+  for (const rp of remotes.values()) if (rp.st && !rp.st.dead) consider(rp.pos.x, rp.pos.y + (rp.crouchK > 0.5 ? 0.85 : 1.2), rp.pos.z);
+  if (!best) return;
+  padAimTarget = best;
+  const moving = Math.min(1, Math.hypot(PAD.mx, PAD.my) + PAD.lx + (mouse.left ? 0.5 : 0));
+  if (moving < 0.05) return;
+  const ty = Math.atan2(-best.dx, -best.dz), tp = Math.atan2(best.dy, Math.hypot(best.dx, best.dz));
+  let dyaw = ty - P.yaw; while (dyaw > Math.PI) dyaw -= 2 * Math.PI; while (dyaw < -Math.PI) dyaw += 2 * Math.PI;
+  const k = 1 - Math.exp(-(mouse.right ? 6 : 3.5) * S.padAim * moving * dt);
+  P.yaw += dyaw * k; P.pitch = clamp(P.pitch + (tp - P.pitch) * k * 0.7, -1.55, 1.55);
 }
 /* ---------- aide à la visée (mode xlock) : attire doucement la visée vers la cible la plus proche du réticule ---------- */
 function aimAssist(dt) {
@@ -3876,6 +4044,8 @@ function drawMinimap() {
   }
   c.fillStyle = 'rgba(244,239,230,.12)';
   for (const r of RAMPS) c.fillRect(r.x0, r.z0, r.x1 - r.x0, r.z1 - r.z0);
+  c.strokeStyle = 'rgba(255,176,32,.85)'; c.lineWidth = 1.3;
+  for (const z of ZIPS) { c.beginPath(); c.moveTo(z.a.x, z.a.z); c.lineTo(z.b.x, z.b.z); c.stroke(); }
   c.fillStyle = '#FFB020';
   for (const pd of PADS) { c.beginPath(); c.arc(pd.x, pd.z, 1.4, 0, Math.PI * 2); c.fill(); }
   c.fillStyle = '#E88A4A';
@@ -4628,6 +4798,50 @@ function updateVehicles(dt) {
 const usePrompt = $('usePrompt');
 VEH_READY = true;
 resetVehicles();
+/* ---------- armes des autres joueurs (vrai modèle, skin compris) et reflet de lunette du sniper ---------- */
+const _gw = new V3(), _gv = new V3(), _gq = new THREE.Quaternion(), _gd = new V3();
+const glintMat = new THREE.SpriteMaterial({ map: glowTex, color: 0xdff2ff, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false });
+function remoteGunKey(st) { const w = clamp(st.w | 0, 0, 5); return w + '|' + (w === 5 ? st.kt || 'combat' : '') + '|' + (st.sk || 'std') + '|' + (w === 5 ? st.ks || '' : ''); }
+function updateRemoteGun(rp, dt) {
+  const st = rp.st;
+  const show = st && !st.dead && !st.vh && !st.em && rp.hand && rp.vis && rp.vis.mixer && rp.g.visible;
+  if (rp.glint) rp.glint.forEach(sp => { sp.visible = false; });
+  if (!show) { if (rp.gun) rp.gun.vm.g.visible = false; return; }
+  const key = remoteGunKey(st);
+  if (!rp.gun || rp.gun.key !== key) {
+    if (rp.gun) rp.g.remove(rp.gun.vm.g);
+    const kind = clamp(st.w | 0, 0, 5), kt = KNIVES[st.kt] ? st.kt : 'combat';
+    const vm = buildViewmodel(kind, kt); wScene.remove(vm.g);
+    vm.g.scale.setScalar(0.92); vm.g.traverse(o => { if (o.isMesh && o !== vm.flash) o.castShadow = true; });
+    applySkinVM(vm, kind === 5 && kt === 'katana' && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : SKINS[st.sk] || SKINS.std);
+    rp.g.add(vm.g); rp.gun = { vm, key, flashT: 0 };
+  }
+  const vm = rp.gun.vm, g = vm.g; g.visible = true;
+  rp.vis.obj.updateMatrixWorld(true);
+  rp.hand.getWorldPosition(_gw); rp.g.worldToLocal(_gw);
+  g.rotation.set(clamp(st.pi || 0, -1.4, 1.4), 0, 0);
+  const h = vm.hands.r; _gq.setFromEuler(g.rotation); _gv.set(h[0], h[1], h[2]).multiplyScalar(g.scale.x).applyQuaternion(_gq);
+  g.position.copy(_gw).sub(_gv);
+  rp.gun.flashT -= dt; vm.flash.visible = rp.gun.flashT > 0 && vm.kind !== 5;
+  if (vm.flash.visible) vm.flash.rotation.z = Math.random() * 6;
+  // reflet de lunette : visible quand un sniper vise dans ta direction
+  if (st.ads && (st.w | 0) === 3) {
+    if (!rp.glint) { rp.glint = [new THREE.Sprite(glintMat.clone()), new THREE.Sprite(glintMat.clone())]; rp.glint.forEach(sp => scene.add(sp)); }
+    g.updateMatrixWorld(true);
+    _gw.set(0, 0.085, -0.25).applyMatrix4(g.matrixWorld);
+    const cp = Math.cos(st.pi || 0);
+    _gd.set(-Math.sin(rp.yaw) * cp, Math.sin(st.pi || 0), -Math.cos(rp.yaw) * cp);
+    _gv.copy(camera.position).sub(_gw); const dist = _gv.length(); _gv.divideScalar(dist);
+    const k = smoothstep(0.86, 0.995, _gd.dot(_gv));
+    if (k > 0.01) {
+      const tw = 0.85 + 0.15 * Math.sin(performance.now() / 45), base = (0.5 + dist * 0.03) * k * tw;
+      const [a, b] = rp.glint;
+      a.visible = b.visible = true; a.position.copy(_gw); b.position.copy(_gw);
+      a.scale.setScalar(base * 1.6); b.scale.set(base * 6, base * 0.45, 1);
+      a.material.opacity = Math.min(1, k * 1.2); b.material.opacity = k * 0.8;
+    }
+  }
+}
 function updateRemotes(dt) {
   const W = window.innerWidth, H = window.innerHeight;
   for (const rp of remotes.values()) {
@@ -4658,6 +4872,7 @@ function updateRemotes(dt) {
       }
       rp.vis.obj.scale.y = (rp.vis.mixer ? rp.vis.base : 1) * (1 - rp.crouchK * 0.33);
       if (st.a === 'slide') rp.vis.obj.rotation.x = -0.35 * rp.crouchK; else if (st.a !== 'sg' || rp.vis.ch !== 'robot') rp.vis.obj.rotation.x = 0;
+      updateRemoteGun(rp, dt);
       if (rp.vis.mixer) {
         const seated = !!(st.vh && VEHICLES[st.vh - 1]);
         // au volant : assis sur le siège gauche du buggy
@@ -5219,12 +5434,14 @@ function loadBinds() {
 }
 loadBinds();
 const wheelT = {};
-const act = id => { const b = BINDS[id]; return !!b && b.some(c => c && (keys[c] || wheelT[c] > 0)); };
+const act = id => { if (PAD.act[id]) return true; const b = BINDS[id]; return !!b && b.some(c => c && (keys[c] || wheelT[c] > 0)); };
+const SOCD = { x: 0, z: 0 };
 const boundCodes = () => { const set = new Set(); for (const id in BINDS) for (const c of BINDS[id]) if (c) set.add(c); return set; };
 function pressCode(c) {
   for (const id in BINDS) if (BINDS[id].includes(c)) onAction(id);
 }
 function onAction(id) {
+  if (id === 'left') SOCD.x = -1; else if (id === 'right') SOCD.x = 1; else if (id === 'forward') SOCD.z = 1; else if (id === 'back') SOCD.z = -1;
   if (id === 'jump') P.jumpBuf = 0.14;
   else if (id === 'crouch') { lastCrouchT = simTime; crouchEdge = true; }
   else if (id === 'forward') P.tapPulse = true;
@@ -5417,6 +5634,7 @@ const admEls = { g: $('admG'), s: $('admS'), bots: $('admBots'), oG: $('oAdmG'),
 function admCanRule() { return NET.mode !== 'client'; }
 function syncAdmin() {
   $('adminBlock').hidden = !xUnlocked;
+  { const tb = document.querySelector('.tabs [data-tab="admin"]'); if (tb) { tb.hidden = !xUnlocked; if (!xUnlocked && tb.getAttribute('aria-selected') === 'true' && window.showTab) showTab('play'); } }
   if (!xUnlocked) return;
   admEls.g.value = RULES.g; admEls.s.value = RULES.s; admEls.bots.checked = RULES.bots;
   admEls.oG.textContent = '×' + (+RULES.g).toFixed(2); admEls.oS.textContent = '×' + (+RULES.s).toFixed(2);
@@ -5473,11 +5691,12 @@ let prevR = null, prevScene = null, prevCam = null, prevVis = null;
 function refreshPreview() {
   if (!prevR) {
     try { prevR = new THREE.WebGLRenderer({ canvas: prevCanvas, alpha: true, antialias: true }); } catch (e) { return; }
-    prevR.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); prevR.setSize(150, 200, false);
+    prevR.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); prevR.setSize(440, 620, false);
     prevScene = new THREE.Scene();
     prevScene.add(new THREE.HemisphereLight(0xe8eef2, 0x5a4a3a, 1.0));
     const dl = new THREE.DirectionalLight(0xffe6c2, 0.9); dl.position.set(1.5, 3, 2.5); prevScene.add(dl);
-    prevCam = new THREE.PerspectiveCamera(30, 150 / 200, 0.1, 20); prevCam.position.set(0, 1.05, 4.4); prevCam.lookAt(0, 0.95, 0);
+    prevCam = new THREE.PerspectiveCamera(28, 440 / 620, 0.1, 30); prevCam.position.set(0, 1.0, 4.9); prevCam.lookAt(0, 0.93, 0);
+    const rim = new THREE.DirectionalLight(0xffb020, 0.6); rim.position.set(-2, 2, -3); prevScene.add(rim);
   }
   const model = MODELS.chars[S.char];
   if (prevVis) { prevScene.remove(prevVis.obj); prevVis = null; }
@@ -5489,7 +5708,7 @@ function refreshPreview() {
 }
 function renderPreview(dt) {
   if (!prevR || !prevVis) return;
-  prevVis.mixer.update(dt); prevVis.obj.rotation.y += dt * 0.6;
+  prevVis.mixer.update(dt); prevVis.obj.rotation.y += dt * 0.45;
   prevR.render(prevScene, prevCam);
 }
 const charSel = $('charSel'), tintSel = $('tintSel');
@@ -5499,7 +5718,49 @@ function renderClassInfo() {
   const c = myClass(), el = $('clsInfo'); if (!el) return;
   const row = (k, slot, act) => `<div><kbd data-act="${act}">${codeLabel(BINDS[act][0] || BINDS[act][1] || '')}</kbd><b>${t('ab.' + k)}</b><span>${t('abd.' + k)}</span></div>`;
   el.innerHTML = `<p class="cls">${t('cls.label')} <strong>${t('cls.' + c.id)}</strong></p>` + row(c.tac, 'tac', 'tactical') + row(c.ult, 'ult', 'ultimate');
+  const sn = $('stName'); if (sn) {
+    sn.textContent = t('char.' + S.char); $('stClass').textContent = t('cls.' + c.id);
+    const chip = (k, act) => `<span><kbd>${codeLabel(BINDS[act][0] || BINDS[act][1] || '')}</kbd>${t('ab.' + k)}</span>`;
+    $('stAbil').innerHTML = chip(c.tac, 'tactical') + chip(c.ult, 'ultimate');
+  }
 }
+/* ---------- mise en page du menu : onglets + personnage en grand ---------- */
+(function buildMenuLayout() {
+  const inner = menu.querySelector('.menu-inner'); if (!inner || inner.classList.contains('shell')) return;
+  const header = inner.querySelector('header');
+  const blockOf = key => { const h = inner.querySelector(`.block h2[data-i18n="${key}"]`); return h ? h.closest('.block') : null; };
+  const charBlock = blockOf('char.title'), netBlock = blockOf('net.title'), cols = inner.querySelector('.cols'), settings = inner.querySelector('.block.settings'), credits = inner.querySelector('.credits');
+  const arms = document.createElement('div'); arms.className = 'block';
+  arms.innerHTML = '<h2 data-i18n="arms.title">Armes et skins</h2><div class="armsgrid"></div>';
+  const ag = arms.querySelector('.armsgrid');
+  for (const id of ['skin', 'knifeSel']) { const f = $(id).closest('.field'); if (f) ag.appendChild(f); }
+  ag.appendChild($('kskinField'));
+  const stage = document.createElement('aside'); stage.className = 'stage';
+  stage.innerHTML = '<div class="stagebox"></div><div class="sname" id="stName"></div><div class="sclass" id="stClass"></div><div class="sabil" id="stAbil"></div>';
+  stage.firstChild.appendChild($('charPrev'));
+  const tabs = [['play', 'tab.play', [netBlock]], ['char', 'tab.char', [charBlock]], ['arms', 'tab.arms', [arms]], ['settings', 'tab.settings', [settings]], ['controls', 'tab.controls', [cols]], ['admin', 'tab.admin', [$('adminBlock'), $('xlockBlock')]]];
+  const nav = document.createElement('nav'); nav.className = 'tabs'; nav.setAttribute('role', 'tablist');
+  const main = document.createElement('div'); main.className = 'menu-main';
+  main.append(header, nav);
+  const panels = {};
+  for (const [id, key, blocks] of tabs) {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = id; b.dataset.i18n = key; b.textContent = t(key);
+    const pnl = document.createElement('div'); pnl.className = 'tabpanel'; pnl.dataset.tab = id; pnl.setAttribute('role', 'tabpanel');
+    for (const bl of blocks) if (bl) pnl.appendChild(bl);
+    b.addEventListener('click', () => showTab(id));
+    nav.appendChild(b); main.appendChild(pnl); panels[id] = pnl;
+  }
+  if (credits) main.appendChild(credits);
+  inner.replaceChildren(main, stage); inner.classList.add('shell');
+  window.showTab = function showTab(id) {
+    if (id === 'admin' && !xUnlocked) id = 'play';
+    for (const b of nav.children) b.setAttribute('aria-selected', String(b.dataset.tab === id));
+    for (const k in panels) panels[k].hidden = k !== id;
+    store.set('menuTab', id);
+  };
+  nav.querySelector('[data-tab="admin"]').hidden = !xUnlocked;
+  showTab(store.get('menuTab', 'play'));
+})();
 renderClassInfo();
 tintSel.addEventListener('change', () => { S.tint = tintSel.value; store.set('tint', S.tint); refreshPreview(); });
 const knifeSel = $('knifeSel'); knifeSel.value = S.knife;
@@ -5593,6 +5854,17 @@ qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quali
     rd.readAsDataURL(f);
   });
 }
+{
+  const ps = $('padSens'), pa = $('padAim');
+  ps.value = S.padSens; pa.value = S.padAim; $('padSnap').checked = S.padSnap; $('padInvert').checked = S.padInvert; $('snapTap').checked = S.snapTap;
+  const sync = () => { $('oPadSens').textContent = (+S.padSens).toFixed(2); $('oPadAim').textContent = Math.round(S.padAim * 100) + ' %'; };
+  sync();
+  ps.addEventListener('input', () => { S.padSens = +ps.value; store.set('padSens', S.padSens); sync(); });
+  pa.addEventListener('input', () => { S.padAim = +pa.value; store.set('padAim', S.padAim); sync(); });
+  $('padSnap').addEventListener('change', e => { S.padSnap = e.target.checked; store.set('padSnap', S.padSnap); });
+  $('padInvert').addEventListener('change', e => { S.padInvert = e.target.checked; store.set('padInvert', S.padInvert); });
+  $('snapTap').addEventListener('change', e => { S.snapTap = e.target.checked; store.set('snapTap', S.snapTap); });
+}
 const camFxEl = $('camFx'); camFxEl.value = S.camFx;
 const syncCamFx = () => { $('oCamFx').textContent = S.camFx <= 0 ? t('set.off') : Math.round(S.camFx * 100) + ' %'; };
 syncCamFx();
@@ -5685,6 +5957,8 @@ function frame(now) {
     pd.ring.position.set(pd.x, pd.y + 0.2 + pd.ph * 2.2, pd.z);
     const s = 1 - pd.ph * 0.35; pd.ring.scale.set(s, s, s); pd.ring.material.opacity = (1 - pd.ph) * 0.8;
   }
+  pollPad(dt);
+  padAimAssist(dt);
   aimAssist(dt);
   updateCamera(dt, playing || NET.mode !== 'off' ? acc / STEP : 1);
   updateRemotes(dt);
@@ -5709,7 +5983,7 @@ function frame(now) {
   if (toastT > 0) { toastT -= dt; if (toastT <= 0) $('toast').classList.remove('on'); }
   if (!menu.hidden) renderPreview(dt);
   renderer.clear(); renderer.render(scene, camera);
-  renderer.clearDepth(); renderer.render(wScene, wCam);
+  if (menu.hidden) { renderer.clearDepth(); renderer.render(wScene, wCam); }
 }
 requestAnimationFrame(frame);
 })();

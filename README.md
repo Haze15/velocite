@@ -9,7 +9,7 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 - **Glissade :** sprinte puis accroupis-toi. Un boost toutes les 2 s.
 - **Bhop :** saute dans les 0,12 s qui suivent l'atterrissage. La vitesse perdue au sol est rendue et chaque saut enchaîné ajoute environ 0,4 m/s, jusqu'à 17 m/s.
 - **Wall-jump :** en l'air contre un mur, saute pour rebondir en gardant ton élan le long du mur. Trois rebonds avant de retoucher le sol.
-- **Mantle jump :** en te hissant sur un rebord, appuie seulement sur saut : tu es propulsé environ 4 m au-dessus du rebord.
+- **Mantle jump :** en te hissant sur un rebord, appuie seulement sur saut : tu es propulsé environ 7,5 m au-dessus du rebord.
 - **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 18 m/s, plus si tu arrives lancé.
 - **Son de glissade :** gravier, métal, souffle, électrique, aucun, ou ton propre fichier son (mémorisé jusqu'à 2 Mo).
 - **Touches :** toutes les actions se règlent dans le menu, deux touches par action, clavier, souris ou molette.
@@ -46,7 +46,7 @@ La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui chois
 
 ## Tyroliennes
 
-Des câbles relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
+Des câbles ambre lumineux relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts, traits ambre sur la mini-carte), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
 
 ## Buggys
 
@@ -65,6 +65,12 @@ Fermer l'onglet ou la fenêtre fait quitter la partie tout de suite (les autres 
 La connexion passe par WebRTC avec [PeerJS](https://peerjs.com/) et son serveur de mise en relation public. Il n'y a pas de serveur de jeu : l'hôte relaie positions, tirs et éliminations. Si l'hôte quitte, la partie se ferme.
 
 Sur certains réseaux (4G, réseaux d'entreprise), la connexion directe entre deux joueurs peut échouer faute de serveur TURN.
+
+## Manette
+
+Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie sur un bouton pour qu'elle soit détectée, Start ou A pour lancer depuis le menu). Stick gauche : bouger · stick droit : viser · A : sauter · B : s'accroupir, glisser · X : recharger ou interagir (buggy, tyrolienne) · Y : arme suivante · LB / RB : capacités tactique et ultime · LT / RT : viser / tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause. Vibrations au tir.
+
+Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d'une cible et légère traction quand tu bouges ou vises, de 0 à 100 %), **snap strafe facile** en l'air et inversion verticale. Au clavier, le **snap tap** est activé par défaut : si deux directions opposées sont enfoncées, la dernière appuyée gagne.
 
 ## Commandes
 
@@ -115,6 +121,8 @@ Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au c
 **Morgane :** hache double à lames argent-violet et runes roses. Coup vertical puis diagonal, lents mais lourds. Un joueur éliminé à la Morgane réapparaît en tenue Morgane (rose, oreilles de chat, nœud et jupe plissée) jusqu'à sa prochaine mort ; les robots d'entraînement la gardent 90 s.
 
 **Sons personnalisés :** dans les réglages, tu peux remplacer le son de chaque arme, du couteau, du saut, de l'atterrissage, des éliminations, des touches, du superglide et des capacités par ton propre fichier (300 Ko et 4 s maximum). En ligne, les autres joueurs entendent tes sons quand c'est toi qui tires ou qui utilises la capacité (chacun peut couper ça dans ses réglages).
+
+**Bras et armes :** tu vois tes bras (gants et manches à ta couleur) tenir chaque arme à deux mains quand c'est possible. Les autres joueurs portent leur vraie arme en main, avec leur skin. Quand un joueur vise au sniper dans ta direction, le reflet de sa lunette brille, même de loin.
 
 **Effets de caméra :** légère secousse au tir et aux atterrissages lourds, coup de champ de vision au superglide et sur les pads, balancement de la marche. Un curseur dans les réglages les règle de 0 (aucun) à 150 %. L'arme en main bouge beaucoup moins qu'avant.
 
