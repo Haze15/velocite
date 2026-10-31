@@ -1,6 +1,6 @@
 # Vélocité
 
-FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Sept cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion, Ville fantôme), des buggys, tanks, hélicos et avions à piloter, 5 armes, 6 couteaux, la hache double Morgane et un trident qui se lance et revient, quatre personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
+FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-strafe, tap-strafe, escalade, wall-jump, superglide et jump pads. Dix cartes (Canyon, Raffinerie, Forêt, Château, Volcan, Fusion, Ville fantôme, Océan, Arctique et Monde qui les réunit toutes), des buggys, tanks, hélicos, avions, chasseurs et bateaux à piloter, des armes spéciales à ramasser au sol, un mode spectateur, 5 armes, 6 couteaux, la hache double Morgane et un trident qui se lance et revient, quatre personnages jouables avec chacun sa classe et ses capacités (stim, dôme, grappin, portail, scan, tremplin), skins d'arme (dont des skins animés), emotes, robots d'entraînement animés, mini-carte et multijoueur en pair-à-pair jusqu'à 8 joueurs. Interface en français, anglais, afrikaans et isiZulu.
 
 **Jouer :** https://haze15.github.io/velocite/
 
@@ -23,6 +23,7 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | Soldat | Assaut | Stim : +35 % de vitesse 6 s (recharge 9 s) | Dôme-bouclier : bulle de 5 m qui arrête les balles 12 s (recharge 25 s) |
 | X-Bot | Éclaireur | Grappin : accroche un point visé jusqu'à 45 m et te tire vers lui ; Espace pour lâcher avec un saut (recharge 6 s) | Portail : pose l'entrée, va à au moins 6 m, réappuie pour la sortie (40 s, recharge 30 s) |
 | Robot | Sentinelle | Scan : révèle robots et joueurs à travers les murs et sur la mini-carte 7 s (recharge 18 s) | Tremplin : pad violet posé au sol que tout le monde peut utiliser, 30 s (recharge 22 s) |
+| Titan | Assaut lourd | Jetpack : bond propulsé puis vol stationnaire en maintenant Espace (recharge 7 s) | Frappe aérienne : marque le point visé, 8 obus tombent du ciel 2 s plus tard (recharge 40 s) |
 | Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
 
 
@@ -42,6 +43,9 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 
 - **Volcan** : carte immense (420 m de côté) avec un vrai relief : volcan de 74 m avec cratère de lave, trois coulées qui descendent ses flancs (la lave brûle), ponts, avant-postes dans les coins, camp de base au sud, plaine de cendres avec tremplins pour les buggys.
 - **Fusion** : les quatre cartes collées en carré, sans murs entre elles, avec un carrefour et un pad au centre.
+- **Océan** : six îles tropicales (palmiers, plages, cabanes, phare), pontons, deux ponts, une épave et une plateforme pétrolière avec héliport et tyrolienne. Dans l'eau profonde, on nage (lentement, sans glissade). Bateaux, chasseur et avion sur la piste de l'île principale, hélicos.
+- **Arctique** : collines enneigées sous la neige qui tombe, lac gelé qui sert de piste, base polaire avec tour et pad, chalets, tremplin de saut, forêt de sapins enneigés. Tanks, buggys, hélico, avion.
+- **Monde** : toutes les cartes réunies en une seule (Fusion au centre, Ville fantôme à l'est, Volcan à l'ouest, Océan au nord, Arctique au sud), reliées par une route en boucle et des routes vers chaque zone, avec lampadaires, pads et véhicules en plus.
 - **Ville fantôme** : grande ville abandonnée de 320 m de côté au crépuscule, dans un brouillard verdâtre plein de poussière. Rues en damier, immeubles à fenêtres cassées ou condamnées (jusqu'à une tour de 52 m avec un pad sur le toit), immeuble en chantier à six étages avec escaliers, autoroute surélevée avec bretelles, voitures abandonnées, place centrale, parc d'herbes hautes, tyroliennes entre les toits et aérodrome à l'est avec piste, hangar, tour de contrôle et héliport.
 
 L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondule au vent.
@@ -54,6 +58,26 @@ La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui chois
 
 Des câbles ambre lumineux relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts, traits ambre sur la mini-carte), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
 
+## Armes spéciales au sol
+
+Sur chaque carte, des armes brillantes attendent au sol (un faisceau coloré les signale). Approche-toi et appuie sur **E** pour en ramasser une : elle va dans l'emplacement **7**. Munitions limitées, pas de rechargement : vide, elle disparaît. Si tu meurs, elle tombe par terre et quelqu'un d'autre peut la prendre. Une arme ramassée réapparaît 30 s plus tard.
+
+| Arme | Particularité |
+| --- | --- |
+| Lame-fusil | Clic gauche : coup de lame (80). Clic droit : décharge de chevrotine (8 cartouches) |
+| Minigun | Doit d'abord tourner une demi-seconde, puis 1500 coups/min, 240 balles |
+| Lance-roquettes | 4 roquettes, 125 dégâts en zone, rocket jump possible |
+| Railgun | 125 dégâts, traverse tous les ennemis alignés jusqu'au premier mur |
+| Revolver .44 | 48 dégâts, tête ×2 |
+| Lance-grenades | Grenades de 40 mm qui explosent à l'impact (100 en zone) |
+| Fusil rafale | Rafales de 3 balles, 24 dégâts |
+
+L'onglet **Armes** du menu montre chaque arme en 3D avec ton skin (fais-la tourner à la souris).
+
+## Mode spectateur
+
+Le bouton **Spectateur** du menu te fait regarder la partie sans jouer : clic gauche / droit pour passer d'un joueur à l'autre (ou d'un robot à l'autre en solo), **E** pour une caméra libre (ZQSD, Espace, C). Les autres ne te voient pas. **Jouer** te fait revenir dans la partie.
+
 ## Véhicules
 
 Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. Approche-toi et appuie sur **E** pour monter : Z/W accélère, S freine puis recule, Q/D (A/D) tourne, **Espace** est le frein à main pour déraper, **Maj** donne un petit turbo. La caméra passe derrière le buggy et la souris tourne autour. Les tremplins et les crêtes font décoller. Foncer dans un robot ou un joueur à plus de 9 m/s lui fait des dégâts. **E** pour descendre. En ligne, les autres te voient assis au volant.
@@ -64,6 +88,8 @@ Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. 
 | Hélico | Ville fantôme (2), Volcan (2), Fusion | Il se tourne vers où tu regardes ; Z/Q/S/D le déplacent, **Espace** monte, **C** descend, **Maj** accélère | Mitrailleuse au clic gauche |
 | Avion | Ville fantôme (2, sur la piste), Volcan | Z/S règlent les gaz, la souris donne la direction, Q/D penchent ; il décolle en tirant vers le haut au-dessus de 30 m/s | Mitrailleuse au clic gauche |
 | Chasseur | Ville fantôme (sur la piste), Volcan | Comme l'avion, mais bien plus rapide (jusqu'à 112 m/s avec Maj), décolle au-dessus de 40 m/s, postcombustion visible | Deux canons qui tirent en alternance |
+
+**Vue cockpit :** en véhicule, **V** passe à la première personne, à la place du pilote, avec des instruments (vitesse, altitude, cap, gaz, horizon artificiel) ; dans le tank, c'est la vue du viseur. L'hélico se tourne maintenant directement vers la souris.
 
 **Réticule :** comme dans Battlefield, le petit rond au centre de l'écran montre où tu regardes et le grand réticule montre où partent vraiment tes tirs. Celui de l'hélico, de l'avion et du chasseur est devant le nez de l'appareil. Celui du tank est au bout du canon : il tient compte de la chute de l'obus et se remplit pendant le rechargement. Quand tu tournes la souris, le réticule rattrape la visée avec un temps de retard : la tourelle, le canon de l'hélico et le nez de l'avion pivotent moins vite que la caméra.
 
