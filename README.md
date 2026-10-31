@@ -281,6 +281,8 @@ python3 -m http.server 8000
 
 ## Crédits
 
+- **Squelette** (`assets/models/Skeleton.glb`) : modèle Sketchfab riggé Mixamo, fourni par le propriétaire du jeu ; c'est l'apparence de son Soldat. Il est animé avec les clips du X-Bot.
+
 - Robots d’entraînement : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
 - Soldat, X-Bot et Nova (modèle « Michelle ») : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js. Nova est animée avec les mouvements du X-Bot.
 - Musique de fond : « Celestial Butterfly », téléchargée sur [Pixabay](https://pixabay.com/music/) (licence de contenu Pixabay, utilisation libre dans un jeu).

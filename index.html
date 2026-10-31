@@ -3070,6 +3070,8 @@ const CLASSES = {
   titan: { id: 'heavy', tac: 'jet', ult: 'strike' }
 };
 const myClass = () => CLASSES[S.char] || CLASSES.soldier;
+// le Soldat du propriétaire est le squelette
+const myChar = () => S.char === 'soldier' && xUnlocked && MODELS.chars.skel ? 'skel' : S.char;
 function useAbility(k) {
   if (P.veh || P.pass || EDIT.on) return;
   if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
@@ -3709,6 +3711,7 @@ const CHARS = {
   spectre: { file: 'Xbot.glb', h: 1.84, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ },
   nova: { file: 'Nova.glb', h: 1.72, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ },
   titan: { file: 'Soldier.glb', h: 1.92, yaw: 0, anim: { idle: 'Idle', walk: 'Walk', run: 'Run' }, hand: /RightHand$/, gearFz: 1 },
+  skel: { file: 'Skeleton.glb', h: 1.82, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand(_\d+)?$/ },
   robot: { file: 'RobotExpressive.glb', h: 1.85, yaw: Math.PI, anim: { idle: 'Idle', walk: 'Walking', run: 'Running' }, hand: /^Palm2R$/, tintMat: /^Main$/ }
 };
 const TINTS = { amber: 0xffb020, cyan: 0x66d4e2, red: 0xff5a44, green: 0x9be36a, violet: 0xc78cff, pink: 0xff8fc7, white: 0xf4efe6, blue: 0x5f8cff, black: 0x2a2a2e,
@@ -3890,6 +3893,7 @@ function tintChar(vis, ch, col) {
       else if (ch === 'titan') m.color.setHex(0x3a3f46).lerp(new THREE.Color(col), 0.18);
       else m.color.setHex(col).lerp(white, 0.7);
     } else if (ch === 'nova') { m.color.setHex(0xffffff).lerp(new THREE.Color(col), 0.18); }
+    else if (ch === 'skel') { m.color.setRGB(1.75, 1.7, 1.6); m.userData.keep = true; }
     else if (c.tintMat && c.tintMat.test(m.name)) m.color.setHex(col);
   });
   if (ch === 'spectre') phantomGear(vis, col);
@@ -3938,7 +3942,7 @@ const XCLIPS = {};
 // reciblage en repère monde des clips du X-Bot vers un autre squelette Mixamo :
 // les deux squelettes en T-pose, q_cible = D_parent⁻¹ × q_xbot × D_os, avec D = (monde X)⁻¹ × (monde cible)
 function retargetFromXbot(m, ownClips) {
-  const norm = n => String(n).replace(/^mixamorig\d*[:_]?/i, '').toLowerCase();
+  const norm = n => String(n).replace(/^mixamorig\d*[:_]?/i, '').replace(/_\d+$/, '').toLowerCase();
   const bonesOf = root => { const r = {}; root.traverse(o => { if (o.isBone) r[norm(o.name)] = o; }); return r; };
   const bx = bonesOf(MODELS.chars.xbot.scene), bn = bonesOf(m.scene);
   const tp = (ownClips || []).find(c => /t-?pose/i.test(c.name));
@@ -3965,9 +3969,17 @@ if (THREE.GLTFLoader) {
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
   loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
   loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); XCLIPS.list = g.animations; novaReady(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); XCLIPS.list = g.animations; novaReady(); skelReady(); charLoaded(); }, undefined, () => {});
   // Nova : modèle à part (Michelle, Mixamo), animé avec les clips du X-Bot (même squelette ; on ne garde que les rotations)
   loader.load('assets/models/Nova.glb', g => { XCLIPS.nova = g; novaReady(); }, undefined, () => {});
+  // squelette : version spéciale du Soldat réservée au propriétaire (les autres le voient quand il joue)
+  loader.load('assets/models/Skeleton.glb', g => { XCLIPS.skel = g; skelReady(); }, undefined, () => {});
+  function skelReady() {
+    if (!XCLIPS.list || !XCLIPS.skel || MODELS.chars.skel) return;
+    const m = prepModel(XCLIPS.skel, CHARS.skel.h);
+    m.anims = retargetFromXbot(m, []);
+    MODELS.chars.skel = m; charLoaded();
+  }
   function novaReady() {
     if (!XCLIPS.list || !XCLIPS.nova || MODELS.chars.nova) return;
     const m = prepModel(XCLIPS.nova, CHARS.nova.h);
@@ -5156,7 +5168,7 @@ function peerSupported() { return typeof window.Peer === 'function' && typeof wi
 function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint, z: P.zombie ? 1 : 0 };
+  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, z: P.zombie ? 1 : 0 };
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (SPEC.on) { st.dead = true; st.spec = 1; }
   if (P.pass) { st.pv = P.pass.i + 1; st.ps = P.passSeat; st.a = 'ground'; }
@@ -5658,7 +5670,7 @@ const RIGS = {
 function rigOf(vis) {
   if (!vis._rig) {
     const R = vis.ch === 'robot' ? RIGS.robot : RIGS.mixamo; vis._rig = {};
-    vis.obj.traverse(o => { if (!o.isBone) return; for (const k in R) if (!vis._rig[k] && R[k].test(o.name)) vis._rig[k] = o; });
+    vis.obj.traverse(o => { if (!o.isBone) return; const n = o.name.replace(/_\d+$/, ''); for (const k in R) if (!vis._rig[k] && R[k].test(n)) vis._rig[k] = o; });
   }
   return vis._rig;
 }
@@ -5787,7 +5799,7 @@ const SELF = { g: new THREE.Group(), vis: null, key: '' };
 SELF.g.visible = false; scene.add(SELF.g);
 function myColor() { const me = NET.players.get(NET.selfId); return TINTS[S.tint] || (me ? me.color : COLORS[0]); }
 function ensureSelfAvatar() {
-  const ch = MODELS.chars[S.char] ? S.char : 'soldier', model = MODELS.chars[ch];
+  const ch = MODELS.chars[myChar()] ? myChar() : 'soldier', model = MODELS.chars[ch];
   if (!model) return null;
   const key = ch + '|' + myColor();
   if (SELF.key !== key) {
@@ -8935,10 +8947,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.10.31c';
+const GAME_VERSION = '2026.10.31d';
 const CHANGES = {
-  fr: ['Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://haze15.github.io/velocite/', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9004,13 +9016,13 @@ function refreshPreview() {
     prevCam = new THREE.PerspectiveCamera(28, 440 / 620, 0.1, 30); prevCam.position.set(0, 1.0, 4.9); prevCam.lookAt(0, 0.93, 0);
     const rim = new THREE.DirectionalLight(0xffb020, 0.6); rim.position.set(-2, 2, -3); prevScene.add(rim);
   }
-  const model = MODELS.chars[S.char];
+  const pch = myChar(), model = MODELS.chars[pch];
   if (prevVis) { prevScene.remove(prevVis.obj); prevVis = null; }
   if (!model) return;
-  prevVis = cloneModel(model); prevVis.ch = S.char;
-  tintChar(prevVis, S.char, TINTS[S.tint] || COLORS[0]);
+  prevVis = cloneModel(model); prevVis.ch = pch; prevVis.obj.rotation.y = CHARS[pch].yaw;
+  tintChar(prevVis, pch, TINTS[S.tint] || COLORS[0]);
   prevScene.add(prevVis.obj);
-  playAnim(prevVis, CHARS[S.char].anim.idle, 0);
+  playAnim(prevVis, CHARS[pch].anim.idle, 0);
 }
 function renderPreview(dt) {
   if (!prevR || !prevVis) return;
@@ -9018,6 +9030,7 @@ function renderPreview(dt) {
   prevR.render(prevScene, prevCam);
 }
 const charSel = $('charSel'), tintSel = $('tintSel');
+{ let lastCh = ''; setInterval(() => { const c = myChar(); if (c !== lastCh) { lastCh = c; refreshPreview(); SELF.key = ''; } }, 800); }
 charSel.value = S.char; tintSel.value = S.tint;
 charSel.addEventListener('change', () => { S.char = charSel.value; store.set('char', S.char); refreshPreview(); renderClassInfo(); releaseHook(0); });
 function renderClassInfo() {
