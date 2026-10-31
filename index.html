@@ -3077,7 +3077,7 @@ const CLASSES = {
 };
 const myClass = () => CLASSES[S.char] || CLASSES.soldier;
 // le Soldat du propriétaire est le squelette
-const myChar = () => S.char === 'soldier' && xUnlocked && MODELS.chars.skel ? 'skel' : S.char;
+const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && MODELS.chars.skel ? 'skel' : S.char;
 function useAbility(k) {
   if (P.veh || P.pass || EDIT.on) return;
   if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
@@ -3953,6 +3953,24 @@ function retargetFromXbot(m, ownClips) {
   const bx = bonesOf(MODELS.chars.xbot.scene), bn = bonesOf(m.scene);
   const tp = (ownClips || []).find(c => /t-?pose/i.test(c.name));
   if (tp) for (const tr of tp.tracks) if (tr.name.endsWith('.quaternion')) { const b = bn[norm(tr.name.slice(0, -11))]; if (b) b.quaternion.fromArray(tr.values, 0); }
+  // pose de repos alignée sur celle du X-Bot (T-pose) : chaque os est tourné pour pointer vers son enfant comme chez le X-Bot.
+  // Sans ça, un modèle livré en A-pose ou bras repliés garde ce décalage dans toutes les animations (mains dans le dos…)
+  if (!tp) {
+    MODELS.chars.xbot.scene.updateMatrixWorld(true);
+    const v1 = new THREE.Vector3(), v2 = new THREE.Vector3(), v3 = new THREE.Vector3(), v4 = new THREE.Vector3(), qp = new THREE.Quaternion(), qr = new THREE.Quaternion();
+    const order = []; m.scene.traverse(o => { if (o.isBone) order.push(o); });
+    for (const b of order) {
+      const a = bx[norm(b.name)]; if (!a || !b.parent) continue;
+      const bc = b.children.find(c => c.isBone && bx[norm(c.name)]); if (!bc) continue;
+      const ac = bx[norm(bc.name)];
+      m.scene.updateMatrixWorld(true);
+      const dt = bc.getWorldPosition(v2).sub(b.getWorldPosition(v1)), dx = ac.getWorldPosition(v4).sub(a.getWorldPosition(v3));
+      if (dt.lengthSq() < 1e-10 || dx.lengthSq() < 1e-10) continue;
+      dt.normalize(); dx.normalize(); if (dt.dot(dx) > 0.9998) continue;
+      qr.setFromUnitVectors(dt, dx); b.parent.getWorldQuaternion(qp);
+      b.quaternion.premultiply(qp.clone().invert().multiply(qr).multiply(qp));
+    }
+  }
   MODELS.chars.xbot.scene.updateMatrixWorld(true); m.scene.updateMatrixWorld(true);
   const wq = o => o.getWorldQuaternion(new THREE.Quaternion());
   const D = {}, DP = {};
@@ -5260,7 +5278,7 @@ function snapshot() {
   return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); else if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
   if (m.k === 'snd') { csClientRecv(m); return; }
   if (m.k === 'mdl') { cmClientRecv(m); return; }
   if (m.k === 'zround' || m.k === 'zend' || m.k === 'zsync') { clientRecvMode(m); return; }
@@ -8971,7 +8989,7 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.10.31e';
+const GAME_VERSION = '2026.10.31f';
 const CHANGES = {
   fr: ['Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
   en: ['Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
