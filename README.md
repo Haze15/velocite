@@ -7,7 +7,8 @@ FPS dans le navigateur au mouvement nerveux : glissade avec boost, bhop, air-str
 ## Mouvement
 
 - **Glissade :** sprinte puis accroupis-toi. Un boost toutes les 2 s.
-- **Bhop :** saute dans les 0,12 s qui suivent l'atterrissage. La vitesse perdue au sol est rendue et chaque saut enchaîné ajoute environ 0,4 m/s, jusqu'à 17 m/s.
+- **Bhop :** saute dans les 0,12 s qui suivent l'atterrissage. La vitesse perdue au sol est rendue et chaque saut enchaîné ajoute environ 0,4 m/s, sans limite de vitesse.
+- **Snap strafe facile :** activé pour tout le monde, au clavier comme à la manette (désactivable dans les réglages).
 - **Wall-jump :** en l'air contre un mur, saute pour rebondir en gardant ton élan le long du mur. Trois rebonds avant de retoucher le sol.
 - **Mantle jump :** en te hissant sur un rebord, appuie seulement sur saut : tu es propulsé environ 7,5 m au-dessus du rebord.
 - **Superglide :** en te hissant sur un rebord, saute puis accroupis-toi presque en même temps (fenêtre de 0,14 s). Sortie à 18 m/s, plus si tu arrives lancé.
@@ -118,6 +119,28 @@ Les modèles sont détaillés : tank camouflé avec chenilles qui défilent, tou
 Grenades, obus du tank, trident, couteaux, armes et mitrailleuses des véhicules les abîment, tout comme les chocs contre les murs, les atterrissages trop durs et les collisions entre véhicules (le tank écrase les buggys). Abîmé, un véhicule fume ; sous 20 %, la fumée devient noire et il crache des étincelles. À zéro, il explose. Le conducteur est éjecté et prend 140 dégâts, et l'élimination revient à celui qui l'a détruit. L'explosion blesse aussi autour, ce qui peut faire sauter d'autres véhicules. L'épave noircie brûle sur place (un appareil touché en vol s'écrase d'abord), puis le véhicule réapparaît à son point de départ 14 s plus tard. En ligne, les dégâts sont partagés entre tous les joueurs.
 
 Un avion qui pique dans le sol ou percute un immeuble explose (tu es éjecté et blessé) et réapparaît à sa place 8 s plus tard. Près du bord de la carte, l'avion fait demi-tour tout seul. Un hélico abandonné en vol redescend doucement en autorotation.
+
+## Modes de jeu
+
+Le mode se choisit dans le menu (à côté de la carte) ou dans le panneau admin. En ligne, c'est l'hôte qui décide.
+
+- **Chacun pour soi :** le mode classique.
+- **2 équipes :** bleus contre rouges, répartis automatiquement. Pas de tir ami. Le score de chaque équipe s'affiche en haut de l'écran.
+- **Zombies :** un joueur tiré au sort devient le premier zombie. Les zombies n'ont que le couteau (dégâts doublés, 150 PV, un peu plus rapides) et ne peuvent ni ouvrir les coffres ni ramasser d'armes. Chaque humain tué par un zombie revient en zombie. Les humains gagnent s'ils tiennent 3 minutes. Une nouvelle manche démarre 7 s après la fin. En solo, ce sont les robots qui jouent les zombies et te foncent dessus.
+
+## Comptes et signalements
+
+- **Mot de passe :** dans l'onglet Multijoueur, à côté du pseudo. Le premier mot de passe tapé avec un pseudo crée le compte chez l'hôte ; ensuite il faut le même pour rejoindre avec ce pseudo. Sans mot de passe, on peut toujours jouer avec un pseudo libre (sauf si l'hôte rend le mot de passe obligatoire).
+- **Panneau admin, onglet Comptes :** liste des comptes, dernière connexion, réinitialiser ou définir un mot de passe, bannir ou débannir, supprimer. Les mots de passe sont stockés sous forme d'empreinte SHA-256 salée : personne ne peut les lire, on peut seulement les remplacer. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien.
+- **Signaler :** en ligne, l'onglet Multijoueur propose de signaler un joueur (triche, insultes, spam, inactif, autre). Les signalements arrivent chez l'hôte et chez les admins, dans l'onglet **Signalements** du panneau admin, avec un bouton pour expulser ou bannir.
+
+## Mon propre modèle 3D
+
+Onglet Personnage → **Importer mon modèle (.glb)**, 4 Mo maximum. Un modèle avec un squelette Mixamo reprend les animations du jeu ; sinon il utilise ses propres animations nommées idle, walk et run. Une case permet de le tourner de 180° s'il regarde dans le mauvais sens. Le modèle est mémorisé dans le navigateur et envoyé aux autres joueurs de la partie, qui le voient à ta place.
+
+## Mises à jour
+
+Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écran (vérification toutes les 3 minutes) avec un bouton pour recharger, ou pour télécharger la nouvelle appli Windows. Les nouveautés s'affichent une fois à chaque nouvelle version, et le bouton **Nouveautés** du menu les remontre.
 
 ## Multijoueur
 

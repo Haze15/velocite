@@ -356,6 +356,25 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #board tr.me td{color:var(--amber)}
 @media (max-width:640px){#stats{gap:12px}#stats b{font-size:18px}#spd,#ammo{font-size:44px}#speed{width:200px}#spark{width:200px}}
 @media (prefers-reduced-motion:reduce){.btn,.btn:hover{transition:none}}
+#modeBar{position:absolute;top:14px;left:50%;transform:translateX(-50%);background:rgba(10,12,16,.72);border:1px solid rgba(255,255,255,.14);padding:6px 14px;font:600 13px/1.2 var(--mono,monospace);letter-spacing:.06em;display:flex;gap:12px;align-items:center;pointer-events:none;z-index:5}
+#modeBar span{opacity:.75}
+#zombieFx{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 55%,rgba(60,200,40,.28));mix-blend-mode:screen;z-index:2}
+#updBar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;gap:12px;align-items:center;flex-wrap:wrap;padding:8px 16px;background:#ffb020;color:#14110a;font:600 13px/1.3 system-ui,sans-serif}
+#updBar #updNotes{font-weight:400;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#updBar .btn3{background:#14110a;color:#ffb020;border-color:#14110a}
+#news{position:fixed;inset:0;z-index:59;background:rgba(6,8,10,.7);display:grid;place-items:center;padding:16px}
+#news .newsbox{background:#15181d;border:1px solid rgba(255,176,32,.5);max-width:460px;width:100%;padding:20px 22px}
+#news h3{margin:0 0 10px;color:#ffb020;letter-spacing:.06em}
+#news ul{margin:0 0 16px;padding-left:20px;line-height:1.6}
+.cmrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.cmfile{position:relative;overflow:hidden;cursor:pointer}
+.cmfile input{position:absolute;inset:0;opacity:0;cursor:pointer}
+#cmInfo{opacity:.75;font-size:13px}
+#repBox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:10px 0}
+#repBox[hidden]{display:none}
+#repBox select,#repBox input{background:#0e1013;color:inherit;border:1px solid rgba(255,255,255,.18);padding:5px 8px}
+#repBox input{flex:1;min-width:140px}
+.ntag.zmb span{color:#7aff5a}
 </style>
 </head>
 <body>
@@ -400,6 +419,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
     <div id="wname">CARABINE K-31</div>
     <div id="reloadBar"><i></i></div>
   </div>
+  <div id="modeBar" hidden></div><div id="zombieFx" hidden></div>
   <div id="death" hidden><b data-i18n="state.dead">ÉLIMINÉ</b><span id="deathBy"></span></div>
   <div id="board" hidden><h3 id="boardTitle">PARTIE</h3><table><thead><tr><th data-i18n="board.player">Joueur</th><th data-i18n="hud.kills">Élim.</th><th data-i18n="board.deaths">Morts</th></tr></thead><tbody id="boardBody"></tbody></table></div>
   <div id="toast"></div>
@@ -420,10 +440,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 
 <div id="admPanel" hidden role="dialog" aria-label="Admin">
   <div class="admhead"><b>PANNEAU ADMIN</b><span id="admWho"></span><button type="button" class="btn3" id="admClose">✕</button></div>
-  <nav class="admtabs"><button type="button" data-t="players" data-i18n="adm.tabPlayers">Joueurs</button><button type="button" data-t="game" data-i18n="adm.tabGame">Partie</button><button type="button" data-t="cheats" data-i18n="adm.tabCheats">Triche</button><button type="button" data-t="access" data-i18n="adm.tabAccess">Accès admin</button></nav>
+  <nav class="admtabs"><button type="button" data-t="players" data-i18n="adm.tabPlayers">Joueurs</button><button type="button" data-t="game" data-i18n="adm.tabGame">Partie</button><button type="button" data-t="cheats" data-i18n="adm.tabCheats">Triche</button><button type="button" data-t="access" data-i18n="adm.tabAccess">Accès admin</button><button type="button" data-t="accounts" data-i18n="adm.tabAccounts">Comptes</button><button type="button" data-t="reports" data-i18n="adm.tabReports">Signalements</button></nav>
   <div id="admBody"></div>
   <p class="admfoot" data-i18n="adm.foot">Inser : ouvrir / fermer · clique dans le jeu pour reprendre la souris</p>
 </div>
+<div id="updBar" hidden role="status"><b id="updTxt"></b><span id="updNotes"></span><button type="button" class="btn3" id="updGo"></button><button type="button" class="btn3" id="updX" aria-label="Fermer">✕</button></div>
+<div id="news" hidden role="dialog" aria-labelledby="newsH"><div class="newsbox"><h3 id="newsH"><span data-i18n="news.title">Nouveautés</span> · <span id="newsVer"></span></h3><ul id="newsList"></ul><button type="button" class="btn" id="newsOk" data-i18n="news.ok">C’est parti</button></div></div>
 <section id="menu">
   <div class="menu-inner">
     <header>
@@ -438,6 +460,8 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
         <button class="btn ghost" id="specBtn" type="button" data-i18n="spec.btn">Spectateur</button>
         <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option><option value="ocean" data-i18n="map.ocean">Océan (îles)</option><option value="arctic" data-i18n="map.arctic">Arctique</option><option value="world" data-i18n="map.world">Monde (toutes les cartes)</option></select></label>
+        <label class="mapsel"><span data-i18n="mode.label">Mode</span><select id="modeSel"><option value="ffa" data-i18n="mode.ffa">Chacun pour soi</option><option value="teams" data-i18n="mode.teams">2 équipes</option><option value="zombie" data-i18n="mode.zombie">Zombies</option></select></label>
+        <button class="btn3" id="newsBtn" type="button" data-i18n="news.btn">Nouveautés</button>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
       </div>
     </header>
@@ -447,9 +471,11 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <div class="charbox">
         <canvas id="charPrev" width="440" height="620" aria-hidden="true"></canvas>
         <div class="charopts">
-          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option><option value="custom" hidden>Mon modèle</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
+          <div class="cmrow"><label class="btn3 cmfile"><span data-i18n="cm.import">Importer mon modèle (.glb)</span><input type="file" id="cmFile" accept=".glb,model/gltf-binary"></label><span id="cmInfo"></span><label class="check"><input type="checkbox" id="cmFlip"> <span data-i18n="cm.flip">Tourner de 180°</span></label><button class="btn3" id="cmClear" type="button" data-i18n="cm.clear">Retirer</button></div>
+          <p class="hint" data-i18n="cm.hint">Un fichier .glb de 4 Mo max. S’il a un squelette Mixamo, il reprend les animations du jeu ; sinon il utilise ses propres animations (idle, walk, run). Les autres joueurs le voient en ligne.</p>
           <div class="clsinfo" id="clsInfo"></div>
         </div>
       </div>
@@ -459,13 +485,15 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <h2 data-i18n="net.title">Multijoueur</h2>
       <div class="net">
         <div class="netrow">
-          <label for="pseudo"><span data-i18n="net.pseudo">Pseudo</span><input id="pseudo" maxlength="14" autocomplete="off" spellcheck="false"></label>
+          <label for="pseudo"><span data-i18n="net.pseudo">Pseudo</span><input id="pseudo" maxlength="14" autocomplete="username" spellcheck="false"></label>
+          <label for="pass"><span data-i18n="login.pass">Mot de passe</span><input id="pass" type="password" maxlength="64" autocomplete="current-password" data-i18n-ph="login.passPh" placeholder="facultatif"></label>
           <button class="btn2" id="hostBtn" type="button"><span data-i18n="net.host">Créer une partie</span></button>
           <span class="or" data-i18n="net.or">OU</span>
           <label for="code"><span data-i18n="net.code">Code</span><input id="code" maxlength="5" autocomplete="off" spellcheck="false" placeholder="ABCDE"></label>
           <button class="btn2" id="joinBtn" type="button"><span data-i18n="net.join">Rejoindre</span></button>
         </div>
         <div id="roomBox" hidden><span id="roomCode"></span><button class="btn2" id="copyBtn" type="button"><span data-i18n="net.copy">Copier le lien</span></button><span id="roomLink"></span><button class="btn3" id="leaveBtn" type="button" data-i18n="net.leave">Quitter la partie</button></div>
+        <div id="repBox" hidden><b data-i18n="rep.title">Signaler un joueur</b><select id="repWho"></select><select id="repWhy"><option value="cheat" data-i18n="rep.r.cheat">Triche</option><option value="insult" data-i18n="rep.r.insult">Insultes</option><option value="spam" data-i18n="rep.r.spam">Spam</option><option value="afk" data-i18n="rep.r.afk">Inactif</option><option value="other" data-i18n="rep.r.other">Autre</option></select><input id="repTxt" maxlength="200" data-i18n-ph="rep.ph" placeholder="Détails (facultatif)"><button class="btn3" id="repSend" type="button" data-i18n="rep.send">Envoyer</button></div>
         <div id="netStatus">Partie en pair-à-pair : celui qui crée la partie l'héberge, les autres entrent son code.</div>
         <div class="lobbies">
           <div class="lobhead"><h3 data-i18n="lob.title">Parties en cours</h3><label class="check"><input type="checkbox" id="lobPublic"> <span data-i18n="lob.public">Afficher ma partie dans la liste</span></label></div>
@@ -518,6 +546,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
         <div class="field padfield"><span class="lab" data-i18n="pad.title">Manette</span>
           <label class="field"><span class="lab"><span data-i18n="pad.sens">Sensibilité manette</span> <output id="oPadSens"></output></span><input type="range" id="padSens" min="0.3" max="3" step="0.05"></label>
           <label class="field"><span class="lab"><span data-i18n="pad.aim">Aide à la visée manette</span> <output id="oPadAim"></output></span><input type="range" id="padAim" min="0" max="1" step="0.05"></label>
+          <label class="check"><input type="checkbox" id="easySnap"> <span data-i18n="set.easySnap">Snap strafe facile (clavier et manette)</span></label>
           <label class="check"><input type="checkbox" id="padSnap"> <span data-i18n="pad.snap">Snap strafe facile à la manette</span></label>
           <label class="check"><input type="checkbox" id="padInvert"> <span data-i18n="pad.invert">Inverser la visée verticale</span></label>
           <p class="hint" data-i18n="pad.help">Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes (haut), grenade (bas), arme précédente (gauche), type de grenade (droite) · Start : pause.</p>
@@ -1040,6 +1069,8 @@ const I18N_ADD12 = {"fr": {"set.loot": "Départ au pistolet, armes dans les coff
 for (const l in I18N_ADD12) Object.assign(I18N[l], I18N_ADD12[l]);
 Object.assign(I18N.fr, {"adm.tabPlayers": "Joueurs", "adm.tabGame": "Partie", "adm.tabCheats": "Triche", "adm.tabAccess": "Accès admin", "adm.foot": "Inser : ouvrir / fermer · clique dans le jeu pour reprendre la souris", "adm.owner": "Propriétaire : tout est permis", "adm.adminOf": "Admin de la partie (accès donné par l’hôte)", "adm.me": "moi", "adm.itemToGive": "Arme à donner :", "adm.healAll": "Soigner tout le monde", "adm.respawnAll": "Faire réapparaître tout le monde", "adm.heal": "Soigner", "adm.give": "Donner", "adm.giveAll": "Toutes les armes", "adm.bring": "Amener à moi", "adm.goto": "Aller vers lui", "adm.freeze": "Geler 5 s", "adm.kill": "Éliminer", "adm.kick": "Expulser", "adm.admin": "Admin", "adm.soloNote": "Hors ligne : les actions s’appliquent à toi. Héberge une partie pour gérer les autres joueurs.", "adm.apply": "Changer", "adm.gravity": "Gravité", "adm.speed": "Vitesse de tous", "adm.bots": "Robots d’entraînement", "adm.vehicle": "Véhicule :", "adm.spawn": "Faire apparaître devant moi", "adm.vreset": "Réinitialiser les véhicules", "adm.chestsOpen": "Ouvrir tous les coffres", "adm.chestsFill": "Remplir tous les coffres", "adm.killBots": "Éliminer les robots", "adm.resetScores": "Scores à zéro", "adm.msg": "Message à tous", "adm.send": "Envoyer", "adm.accessNote": "Liste des joueurs qui ont l’accès admin (Inser), même s’ils ne sont pas connectés. Elle s’applique quand c’est toi qui héberges : un nom marqué « oui » reçoit l’accès dès qu’il rejoint.", "adm.name": "Pseudo", "adm.addYes": "Ajouter (oui)", "adm.online": "connecté", "adm.offline": "hors ligne", "adm.yes": "Oui", "adm.no": "Non", "adm.healed": "Un admin t’a soigné.", "adm.frozen": "Un admin t’a gelé.", "adm.granted": "Accès admin accordé : touche Inser.", "adm.revoked": "Accès admin retiré.", "adm.denied": "Accès admin refusé.", "adm.x.god": "Invincible", "adm.x.oneshot": "Un coup = une mort", "adm.x.norecoil": "Sans recul", "adm.x.ammo": "Munitions infinies", "adm.x.nocd": "Capacités sans recharge", "adm.x.rapid": "Cadence ×3", "adm.x.speed": "Vitesse ×2", "adm.x.jumps": "Sauts infinis", "adm.x.superjump": "Super saut", "adm.x.fly": "Vol", "adm.x.tp": "Téléportation (B)", "adm.x.wall": "Voir à travers les murs", "adm.x.esp": "ESP", "adm.x.aimbot": "Aimbot", "adm.x.trigger": "Triggerbot"});
 Object.assign(I18N.en, {"adm.tabPlayers": "Players", "adm.tabGame": "Match", "adm.tabCheats": "Cheats", "adm.tabAccess": "Admin access", "adm.foot": "Insert: open / close · click the game to get the mouse back", "adm.owner": "Owner: everything allowed", "adm.adminOf": "Match admin (granted by the host)", "adm.me": "me", "adm.itemToGive": "Weapon to give:", "adm.healAll": "Heal everyone", "adm.respawnAll": "Respawn everyone", "adm.heal": "Heal", "adm.give": "Give", "adm.giveAll": "All weapons", "adm.bring": "Bring to me", "adm.goto": "Go to them", "adm.freeze": "Freeze 5 s", "adm.kill": "Kill", "adm.kick": "Kick", "adm.admin": "Admin", "adm.soloNote": "Offline: actions apply to you. Host a match to manage other players.", "adm.apply": "Change", "adm.gravity": "Gravity", "adm.speed": "Everyone’s speed", "adm.bots": "Training robots", "adm.vehicle": "Vehicle:", "adm.spawn": "Spawn in front of me", "adm.vreset": "Reset vehicles", "adm.chestsOpen": "Open all chests", "adm.chestsFill": "Refill all chests", "adm.killBots": "Kill the robots", "adm.resetScores": "Reset scores", "adm.msg": "Message to everyone", "adm.send": "Send", "adm.accessNote": "Players who get admin access (Insert), even when offline. It applies when you host: a name set to “yes” gets access as soon as they join.", "adm.name": "Name", "adm.addYes": "Add (yes)", "adm.online": "online", "adm.offline": "offline", "adm.yes": "Yes", "adm.no": "No", "adm.healed": "An admin healed you.", "adm.frozen": "An admin froze you.", "adm.granted": "Admin access granted: press Insert.", "adm.revoked": "Admin access removed.", "adm.denied": "Admin access denied.", "adm.x.god": "God mode", "adm.x.oneshot": "One-shot kills", "adm.x.norecoil": "No recoil", "adm.x.ammo": "Infinite ammo", "adm.x.nocd": "No ability cooldown", "adm.x.rapid": "Fire rate ×3", "adm.x.speed": "Speed ×2", "adm.x.jumps": "Infinite jumps", "adm.x.superjump": "Super jump", "adm.x.fly": "Fly", "adm.x.tp": "Teleport (B)", "adm.x.wall": "See through walls", "adm.x.esp": "ESP", "adm.x.aimbot": "Aimbot", "adm.x.trigger": "Triggerbot"});
+Object.assign(I18N.fr, {"mode.label": "Mode", "mode.ffa": "Chacun pour soi", "mode.teams": "2 équipes", "mode.zombie": "Zombies", "mode.blue": "BLEUS", "mode.red": "ROUGES", "mode.youZombie": "TU ES UN ZOMBIE : couteau seulement, contamine-les tous", "mode.youHuman": "HUMAIN : survis", "mode.survive": "les robots sont des zombies, survis", "mode.firstZombie": "Tu es le premier zombie ! Couteau seulement, tue les humains.", "mode.roundStart": "Nouvelle manche : un zombie est parmi vous…", "mode.zWin": "Les zombies ont gagné !", "mode.hWin": "Les humains ont survécu !", "mode.infected": "contaminé : tu reviens en zombie", "mode.set": "Mode de jeu : {m}", "mode.hostOnly": "Seul l’hôte choisit le mode.", "news.title": "Nouveautés", "news.ok": "C’est parti", "news.btn": "Nouveautés", "upd.new": "Nouvelle version disponible ({v})", "upd.download": "Télécharger", "upd.reload": "Recharger", "cm.import": "Importer mon modèle (.glb)", "cm.flip": "Tourner de 180°", "cm.clear": "Retirer", "cm.hint": "Un fichier .glb de 4 Mo max. S’il a un squelette Mixamo, il reprend les animations du jeu ; sinon il utilise ses propres animations (idle, walk, run). Les autres joueurs le voient en ligne.", "cm.tooBig": "Modèle trop lourd (4 Mo max).", "cm.bad": "Ce fichier n’est pas un modèle .glb lisible.", "cm.loaded": "Modèle « {name} » chargé : les autres joueurs le verront.", "cm.option": "Mon modèle", "cm.none": "aucun modèle importé", "char.custom": "Mon modèle", "login.pass": "Mot de passe", "login.passPh": "facultatif", "login.banned": "Tu es banni de cette partie.", "login.needpw": "Ce pseudo a un compte : entre son mot de passe.", "login.badpw": "Mot de passe incorrect.", "rep.title": "Signaler un joueur", "rep.r.cheat": "Triche", "rep.r.insult": "Insultes", "rep.r.spam": "Spam", "rep.r.afk": "Inactif", "rep.r.other": "Autre", "rep.ph": "Détails (facultatif)", "rep.send": "Envoyer", "rep.sent": "Signalement envoyé à l’hôte. Merci !", "rep.new": "Nouveau signalement : {name}", "rep.none": "Aucun signalement.", "rep.by": "par", "acc.note": "Comptes des joueurs qui rejoignent tes parties. Le premier mot de passe tapé crée le compte. Les mots de passe sont chiffrés (empreinte SHA-256 salée) : personne ne peut les lire, même toi, mais tu peux les réinitialiser ou en choisir un nouveau. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien.", "acc.require": "Mot de passe obligatoire pour rejoindre", "acc.none": "Aucun compte pour l’instant.", "acc.last": "vu le", "acc.pwSet": "mot de passe défini", "acc.pwReset": "réinitialisé : en attente d’un nouveau", "acc.newPw": "nouveau mot de passe", "acc.reset": "Réinitialiser", "acc.setPw": "Définir", "acc.pwChanged": "Mot de passe de {name} changé.", "acc.ban": "Bannir", "acc.unban": "Débannir", "acc.banned": "banni", "adm.tabAccounts": "Comptes", "adm.tabReports": "Signalements", "set.easySnap": "Snap strafe facile (clavier et manette)"});
+Object.assign(I18N.en, {"mode.label": "Mode", "mode.ffa": "Free for all", "mode.teams": "2 teams", "mode.zombie": "Zombies", "mode.blue": "BLUE", "mode.red": "RED", "mode.youZombie": "YOU ARE A ZOMBIE: knife only, infect them all", "mode.youHuman": "HUMAN: survive", "mode.survive": "the robots are zombies, survive", "mode.firstZombie": "You are patient zero! Knife only, kill the humans.", "mode.roundStart": "New round: a zombie is among you…", "mode.zWin": "The zombies win!", "mode.hWin": "The humans survived!", "mode.infected": "infected: you come back as a zombie", "mode.set": "Game mode: {m}", "mode.hostOnly": "Only the host picks the mode.", "news.title": "What’s new", "news.ok": "Let’s go", "news.btn": "What’s new", "upd.new": "New version available ({v})", "upd.download": "Download", "upd.reload": "Reload", "cm.import": "Import my model (.glb)", "cm.flip": "Rotate 180°", "cm.clear": "Remove", "cm.hint": "A .glb file, 4 MB max. With a Mixamo skeleton it uses the game’s animations; otherwise its own (idle, walk, run). Other players see it online.", "cm.tooBig": "Model too large (4 MB max).", "cm.bad": "This file isn’t a readable .glb model.", "cm.loaded": "Model “{name}” loaded: other players will see it.", "cm.option": "My model", "cm.none": "no model imported", "char.custom": "My model", "login.pass": "Password", "login.passPh": "optional", "login.banned": "You are banned from this match.", "login.needpw": "This name has an account: enter its password.", "login.badpw": "Wrong password.", "rep.title": "Report a player", "rep.r.cheat": "Cheating", "rep.r.insult": "Insults", "rep.r.spam": "Spam", "rep.r.afk": "AFK", "rep.r.other": "Other", "rep.ph": "Details (optional)", "rep.send": "Send", "rep.sent": "Report sent to the host. Thanks!", "rep.new": "New report: {name}", "rep.none": "No reports.", "rep.by": "by", "acc.note": "Accounts of players who join your matches. The first password typed creates the account. Passwords are hashed (salted SHA-256): nobody can read them, not even you, but you can reset them or set a new one. After a reset, the next password the player types becomes theirs.", "acc.require": "Password required to join", "acc.none": "No accounts yet.", "acc.last": "seen", "acc.pwSet": "password set", "acc.pwReset": "reset: waiting for a new one", "acc.newPw": "new password", "acc.reset": "Reset", "acc.setPw": "Set", "acc.pwChanged": "{name}’s password changed.", "acc.ban": "Ban", "acc.unban": "Unban", "acc.banned": "banned", "adm.tabAccounts": "Accounts", "adm.tabReports": "Reports", "set.easySnap": "Easy snap strafe (keyboard and controller)"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1063,7 +1094,7 @@ const wName = i => i === 5 ? t('knife.' + (S.knife || 'combat')).toUpperCase() :
 const X_HASH = 'e99ca6495c4f655f8314f7af87026b5acca4978bed48525edfc8c05c16e5b8d3';
 const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false, aimbot: false, head: true, vis: true, trigger: false, esp: false, rapid: false, fly: false, superjump: false, tp: false };
 const XV = Object.assign({ fov: 30, smooth: 0.15 }, store.get('xv', {}));
-const RULES = { g: 1, s: 1, bots: true };
+const RULES = { g: 1, s: 1, bots: true, mode: 'ffa' };
 const LOCAL_RULES = Object.assign({}, RULES, store.get('rules', {}));
 Object.assign(RULES, LOCAL_RULES);
 let xUnlocked = store.get('xu', false) === true;
@@ -1088,7 +1119,7 @@ const SLIDE_MIN = 5.6 * K, SLIDE_END = 3.6 * K, SLIDE_BOOST = 2.3 * K, SLIDE_BOO
 const SLIDE_G = 22, SLIDE_FRIC = 2.8, SLIDE_FRIC2 = 0.15, SLIDE_STEER = 4.5;
 const CLIMB_TIME = 1.05, CLIMB_V0 = 6.4, CLIMB_V1 = 3.0;
 const WJ_OUT = 6.6 * K, WJ_UP = 7.0, WJ_SIDE = 4.0, WJ_MAX = 3;
-const BHOP_WIN = 0.12, BHOP_CAP = 17.5;
+const BHOP_WIN = 0.12, BHOP_CAP = Infinity; // plus de limite de vitesse
 const SG_WIN = 0.14, SG_SPEED = 15.5 * K;
 const TAP_MAX = 30, TAP_BUDGET = 160, PAD_V = 15, MANTLE_JUMP_V = 16.5;
 const MAX_SH = 75, MAX_HP = 100;
@@ -2741,6 +2772,7 @@ function spawnPlayer(random) {
   P.hp = MAX_HP; P.sh = MAX_SH; P.dead = false; P.sgT = 0; if (typeof grenFull === 'function') grenFull();
   for (let i = 0; i < WEAPONS.length; i++) WS.ammo[i] = WEAPONS[i].mag;
   WS.reloading = false;
+  if (RULES.mode === 'zombie' && NET.mode !== 'off' && typeof becomeZombie === 'function') { if (P.infect || P.zombie) { P.infect = false; P.zombie = false; becomeZombie(true); } }
 }
 const keys = {};
 const mouse = { left: false, right: false };
@@ -2918,7 +2950,7 @@ function groundMove(dt, wx, wz, hasWish, iz) {
   }
   P.sprinting = hasWish && iz > 0 && !P.crouch && !mouse.right && !mouse.left && (act('sprint') || S.autoSprint);
   if (hasWish) {
-    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1) * (WEAPONS[WS.cur].melee ? 1.1 : 1) * (AB.stimT > 0 ? STIM_MUL : 1) * RULES.s;
+    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1) * (WEAPONS[WS.cur].melee ? 1.1 : 1) * (AB.stimT > 0 ? STIM_MUL : 1) * RULES.s * (P.zombie ? 1.15 : 1);
     if (iz < 0) target = Math.min(target, WALK * 0.9);
     if (mouse.right) target = Math.min(target, WALK * 0.75);
     accelerate(wx, wz, target, GACCEL, dt);
@@ -2943,7 +2975,7 @@ function slideStep(dt, wx, wz, hasWish, crouchHeld) {
     v.x += (wx - dx * al) * SLIDE_STEER * dt; v.z += (wz - dz * al) * SLIDE_STEER * dt;
   }
   const s2 = Math.hypot(v.x, v.z);
-  const ns = Math.min(24, Math.max(0, sp - (SLIDE_FRIC + SLIDE_FRIC2 * sp) * dt));
+  const ns = Math.max(0, sp - (SLIDE_FRIC + SLIDE_FRIC2 * sp) * dt);
   v.x *= ns / s2; v.z *= ns / s2;
   if (!crouchHeld || ns < SLIDE_END) P.sliding = false;
 }
@@ -2994,7 +3026,7 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
     }
     // snap strafe facile : la trajectoire suit tes touches presque instantanément, sans perte de vitesse
     const sp2 = Math.hypot(v.x, v.z);
-    if (((X.snap && xUnlocked) || (PAD.active && S.padSnap)) && sp2 > 2) {
+    if (((X.snap && xUnlocked) || S.easySnap || (PAD.active && S.padSnap)) && sp2 > 2) {
       const a1 = Math.atan2(v.z, v.x), a2 = Math.atan2(wz, wx);
       let d = a2 - a1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
       const lim = Math.min(Math.abs(d), (X.snap && xUnlocked ? 900 : 520) * DEG * dt);
@@ -3006,8 +3038,6 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
       }
     }
   }
-  const s3 = Math.hypot(v.x, v.z);
-  if (s3 > 16 * K) { const k = 1 - 0.35 * dt; v.x *= k; v.z *= k; }
   if (fwdHeld) tryWall(fx, fz);
 }
 function onLand(vy) {
@@ -3519,6 +3549,7 @@ const SHOT_SOUNDS = [
 const sfx = {
   shot: snd((t, i, vol = 1) => SHOT_SOUNDS[i](t, vol, 0.94 + Math.random() * 0.12)),
   hit: snd((t, head) => { if (head) { tn(t, { f: 2500, dur: .08, type: 'square', gain: .05 }); tn(t + .012, { f: 3800, dur: .13, gain: .09 }); } else tn(t, { f: 1700, dur: .05, type: 'square', gain: .045 }); }),
+  zombie: snd(t => { tn(t, { f: 120, f2: 62, dur: .7, type: 'sawtooth', gain: .13 }); nz(t, { dur: .55, f: 340, q: 2.5, gain: .16 }); tn(t + .1, { f: 90, f2: 70, dur: .5, type: 'square', gain: .05 }); }),
   hurt: snd(t => { tn(t, { f: 160, f2: 90, dur: .15, type: 'sawtooth', gain: .12 }); nz(t, { dur: .12, f: 400, q: 1, gain: .2 }); }),
   shieldBreak: snd(t => { nz(t, { dur: .35, f: 5200, q: 2, gain: .25, f2: 1800 }); tn(t, { f: 1300, f2: 600, dur: .3, type: 'triangle', gain: .12 }); }),
   kill: snd(t => { tn(t, { f: 220, f2: 110, dur: .2, type: 'triangle', gain: .3 }); tn(t + .05, { f: 880, f2: 1320, dur: .2, gain: .12 }); }),
@@ -3900,6 +3931,28 @@ function playAnim(av, name, fade = 0.2, once = false) {
   av.cur = name;
 }
 const XCLIPS = {};
+// reciblage en repère monde des clips du X-Bot vers un autre squelette Mixamo :
+// les deux squelettes en T-pose, q_cible = D_parent⁻¹ × q_xbot × D_os, avec D = (monde X)⁻¹ × (monde cible)
+function retargetFromXbot(m, ownClips) {
+  const norm = n => String(n).replace(/^mixamorig\d*[:_]?/i, '').toLowerCase();
+  const bonesOf = root => { const r = {}; root.traverse(o => { if (o.isBone) r[norm(o.name)] = o; }); return r; };
+  const bx = bonesOf(MODELS.chars.xbot.scene), bn = bonesOf(m.scene);
+  const tp = (ownClips || []).find(c => /t-?pose/i.test(c.name));
+  if (tp) for (const tr of tp.tracks) if (tr.name.endsWith('.quaternion')) { const b = bn[norm(tr.name.slice(0, -11))]; if (b) b.quaternion.fromArray(tr.values, 0); }
+  MODELS.chars.xbot.scene.updateMatrixWorld(true); m.scene.updateMatrixWorld(true);
+  const wq = o => o.getWorldQuaternion(new THREE.Quaternion());
+  const D = {}, DP = {};
+  for (const name in bn) { const a = bx[name], b = bn[name]; if (!a || !a.parent || !b.parent) continue; D[name] = wq(a).invert().multiply(wq(b)); DP[name] = wq(a.parent).invert().multiply(wq(b.parent)).invert(); }
+  const qa = new THREE.Quaternion(), qb = new THREE.Quaternion();
+  return XCLIPS.list.map(c => new THREE.AnimationClip(c.name, c.duration, c.tracks.filter(tr => tr.name.endsWith('.quaternion')).map(tr => {
+    const key = norm(tr.name.slice(0, -11)), out = tr.clone();
+    if (!D[key]) return out;
+    out.name = bn[key].name + '.quaternion';
+    const v = out.values;
+    for (let i = 0; i < v.length; i += 4) { qa.fromArray(v, i); qb.copy(DP[key]).multiply(qa).multiply(D[key]); qb.toArray(v, i); }
+    return out;
+  })));
+}
 if (THREE.GLTFLoader) {
   const loader = new THREE.GLTFLoader();
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
@@ -3911,16 +3964,7 @@ if (THREE.GLTFLoader) {
   function novaReady() {
     if (!XCLIPS.list || !XCLIPS.nova || MODELS.chars.nova) return;
     const m = prepModel(XCLIPS.nova, CHARS.nova.h);
-    // reciblage : q_nova = repos_nova × repos_xbot⁻¹ × q_xbot, os par os
-    const rest = root => { const r = {}; root.traverse(o => { if (o.isBone) r[o.name] = o.quaternion.clone(); }); return r; };
-    const rx = rest(MODELS.chars.xbot.scene), rn = rest(m.scene), qa = new THREE.Quaternion(), qb = new THREE.Quaternion();
-    m.anims = XCLIPS.list.map(c => new THREE.AnimationClip(c.name, c.duration, c.tracks.filter(tr => tr.name.endsWith('.quaternion')).map(tr => {
-      const bone = tr.name.slice(0, -'.quaternion'.length), qx = rx[bone], qn = rn[bone];
-      const out = tr.clone(); if (!qx || !qn) return out;
-      const d = qn.clone().multiply(qx.clone().invert()), v = out.values;
-      for (let i = 0; i < v.length; i += 4) { qa.fromArray(v, i); qb.copy(d).multiply(qa); qb.toArray(v, i); }
-      return out;
-    })));
+    m.anims = retargetFromXbot(m, XCLIPS.nova.animations);
     MODELS.chars.nova = m; charLoaded();
   }
 }
@@ -4003,7 +4047,7 @@ function updateDummy(d, dt) {
     if (d.dieT > 2.2) g.visible = false;
     d.respawn -= dt;
     if (d.respawn <= 0) {
-      d.alive = true; d.hp = MAX_HP; d.sh = MAX_SH; g.visible = true; d.pop = 0; d.dieT = 0;
+      d.alive = true; d.hp = MAX_HP; d.sh = MAX_SH; g.visible = true; d.pop = 0; d.dieT = 0; if (d.home) d.base.copy(d.home);
       vis.obj.rotation.x = 0; if (!vis.mixer) vis.obj.position.y = 0;
       playAnim(vis, 'Idle', 0);
     }
@@ -4011,7 +4055,10 @@ function updateDummy(d, dt) {
   }
   d.t += dt;
   let ox = 0, oz = 0, moving = false, air = false;
-  if (d.mode === 'strafe') {
+  const zmb = RULES.mode === 'zombie' && NET.mode === 'off' && dummyZombie(d, dt);
+  if (!zmb && d.home) { d.base.copy(d.home); d.home = null; }
+  if (zmb) { moving = !P.dead; }
+  else if (d.mode === 'strafe') {
     d.turnT -= dt;
     if (d.turnT <= 0) { d.dir *= -1; d.turnT = 0.4 + Math.random() * 1.1; }
     d.off += d.dir * 4.2 * dt;
@@ -4036,7 +4083,7 @@ function updateDummy(d, dt) {
   if (vis.mixer) playAnim(vis, air ? 'Jump' : moving ? 'Running' : 'Idle', 0.2);
   d.pop = Math.min(1, d.pop + dt * 4); const s = easeOut(d.pop); g.scale.set(s, s, s);
   d.flash = Math.max(0, d.flash - dt * 8); d.shFlash = Math.max(0, d.shFlash - dt * 5);
-  if (d.scanned) setEmissive(vis, 0.55 + Math.sin(performance.now() / 120) * 0.2, 0xff3a20); else setEmissive(vis, d.flash * 0.6);
+  if (d.scanned) setEmissive(vis, 0.55 + Math.sin(performance.now() / 120) * 0.2, 0xff3a20); else if (zmb && d.flash < 0.3) setEmissive(vis, 0.4, 0x3aff2a); else setEmissive(vis, d.flash * 0.6);
   d.shell.material.opacity = d.shFlash * 0.4;
 }
 
@@ -4591,7 +4638,7 @@ function animSkin(vm, sk, t) {
 }
 const slotsEl = $('slots');
 WEAPONS.forEach((w, i) => { const s = document.createElement('span'); s.className = 'slot' + (i === 0 ? ' on' : ''); s.innerHTML = `<kbd>${i + 1}</kbd><span></span>`; slotsEl.appendChild(s); });
-function renderSlots() { Array.from(slotsEl.children).forEach((s, i) => { s.lastChild.textContent = wShort(i); s.hidden = i === 6 ? !SP.held : (S.loot && !OWN[i]); }); $('wname').textContent = wName(WS.cur); }
+function renderSlots() { Array.from(slotsEl.children).forEach((s, i) => { s.lastChild.textContent = wShort(i); s.hidden = i === 6 ? !SP.held || P.zombie : ((S.loot || P.zombie) && !OWN[i]); }); $('wname').textContent = wName(WS.cur); }
 renderSlots();
 
 const tracers = [], sparks = [];
@@ -4658,6 +4705,8 @@ function damageDummy(d, amount, part) {
 function damageRemote(rp, amount, part) {
   // prédiction locale : le joueur visé applique les vrais dégâts de son côté
   const st = rp.st; if (!st) return 'hit';
+  if (sameSide(rp)) return 'hit';
+  if (P.zombie && WS.cur === 5) amount *= 2;
   const toSh = Math.min(rp.pSh, amount); rp.pSh -= toSh;
   const toHp = Math.min(rp.pHp, amount - toSh); rp.pHp -= toHp;
   stats.dmg += toSh + toHp;
@@ -4875,7 +4924,8 @@ function startReload() {
 function swapTo(i) {
   if (i === WS.cur || i < 0 || i >= WEAPONS.length) return;
   if (i === 6 && !SP.held) return;
-  if (i < 6 && S.loot && !OWN[i]) return;
+  if (i < 6 && (S.loot || P.zombie) && !OWN[i]) return;
+  if (i === 6 && P.zombie) return;
   if (i !== 6 && WS.cur >= 0 && WS.cur < 6) SP.prev = WS.cur;
   WS.burstLeft = 0;
   WS.reloading = false; WS.cur = i; WS.swapT = 0.32; WS.bloom = 0; WS.inspT = 0; WS.swingT = 0;
@@ -5099,7 +5149,7 @@ function peerSupported() { return typeof window.Peer === 'function' && typeof wi
 function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint };
+  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: S.char, tc: S.tint, z: P.zombie ? 1 : 0 };
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (SPEC.on) { st.dead = true; st.spec = 1; }
   if (P.veh) { st.vh = P.veh.i + 1; st.vy = r2(P.veh.yaw); st.y = st.vy; st.a = P.veh.grounded ? 'ground' : 'air'; if (P.veh.type !== 'buggy') st.vq = [r2(P.veh.pitch), r2(P.veh.roll), r2(P.veh.tYaw), r2(P.veh.tPitch)]; }
@@ -5120,31 +5170,40 @@ function sendTo(id, m) {
   const c = NET.conns.get(id); if (c && c.open) c.send(m);
 }
 function broadcast(m, except) { for (const id of NET.players.keys()) if (id !== except) sendTo(id, m); }
-function hostRecv(from, m) {
-  const pl = NET.players.get(from);
-  if (m.k === 'hello') {
+function helloAccept(from, m, r) {
     if (NET.players.size >= 8) { sendTo(from, { k: 'full' }); return; }
     const used = new Set([...NET.players.values()].map(p => p.color));
     const color = COLORS.find(c => !used.has(c)) || COLORS[NET.players.size % COLORS.length];
     NET.players.set(from, { name: String(m.name || 'Joueur').slice(0, 14), color, kills: 0, deaths: 0, st: null });
     sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map });
     broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
-    if (isListedAdmin(m.name)) { NET.players.get(from).admin = true; sendTo(from, { k: 'admx', act: 'admin', arg: true }); }
+    if (isListedAdmin(m.name) && r.auth) { NET.players.get(from).admin = true; sendTo(from, { k: 'admx', act: 'admin', arg: true }); }
     lobbyShow();
-    setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); } }, 400);
+    setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); cmShare(from); for (const [o, c] of CM.host) if (o !== from) cmSendCached(from, o, c); if (RULES.mode === 'zombie' && MODE.active) sendTo(from, { k: 'zsync', t: MODE.zT }); } }, 400);
+}
+function hostRecv(from, m) {
+  const pl = NET.players.get(from);
+  if (m.k === 'hello') {
+    if (NET.players.has(from)) return;
+    if (from === NET.selfId) { helloAccept(from, m, { ok: true, auth: true }); return; }
+    const pend = NET.pendingLogin || (NET.pendingLogin = new Set());
+    if (pend.has(from)) return; pend.add(from);
+    loginCheck(m).then(r => { pend.delete(from); if (!NET.conns.has(from)) return; if (!r.ok) { accKick(from, r.why); return; } helloAccept(from, m, r); });
     return;
   }
   if (!pl) return;
   if (m.k === 'bye') {
     if (from === NET.selfId) return;
     const c = NET.conns.get(from);
-    NET.players.delete(from); NET.conns.delete(from); CS.host.delete(from);
+    NET.players.delete(from); NET.conns.delete(from); CS.host.delete(from); CM.host.delete(from);
     broadcast({ k: 'sys', t: 'leave', name: pl.name });
     try { if (c) c.close(); } catch (e) {}
     lobbyShow();
     return;
   }
   if (m.k === 'snd') { csHostRecv(from, m); return; }
+  if (m.k === 'mdl') { cmHostRecv(from, m); return; }
+  if (m.k === 'report') { hostReport(from, m.r || {}); return; }
   if (m.k === 'st') pl.st = m.s;
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, sp: typeof m.sp === 'string' ? m.sp.slice(0, 12) : undefined, bl: m.bl, a: m.a, e: m.e }, from);
   else if (m.k === 'adm') admHost(from, m);
@@ -5175,14 +5234,17 @@ function snapshot() {
   return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); return; }
   if (m.k === 'snd') { csClientRecv(m); return; }
+  if (m.k === 'mdl') { cmClientRecv(m); return; }
+  if (m.k === 'zround' || m.k === 'zend' || m.k === 'zsync') { clientRecvMode(m); return; }
+  if (m.k === 'reportx') { if (m.r && typeof m.r === 'object') { ACC.remoteReports.push({ at: +m.r.at || Date.now(), from: String(m.r.from || '?').slice(0, 14), target: String(m.r.target || '?').slice(0, 14), reason: REPORT_REASONS.includes(m.r.reason) ? m.r.reason : 'other', text: String(m.r.text || '').slice(0, 200) }); toast(t('rep.new', { name: String(m.r.target || '?').slice(0, 14) }), 4); if (ADM.open && ADM.tab === 'reports') admRender(); } return; }
   if (m.k === 'mapdef') { recvMapdef(m); return; }
   if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
   if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
   if (m.k === 'snap') {
     if (NET.mode === 'client' && m.map && m.map !== S.map) switchMap(m.map, true);
-    if (NET.mode === 'client' && m.rules) { RULES.g = clamp(+m.rules.g || 1, 0.3, 2); RULES.s = clamp(+m.rules.s || 1, 0.5, 2); RULES.bots = m.rules.bots !== false; }
+    if (NET.mode === 'client' && m.rules) { RULES.g = clamp(+m.rules.g || 1, 0.3, 2); RULES.s = clamp(+m.rules.s || 1, 0.5, 2); RULES.bots = m.rules.bots !== false; RULES.mode = ['ffa', 'teams', 'zombie'].includes(m.rules.mode) ? m.rules.mode : 'ffa'; }
     const seen = new Set();
     for (const [id, name, color, kills, deaths, st] of m.pl) {
       seen.add(id);
@@ -5230,7 +5292,7 @@ function clientRecv(m) {
   if (m.k === 'gren') { if (GREN_TYPES.includes(m.t) || GREN_IMPACT.includes(m.t)) { if (m.t === 'rocket') sfx.rocket(0.5); spawnGrenade(m.t, m.p, m.v, m.o, false); } return; }
   if (m.k === 'push') { if (!P.dead && !P.veh) { P.vel.x += m.v[0]; P.vel.y += m.v[1]; P.vel.z += m.v[2]; P.grounded = false; P.zip = null; } return; }
   if (m.k === 'portal') { SND_OWNER = m.o || null; spawnPortal(m.a, m.b); SND_OWNER = null; return; }
-  if (m.k === 'kick') { leaveNet(); setNetStatus(t('net.kicked'), 'err'); toast(t('net.kicked'), 4); if (playing) pause(); return; }
+  if (m.k === 'kick') { const why = ['banned', 'needpw', 'badpw'].includes(m.reason) ? t('login.' + m.reason) : t('net.kicked'); leaveNet(); setNetStatus(why, 'err'); toast(why, 5); if (playing) pause(); return; }
   if (m.k === 'kf') {
     const nameOf = id => id === NET.selfId ? S.name : (remotes.get(id) ? remotes.get(id).name : '?');
     killfeed(nameOf(m.by), wLabel(m.w | 0), nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
@@ -5244,6 +5306,7 @@ function clientRecv(m) {
 }
 function applyHit(m) {
   if (P.dead || NET.mode === 'off' || X.god || SPEC.on) return;
+  { const r0 = remotes.get(m.from); if (r0 && sameSide(r0)) return; }
   const dmg = Math.max(0, Math.min(400, +m.dmg || 0)) * (P.veh && P.veh.type === 'tank' ? 0.4 : 1);
   const shBefore = P.sh;
   const toSh = Math.min(P.sh, dmg); P.sh -= toSh;
@@ -5260,6 +5323,8 @@ function applyHit(m) {
     // tuée à la hache Morgane : tenue Morgane jusqu'à la prochaine mort (3 min max)
     P.mgT = m.kt === 'morgane' ? 180 : 0;
     if (P.mgT) { toast(t('mg.you'), 4); sfx.outfit(); }
+    // mode zombies : un humain tué par un zombie revient en zombie
+    if (RULES.mode === 'zombie' && !P.zombie && rp && rp.st && rp.st.z) { P.infect = true; $('deathBy').textContent = t('mode.infected'); }
   }
 }
 // 8 = lave, 9 = buggy (dégâts qui ne viennent pas d'une arme)
@@ -5315,7 +5380,8 @@ function addRemote(id, name, color) {
   return rp;
 }
 function attachChar(rp) {
-  const ch = CHARS[rp.ch] ? rp.ch : 'soldier';
+  const uk = 'u:' + rp.id;
+  const ch = rp.ch === 'custom' ? (CHARS[uk] && MODELS.chars[uk] ? uk : 'soldier') : CHARS[rp.ch] ? rp.ch : 'soldier';
   const model = MODELS.chars[ch] || MODELS.chars.soldier;
   if (!model) return;
   const used = MODELS.chars[ch] ? ch : 'soldier';
@@ -5339,7 +5405,7 @@ function removeRemote(id) {
 /* ================= Manette (API Gamepad, disposition standard Xbox / PlayStation) ================= */
 const PAD = { active: false, act: {}, prev: [], mx: 0, my: 0, lx: 0, ly: 0, id: '' };
 S.padSens = clamp(+store.get('padSens', 1), 0.3, 3); S.padAim = clamp(+store.get('padAim', 0.6), 0, 1);
-S.padSnap = store.get('padSnap', true) !== false; S.padInvert = store.get('padInvert', false) === true; S.snapTap = store.get('snapTap', true) !== false;
+S.padSnap = store.get('padSnap', true) !== false; S.padInvert = store.get('padInvert', false) === true; S.snapTap = store.get('snapTap', true) !== false; S.easySnap = store.get('easySnap2', true) !== false;
 // boutons → actions maintenues (A=0, B=1, X=2, Y=3, LB=4, RB=5, LT=6, RT=7, Select=8, Start=9, L3=10, R3=11, croix=12..15)
 const PAD_HOLD = { 0: 'jump', 1: 'crouch', 6: 'ads', 7: 'fire', 10: 'sprint', 8: 'board' };
 const PAD_PRESS = { 0: 'jump', 1: 'crouch', 3: 'next', 4: 'tactical', 5: 'ultimate', 11: 'w6', 12: 'emote', 13: 'grenade', 14: 'prev', 15: 'grenType' };
@@ -6465,6 +6531,7 @@ function buildPickups(mapId) {
   }
 }
 function nearPickup() {
+  if (P.zombie) return null;
   let best = null, bd = 1.9;
   for (const p of PICKS) { if (p.taken) continue; const d = Math.hypot(p.pos.x - P.pos.x, p.pos.z - P.pos.z); if (d < bd && Math.abs(p.pos.y - P.pos.y) < 2.4) { bd = d; best = p; } }
   return best;
@@ -6497,7 +6564,7 @@ function updatePickups(dt) {
   if (P.dead && SP.held) dropSpecial();
 }
 /* ================= Coffres : on part au pistolet, le reste se trouve dans les coffres ================= */
-const owns = i => i === 6 ? !!SP.held : !S.loot || OWN[i];
+const owns = i => i === 6 ? !!SP.held && !P.zombie : !(S.loot || P.zombie) || OWN[i];
 function resetLoadout() {
   for (let i = 0; i < 6; i++) OWN[i] = i === 4;
   WS.ammo = WEAPONS.map(w => w.mag); WS.ammo[6] = 0;
@@ -6561,6 +6628,7 @@ function buildChests(mapId) {
   }
 }
 function nearChest() {
+  if (P.zombie) return null;
   let best = null, bd = 2.2;
   for (const c of CHESTS) { if (c.open) continue; const d = Math.hypot(c.pos.x - P.pos.x, c.pos.z - P.pos.z); if (d < bd && Math.abs(c.pos.y - P.pos.y) < 2) { bd = d; best = c; } }
   return best;
@@ -7538,7 +7606,8 @@ function updateRemotes(dt) {
       }
       rp.flash = Math.max(0, rp.flash - dt * 8);
       rp.pingT = Math.max(0, rp.pingT - dt);
-      setEmissive(rp.vis, rp.flash * 0.5);
+      { const zc = RULES.mode === 'zombie' && st.z, tm = teamOf(rp.id); if (rp.flash < 0.2 && (zc || tm >= 0)) setEmissive(rp.vis, zc ? 0.42 : 0.22, zc ? 0x3aff2a : TEAM_COL[tm]); else setEmissive(rp.vis, rp.flash * 0.5); }
+      { const tm = teamOf(rp.id), key = (RULES.mode === 'zombie' && st.z ? 'z' : '') + tm; if (rp.tagK !== key) { rp.tagK = key; rp.tag.classList.toggle('zmb', key[0] === 'z'); rp.tag.lastChild.style.background = '#' + (key[0] === 'z' ? 0x3aff2a : tm >= 0 ? TEAM_COL[tm] : rp.color).toString(16).padStart(6, '0'); } }
     }
     // étiquette de nom, masquée derrière les murs
     rp.tag.hidden = true;
@@ -7643,7 +7712,7 @@ function joinGame(code) {
     conn.on('open', () => {
       clearTimeout(timeout);
       NET.mode = 'client'; mapSel.disabled = true;
-      conn.send({ k: 'hello', name: S.name });
+      conn.send({ k: 'hello', name: S.name, pw: $('pass').value || '' });
       onlineReady(code);
       setNetStatus(t('net.connected', { code }), 'ok');
     });
@@ -8393,6 +8462,7 @@ function syncAdmin() {
 function setRule(k, v) {
   if (!admCanRule()) return;
   RULES[k] = v; Object.assign(LOCAL_RULES, RULES); store.set('rules', LOCAL_RULES); syncAdmin();
+  if (k === 'mode') { MODE.active = false; MODE.ended = false; MODE.checkT = 0.5; if ($('modeSel')) $('modeSel').value = v; toast(t('mode.set', { m: t('mode.' + v) }), 2.5); if (NET.mode === 'host') broadcast({ k: 'sys', msg: t('mode.set', { m: t('mode.' + v) }) }, NET.selfId); }
 }
 admEls.g.addEventListener('input', () => setRule('g', +admEls.g.value));
 admEls.s.addEventListener('input', () => setRule('s', +admEls.s.value));
@@ -8431,7 +8501,7 @@ function admHost(from, m) {
   if (m.act === 'kick') { if (!tgt || m.to === NET.selfId) return; sendTo(m.to, { k: 'kick' }); setTimeout(() => { const c = NET.conns.get(m.to); try { c && c.close(); } catch (e) {} }, 300); NET.players.delete(m.to); broadcast({ k: 'sys', t: 'leave', name: tgt.name }); return; }
   if (m.act === 'grant') { if (tgt) tgt.admin = !!m.arg; if (m.to === NET.selfId) ADM.granted = !!m.arg; else sendTo(m.to, { k: 'admx', act: 'admin', arg: !!m.arg }); return; }
   if (m.act === 'map') { if (MAPS[m.arg]) switchMap(m.arg, false); return; }
-  if (m.act === 'rule') { if (m.arg && ['g', 's', 'bots'].includes(m.arg.k)) setRule(m.arg.k, m.arg.v); return; }
+  if (m.act === 'rule') { if (m.arg && ['g', 's', 'bots'].includes(m.arg.k)) setRule(m.arg.k, m.arg.v); else if (m.arg && m.arg.k === 'mode' && ['ffa', 'teams', 'zombie'].includes(m.arg.v)) setRule('mode', m.arg.v); return; }
   if (m.act === 'say') { broadcast({ k: 'sys', msg: '[ADMIN] ' + String(m.arg).slice(0, 80) }); return; }
   if (m.act === 'all') { for (const id of NET.players.keys()) if (id === NET.selfId) admApply(m.arg.act, m.arg.arg); else sendTo(id, { k: 'admx', act: m.arg.act, arg: m.arg.arg }); return; }
   if (!tgt) return;
@@ -8470,7 +8540,7 @@ function admBtn(label, fn, cls = '') { const b = document.createElement('button'
 function admRender() {
   if (!ADM.open) return;
   const body = $('admBody'); body.replaceChildren();
-  for (const b of admPanel.querySelectorAll('.admtabs button')) { b.setAttribute('aria-selected', String(b.dataset.t === ADM.tab)); b.hidden = (b.dataset.t === 'cheats' || b.dataset.t === 'access') && !xUnlocked; }
+  for (const b of admPanel.querySelectorAll('.admtabs button')) { b.setAttribute('aria-selected', String(b.dataset.t === ADM.tab)); b.hidden = (b.dataset.t === 'cheats' || b.dataset.t === 'access' || b.dataset.t === 'accounts') && !xUnlocked; }
   $('admWho').textContent = xUnlocked ? t('adm.owner') : t('adm.adminOf');
   if (ADM.tab === 'players') {
     const tbl = document.createElement('div'); tbl.className = 'admlist';
@@ -8505,6 +8575,7 @@ function admRender() {
     const rule = (k, v) => { if (host) setRule(k, v); else netSend({ k: 'adm', act: 'rule', arg: { k, v } }); };
     const rng = (key, k, min, max) => { const i = document.createElement('input'); i.type = 'range'; i.min = min; i.max = max; i.step = 0.05; i.value = RULES[k]; const o = document.createElement('output'); o.textContent = '×' + (+RULES[k]).toFixed(2); i.addEventListener('input', () => { o.textContent = '×' + (+i.value).toFixed(2); rule(k, +i.value); }); row(Object.assign(document.createElement('span'), { textContent: t(key) }), i, o); };
     rng('adm.gravity', 'g', 0.3, 2); rng('adm.speed', 's', 0.5, 2);
+    { const md = document.createElement('select'); md.className = 'admsel'; md.innerHTML = ['ffa', 'teams', 'zombie'].map(v => `<option value="${v}"${v === RULES.mode ? ' selected' : ''}>${escapeHtml(t('mode.' + v))}</option>`).join(''); md.addEventListener('change', () => rule('mode', md.value)); row(Object.assign(document.createElement('span'), { textContent: t('mode.label') }), md); }
     const ck = (key, val, fn) => { const l = document.createElement('label'); l.className = 'check'; const i = document.createElement('input'); i.type = 'checkbox'; i.checked = val; i.addEventListener('change', () => fn(i.checked)); l.append(i, ' ' + t(key)); return l; };
     row(ck('adm.bots', RULES.bots, v => rule('bots', v)), ck('set.loot', S.loot, v => { S.loot = v; store.set('loot', v); $('lootOn').checked = v; if (v) resetLoadout(); else renderSlots(); }));
     const vs = document.createElement('select'); vs.className = 'admsel'; vs.innerHTML = ['buggy', 'tank', 'heli', 'plane', 'jet', 'boat'].map(v => `<option value="${v}">${v}</option>`).join('');
@@ -8522,6 +8593,8 @@ function admRender() {
       l.append(i, ' ' + t('adm.x.' + k)); grid.append(l);
     }
     body.append(grid);
+  } else if (ADM.tab === 'accounts') { renderAccounts(body);
+  } else if (ADM.tab === 'reports') { renderReports(body);
   } else if (ADM.tab === 'access') {
     body.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: t('adm.accessNote') }));
     const add = document.createElement('div'); add.className = 'admrow';
@@ -8557,6 +8630,293 @@ function addVehicleAt(type, p, yaw) {
   scene.add(v.g); VEHICLES.push(v); vehHitboxes(v); placeVehicleMesh(v, v.pos, v.yaw, 1); rebuildShootable();
 }
 function refillChests() { for (const c of CHESTS) { c.open = false; c.t = 0; c.glow.visible = true; } }
+/* ================= Modes de jeu : chacun pour soi, 2 équipes, zombies ================= */
+const MODE = { zT: 0, active: false, ended: false, endT: 0, checkT: 0 };
+const TEAM_COL = [0x4a8cff, 0xff4a4a];
+// équipe : rang de l'identifiant parmi tous les joueurs connus, pair = bleus, impair = rouges
+function teamOf(id) {
+  if (RULES.mode !== 'teams' || NET.mode === 'off') return -1;
+  const ids = [NET.selfId, ...remotes.keys()].filter(Boolean).sort();
+  return ids.indexOf(id) % 2;
+}
+const sameTeam = id => RULES.mode === 'teams' && NET.mode !== 'off' && teamOf(id) === teamOf(NET.selfId);
+function modeHud() {
+  const el = $('modeBar');
+  let txt = '';
+  if (RULES.mode === 'teams' && NET.mode !== 'off') {
+    const me = teamOf(NET.selfId), sc = [0, 0];
+    for (const row of NET.board || []) { const tm = teamOf(row[0]); if (tm >= 0) sc[tm] += row[3] || 0; }
+    txt = `<b style="color:#${TEAM_COL[me].toString(16).padStart(6, '0')}">${t(me ? 'mode.red' : 'mode.blue')}</b>` + ` <span>${t('mode.blue')} ${sc[0]} · ${sc[1]} ${t('mode.red')}</span>`;
+  } else if (RULES.mode === 'zombie') {
+    const left = Math.max(0, Math.ceil(MODE.zT || 0));
+    txt = (P.zombie ? `<b style="color:#7aff5a">${t('mode.youZombie')}</b>` : `<b>${t('mode.youHuman')}</b>`) + (NET.mode !== 'off' ? ` <span>${Math.floor(left / 60)}:${String(left % 60).padStart(2, '0')}</span>` : ` <span>${t('mode.survive')}</span>`);
+  }
+  el.hidden = !txt || !playing; if (txt && el.dataset.h !== txt) { el.dataset.h = txt; el.innerHTML = txt; }
+}
+function becomeZombie(on) {
+  if (!on && !P.zombie) return;
+  P.zombie = on;
+  if (on) {
+    for (let i = 0; i < 6; i++) OWN[i] = i === 5;
+    if (SP.held) clearSpecial();
+    WS.cur = -1; swapTo(5); P.hp = 150; renderSlots();
+    $('zombieFx').hidden = false; sfx.zombie();
+  } else {
+    $('zombieFx').hidden = true;
+    if (S.loot) resetLoadout(); else { for (let i = 0; i < 6; i++) OWN[i] = true; renderSlots(); }
+  }
+}
+// l'hôte lance une manche : un joueur tiré au sort devient le premier zombie
+function zombieRoundStart() {
+  if (NET.mode !== 'host' || RULES.mode !== 'zombie') return;
+  const ids = [...NET.players.keys()];
+  const m = { k: 'zround', z: ids[(Math.random() * ids.length) | 0], t: 180 };
+  broadcast(m, NET.selfId); clientRecvMode(m);
+}
+function clientRecvMode(m) {
+  if (m.k === 'zround' || m.k === 'zsync') RULES.mode = 'zombie'; // la manche arrive parfois avant la mise à jour des règles
+  if (m.k === 'zround') {
+    MODE.zT = +m.t || 180; MODE.ended = false; MODE.active = true;
+    becomeZombie(false); P.infect = m.z === NET.selfId; spawnPlayer(true); hudEls.death.hidden = true;
+    toast(m.z === NET.selfId ? t('mode.firstZombie') : t('mode.roundStart'), 3);
+  } else if (m.k === 'zsync') { MODE.zT = +m.t || 0; MODE.active = true; MODE.ended = false; }
+  else if (m.k === 'zend') {
+    MODE.ended = true; MODE.active = false; MODE.endT = 7;
+    const txt = t(m.w === 'z' ? 'mode.zWin' : 'mode.hWin'); toast(txt, 4); feed(txt, '', 'gold');
+  }
+}
+function modeTick(dt) {
+  modeHud();
+  if (RULES.mode !== 'zombie') { becomeZombie(false); MODE.active = false; MODE.ended = false; P.infect = false; return; }
+  if (NET.mode === 'off') { becomeZombie(false); return; }
+  if (MODE.active) MODE.zT -= dt;
+  if (NET.mode !== 'host') return;
+  // l'hôte surveille la manche : plus d'humains → victoire des zombies ; temps écoulé → victoire des humains
+  if ((MODE.checkT -= dt) > 0) return; MODE.checkT = 1;
+  let humans = P.zombie ? 0 : 1, zombies = 1 - humans, total = 1;
+  for (const rp of remotes.values()) { if (!rp.st) continue; total++; if (rp.st.z) zombies++; else humans++; }
+  if (MODE.ended) { MODE.endT -= 1; if (MODE.endT <= 0) zombieRoundStart(); return; }
+  if (!MODE.active) { if (total >= 2) zombieRoundStart(); return; }
+  if (total >= 2 && zombies === 0) { zombieRoundStart(); return; }
+  if (humans === 0 || MODE.zT <= 0) { const m = { k: 'zend', w: humans === 0 ? 'z' : 'h' }; broadcast(m, NET.selfId); clientRecvMode(m); }
+}
+// zombies en solo : les robots courent sur toi et frappent au corps à corps
+function dummyZombie(d, dt) {
+  if (!d.home) d.home = d.base.clone();
+  if (P.dead || SPEC.on) return true;
+  const dx = P.pos.x - d.base.x, dz = P.pos.z - d.base.z, dist = Math.hypot(dx, dz);
+  if (dist > 1.3) { const sp = 4.6 * dt / dist; d.base.x += dx * sp; d.base.z += dz * sp; }
+  const gy = TERRAIN ? terrainH(d.base.x, d.base.z) : groundAtPoint(d.base.x, d.base.z, d.base.y + 1.2);
+  d.base.y = Math.max(gy, 0);
+  d.atkT = (d.atkT || 0) - dt;
+  if (dist < 1.7 && Math.abs(P.pos.y - d.base.y) < 2 && d.atkT <= 0) { d.atkT = 0.9; hurtSelf(20, 5); sfx.katana(); camShake(0.3); }
+  return true;
+}
+
+/* ================= Comptes (connexion) et signalements — gérés par l'hôte ================= */
+// les mots de passe ne sont jamais gardés en clair : seulement une empreinte SHA-256 salée
+const ACC = { list: store.get('accounts', {}) || {}, banned: store.get('banned', {}) || {}, reports: store.get('reports', []) || [], require: store.get('reqLogin', false) === true, remoteReports: [] };
+const accSave = () => { store.set('accounts', ACC.list); store.set('banned', ACC.banned); store.set('reports', ACC.reports.slice(-200)); store.set('reqLogin', ACC.require); };
+async function sha256(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join(''); }
+const newSalt = () => Array.from(crypto.getRandomValues(new Uint8Array(12))).map(x => x.toString(16).padStart(2, '0')).join('');
+async function accSetPw(key, pw) { const a = ACC.list[key] || (ACC.list[key] = { created: Date.now() }); a.salt = newSalt(); a.h = await sha256(a.salt + '|' + pw); accSave(); }
+// vérifie le pseudo et le mot de passe d'un joueur qui arrive ; renvoie { ok, auth } ou { ok: false, why }
+async function loginCheck(m) {
+  const name = String(m.name || 'Joueur').slice(0, 14), key = name.toLowerCase(), pw = typeof m.pw === 'string' ? m.pw.slice(0, 64) : '';
+  if (ACC.banned[key]) return { ok: false, why: 'banned' };
+  const a = ACC.list[key];
+  if (!a) {
+    if (!pw) return ACC.require ? { ok: false, why: 'needpw' } : { ok: true, auth: false };
+    await accSetPw(key, pw); ACC.list[key].last = Date.now(); accSave(); return { ok: true, auth: true, created: true };
+  }
+  if (!a.h) { if (!pw) return { ok: false, why: 'needpw' }; await accSetPw(key, pw); ACC.list[key].last = Date.now(); accSave(); return { ok: true, auth: true }; }
+  if (!pw) return { ok: false, why: 'needpw' };
+  if (await sha256(a.salt + '|' + pw) !== a.h) return { ok: false, why: 'badpw' };
+  a.last = Date.now(); accSave(); return { ok: true, auth: true };
+}
+function accKick(id, why) { sendTo(id, { k: 'kick', reason: why }); setTimeout(() => { const c = NET.conns.get(id); try { c && c.close(); } catch (e) {} }, 300); }
+/* ---------- signalements ---------- */
+const REPORT_REASONS = ['cheat', 'insult', 'spam', 'afk', 'other'];
+function sendReport(targetName, reason, text) {
+  const r = { at: Date.now(), from: S.name, target: String(targetName).slice(0, 14), reason: REPORT_REASONS.includes(reason) ? reason : 'other', text: String(text || '').slice(0, 200), map: S.map };
+  if (NET.mode === 'host') hostReport(NET.selfId, r); else if (NET.mode === 'client') netSend({ k: 'report', r });
+  toast(t('rep.sent'), 3);
+}
+function hostReport(from, r) {
+  const pl = NET.players.get(from);
+  const rep = { at: Date.now(), from: pl ? pl.name : String(r.from || '?').slice(0, 14), target: String(r.target || '').slice(0, 14), reason: REPORT_REASONS.includes(r.reason) ? r.reason : 'other', text: String(r.text || '').slice(0, 200), map: S.map };
+  ACC.reports.push(rep); accSave();
+  if (xUnlocked || ADM.granted) toast(t('rep.new', { name: rep.target }), 4);
+  for (const [id, p] of NET.players) if (id !== NET.selfId && p.admin) sendTo(id, { k: 'reportx', r: rep });
+}
+function renderAccounts(body) {
+  body.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: t('acc.note') }));
+  const top = document.createElement('div'); top.className = 'admrow';
+  const l = document.createElement('label'); l.className = 'check'; const req = document.createElement('input'); req.type = 'checkbox'; req.checked = ACC.require;
+  req.addEventListener('change', () => { ACC.require = req.checked; accSave(); }); l.append(req, ' ' + t('acc.require')); top.append(l);
+  body.append(top);
+  const online = new Map(); if (NET.mode === 'host') for (const [id, p] of NET.players) online.set(p.name.toLowerCase(), id);
+  const keys = Object.keys(ACC.list).sort();
+  if (!keys.length) body.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: t('acc.none') }));
+  const fmt = ts => ts ? new Date(ts).toLocaleString() : '—';
+  for (const k of keys) {
+    const a = ACC.list[k], r = document.createElement('div'); r.className = 'admrow pl';
+    r.append(Object.assign(document.createElement('b'), { textContent: k }), Object.assign(document.createElement('em'), { textContent: (online.has(k) ? t('adm.online') : t('adm.offline')) + ' · ' + t('acc.last') + ' ' + fmt(a.last) }),
+      Object.assign(document.createElement('em'), { textContent: a.h ? t('acc.pwSet') : t('acc.pwReset') }));
+    const pw = document.createElement('input'); pw.type = 'text'; pw.placeholder = t('acc.newPw'); pw.className = 'admin-in'; pw.style.minWidth = '130px';
+    r.append(admBtn(t('acc.reset'), () => { a.h = null; a.salt = null; accSave(); renderAccTab(); }),
+      pw, admBtn(t('acc.setPw'), async () => { if (!pw.value) return; await accSetPw(k, pw.value); toast(t('acc.pwChanged', { name: k }), 3); renderAccTab(); }),
+      admBtn(ACC.banned[k] ? t('acc.unban') : t('acc.ban'), () => { if (ACC.banned[k]) delete ACC.banned[k]; else { ACC.banned[k] = true; if (online.has(k)) accKick(online.get(k), 'banned'); } accSave(); renderAccTab(); }, ACC.banned[k] ? 'on warn' : 'warn'),
+      admBtn('✕', () => { delete ACC.list[k]; accSave(); renderAccTab(); }));
+    body.append(r);
+  }
+  const bans = Object.keys(ACC.banned).filter(k => !ACC.list[k]);
+  for (const k of bans) { const r = document.createElement('div'); r.className = 'admrow pl'; r.append(Object.assign(document.createElement('b'), { textContent: k }), Object.assign(document.createElement('em'), { textContent: t('acc.banned') }), admBtn(t('acc.unban'), () => { delete ACC.banned[k]; accSave(); renderAccTab(); })); body.append(r); }
+}
+function renderReports(body) {
+  const all = ACC.reports.concat(ACC.remoteReports).sort((a, b) => b.at - a.at);
+  if (!all.length) { body.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: t('rep.none') })); return; }
+  const online = new Map(); if (NET.mode === 'host') for (const [id, p] of NET.players) online.set(p.name.toLowerCase(), id);
+  for (const r of all) {
+    const row = document.createElement('div'); row.className = 'admrow pl';
+    row.append(Object.assign(document.createElement('b'), { textContent: r.target }), Object.assign(document.createElement('em'), { textContent: t('rep.r.' + r.reason) + ' · ' + t('rep.by') + ' ' + r.from + ' · ' + new Date(r.at).toLocaleString() }));
+    if (r.text) row.append(Object.assign(document.createElement('span'), { textContent: '« ' + r.text + ' »' }));
+    const key = r.target.toLowerCase();
+    if (online.has(key)) row.append(admBtn(t('adm.kick'), () => accKick(online.get(key), 'kick'), 'warn'));
+    if (xUnlocked) row.append(admBtn(ACC.banned[key] ? t('acc.unban') : t('acc.ban'), () => { if (ACC.banned[key]) delete ACC.banned[key]; else { ACC.banned[key] = true; if (online.has(key)) accKick(online.get(key), 'banned'); } accSave(); admRender(); }, 'warn'));
+    row.append(admBtn('✕', () => { let i = ACC.reports.indexOf(r); if (i >= 0) ACC.reports.splice(i, 1); i = ACC.remoteReports.indexOf(r); if (i >= 0) ACC.remoteReports.splice(i, 1); accSave(); admRender(); }));
+    body.append(row);
+  }
+}
+function renderAccTab() { if (ADM.open && ADM.tab === 'accounts') admRender(); }
+
+/* ================= Mon propre modèle 3D : import .glb, partagé avec les autres joueurs ================= */
+const CM = { b64: null, name: '', flip: false, pend: new Map(), host: new Map(), MAX: 6 * 1024 * 1024, CHUNK: 15000 };
+const cmDB = () => new Promise((res, rej) => { const r = indexedDB.open('velocite-models', 1); r.onupgradeneeded = () => r.result.createObjectStore('m'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+async function cmSave(v) { try { const db = await cmDB(); db.transaction('m', 'readwrite').objectStore('m').put(v, 'mine'); } catch (e) {} }
+async function cmLoadSaved() { try { const db = await cmDB(); return await new Promise(res => { const q = db.transaction('m').objectStore('m').get('mine'); q.onsuccess = () => res(q.result || null); q.onerror = () => res(null); }); } catch (e) { return null; } }
+const b64ToBuf = b64 => { const bin = atob(b64.slice(b64.indexOf(',') + 1)); const u = new Uint8Array(bin.length); for (let i = 0; i < bin.length; i++) u[i] = bin.charCodeAt(i); return u.buffer; };
+// construit un perso jouable à partir d'un glTF : ses propres clips idle/walk/run, sinon ceux du X-Bot s'il a un squelette Mixamo
+function cmBuild(gltf, key, flip) {
+  const m = prepModel(gltf, 1.8);
+  const names = []; gltf.scene.traverse(o => { if (o.isBone) names.push(o.name); });
+  const pick = re => (gltf.animations.find(c => re.test(c.name)) || {}).name;
+  let anim = { idle: pick(/idle|stand/i), walk: pick(/walk/i), run: pick(/run|sprint/i) };
+  const mixamo = names.some(n => /mixamorig/i.test(n));
+  if ((!anim.idle || !anim.run) && mixamo && XCLIPS.list && MODELS.chars.xbot) { m.anims = retargetFromXbot(m, gltf.animations); anim = { idle: 'idle', walk: 'walk', run: 'run' }; }
+  anim.idle = anim.idle || '__none'; anim.walk = anim.walk || anim.idle; anim.run = anim.run || anim.walk;
+  CHARS[key] = { file: null, h: 1.8, yaw: (mixamo ? Math.PI : 0) + (flip ? Math.PI : 0), anim, hand: /RightHand$|hand[._ ]?r$|Hand_R$|right_?hand/i, custom: true };
+  MODELS.chars[key] = m;
+}
+function cmParse(b64, key, flip) {
+  return new Promise((res, rej) => { try { new THREE.GLTFLoader().parse(b64ToBuf(b64), '', g => { cmBuild(g, key, flip); res(); }, rej); } catch (e) { rej(e); } });
+}
+async function cmImport(file) {
+  if (!file) return;
+  if (file.size > CM.MAX * 0.74) { toast(t('cm.tooBig'), 4); return; }
+  const b64 = await new Promise(res => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(file); });
+  try { await cmParse(b64, 'custom', CM.flip); } catch (e) { toast(t('cm.bad'), 4); return; }
+  CM.b64 = b64; CM.name = file.name.slice(0, 40); cmSave({ b64, name: CM.name, flip: CM.flip });
+  S.char = 'custom'; store.set('char', 'custom'); cmSyncUi(); refreshPreview(); renderClassInfo(); SELF.key = '';
+  toast(t('cm.loaded', { name: CM.name }), 3); cmShare();
+}
+function cmSyncUi() {
+  const o = $('charSel').querySelector('option[value="custom"]');
+  if (o) { o.hidden = !CM.b64; o.textContent = t('cm.option') + (CM.name ? ' (' + CM.name + ')' : ''); }
+  $('charSel').value = S.char; $('cmInfo').textContent = CM.b64 ? CM.name : t('cm.none'); $('cmFlip').checked = CM.flip;
+}
+// envoi en morceaux : l'hôte relaie et garde une copie pour ceux qui arrivent plus tard
+function cmShare(toId) {
+  if (!CM.b64 || NET.mode === 'off') return;
+  const d = CM.b64, n = Math.ceil(d.length / CM.CHUNK), id = Math.random().toString(36).slice(2, 8);
+  for (let i = 0; i < n; i++) { const m = { k: 'mdl', id, i, n, f: CM.flip ? 1 : 0, d: d.slice(i * CM.CHUNK, (i + 1) * CM.CHUNK) }; if (NET.mode === 'host') { if (toId) sendTo(toId, Object.assign({ o: NET.selfId }, m)); else broadcast(Object.assign({ o: NET.selfId }, m), NET.selfId); } else netSend(m); }
+}
+function cmSendCached(toId, owner, r) {
+  const d = r.b64, n = Math.ceil(d.length / CM.CHUNK), id = Math.random().toString(36).slice(2, 8);
+  for (let i = 0; i < n; i++) sendTo(toId, { k: 'mdl', o: owner, id, i, n, f: r.f ? 1 : 0, d: d.slice(i * CM.CHUNK, (i + 1) * CM.CHUNK) });
+}
+function cmAssemble(owner, m) {
+  if (typeof m.d !== 'string' || !(m.n >= 1 && m.n <= 600) || !(m.i >= 0 && m.i < m.n)) return null;
+  let a = CM.pend.get(owner); if (!a || a.id !== m.id) { a = { id: m.id, n: m.n, parts: [], got: 0, f: m.f }; CM.pend.set(owner, a); }
+  if (a.parts[m.i] === undefined) { a.parts[m.i] = m.d; a.got++; }
+  if (a.got < a.n) return null;
+  CM.pend.delete(owner); const full = a.parts.join('');
+  return full.length <= CM.MAX && full.startsWith('data:') ? { b64: full, f: a.f } : null;
+}
+function cmHostRecv(from, m) {
+  broadcast(Object.assign({}, m, { o: from }), from);
+  const r = cmAssemble('h' + from, m); if (!r) return;
+  CM.host.set(from, r); cmGot(from, r);
+}
+function cmClientRecv(m) { const r = cmAssemble(m.o, m); if (r) cmGot(m.o, r); }
+async function cmGot(owner, r) {
+  if (owner === NET.selfId) return;
+  try { await cmParse(r.b64, 'u:' + owner, !!r.f); } catch (e) { return; }
+  const rp = remotes.get(owner); if (rp) attachChar(rp);
+}
+// au démarrage : on recharge le modèle enregistré
+cmLoadSaved().then(async v => {
+  if (!v || !v.b64) { if (S.char === 'custom') S.char = 'soldier'; cmSyncUi(); return; }
+  CM.b64 = v.b64; CM.name = v.name || 'modèle'; CM.flip = !!v.flip;
+  const tryBuild = async () => { if (!XCLIPS.list) { setTimeout(tryBuild, 400); return; } try { await cmParse(CM.b64, 'custom', CM.flip); } catch (e) {} cmSyncUi(); if (S.char === 'custom') { refreshPreview(); SELF.key = ''; } };
+  tryBuild();
+});
+$('cmFile').addEventListener('change', e => { cmImport(e.target.files[0]); e.target.value = ''; });
+$('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; if (CM.b64) { await cmParse(CM.b64, 'custom', CM.flip); cmSave({ b64: CM.b64, name: CM.name, flip: CM.flip }); refreshPreview(); SELF.key = ''; cmShare(); } });
+$('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
+
+/* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
+const GAME_VERSION = '2026.10.31';
+const CHANGES = {
+  fr: ['Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+};
+const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
+const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
+async function checkUpdate() {
+  try {
+    const r = await fetch(UPD.url + '?t=' + Date.now(), { cache: 'no-store' }); if (!r.ok) return;
+    const j = await r.json(); const v = String(j.v || '');
+    if (!v || v <= GAME_VERSION || UPD.shown === v) return;
+    UPD.shown = v;
+    const bar = $('updBar'); bar.hidden = false;
+    $('updTxt').textContent = t('upd.new', { v });
+    const notes = (j.notes && (j.notes[LANG] || j.notes.en || j.notes.fr)) || [];
+    $('updNotes').textContent = notes.slice(0, 4).join(' · ');
+    $('updGo').textContent = t(isExe() ? 'upd.download' : 'upd.reload');
+  } catch (e) {}
+}
+$('updGo').addEventListener('click', () => { if (isExe()) window.open(UPD.exe, '_blank'); else location.reload(); });
+$('updX').addEventListener('click', () => { $('updBar').hidden = true; });
+setTimeout(checkUpdate, 2500); setInterval(checkUpdate, 3 * 60 * 1000);
+// « Nouveautés » : une seule fois par version
+function showNews(force) {
+  if (!force && store.get('seenVer', '') === GAME_VERSION) return;
+  store.set('seenVer', GAME_VERSION);
+  const ul = $('newsList'); ul.replaceChildren();
+  for (const c of CHANGES[LANG] || CHANGES.en) ul.append(Object.assign(document.createElement('li'), { textContent: c }));
+  $('newsVer').textContent = GAME_VERSION; $('news').hidden = false;
+}
+$('newsOk').addEventListener('click', () => { $('news').hidden = true; });
+$('newsBtn').addEventListener('click', () => showNews(true));
+setTimeout(() => showNews(false), 900);
+
+/* ---------- menu : mode de jeu, signalements ---------- */
+const modeSel = $('modeSel'); modeSel.value = RULES.mode;
+modeSel.addEventListener('change', () => { if (NET.mode === 'client') { modeSel.value = RULES.mode; toast(t('mode.hostOnly'), 2.5); return; } setRule('mode', modeSel.value); });
+setInterval(() => {
+  if (modeSel.value !== RULES.mode && document.activeElement !== modeSel) modeSel.value = RULES.mode;
+  const box = $('repBox'), on = NET.mode !== 'off' && remotes.size > 0; box.hidden = !on; if (!on) return;
+  const sel = $('repWho'), names = [...remotes.values()].map(r => r.name).sort(), cur = sel.value;
+  if (sel.dataset.n !== names.join('|')) { sel.dataset.n = names.join('|'); sel.replaceChildren(...names.map(n => Object.assign(document.createElement('option'), { value: n, textContent: n }))); if (names.includes(cur)) sel.value = cur; }
+}, 1000);
+$('repSend').addEventListener('click', () => { const who = $('repWho').value; if (!who) return; sendReport(who, $('repWhy').value, $('repTxt').value); $('repTxt').value = ''; });
+// coéquipier ou même camp : pas de dégâts
+function sameSide(rp) {
+  if (RULES.mode === 'teams') return sameTeam(rp.id);
+  if (RULES.mode === 'zombie' && NET.mode !== 'off') return !!(rp.st && rp.st.z) === !!P.zombie;
+  return false;
+}
 const mapSel = $('mapSel'); mapSel.value = S.map;
 mapSel.addEventListener('change', () => {
   if (NET.mode === 'client') { mapSel.value = S.map; setNetStatus(t('map.hostOnly'), 'err'); return; }
@@ -8795,7 +9155,7 @@ qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quali
 }
 {
   const ps = $('padSens'), pa = $('padAim');
-  ps.value = S.padSens; pa.value = S.padAim; $('padSnap').checked = S.padSnap; $('padInvert').checked = S.padInvert; $('snapTap').checked = S.snapTap;
+  ps.value = S.padSens; pa.value = S.padAim; $('padSnap').checked = S.padSnap; $('padInvert').checked = S.padInvert; $('snapTap').checked = S.snapTap; $('easySnap').checked = S.easySnap;
   const sync = () => { $('oPadSens').textContent = (+S.padSens).toFixed(2); $('oPadAim').textContent = Math.round(S.padAim * 100) + ' %'; };
   sync();
   ps.addEventListener('input', () => { S.padSens = +ps.value; store.set('padSens', S.padSens); sync(); });
@@ -8803,6 +9163,7 @@ qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quali
   $('padSnap').addEventListener('change', e => { S.padSnap = e.target.checked; store.set('padSnap', S.padSnap); });
   $('padInvert').addEventListener('change', e => { S.padInvert = e.target.checked; store.set('padInvert', S.padInvert); });
   $('snapTap').addEventListener('change', e => { S.snapTap = e.target.checked; store.set('snapTap', S.snapTap); });
+  $('easySnap').addEventListener('change', e => { S.easySnap = e.target.checked; store.set('easySnap2', S.easySnap); });
 }
 const camFxEl = $('camFx'); camFxEl.value = S.camFx;
 const syncCamFx = () => { $('oCamFx').textContent = S.camFx <= 0 ? t('set.off') : Math.round(S.camFx * 100) + ' %'; };
@@ -8905,6 +9266,7 @@ function frame(now) {
   xAimbot(dt);
   updateCamera(dt, playing || NET.mode !== 'off' ? acc / STEP : 1);
   updateRemotes(dt);
+  modeTick(dt);
   updateSelfAvatar(dt);
   updateFpLegs(dt);
   updateVehicles(dt);
