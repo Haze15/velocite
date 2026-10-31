@@ -157,6 +157,13 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .wpinfo{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:6px 2px 8px}.wpinfo b{font:700 18px/1.1 var(--f-display);letter-spacing:.04em}.wpinfo span{font-size:13px;opacity:.75}
 .wpbtns{display:flex;flex-wrap:wrap;gap:6px}.wpbtn{padding:5px 9px;font:600 12px/1 var(--f-display);letter-spacing:.06em;color:var(--ink);background:rgba(244,239,230,.06);border:1px solid rgba(244,239,230,.16);cursor:pointer}
 .wpbtn.sp{border-color:rgba(255,176,32,.35)}.wpbtn.on{background:#ffb020;color:#14161a;border-color:#ffb020}
+#admPanel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(820px,calc(100vw - 32px));max-height:calc(100vh - 40px);overflow:auto;z-index:60;background:rgba(14,17,21,.96);border:1px solid rgba(255,176,32,.45);box-shadow:0 20px 60px rgba(0,0,0,.6);color:var(--ink);font:14px/1.35 var(--f-body, system-ui);padding:14px 16px}
+#admPanel[hidden]{display:none}.admhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}.admhead b{font:700 18px/1 var(--f-display);letter-spacing:.1em;color:#ffb020}.admhead span{flex:1;opacity:.7;font-size:12px}
+.admtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.admtabs button{padding:6px 12px;background:rgba(244,239,230,.06);border:1px solid rgba(244,239,230,.16);color:var(--ink);font:600 13px/1 var(--f-display);letter-spacing:.06em;cursor:pointer}.admtabs button[aria-selected="true"]{background:#ffb020;color:#14161a;border-color:#ffb020}
+.admrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid rgba(244,239,230,.07)}.admrow.pl b{min-width:150px}.admrow em{font-style:normal;opacity:.6;min-width:54px}
+.admrow .btn3{padding:4px 9px;font-size:12px}.admrow .btn3.warn{border-color:rgba(255,90,68,.6)}.admrow .btn3.on{background:#9be36a;color:#14161a}.admrow .btn3.on.warn{background:#ff5a44}
+.admsel,.admin-in{background:#1b1f24;color:var(--ink);border:1px solid rgba(244,239,230,.2);padding:4px 6px;font-size:13px}.admin-in{min-width:220px}
+.admgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:8px}.admfoot{margin:10px 0 0;font-size:12px;opacity:.6}
 #hud.inveh .slots,#hud.inveh .ammo,#hud.inveh #wname{visibility:hidden}
 .xsub{margin:16px 0 8px;font:700 13px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:var(--amber)}
 #espCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
@@ -411,6 +418,12 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   </div>
 </div>
 
+<div id="admPanel" hidden role="dialog" aria-label="Admin">
+  <div class="admhead"><b>PANNEAU ADMIN</b><span id="admWho"></span><button type="button" class="btn3" id="admClose">✕</button></div>
+  <nav class="admtabs"><button type="button" data-t="players" data-i18n="adm.tabPlayers">Joueurs</button><button type="button" data-t="game" data-i18n="adm.tabGame">Partie</button><button type="button" data-t="cheats" data-i18n="adm.tabCheats">Triche</button><button type="button" data-t="access" data-i18n="adm.tabAccess">Accès admin</button></nav>
+  <div id="admBody"></div>
+  <p class="admfoot" data-i18n="adm.foot">Inser : ouvrir / fermer · clique dans le jeu pour reprendre la souris</p>
+</div>
 <section id="menu">
   <div class="menu-inner">
     <header>
@@ -1025,6 +1038,8 @@ const I18N_ADD11 = {"fr": {"spec.btn": "Spectateur", "spec.title": "SPECTATEUR",
 for (const l in I18N_ADD11) Object.assign(I18N[l], I18N_ADD11[l]);
 const I18N_ADD12 = {"fr": {"set.loot": "Départ au pistolet, armes dans les coffres", "chest.open": "{key} Ouvrir le coffre", "char.nova": "Nova", "sp.crossbow": "Arbalète", "sp.flamer": "Lance-flammes", "sp.laser": "Fusil laser", "sp.autoshotgun": "Pompe automatique", "sp.hsniper": "Sniper lourd", "sp.lmg": "Mitrailleuse lourde", "w18s": "CARREAU"}, "en": {"set.loot": "Start with a pistol, weapons in chests", "chest.open": "{key} Open the chest", "char.nova": "Nova", "sp.crossbow": "Crossbow", "sp.flamer": "Flamethrower", "sp.laser": "Laser rifle", "sp.autoshotgun": "Auto shotgun", "sp.hsniper": "Heavy sniper", "sp.lmg": "Light machine gun", "w18s": "BOLT"}, "af": {"set.loot": "Begin met ’n pistool, wapens in kiste", "chest.open": "{key} Maak die kis oop", "char.nova": "Nova", "sp.crossbow": "Kruisboog", "sp.flamer": "Vlamwerper", "sp.laser": "Lasergeweer", "sp.autoshotgun": "Outomatiese haelgeweer", "sp.hsniper": "Swaar skerpskutter", "sp.lmg": "Ligte masjiengeweer", "w18s": "PYL"}, "zu": {"set.loot": "Qala ngevolovolo, izikhali ezifubeni", "chest.open": "{key} Vula isifuba", "char.nova": "I-Nova", "sp.crossbow": "Umnsalo", "sp.flamer": "Isiphephethi somlilo", "sp.laser": "Isibhamu se-laser", "sp.autoshotgun": "Isibhamu esizenzakalelayo", "sp.hsniper": "I-sniper esindayo", "sp.lmg": "Isibhamu esikhulu", "w18s": "UMCIBISHOLO"}};
 for (const l in I18N_ADD12) Object.assign(I18N[l], I18N_ADD12[l]);
+Object.assign(I18N.fr, {"adm.tabPlayers": "Joueurs", "adm.tabGame": "Partie", "adm.tabCheats": "Triche", "adm.tabAccess": "Accès admin", "adm.foot": "Inser : ouvrir / fermer · clique dans le jeu pour reprendre la souris", "adm.owner": "Propriétaire : tout est permis", "adm.adminOf": "Admin de la partie (accès donné par l’hôte)", "adm.me": "moi", "adm.itemToGive": "Arme à donner :", "adm.healAll": "Soigner tout le monde", "adm.respawnAll": "Faire réapparaître tout le monde", "adm.heal": "Soigner", "adm.give": "Donner", "adm.giveAll": "Toutes les armes", "adm.bring": "Amener à moi", "adm.goto": "Aller vers lui", "adm.freeze": "Geler 5 s", "adm.kill": "Éliminer", "adm.kick": "Expulser", "adm.admin": "Admin", "adm.soloNote": "Hors ligne : les actions s’appliquent à toi. Héberge une partie pour gérer les autres joueurs.", "adm.apply": "Changer", "adm.gravity": "Gravité", "adm.speed": "Vitesse de tous", "adm.bots": "Robots d’entraînement", "adm.vehicle": "Véhicule :", "adm.spawn": "Faire apparaître devant moi", "adm.vreset": "Réinitialiser les véhicules", "adm.chestsOpen": "Ouvrir tous les coffres", "adm.chestsFill": "Remplir tous les coffres", "adm.killBots": "Éliminer les robots", "adm.resetScores": "Scores à zéro", "adm.msg": "Message à tous", "adm.send": "Envoyer", "adm.accessNote": "Liste des joueurs qui ont l’accès admin (Inser), même s’ils ne sont pas connectés. Elle s’applique quand c’est toi qui héberges : un nom marqué « oui » reçoit l’accès dès qu’il rejoint.", "adm.name": "Pseudo", "adm.addYes": "Ajouter (oui)", "adm.online": "connecté", "adm.offline": "hors ligne", "adm.yes": "Oui", "adm.no": "Non", "adm.healed": "Un admin t’a soigné.", "adm.frozen": "Un admin t’a gelé.", "adm.granted": "Accès admin accordé : touche Inser.", "adm.revoked": "Accès admin retiré.", "adm.denied": "Accès admin refusé.", "adm.x.god": "Invincible", "adm.x.oneshot": "Un coup = une mort", "adm.x.norecoil": "Sans recul", "adm.x.ammo": "Munitions infinies", "adm.x.nocd": "Capacités sans recharge", "adm.x.rapid": "Cadence ×3", "adm.x.speed": "Vitesse ×2", "adm.x.jumps": "Sauts infinis", "adm.x.superjump": "Super saut", "adm.x.fly": "Vol", "adm.x.tp": "Téléportation (B)", "adm.x.wall": "Voir à travers les murs", "adm.x.esp": "ESP", "adm.x.aimbot": "Aimbot", "adm.x.trigger": "Triggerbot"});
+Object.assign(I18N.en, {"adm.tabPlayers": "Players", "adm.tabGame": "Match", "adm.tabCheats": "Cheats", "adm.tabAccess": "Admin access", "adm.foot": "Insert: open / close · click the game to get the mouse back", "adm.owner": "Owner: everything allowed", "adm.adminOf": "Match admin (granted by the host)", "adm.me": "me", "adm.itemToGive": "Weapon to give:", "adm.healAll": "Heal everyone", "adm.respawnAll": "Respawn everyone", "adm.heal": "Heal", "adm.give": "Give", "adm.giveAll": "All weapons", "adm.bring": "Bring to me", "adm.goto": "Go to them", "adm.freeze": "Freeze 5 s", "adm.kill": "Kill", "adm.kick": "Kick", "adm.admin": "Admin", "adm.soloNote": "Offline: actions apply to you. Host a match to manage other players.", "adm.apply": "Change", "adm.gravity": "Gravity", "adm.speed": "Everyone’s speed", "adm.bots": "Training robots", "adm.vehicle": "Vehicle:", "adm.spawn": "Spawn in front of me", "adm.vreset": "Reset vehicles", "adm.chestsOpen": "Open all chests", "adm.chestsFill": "Refill all chests", "adm.killBots": "Kill the robots", "adm.resetScores": "Reset scores", "adm.msg": "Message to everyone", "adm.send": "Send", "adm.accessNote": "Players who get admin access (Insert), even when offline. It applies when you host: a name set to “yes” gets access as soon as they join.", "adm.name": "Name", "adm.addYes": "Add (yes)", "adm.online": "online", "adm.offline": "offline", "adm.yes": "Yes", "adm.no": "No", "adm.healed": "An admin healed you.", "adm.frozen": "An admin froze you.", "adm.granted": "Admin access granted: press Insert.", "adm.revoked": "Admin access removed.", "adm.denied": "Admin access denied.", "adm.x.god": "God mode", "adm.x.oneshot": "One-shot kills", "adm.x.norecoil": "No recoil", "adm.x.ammo": "Infinite ammo", "adm.x.nocd": "No ability cooldown", "adm.x.rapid": "Fire rate ×3", "adm.x.speed": "Speed ×2", "adm.x.jumps": "Infinite jumps", "adm.x.superjump": "Super jump", "adm.x.fly": "Fly", "adm.x.tp": "Teleport (B)", "adm.x.wall": "See through walls", "adm.x.esp": "ESP", "adm.x.aimbot": "Aimbot", "adm.x.trigger": "Triggerbot"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1201,7 +1216,7 @@ function boxGeo(sx, sy, sz) {
   }
   return g;
 }
-let SKIP_PERIM = false, FAR_CLIP = 0, WORLD_BUILD = false;
+let SKIP_PERIM = false, FAR_CLIP = 0, WORLD_BUILD = false, WORLD_EDGE = null;
 const VOL_OFF = { x: 0, z: 0 }, WATER = [];
 /* ---------- tyroliennes : câble entre deux points (les mains du joueur s'y accrochent) ---------- */
 const ZIPS = [];
@@ -1276,7 +1291,7 @@ const groundMat = new THREE.MeshLambertMaterial({ color: PAL.ground, map: gridTe
 }
 // Décor lointain : silhouettes regroupées en un seul maillage
 function farDecor(list, mat, shadow) {
-  if (WORLD_BUILD) return;
+  if (WORLD_BUILD) list = list.filter(it => Math.max(Math.abs(it[1]), Math.abs(it[3])) < 170);
   if (FAR_CLIP) list = list.filter(it => Math.max(Math.abs(it[1]), Math.abs(it[3])) < FAR_CLIP);
   if (!list.length) return;
   const geos = list.map(([geo, x, y, z, ry]) => { const g = (geo.index ? geo.toNonIndexed() : geo); if (ry) g.rotateY(ry); return g.translate(x, y, z); });
@@ -1323,7 +1338,9 @@ function buildTerrainMeshes(colorFn) {
       const hl = T.h[gj * n + Math.max(0, gi - 1)], hr = T.h[gj * n + Math.min(n - 1, gi + 1)], hd = T.h[Math.max(0, gj - 1) * n + gi], hu = T.h[Math.min(n - 1, gj + 1) * n + gi];
       const nx = -(hr - hl) / (2 * T.cell), nz = -(hu - hd) / (2 * T.cell), il = 1 / Math.hypot(nx, 1, nz);
       nor[k * 3] = nx * il; nor[k * 3 + 1] = il; nor[k * 3 + 2] = nz * il;
-      colorFn(x, z, y, il, col); cols[k * 3] = col.r; cols[k * 3 + 1] = col.g; cols[k * 3 + 2] = col.b;
+      colorFn(x, z, y, il, col);
+      if (WORLD_BUILD && WORLD_EDGE) { const ed = Math.min(x - T.x0, T.x0 + (n - 1) * T.cell - x, z - T.z0, T.z0 + (n - 1) * T.cell - z), kk = smoothstep(34, 4, ed); if (kk > 0) col.lerp(WORLD_EDGE, kk * 0.85); }
+      cols[k * 3] = col.r; cols[k * 3 + 1] = col.g; cols[k * 3 + 2] = col.b;
       uv[k * 2] = x / 4; uv[k * 2 + 1] = z / 4;
     }
     for (let j = 0; j < d - 1; j++) for (let i = 0; i < w - 1; i++) {
@@ -1340,7 +1357,9 @@ function buildTerrainMeshes(colorFn) {
 }
 
 /* ---------- herbe : touffes instanciées qui ondulent au vent (un seul appel de dessin par carte) ---------- */
-const GRASS_T = { value: 0 };
+const GRASS_T = { value: 0 }, GRASS_MESHES = [];
+// herbe : on cache les touffes loin de la caméra (130 m)
+function cullGrass() { for (const m of GRASS_MESHES) { const g = m.userData.grass; m.visible = Math.hypot(g.c.x + m.position.x - camera.position.x, g.c.z + m.position.z - camera.position.z) - g.r < 130; } }
 const grassTex = canvasTex((g, s) => {
   g.clearRect(0, 0, s, s);
   let seed = 101; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -1369,7 +1388,8 @@ const grassGeo = (() => {
 function scatterGrass(x0, z0, x1, z1, count, tint = 0xffffff, avoid) {
   if (S.quality === 'low') count = Math.round(count * 0.3);
   if (count <= 0) return;
-  const mesh = new THREE.InstancedMesh(grassGeo, grassMat, count);
+  const gg = grassGeo.clone(); gg.boundingSphere = new THREE.Sphere(new V3((x0 + x1) / 2, 30, (z0 + z1) / 2), Math.hypot(x1 - x0, z1 - z0) / 2 + 40);
+  const mesh = new THREE.InstancedMesh(gg, grassMat, count);
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new V3(), pos = new V3(), col = new THREE.Color(), base = new THREE.Color(tint);
   let seed = Math.floor(Math.abs(x0 * 7 + z1 * 13)) + 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   let n = 0;
@@ -1385,7 +1405,7 @@ function scatterGrass(x0, z0, x1, z1, count, tint = 0xffffff, avoid) {
     n++;
   }
   mesh.count = n; mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  mesh.receiveShadow = true; mesh.frustumCulled = false; mapRoot.add(mesh);
+  mesh.receiveShadow = true; mesh.frustumCulled = true; mesh.userData.grass = { c: gg.boundingSphere.center.clone(), r: Math.hypot(x1 - x0, z1 - z0) / 2 }; mapRoot.add(mesh); GRASS_MESHES.push(mesh);
 }
 /* ---------- Carte 1 : Canyon ---------- */
 function buildCanyon() {
@@ -1620,6 +1640,7 @@ function volcanoH(x, z) {
   // montagnes qui ferment la carte
   const e = Math.max(Math.abs(x), Math.abs(z));
   if (!WORLD_BUILD) h += Math.max(0, e - 182) * 1.7;
+  else h *= smoothstep(212, 185, e);
   return Math.max(0, h);
 }
 function lavaAt(gx, gz, y) {
@@ -1776,6 +1797,7 @@ function buildMega() {
       for (const sp of MAPS[id].spawns) spawns.push([sp[0] + ox, sp[1], sp[2] + oz, sp[3]]);
       MAPS[id].dummies.slice(0, 3).forEach(d => dums.push([d[0] + ox, d[1], d[2] + oz].concat(d.slice(3))));
       // sol de la couleur de chaque zone
+      if (WORLD_BUILD) continue;
       const gp = new THREE.Mesh(new THREE.PlaneGeometry(128, 128), new THREE.MeshLambertMaterial({ color: MAPS[id].theme.ground, map: gridTex }));
       const uv = gp.geometry.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * 64, uv.getY(i) * 64);
       gp.rotation.x = -Math.PI / 2; gp.position.set(ox, 0.012, oz); gp.receiveShadow = true; mapRoot.add(gp);
@@ -1985,6 +2007,12 @@ const waterTex = canvasTex((g, s) => {
   for (let i = 0; i < 160; i++) { const x = rnd() * s, y = rnd() * s, w = 6 + rnd() * 26; g.fillStyle = `rgba(255,255,255,${0.08 + rnd() * 0.18})`; g.fillRect(x, y, w, 1.5); }
   for (let i = 0; i < 80; i++) { const x = rnd() * s, y = rnd() * s; g.fillStyle = 'rgba(20,60,80,.18)'; g.fillRect(x, y, 10 + rnd() * 30, 3); }
 });
+function waterPlaneRect(x0, z0, x1, z1, lvl) {
+  const tex = waterTex.clone(); tex.needsUpdate = true; tex.repeat.set((x1 - x0) / 14, (z1 - z0) / 14);
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, z1 - z0), new THREE.MeshPhongMaterial({ color: 0x2a86a8, map: tex, transparent: true, opacity: 0.8, shininess: 110, specular: 0xbfe8ff, depthWrite: false }));
+  m.rotation.x = -Math.PI / 2; m.position.set((x0 + x1) / 2, lvl, (z0 + z1) / 2); m.renderOrder = 2; mapRoot.add(m);
+  return tex;
+}
 function waterPlane(cx, cz, size, lvl) {
   const tex = waterTex.clone(); tex.needsUpdate = true; tex.repeat.set(size / 14, size / 14);
   const m = new THREE.Mesh(new THREE.PlaneGeometry(size, size), new THREE.MeshPhongMaterial({ color: 0x2a86a8, map: tex, transparent: true, opacity: 0.8, shininess: 110, specular: 0xbfe8ff, depthWrite: false }));
@@ -2045,6 +2073,8 @@ function oceanH(x, z) {
   // piste d'atterrissage plate sur l'île principale
   const ar = Math.abs(z), ax = Math.abs(x);
   if (ax < 70 && ar < 15) h = lerp(3.2, h, smoothstep(9, 15, ar) * 1 + smoothstep(62, 70, ax) * (1 - smoothstep(9, 15, ar)));
+  // Monde : la côte sud remonte en plage puis rejoint la prairie au niveau 0
+  if (WORLD_BUILD && z > 196) h = z > 226 ? lerp(1.3, 0, smoothstep(226, 238, z)) : lerp(h, 1.3, smoothstep(196, 214, z));
   return h;
 }
 function buildOcean() {
@@ -2058,8 +2088,8 @@ function buildOcean() {
     if (Math.abs(z) < 7 && Math.abs(x) < 64) out.copy(strip);
   });
   const th = (x, z) => terrainH(x, z), L = OCEAN.lvl;
-  WATER.push({ x0: -238, z0: -238, x1: 238, z1: 238, lvl: L });
-  const wtex = waterPlane(0, 0, WORLD_BUILD ? 476 : 1600, L);
+  WATER.push({ x0: -238, z0: -238, x1: 238, z1: WORLD_BUILD ? 205 : 238, lvl: L });
+  const wtex = WORLD_BUILD ? waterPlaneRect(-238, -238, 238, 212, L) : waterPlane(0, 0, 1600, L);
   if (!WORLD_BUILD) { box(0, -240, 484, 4, -1, 26, 'wall'); box(0, 240, 484, 4, -1, 26, 'wall'); box(-240, 0, 4, 476, -1, 26, 'wall'); box(240, 0, 4, 476, -1, 26, 'wall'); }
   const spawns = [], dums = [];
   // phare sur la colline de l'île principale
@@ -2109,7 +2139,8 @@ function arcticH(x, z) {
   const dl = Math.hypot(x - 40, z + 20); h = lerp(1.0, h, smoothstep(44, 56, dl));
   const db = Math.max(Math.abs(x + 65), Math.abs(z - 60)); h = lerp(2.0, h, smoothstep(34, 44, db));
   if (!WORLD_BUILD) h += Math.max(0, Math.max(Math.abs(x), Math.abs(z)) - 158) * 2.4;
-  return Math.max(0.5, h);
+  else h *= smoothstep(186, 150, Math.max(Math.abs(x), Math.abs(z)));
+  return Math.max(WORLD_BUILD ? 0 : 0.5, h);
 }
 function buildArctic() {
   TERRAIN = makeTerrain(-186, -186, 372, 2, arcticH);
@@ -2186,7 +2217,29 @@ function road(x0, z0, x1, z1, w = 11) {
   const m = new THREE.Mesh(new THREE.PlaneGeometry(len, w), new THREE.MeshLambertMaterial({ map: tex }));
   m.rotation.x = -Math.PI / 2; m.rotation.z = -Math.atan2(z1 - z0, x1 - x0); m.position.set((x0 + x1) / 2, 0.035, (z0 + z1) / 2); m.receiveShadow = true; mapRoot.add(m);
 }
+const WORLD_COLS = [[-64, 64, 64, 64, 0x6a8a44], [-64, -64, 64, 64, 0xd9c29b], [64, -64, 64, 64, 0x7b828c], [64, 64, 64, 64, 0x6c9a48], [348, 0, 162, 162, 0x55534e], [-400, 0, 212, 212, 0x5e5650], [0, 368, 186, 186, 0xe8eef2], [0, -418, 238, 238, 0xd8c99a]];
+function worldGroundColor(x, z, out) {
+  const meadow = 0.07; let r = 0x8a / 255 * meadow, g = 0x9a / 255 * meadow, b = 0x5a / 255 * meadow, ws = meadow;
+  for (const [cx, cz, hx, hz, c] of WORLD_COLS) {
+    const d = Math.max(0, Math.abs(x - cx) - hx, Math.abs(z - cz) - hz), w = Math.exp(-d / 22);
+    r += ((c >> 16) & 255) / 255 * w; g += ((c >> 8) & 255) / 255 * w; b += (c & 255) / 255 * w; ws += w;
+  }
+  return out.setRGB(r / ws, g / ws, b / ws);
+}
+function worldGround() {
+  const S2 = 1312, N = 164, geo = new THREE.PlaneGeometry(S2, S2, N, N); geo.rotateX(-Math.PI / 2);
+  const pos = geo.attributes.position, uv = geo.attributes.uv, cols = new Float32Array(pos.count * 3), c = new THREE.Color();
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), z = pos.getZ(i);
+    worldGroundColor(x, z, c); cols[i * 3] = c.r; cols[i * 3 + 1] = c.g; cols[i * 3 + 2] = c.b;
+    pos.setY(i, Math.abs(x) < 236 && z < -206 ? -3 : -0.02);
+    uv.setXY(i, x / 2, z / 2);
+  }
+  geo.setAttribute('color', new THREE.BufferAttribute(cols, 3)); geo.computeVertexNormals();
+  const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, map: gridTex })); m.receiveShadow = true; mapRoot.add(m);
+}
 function buildWorld() {
+  WORLD_EDGE = new THREE.Color(0x8a9a5a);
   const spawns = [], dums = [], ticks = [], terr = [];
   WORLD_BUILD = true;
   try {
@@ -2209,14 +2262,11 @@ function buildWorld() {
       MAPS[id].spawns.forEach(sp => spawns.push([sp[0] + ox, sp[1], sp[2] + oz, sp[3]]));
       MAPS[id].dummies.slice(0, id === 'mega' ? 4 : 2).forEach(d => dums.push([d[0] + ox, d[1], d[2] + oz].concat(d.slice(3))));
     }
-  } finally { WORLD_BUILD = false; }
+  } finally { WORLD_BUILD = false; WORLD_EDGE = null; }
   TERRAIN = terr.length ? { list: terr } : null;
   MAP_TICK = ticks.length ? dt => { for (const f of ticks) f(dt); } : null;
-  // sol : prairie partout sauf sur l'océan, bitume sous la ville fantôme
-  const groundM = new THREE.MeshLambertMaterial({ color: 0x8a9a5a, map: gridTex });
-  const plane = (x0, z0, x1, z1, mat, y = -0.02) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(x1 - x0, z1 - z0), mat); const uv = m.geometry.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * (x1 - x0) / 2, uv.getY(i) * (z1 - z0) / 2); m.rotation.x = -Math.PI / 2; m.position.set((x0 + x1) / 2, y, (z0 + z1) / 2); m.receiveShadow = true; mapRoot.add(m); };
-  plane(-660, -182, 660, 660, groundM); plane(-660, -660, -238, -182, groundM); plane(238, -660, 660, -182, groundM);
-  plane(186, -162, 510, 162, new THREE.MeshLambertMaterial({ color: 0x55534e, map: gridTex }), 0.006);
+  // sol unique du Monde : couleurs fondues d'une zone à l'autre (prairie entre les zones)
+  worldGround();
   // enceinte
   box(0, -652, 1312, 4, 0, 30, 'wall'); box(0, 652, 1312, 4, 0, 30, 'wall'); box(-652, 0, 4, 1300, 0, 30, 'wall'); box(652, 0, 4, 1300, 0, 30, 'wall');
   // routes : boucle autour de la Fusion et une route vers chaque zone
@@ -2299,7 +2349,7 @@ const MAPS = {
   },
   world: {
     build: buildWorld, lim: 648, noGround: true, vehicles: true,
-    theme: { top: 0x3a72a8, mid: 0xaec6d2, hor: 0xf0d2a8, fog: 0xdcd0bc, fogFar: 700, hemiSky: 0xd6e6f0, hemiGround: 0x8a7a5a, hemiI: 0.8, sun: 0xfff0d8, sunI: 0.95, sunDir: [-0.5, 0.55, 0.4], ground: 0xb8a888 },
+    theme: { top: 0x3a72a8, mid: 0xaec6d2, hor: 0xf0d2a8, fog: 0xdcd0bc, fogFar: 560, hemiSky: 0xd6e6f0, hemiGround: 0x8a7a5a, hemiI: 0.8, sun: 0xfff0d8, sunI: 0.95, sunDir: [-0.5, 0.55, 0.4], ground: 0xb8a888 },
     spawns: [[0, 2, 0, 0]], dummies: []
   }
 };
@@ -2389,7 +2439,7 @@ function makeProps(seed0) {
   const free = (x, z, r, sp = [], du = []) => {
     if (Math.abs(x) > MAP_LIM - 2 || Math.abs(z) > MAP_LIM - 2) return false;
     const y = gy(x, z);
-    for (const b of BOXES) if (!b.ground && b.max.y > y + 0.25 && b.min.y < y + 3 && x + r > b.min.x && x - r < b.max.x && z + r > b.min.z && z - r < b.max.z) return false;
+    for (const b of boxesNear(x, z, r + 1)) if (!b.ground && b.max.y > y + 0.25 && b.min.y < y + 3 && x + r > b.min.x && x - r < b.max.x && z + r > b.min.z && z - r < b.max.z) return false;
     for (const rp of RAMPS) if (x + r > rp.x0 && x - r < rp.x1 && z + r > rp.z0 && z - r < rp.z1) return false;
     for (const p of PADS) if (Math.hypot(p.x - x, p.z - z) < r + 2) return false;
     for (const v of VEH_SPAWNS) if (Math.hypot(v[0] - x, v[2] - z) < r + 6) return false;
@@ -2402,8 +2452,14 @@ function makeProps(seed0) {
   // n objets au hasard dans une zone
   const scatter = (n, x0, z0, x1, z1, r, fn, sp, du) => { let k = 0; for (let t = 0; t < n * 12 && k < n; t++) { const x = x0 + rnd() * (x1 - x0), z = z0 + rnd() * (z1 - z0); if (free(x, z, r, sp, du)) { fn(x, z); k++; } } };
   const finish = () => {
-    for (const [mat, list] of solid) { const m = new THREE.Mesh(mergeGeos(list, ['position', 'normal', 'uv']), mat); m.castShadow = m.receiveShadow = true; mapRoot.add(m); WORLD.push(m); }
-    for (const [mat, list] of deco) { const m = new THREE.Mesh(mergeGeos(list, ['position', 'normal', 'uv']), mat); m.castShadow = true; m.receiveShadow = true; mapRoot.add(m); }
+    const chunked = (map, isSolid) => {
+      for (const [mat, list] of map) {
+        const by = new Map();
+        for (const g of list) { const pa = g.attributes.position; const k = chunkOf(pa.getX(0), pa.getZ(0)); if (!by.has(k)) by.set(k, []); by.get(k).push(g); }
+        for (const l of by.values()) { const m = new THREE.Mesh(mergeGeos(l, ['position', 'normal', 'uv']), mat); m.castShadow = true; m.receiveShadow = true; mapRoot.add(m); if (isSolid) WORLD.push(m); }
+      }
+    };
+    chunked(solid, true); chunked(deco, false);
     if (glows.length) {
       const n = glows.length / 6, pos = new Float32Array(n * 3), cols = new Float32Array(n * 3);
       for (let i = 0; i < n; i++) { pos.set(glows.slice(i * 6, i * 6 + 3), i * 3); cols.set(glows.slice(i * 6 + 3, i * 6 + 6), i * 3); }
@@ -2553,7 +2609,7 @@ function applyTheme(th) {
 // Vide la carte courante puis construit la nouvelle (collisions, décor, apparitions, robots)
 function buildMap(id) {
   if (!MAPS[id]) id = 'canyon';
-  mapRoot.traverse(o => { if (o.geometry) o.geometry.dispose(); });
+  mapRoot.traverse(o => { if (o.geometry) o.geometry.dispose(); }); GRASS_MESHES.length = 0;
   mapRoot.clear();
   BOXES.length = 1; RAMPS.length = 0; PADS.length = 0; WORLD.length = 1;
   S.map = id;
@@ -2570,6 +2626,8 @@ function buildMap(id) {
   if (typeof placeDummies === 'function') placeDummies(MAPS[id].dummies);
   if (typeof refreshMinimapBoxes === 'function') refreshMinimapBoxes();
   if (typeof rebuildShootable === 'function') rebuildShootable();
+  BG.n = -1;
+  camera.far = Math.max(640, (MAPS[id].theme.fogFar || 300) * 1.08); camera.updateProjectionMatrix();
   if (typeof buildChests === 'function') buildChests(id);
 }
 // Fusionne les blocs par matériau : ~130 appels de dessin deviennent une dizaine
@@ -2584,23 +2642,25 @@ function mergeGeos(list, attrs) {
   out.computeBoundingSphere(); out.computeBoundingBox();
   return out;
 }
+const chunkOf = (x, z) => '|' + Math.floor(x / 96) + ',' + Math.floor(z / 96);
 function mergeStatic() {
-  const ground = WORLD[0], groups = new Map(), edges = [];
+  const ground = WORLD[0], groups = new Map(), edges = {};
   for (const m of WORLD.slice(1)) {
     m.updateMatrixWorld(true);
     const g = m.geometry.index ? m.geometry.toNonIndexed() : m.geometry.clone();
     g.applyMatrix4(m.matrixWorld);
-    if (!groups.has(m.material)) groups.set(m.material, []);
-    groups.get(m.material).push(g);
-    for (const c of m.children) if (c.isLineSegments) { const e = c.geometry.clone(); e.applyMatrix4(c.matrixWorld); edges.push(e); }
+    const ck = chunkOf(m.matrixWorld.elements[12], m.matrixWorld.elements[14]), key = m.material.uuid + ck;
+    if (!groups.has(key)) groups.set(key, { mat: m.material, list: [] });
+    groups.get(key).list.push(g);
+    for (const c of m.children) if (c.isLineSegments) { const e = c.geometry.clone(); e.applyMatrix4(c.matrixWorld); if (!edges[ck]) edges[ck] = []; edges[ck].push(e); }
     mapRoot.remove(m); m.geometry.dispose();
   }
   WORLD.length = 0; WORLD.push(ground);
-  for (const [mat, list] of groups) {
+  for (const { mat, list } of groups.values()) {
     const mesh = new THREE.Mesh(mergeGeos(list, ['position', 'normal', 'uv']), mat);
     mesh.castShadow = mesh.receiveShadow = true; mapRoot.add(mesh); WORLD.push(mesh);
   }
-  if (edges.length) mapRoot.add(new THREE.LineSegments(mergeGeos(edges, ['position']), edgeMat));
+  for (const k in edges) mapRoot.add(new THREE.LineSegments(mergeGeos(edges[k], ['position']), edgeMat));
 }
 
 /* ================= Collisions ================= */
@@ -2621,17 +2681,37 @@ function rampAt(x, z) {
   return { h: best, n };
 }
 function freeAt(x, y, z, h) {
-  for (const b of BOXES) if (overlapAt(b, x, y, z, h)) return false;
+  for (const b of boxesNear(x, z, 1)) if (overlapAt(b, x, y, z, h)) return false;
   return !(rampAt(x, z).h > y + 0.05);
 }
 function boxAtPoint(x, y, z) {
-  for (const b of BOXES) {
+  for (const b of boxesNear(x, z, 0.5)) {
     if (b.ground) continue;
     if (x > b.min.x && x < b.max.x && y > b.min.y && y < b.max.y && z > b.min.z && z < b.max.z) return b;
   }
   return null;
 }
 const UP = new V3(0, 1, 0);
+// grille spatiale : les collisions ne testent que les blocs proches (indispensable sur la carte Monde)
+const BG = { cell: 16, cells: new Map(), big: [], n: -1, q: 0 };
+function buildBoxGrid() {
+  BG.cells.clear(); BG.big.length = 0; const c = BG.cell;
+  for (const b of BOXES) {
+    if (b.max.x - b.min.x > 160 || b.max.z - b.min.z > 160) { BG.big.push(b); continue; }
+    for (let cx = Math.floor(b.min.x / c); cx <= Math.floor(b.max.x / c); cx++) for (let cz = Math.floor(b.min.z / c); cz <= Math.floor(b.max.z / c); cz++) {
+      const k = cx * 65536 + cz; let l = BG.cells.get(k); if (!l) BG.cells.set(k, l = []); l.push(b);
+    }
+  }
+  BG.n = BOXES.length;
+}
+function boxesNear(x, z, r) {
+  if (BG.n !== BOXES.length) buildBoxGrid();
+  const q = ++BG.q, out = BG.big.slice(), c = BG.cell;
+  for (let cx = Math.floor((x - r) / c), x1 = Math.floor((x + r) / c); cx <= x1; cx++) for (let cz = Math.floor((z - r) / c), z1 = Math.floor((z + r) / c); cz <= z1; cz++) {
+    const l = BG.cells.get(cx * 65536 + cz); if (l) for (const b of l) if (b._q !== q) { b._q = q; out.push(b); }
+  }
+  return out;
+}
 
 /* ================= Joueur ================= */
 const P = {
@@ -2669,7 +2749,7 @@ function moveAxis(ax, d) {
   if (!d) return;
   const p = P.pos;
   p[ax] += d;
-  for (const b of BOXES) {
+  for (const b of boxesNear(p.x, p.z, 1.2)) {
     if (!overlapAt(b, p.x, p.y, p.z, P.height)) continue;
     const up = b.max.y - p.y;
     if (P.grounded && up > 0 && up <= STEP_H && freeAt(p.x, b.max.y, p.z, P.height)) { p.y = b.max.y; continue; }
@@ -2682,7 +2762,7 @@ function moveAxis(ax, d) {
 }
 function groundBelow() {
   const p = P.pos; let h = -Infinity, n = UP;
-  for (const b of BOXES) {
+  for (const b of boxesNear(p.x, p.z, 1)) {
     if (p.x + R > b.min.x && p.x - R < b.max.x && p.z + R > b.min.z && p.z - R < b.max.z && b.max.y <= p.y + 0.01 && b.max.y > h) { h = b.max.y; n = UP; }
   }
   const r = rampAt(p.x, p.z);
@@ -2696,7 +2776,7 @@ function moveAndCollide(dt) {
   let landed = false;
   const dy = v.y * dt;
   p.y += dy;
-  for (const b of BOXES) {
+  for (const b of boxesNear(p.x, p.z, 1)) {
     if (!overlapAt(b, p.x, p.y, p.z, P.height)) continue;
     if (dy <= 0) { p.y = b.max.y; if (v.y < 0) v.y = 0; landed = true; P.gN = UP; }
     else { p.y = b.min.y - P.height; if (v.y > 0) v.y = 0; }
@@ -3260,6 +3340,7 @@ function step(dt) {
   P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
   abilityStep(dt);
   if (SPEC.on) { if (SPEC.free) flyStep(dt); else P.vel.set(0, 0, 0); return; }
+  if (ADM.freezeT > 0) { ADM.freezeT -= dt; P.vel.set(0, 0, 0); return; }
   if (EDIT.on) { editorStep(dt); return; }
   if (X.fly && xUnlocked && !P.dead && !P.veh && !P.zip) { flyStep(dt); return; }
   if (AB.dashT > 0 && !P.dead && !P.veh && !P.zip) { dashStep(dt); return; }
@@ -4813,7 +4894,7 @@ function updateWeapon(dt) {
   if (W.spin) { const was = WS.spin || 0; WS.spin = approach(was, mouse.left && !P.dead ? 1 : 0, dt * (mouse.left ? 2.2 : 1.2)); if (mouse.left && was === 0) sfx.spinUp(); } else WS.spin = 0;
   if (WS.burstLeft > 0 && WS.cur === 6) { WS.burstT -= dt; if (WS.burstT <= 0) { if (WS.ammo[6] > 0 && !P.dead) { WS.inBurst = true; fire(); WS.inBurst = false; WS.burstLeft--; WS.burstT = 60 / W.rpm; } else WS.burstLeft = 0; } }
   if (WS.cur === 6 && W.blast && mouse.right && !WS.rightPrev && WS.ammo[6] > 0 && WS.cool <= 0 && WS.swapT <= 0 && !P.dead && !P.veh) { fire(true); WS.cool = 60 / W.blast.rpm; }
-  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !EDIT.on && !(W.melee && TRI.state !== 'hand') && (!W.spin || WS.spin >= 1)) {
+  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !EDIT.on && !(WS.cur === 5 && TRI.state !== 'hand') && (!W.spin || WS.spin >= 1)) {
     if (WS.ammo[WS.cur] > 0 || W.melee) { if (W.auto || !WS.trigger) fire(); }
     else if (!WS.trigger) { sfx.empty(); startReload(); }
   }
@@ -4822,7 +4903,7 @@ function updateWeapon(dt) {
   if (WS.ammo[WS.cur] === 0 && !WS.reloading && !mouse.left) startReload();
   if (WS.swingT > 0) WS.swingT -= dt;
   if (WS.inspT > 0) { WS.inspT -= dt; if (mouse.right || WS.reloading) WS.inspT = 0; }
-  if (W.melee && S.knife === 'trident' && mouse.right && !WS.rightPrev && !P.dead && !P.veh && !EDIT.on) throwTrident();
+  if (WS.cur === 5 && S.knife === 'trident' && mouse.right && !WS.rightPrev && !P.dead && !P.veh && !EDIT.on) throwTrident();
   WS.rightPrev = mouse.right;
   WS.ads = approach(WS.ads, mouse.right && !W.melee && !WS.reloading && WS.swapT <= 0 && !P.mantle && !P.dead ? 1 : 0, dt * (W.scope ? 5 : 7));
 }
@@ -5048,6 +5129,7 @@ function hostRecv(from, m) {
     NET.players.set(from, { name: String(m.name || 'Joueur').slice(0, 14), color, kills: 0, deaths: 0, st: null });
     sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map });
     broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
+    if (isListedAdmin(m.name)) { NET.players.get(from).admin = true; sendTo(from, { k: 'admx', act: 'admin', arg: true }); }
     lobbyShow();
     setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); } }, 400);
     return;
@@ -5065,6 +5147,8 @@ function hostRecv(from, m) {
   if (m.k === 'snd') { csHostRecv(from, m); return; }
   if (m.k === 'st') pl.st = m.s;
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, sp: typeof m.sp === 'string' ? m.sp.slice(0, 12) : undefined, bl: m.bl, a: m.a, e: m.e }, from);
+  else if (m.k === 'adm') admHost(from, m);
+  else if ((m.k === 'vspawn' || m.k === 'vreset' || m.k === 'chestfill') && (NET.players.get(from) || {}).admin) broadcast(m.k === 'vspawn' ? { k: 'vspawn', t: String(m.t), p: (m.p || []).slice(0, 3).map(Number), y: +m.y || 0 } : { k: m.k }, from);
   else if (m.k === 'chest') broadcast({ k: 'chest', id: String(m.id).slice(0, 20) }, from);
   else if (m.k === 'pick') broadcast({ k: 'pick', id: String(m.id).slice(0, 40) }, from);
   else if (m.k === 'wdrop' && Array.isArray(m.p)) broadcast({ k: 'wdrop', id: String(m.id).slice(0, 40), w: String(m.w).slice(0, 16), p: m.p.slice(0, 3).map(Number), a: typeof m.a === 'number' ? m.a : undefined }, from);
@@ -5091,7 +5175,7 @@ function snapshot() {
   return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); return; }
   if (m.k === 'snd') { csClientRecv(m); return; }
   if (m.k === 'mapdef') { recvMapdef(m); return; }
   if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
@@ -5134,6 +5218,10 @@ function clientRecv(m) {
   if (m.k === 'lpad') { spawnLaunchpad(m.p); return; }
   if (m.k === 'blink') { if (m.b) spawnBlinkTrail(m.a, m.b); else spawnGhost(m.a); return; }
   if (m.k === 'trid') { spawnOtherTrident(m.o, m.p, m.v); return; }
+  if (m.k === 'admx') { admApply(m.act, m.arg); return; }
+  if (m.k === 'vspawn') { addVehicleAt(m.t, m.p, m.y); return; }
+  if (m.k === 'vreset') { resetVehicles(); return; }
+  if (m.k === 'chestfill') { refillChests(); return; }
   if (m.k === 'chest') { const c = CHESTS.find(q => q.id === m.id); if (c && !c.open) { setChestOpen(c); sfx.chest(0.5); } return; }
   if (m.k === 'pick') { const pk = PICKS.find(q => q.id === m.id); if (pk) { if (pk.dyn) removePickup(pk); else { pk.taken = true; pk.t = 30; pk.g.visible = false; } } return; }
   if (m.k === 'wdrop') { addPickup(m.id, String(m.w), +m.p[0], +m.p[1], +m.p[2], true, typeof m.a === 'number' ? m.a : undefined); return; }
@@ -6124,7 +6212,7 @@ function spawnGrenade(type, p, v, owner, mine) {
 function grenCollide(g) {
   const p = g.pos, v = g.vel, rr = 0.1;
   let hit = false;
-  for (const b of BOXES) {
+  for (const b of boxesNear(p.x, p.z, 1)) {
     if (b.ground) continue;
     if (p.x < b.min.x - rr || p.x > b.max.x + rr || p.y < b.min.y - rr || p.y > b.max.y + rr || p.z < b.min.z - rr || p.z > b.max.z + rr) continue;
     const pen = [[p.x - (b.min.x - rr), 'x', -1], [(b.max.x + rr) - p.x, 'x', 1], [p.y - (b.min.y - rr), 'y', -1], [(b.max.y + rr) - p.y, 'y', 1], [p.z - (b.min.z - rr), 'z', -1], [(b.max.z + rr) - p.z, 'z', 1]].sort((a, c) => a[0] - c[0])[0];
@@ -6752,7 +6840,7 @@ function buggyExtras(m, color) {
 // collisions cercle contre boîtes sur une tranche de hauteur (hélico)
 function vehPushOut(v, R, y0, y1) {
   let hit = 0;
-  for (const b of BOXES) {
+  for (const b of boxesNear(v.pos.x, v.pos.z, R + 2)) {
     if (b.ground || b.max.y <= y0 || b.min.y >= y1) continue;
     const cx = clamp(v.pos.x, b.min.x, b.max.x), cz = clamp(v.pos.z, b.min.z, b.max.z), dx = v.pos.x - cx, dz = v.pos.z - cz, d2 = dx * dx + dz * dz;
     if (d2 >= R * R) continue;
@@ -6820,7 +6908,7 @@ function planeStep(v, dt) {
     v.pos.x = clamp(v.pos.x, -MAP_LIM + 1, MAP_LIM - 1); v.pos.z = clamp(v.pos.z, -MAP_LIM + 1, MAP_LIM - 1);
     v.pos.y = Math.min(220, v.pos.y);
     // choc contre un bâtiment
-    for (const b of BOXES) {
+    for (const b of boxesNear(v.pos.x, v.pos.z, 3)) {
       if (b.ground) continue;
       if (v.pos.x > b.min.x - 1 && v.pos.x < b.max.x + 1 && v.pos.z > b.min.z - 1 && v.pos.z < b.max.z + 1 && v.pos.y + 1.2 > b.min.y && v.pos.y + 0.4 < b.max.y) {
         if (v.speed > 20 && v.pos.y + 0.4 < b.max.y - 0.6) { planeCrash(v); return; }
@@ -7078,7 +7166,7 @@ function resetVehicles() {
 function vehGround(x, z, y, step = VEH.step) {
   let h = rampAt(x, z).h;
   if (h > y + 1.3) h = -Infinity;
-  for (const b of BOXES) if (x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y + step && b.max.y > h) h = b.max.y;
+  for (const b of boxesNear(x, z, 0.5)) if (x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y + step && b.max.y > h) h = b.max.y;
   return h;
 }
 // inclinaison du châssis d'après le sol sous les quatre coins
@@ -7130,7 +7218,7 @@ function vehStep(v, dt) {
   let hitWall = 0;
   for (let k = 0; k < n; k++) {
     v.pos.x += v.vel.x * dt / n; v.pos.z += v.vel.z * dt / n;
-    for (const b of BOXES) {
+    for (const b of boxesNear(v.pos.x, v.pos.z, PR.R + 2)) {
       if (b.ground || b.max.y <= v.pos.y + PR.step || b.min.y >= v.pos.y + 1.7) continue;
       const cx = clamp(v.pos.x, b.min.x, b.max.x), cz = clamp(v.pos.z, b.min.z, b.max.z), dx = v.pos.x - cx, dz = v.pos.z - cz, d2 = dx * dx + dz * dz;
       if (d2 >= PR.R * PR.R) continue;
@@ -7220,7 +7308,7 @@ function exitVehicle(silent) {
 }
 function groundAtPoint(x, z, y) {
   let h = Math.max(0, rampAt(x, z).h);
-  for (const b of BOXES) if (!b.ground && x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y && b.max.y > h) h = b.max.y;
+  for (const b of boxesNear(x, z, 0.5)) if (!b.ground && x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y && b.max.y > h) h = b.max.y;
   return h;
 }
 // bruit de moteur : deux oscillateurs filtrés dont la hauteur suit la vitesse
@@ -7907,7 +7995,7 @@ function autoRes(fps) {
   if (S.quality !== 'auto' || !playing) return;
   const maxPR = Math.min(DPR, 1.25);
   let pr = pixelRatio;
-  if (fps < 52 && pr > 0.6) pr = Math.max(0.6, pr - 0.1);
+  if (fps < 52 && pr > 0.5) pr = Math.max(fps < 35 ? 0.5 : 0.6, pr - 0.1);
   else if (fps > 75 && pr < maxPR) pr = Math.min(maxPR, pr + 0.05);
   if (pr !== pixelRatio) { pixelRatio = pr; renderer.setPixelRatio(pr); renderer.setSize(window.innerWidth, window.innerHeight, false); }
 }
@@ -7933,6 +8021,7 @@ addEventListener('keydown', e => {
     if (hex !== X_HASH) return;
     xBuf = '';
     xUnlocked = !xUnlocked; store.set('xu', xUnlocked);
+    if (xUnlocked && NET.mode === 'client') netSend({ k: 'adm', act: 'claim', arg: X_HASH });
     if (!xUnlocked) for (const k in X) X[k] = false;
     renderX();
   }).catch(() => {});
@@ -7992,7 +8081,7 @@ $('play').addEventListener('click', () => { if (SPEC.on) stopSpectate(); });
 $('specBtn').addEventListener('click', () => { if (!SPEC.on) startSpectate(); requestPlay(); });
 document.addEventListener('pointerlockchange', () => {
   if (document.pointerLockElement === canvas) { everLocked = true; unlockedMode = false; startPlaying(); }
-  else if (playing && !unlockedMode) pause();
+  else if (playing && !unlockedMode && !(typeof ADM !== 'undefined' && ADM.open)) pause();
 });
 document.addEventListener('pointerlockerror', () => { if (!everLocked) startUnlocked(); });
 
@@ -8322,6 +8411,152 @@ $('admSay').addEventListener('click', () => {
 });
 setInterval(() => { if (!menu.hidden && xUnlocked) syncAdmin(); }, 1000);
 syncAdmin();
+/* ================= Panneau d'administration (touche Inser) ================= */
+// accès : le propriétaire (code secret) ou les joueurs à qui l'hôte a donné le droit admin
+const ADM = { granted: false, open: false, tab: 'players', list: (() => { const l = store.get('admins', {}); return l && typeof l === 'object' ? l : {}; })(), freezeT: 0 };
+const canAdmin = () => xUnlocked || ADM.granted;
+const admPanel = $('admPanel');
+function admSaveList() { store.set('admins', ADM.list); }
+function isListedAdmin(name) { return ADM.list[String(name || '').toLowerCase()] === true; }
+// une action vise un joueur : en solo ou sur soi, on l'applique directement ; sinon l'hôte la relaie
+function admAct(act, to, arg) {
+  if (!to || to === NET.selfId || NET.mode === 'off') { admApply(act, arg); return; }
+  if (NET.mode === 'host') admHost(NET.selfId, { act, to, arg }); else netSend({ k: 'adm', act, to, arg });
+}
+function admHost(from, m) {
+  const pl = NET.players.get(from);
+  if (m.act === 'claim') { if (m.arg === X_HASH && pl) pl.admin = true; return; }
+  if (from !== NET.selfId && !(pl && pl.admin)) return;
+  const tgt = NET.players.get(m.to);
+  if (m.act === 'kick') { if (!tgt || m.to === NET.selfId) return; sendTo(m.to, { k: 'kick' }); setTimeout(() => { const c = NET.conns.get(m.to); try { c && c.close(); } catch (e) {} }, 300); NET.players.delete(m.to); broadcast({ k: 'sys', t: 'leave', name: tgt.name }); return; }
+  if (m.act === 'grant') { if (tgt) tgt.admin = !!m.arg; if (m.to === NET.selfId) ADM.granted = !!m.arg; else sendTo(m.to, { k: 'admx', act: 'admin', arg: !!m.arg }); return; }
+  if (m.act === 'map') { if (MAPS[m.arg]) switchMap(m.arg, false); return; }
+  if (m.act === 'rule') { if (m.arg && ['g', 's', 'bots'].includes(m.arg.k)) setRule(m.arg.k, m.arg.v); return; }
+  if (m.act === 'say') { broadcast({ k: 'sys', msg: '[ADMIN] ' + String(m.arg).slice(0, 80) }); return; }
+  if (m.act === 'all') { for (const id of NET.players.keys()) if (id === NET.selfId) admApply(m.arg.act, m.arg.arg); else sendTo(id, { k: 'admx', act: m.arg.act, arg: m.arg.arg }); return; }
+  if (!tgt) return;
+  if (m.to === NET.selfId) admApply(m.act, m.arg); else sendTo(m.to, { k: 'admx', act: m.act, arg: m.arg });
+}
+// effets reçus
+function admApply(act, arg) {
+  if (act === 'all' && arg) return admApply(arg.act, arg.arg);
+  if (act === 'heal') { P.hp = MAX_HP; P.sh = MAX_SH; toast(t('adm.healed'), 2); }
+  else if (act === 'kill') { if (!P.dead) hurtSelf(9999, 15); }
+  else if (act === 'tp' && Array.isArray(arg)) { if (P.veh) exitVehicle(true); P.pos.set(+arg[0], +arg[1], +arg[2]); P.prev.copy(P.pos); P.vel.set(0, 0, 0); }
+  else if (act === 'give' && typeof arg === 'string' && isItem(arg)) { if (SPECIALS[arg] && SP.held) dropSpecial(); equipItem(arg); sfx.pickup(); }
+  else if (act === 'giveall') { for (let i = 0; i < 6; i++) OWN[i] = true; WS.ammo = WEAPONS.map(w => w.mag); renderSlots(); sfx.pickup(); }
+  else if (act === 'freeze') { ADM.freezeT = 5; toast(t('adm.frozen'), 2); }
+  else if (act === 'respawn') { spawnPlayer(true); }
+  else if (act === 'admin') { ADM.granted = !!arg; toast(t(arg ? 'adm.granted' : 'adm.revoked'), 3); if (!arg && !xUnlocked) admShow(false); }
+}
+function admShow(v) {
+  if (v && !canAdmin()) { toast(t('adm.denied'), 2); return; }
+  ADM.open = v; admPanel.hidden = !v;
+  if (v) { if (document.pointerLockElement) document.exitPointerLock(); clearInput(); admRender(); }
+}
+addEventListener('keydown', e => { if (e.code === 'Insert') { e.preventDefault(); admShow(!ADM.open); } }, true);
+admPanel.addEventListener('keydown', e => { if (e.code !== 'Insert' && e.code !== 'Escape') e.stopPropagation(); if (e.code === 'Escape') admShow(false); });
+admPanel.addEventListener('keyup', e => e.stopPropagation());
+admPanel.addEventListener('mousedown', e => e.stopPropagation());
+function admPlayers() {
+  const me = { id: NET.selfId || 'me', name: S.name + ' (' + t('adm.me') + ')', self: true };
+  const out = [me];
+  if (NET.mode === 'host') for (const [id, pl] of NET.players) { if (id !== NET.selfId) out.push({ id, name: pl.name, admin: !!pl.admin, k: pl.kills, d: pl.deaths }); }
+  else if (NET.mode === 'client') for (const rp of remotes.values()) out.push({ id: rp.id, name: rp.name });
+  return out;
+}
+const itemOptions = () => ['w0', 'w1', 'w2', 'w3', ...Object.keys(KNIVES).map(k => 'k:' + k), ...SPECIAL_IDS].map(w => `<option value="${w}">${escapeHtml(itemName(w))}</option>`).join('');
+function admBtn(label, fn, cls = '') { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn3 ' + cls; b.textContent = label; b.addEventListener('click', fn); return b; }
+function admRender() {
+  if (!ADM.open) return;
+  const body = $('admBody'); body.replaceChildren();
+  for (const b of admPanel.querySelectorAll('.admtabs button')) { b.setAttribute('aria-selected', String(b.dataset.t === ADM.tab)); b.hidden = (b.dataset.t === 'cheats' || b.dataset.t === 'access') && !xUnlocked; }
+  $('admWho').textContent = xUnlocked ? t('adm.owner') : t('adm.adminOf');
+  if (ADM.tab === 'players') {
+    const tbl = document.createElement('div'); tbl.className = 'admlist';
+    const give = document.createElement('select'); give.innerHTML = itemOptions(); give.className = 'admsel';
+    const top = document.createElement('div'); top.className = 'admrow';
+    top.append(Object.assign(document.createElement('span'), { textContent: t('adm.itemToGive') }), give,
+      admBtn(t('adm.healAll'), () => admAct('all', NET.mode === 'off' ? null : 'x', { act: 'heal' })),
+      admBtn(t('adm.respawnAll'), () => admAct('all', NET.mode === 'off' ? null : 'x', { act: 'respawn' })));
+    body.append(top);
+    for (const p of admPlayers()) {
+      const r = document.createElement('div'); r.className = 'admrow pl';
+      r.append(Object.assign(document.createElement('b'), { textContent: p.name }));
+      if (p.k !== undefined) r.append(Object.assign(document.createElement('em'), { textContent: p.k + ' / ' + p.d }));
+      const to = p.self ? null : p.id;
+      r.append(admBtn(t('adm.heal'), () => admAct('heal', to)), admBtn(t('adm.give'), () => admAct('give', to, give.value)), admBtn(t('adm.giveAll'), () => admAct('giveall', to)));
+      if (!p.self) {
+        const rp = remotes.get(p.id);
+        r.append(admBtn(t('adm.bring'), () => admAct('tp', to, [r2(P.pos.x + 1.5), r2(P.pos.y), r2(P.pos.z)])),
+          admBtn(t('adm.goto'), () => { if (rp) { if (P.veh) exitVehicle(true); P.pos.set(rp.pos.x + 1.5, rp.pos.y + 0.2, rp.pos.z); P.prev.copy(P.pos); } }),
+          admBtn(t('adm.freeze'), () => admAct('freeze', to)), admBtn(t('adm.kill'), () => admAct('kill', to), 'warn'), admBtn(t('adm.kick'), () => admAct('kick', to), 'warn'));
+        if (xUnlocked) r.append(admBtn((p.admin || isListedAdmin(p.name) ? '✓ ' : '') + t('adm.admin'), () => { const on = !(p.admin || isListedAdmin(p.name)); ADM.list[p.name.toLowerCase()] = on; admSaveList(); admAct('grant', to, on); setTimeout(admRender, 150); }, p.admin || isListedAdmin(p.name) ? 'on' : ''));
+      } else r.append(admBtn(t('adm.kill'), () => admAct('kill', null), 'warn'));
+      tbl.append(r);
+    }
+    body.append(tbl);
+    if (NET.mode === 'off') body.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: t('adm.soloNote') }));
+  } else if (ADM.tab === 'game') {
+    const host = NET.mode !== 'client';
+    const row = (...els) => { const r = document.createElement('div'); r.className = 'admrow'; r.append(...els); body.append(r); return r; };
+    const ms = document.createElement('select'); ms.className = 'admsel'; ms.innerHTML = Object.keys(MAPS).map(id => `<option value="${id}"${id === S.map ? ' selected' : ''}>${escapeHtml(mapName(id))}</option>`).join('');
+    row(Object.assign(document.createElement('span'), { textContent: t('map.label') }), ms, admBtn(t('adm.apply'), () => { if (host) switchMap(ms.value, false); else netSend({ k: 'adm', act: 'map', to: null, arg: ms.value }); }));
+    const rule = (k, v) => { if (host) setRule(k, v); else netSend({ k: 'adm', act: 'rule', arg: { k, v } }); };
+    const rng = (key, k, min, max) => { const i = document.createElement('input'); i.type = 'range'; i.min = min; i.max = max; i.step = 0.05; i.value = RULES[k]; const o = document.createElement('output'); o.textContent = '×' + (+RULES[k]).toFixed(2); i.addEventListener('input', () => { o.textContent = '×' + (+i.value).toFixed(2); rule(k, +i.value); }); row(Object.assign(document.createElement('span'), { textContent: t(key) }), i, o); };
+    rng('adm.gravity', 'g', 0.3, 2); rng('adm.speed', 's', 0.5, 2);
+    const ck = (key, val, fn) => { const l = document.createElement('label'); l.className = 'check'; const i = document.createElement('input'); i.type = 'checkbox'; i.checked = val; i.addEventListener('change', () => fn(i.checked)); l.append(i, ' ' + t(key)); return l; };
+    row(ck('adm.bots', RULES.bots, v => rule('bots', v)), ck('set.loot', S.loot, v => { S.loot = v; store.set('loot', v); $('lootOn').checked = v; if (v) resetLoadout(); else renderSlots(); }));
+    const vs = document.createElement('select'); vs.className = 'admsel'; vs.innerHTML = ['buggy', 'tank', 'heli', 'plane', 'jet', 'boat'].map(v => `<option value="${v}">${v}</option>`).join('');
+    row(Object.assign(document.createElement('span'), { textContent: t('adm.vehicle') }), vs, admBtn(t('adm.spawn'), () => { const p = [r2(P.pos.x - Math.sin(P.yaw) * 7), r2(P.pos.y), r2(P.pos.z - Math.cos(P.yaw) * 7)]; spawnVehicleNet(vs.value, p, r2(P.yaw)); }),
+      admBtn(t('adm.vreset'), () => { resetVehicles(); netSend({ k: 'vreset' }); }));
+    row(admBtn(t('adm.chestsOpen'), () => { for (const c of CHESTS) if (!c.open) openChest(c); }), admBtn(t('adm.chestsFill'), () => { refillChests(); netSend({ k: 'chestfill' }); }),
+      admBtn(t('adm.killBots'), () => { for (const d of dummies) if (d.alive) damageDummy(d, 9999, 'body'); }), admBtn(t('adm.resetScores'), () => $('admReset').click()));
+    const msg = document.createElement('input'); msg.maxLength = 80; msg.placeholder = t('adm.msg'); msg.className = 'admin-in';
+    row(msg, admBtn(t('adm.send'), () => { const v = msg.value.trim(); if (!v) return; if (NET.mode === 'host') broadcast({ k: 'sys', msg: '[ADMIN] ' + v }); else if (NET.mode === 'client') netSend({ k: 'adm', act: 'say', arg: v }); toast('[ADMIN] ' + v, 3); msg.value = ''; }));
+  } else if (ADM.tab === 'cheats') {
+    const grid = document.createElement('div'); grid.className = 'admgrid';
+    for (const k of ['god', 'oneshot', 'norecoil', 'ammo', 'nocd', 'rapid', 'speed', 'jumps', 'superjump', 'fly', 'tp', 'wall', 'esp', 'aimbot', 'trigger']) {
+      const l = document.createElement('label'); l.className = 'check'; const i = document.createElement('input'); i.type = 'checkbox'; i.checked = !!X[k];
+      i.addEventListener('change', () => { X[k] = i.checked; const el = $('x_' + k); if (el) el.checked = i.checked; });
+      l.append(i, ' ' + t('adm.x.' + k)); grid.append(l);
+    }
+    body.append(grid);
+  } else if (ADM.tab === 'access') {
+    body.append(Object.assign(document.createElement('p'), { className: 'hint', textContent: t('adm.accessNote') }));
+    const add = document.createElement('div'); add.className = 'admrow';
+    const inp = document.createElement('input'); inp.maxLength = 14; inp.placeholder = t('adm.name'); inp.className = 'admin-in';
+    add.append(inp, admBtn(t('adm.addYes'), () => { const n = inp.value.trim().toLowerCase(); if (!n) return; ADM.list[n] = true; admSaveList(); admSyncGrants(); admRender(); }));
+    body.append(add);
+    const online = new Set(admPlayers().filter(p => !p.self).map(p => p.name.toLowerCase()));
+    for (const n of Object.keys(ADM.list).sort()) {
+      const r = document.createElement('div'); r.className = 'admrow pl';
+      r.append(Object.assign(document.createElement('b'), { textContent: n }), Object.assign(document.createElement('em'), { textContent: online.has(n) ? t('adm.online') : t('adm.offline') }),
+        admBtn(t('adm.yes'), () => { ADM.list[n] = true; admSaveList(); admSyncGrants(); admRender(); }, ADM.list[n] ? 'on' : ''),
+        admBtn(t('adm.no'), () => { ADM.list[n] = false; admSaveList(); admSyncGrants(); admRender(); }, ADM.list[n] ? '' : 'on warn'),
+        admBtn('✕', () => { delete ADM.list[n]; admSaveList(); admSyncGrants(); admRender(); }));
+      body.append(r);
+    }
+  }
+}
+// l'hôte applique la liste d'accès aux joueurs connectés (et à ceux qui arrivent)
+function admSyncGrants() {
+  if (NET.mode !== 'host') return;
+  for (const [id, pl] of NET.players) { if (id === NET.selfId) continue; const on = isListedAdmin(pl.name); if (!!pl.admin !== on) { pl.admin = on; sendTo(id, { k: 'admx', act: 'admin', arg: on }); } }
+}
+for (const b of admPanel.querySelectorAll('.admtabs button')) b.addEventListener('click', () => { ADM.tab = b.dataset.t; admRender(); });
+$('admClose').addEventListener('click', () => admShow(false));
+setInterval(() => { if (ADM.open && ADM.tab === 'players') admRender(); }, 2500);
+// véhicules ajoutés par un admin (synchronisés : même ordre partout)
+function spawnVehicleNet(type, p, yaw) { addVehicleAt(type, p, yaw); netSend({ k: 'vspawn', t: type, p, y: yaw }); }
+function addVehicleAt(type, p, yaw) {
+  if (!VEHP[type]) return;
+  const i = VEHICLES.length, col = VEH_COLORS[i % VEH_COLORS.length];
+  const m = type === 'tank' ? buildTank(0x66753f) : type === 'heli' ? buildHeli(0x4f5a46) : type === 'plane' ? buildPlane(col) : type === 'jet' ? buildJet(0x6f7880) : type === 'boat' ? buildBoat(col) : buggyExtras(buildBuggy(col), col);
+  const v = { i, type, ...m, pos: new V3(+p[0], +p[1], +p[2]), vel: new V3(), yaw: +yaw || 0, grounded: true, pitch: 0, roll: 0, spin: 0, steerV: 0, driver: null, ramCd: new Map(), home: [+p[0], +p[1], +p[2], +yaw || 0, type], thr: 0, speed: 0, fireCd: 0, wreck: 0, tYaw: 0, tPitch: 0 };
+  scene.add(v.g); VEHICLES.push(v); vehHitboxes(v); placeVehicleMesh(v, v.pos, v.yaw, 1); rebuildShootable();
+}
+function refillChests() { for (const c of CHESTS) { c.open = false; c.t = 0; c.glow.visible = true; } }
 const mapSel = $('mapSel'); mapSel.value = S.map;
 mapSel.addEventListener('change', () => {
   if (NET.mode === 'client') { mapSel.value = S.map; setNetStatus(t('map.hostOnly'), 'err'); return; }
@@ -8673,6 +8908,7 @@ function frame(now) {
   updateSelfAvatar(dt);
   updateFpLegs(dt);
   updateVehicles(dt);
+  cullGrass();
   updateVehDamageFx(dt); updateVehHud(); updateCockpitHud(); updatePickups(dt); updateStrikes(dt); updateChests(dt); updateFlames(dt);
   if (SPEC.on && playing) specInput();
   grenStep(dt);

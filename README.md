@@ -153,6 +153,10 @@ Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie su
 
 Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d'une cible et légère traction quand tu bouges ou vises, de 0 à 100 %), **snap strafe facile** en l'air et inversion verticale. Au clavier, le **snap tap** est activé par défaut : si deux directions opposées sont enfoncées, la dernière appuyée gagne.
 
+## Optimisation
+
+Les collisions utilisent une grille spatiale (seuls les blocs proches sont testés), le décor est fusionné par morceaux de 96 m pour que la carte graphique et les tirs ignorent ce qui est hors champ, l'herbe disparaît au-delà de 130 m et la distance d'affichage suit le brouillard. Sur la carte Monde, la physique est environ 4 fois plus rapide et les tirs 2,5 fois. En qualité « auto », la résolution baisse toute seule si les images par seconde chutent.
+
 ## Commandes
 
 Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souris ou molette, deux touches par action. Touches par défaut :
