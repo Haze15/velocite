@@ -140,7 +140,7 @@ Onglet Personnage → **Importer mon modèle (.glb)**, 4 Mo maximum. Un modèle 
 
 ## Mises à jour
 
-Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écran (vérification toutes les 3 minutes) avec un bouton pour recharger, ou pour télécharger la nouvelle appli Windows. Les nouveautés s'affichent une fois à chaque nouvelle version, et le bouton **Nouveautés** du menu les remontre.
+Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écran (vérification toutes les 3 minutes) avec un bouton pour recharger (dans l'appli Windows, le bouton ouvre la version en ligne, déjà à jour). Les nouveautés s'affichent une fois à chaque nouvelle version, et le bouton **Nouveautés** du menu les remontre.
 
 ## Multijoueur
 
