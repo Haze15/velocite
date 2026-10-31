@@ -91,6 +91,8 @@ Le bouton **Spectateur** du menu te fait regarder la partie sans jouer : clic ga
 
 ## Véhicules
 
+**À plusieurs :** quand quelqu'un conduit, approche-toi et appuie sur la touche d'action (E) pour monter en passager. Tu peux viser et tirer depuis ta place (sauf dans l'avion et le chasseur, où le passager est à l'intérieur). Places passagers : buggy 1, tank 2 (sur la plage arrière), hélico 3, bateau 2, avion 1, chasseur 1. Si le véhicule explose, les passagers sont éjectés et blessés comme le conducteur.
+
 Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. Approche-toi et appuie sur **E** pour monter : Z/W accélère, S freine puis recule, Q/D (A/D) tourne, **Espace** est le frein à main pour déraper, **Maj** donne un petit turbo. La caméra passe derrière le buggy et la souris tourne autour. Les tremplins et les crêtes font décoller. Foncer dans un robot ou un joueur à plus de 9 m/s lui fait des dégâts. **E** pour descendre. En ligne, les autres te voient assis au volant.
 
 | Véhicule | Où | Commandes | Arme |
