@@ -22,12 +22,12 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | --- | --- | --- | --- |
 | Soldat | Assaut | Stim : +35 % de vitesse 6 s (recharge 9 s) | Dôme-bouclier : bulle de 5 m qui arrête les balles 12 s (recharge 25 s) |
 | X-Bot | Éclaireur | Grappin : accroche un point visé jusqu'à 45 m et te tire vers lui ; Espace pour lâcher avec un saut (recharge 6 s) | Portail : pose l'entrée, va à au moins 6 m, réappuie pour la sortie (40 s, recharge 30 s) |
-| Robot | Sentinelle | Scan : révèle robots et joueurs à travers les murs et sur la mini-carte 7 s (recharge 18 s) | Tremplin : pad violet posé au sol que tout le monde peut utiliser, 30 s (recharge 22 s) |
+| Nova | Sentinelle | Scan : révèle robots et joueurs à travers les murs et sur la mini-carte 7 s (recharge 18 s) | Tremplin : pad violet posé au sol que tout le monde peut utiliser, 30 s (recharge 22 s) |
 | Titan | Assaut lourd | Jetpack : bond propulsé puis vol stationnaire en maintenant Espace (recharge 7 s) | Frappe aérienne : marque le point visé, 8 obus tombent du ciel 2 s plus tard (recharge 40 s) |
 | Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
 
 
-Soldat, X-Bot, Robot ou Spectre, avec dix-huit couleurs. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+Soldat, X-Bot, Nova, Spectre ou Titan, avec dix-huit couleurs. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
 Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (jambes tendues vers l'avant). Pendant un superglide, tu vois aussi tes jambes tendues à la première personne (case « Voir mes jambes » dans les réglages pour les enlever).
 
@@ -58,9 +58,13 @@ La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui chois
 
 Des câbles ambre lumineux relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts, traits ambre sur la mini-carte), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
 
-## Armes spéciales au sol
+## Coffres
 
-Sur chaque carte, des armes brillantes attendent au sol (un faisceau coloré les signale). Approche-toi et appuie sur **E** pour en ramasser une : elle va dans l'emplacement **7**. Munitions limitées, pas de rechargement : vide, elle disparaît. Si tu meurs, elle tombe par terre et quelqu'un d'autre peut la prendre. Une arme ramassée réapparaît 30 s plus tard.
+Par défaut, tu commences chaque vie avec seulement le **pistolet**. Les autres armes, les couteaux et les armes spéciales se trouvent dans des **coffres** dorés qui brillent un peu partout sur la carte. Approche-toi, **E** pour l'ouvrir : une ou deux armes jaillissent devant, **E** encore pour les ramasser. Le coffre se referme et se remplit 75 s plus tard. Tu perds tout à la mort. En ligne, tout le monde voit les mêmes coffres s'ouvrir. La case « Départ au pistolet, armes dans les coffres » des réglages remet l'arsenal complet.
+
+## Armes spéciales
+
+Les armes spéciales sortent des coffres et se rangent dans l'emplacement **7**. Munitions limitées, pas de rechargement : vide, elle disparaît. Si tu meurs, elle tombe par terre et quelqu'un d'autre peut la prendre. Une arme ramassée réapparaît 30 s plus tard.
 
 | Arme | Particularité |
 | --- | --- |
@@ -71,6 +75,12 @@ Sur chaque carte, des armes brillantes attendent au sol (un faisceau coloré les
 | Revolver .44 | 48 dégâts, tête ×2 |
 | Lance-grenades | Grenades de 40 mm qui explosent à l'impact (100 en zone) |
 | Fusil rafale | Rafales de 3 balles, 24 dégâts |
+| Arbalète | Carreaux de 110 dégâts qui retombent avec la distance |
+| Lance-flammes | Courte portée (14 m), arrose devant toi |
+| Fusil laser | Rayon automatique, 11 dégâts, très précis |
+| Pompe automatique | 8 plombs, 240 coups/min |
+| Sniper lourd | 140 dégâts, tête ×2, lunette ×4,5 |
+| Mitrailleuse lourde | 100 balles, 700 coups/min |
 
 L'onglet **Armes** du menu montre chaque arme en 3D avec ton skin (fais-la tourner à la souris).
 
@@ -89,7 +99,7 @@ Sur le Canyon, le Volcan, la Fusion et la Ville fantôme, des buggys attendent. 
 | Avion | Ville fantôme (2, sur la piste), Volcan | Z/S règlent les gaz, la souris donne la direction, Q/D penchent ; il décolle en tirant vers le haut au-dessus de 30 m/s | Mitrailleuse au clic gauche |
 | Chasseur | Ville fantôme (sur la piste), Volcan | Comme l'avion, mais bien plus rapide (jusqu'à 112 m/s avec Maj), décolle au-dessus de 40 m/s, postcombustion visible | Deux canons qui tirent en alternance |
 
-**Vue cockpit :** en véhicule, **V** passe à la première personne, à la place du pilote, avec des instruments (vitesse, altitude, cap, gaz, horizon artificiel) ; dans le tank, c'est la vue du viseur. L'hélico se tourne maintenant directement vers la souris.
+**Vue cockpit :** en véhicule, **V** passe à la première personne avec un HUD épuré : vitesse et altitude encadrées, cap gradué, horizon et barre des gaz, sans carlingue devant les yeux. Dans le tank, c'est un viseur circulaire. L'hélico se tourne maintenant directement vers la souris.
 
 **Réticule :** comme dans Battlefield, le petit rond au centre de l'écran montre où tu regardes et le grand réticule montre où partent vraiment tes tirs. Celui de l'hélico, de l'avion et du chasseur est devant le nez de l'appareil. Celui du tank est au bout du canon : il tient compte de la chute de l'obus et se remplit pendant le rechargement. Quand tu tournes la souris, le réticule rattrape la visée avec un temps de retard : la tourelle, le canon de l'hélico et le nez de l'avion pivotent moins vite que la caméra.
 
@@ -242,8 +252,8 @@ python3 -m http.server 8000
 
 ## Crédits
 
-- Robot : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
-- Soldat et X-Bot : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js.
+- Robots d’entraînement : « RobotExpressive » de Tomás Laulhé ([Quaternius](https://quaternius.com/)), modifié par Don McCurdy, licence CC0 1.0.
+- Soldat, X-Bot et Nova (modèle « Michelle ») : modèles et animations [Mixamo](https://www.mixamo.com/) (Adobe), tels que fournis dans les exemples de three.js. Nova est animée avec les mouvements du X-Bot.
 - Musique de fond : « Celestial Butterfly », téléchargée sur [Pixabay](https://pixabay.com/music/) (licence de contenu Pixabay, utilisation libre dans un jeu).
 - Moteur : [three.js](https://threejs.org/) r128 (MIT), copié dans `launcher/vendor/` pour l'appli Windows. Réseau : [PeerJS](https://peerjs.com/) (MIT).
 - Fenêtre de l'appli : [go-webview2](https://github.com/jchv/go-webview2) (MIT) et [go-winloader](https://github.com/jchv/go-winloader) (ISC) de John Chadwick, [golang.org/x/sys](https://pkg.go.dev/golang.org/x/sys) (BSD), copiés dans `launcher/third_party/`.
