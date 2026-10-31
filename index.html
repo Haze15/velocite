@@ -157,6 +157,9 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .wpinfo{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;margin:6px 2px 8px}.wpinfo b{font:700 18px/1.1 var(--f-display);letter-spacing:.04em}.wpinfo span{font-size:13px;opacity:.75}
 .wpbtns{display:flex;flex-wrap:wrap;gap:6px}.wpbtn{padding:5px 9px;font:600 12px/1 var(--f-display);letter-spacing:.06em;color:var(--ink);background:rgba(244,239,230,.06);border:1px solid rgba(244,239,230,.16);cursor:pointer}
 .wpbtn.sp{border-color:rgba(255,176,32,.35)}.wpbtn.on{background:#ffb020;color:#14161a;border-color:#ffb020}
+#admLogin{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:61;background:rgba(14,17,21,.97);border:1px solid rgba(255,176,32,.45);padding:16px 18px;width:min(320px,calc(100vw - 32px));color:var(--ink);font:14px/1.35 var(--f-body, system-ui)}
+#admLogin b{color:#ffb020;letter-spacing:.08em}
+#admLogin input{width:100%;box-sizing:border-box;margin:6px 0 10px;background:#0e1013;color:inherit;border:1px solid rgba(255,255,255,.2);padding:7px 9px}
 #admPanel{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);width:min(820px,calc(100vw - 32px));max-height:calc(100vh - 40px);overflow:auto;z-index:60;background:rgba(14,17,21,.96);border:1px solid rgba(255,176,32,.45);box-shadow:0 20px 60px rgba(0,0,0,.6);color:var(--ink);font:14px/1.35 var(--f-body, system-ui);padding:14px 16px}
 #admPanel[hidden]{display:none}.admhead{display:flex;align-items:center;gap:12px;margin-bottom:10px}.admhead b{font:700 18px/1 var(--f-display);letter-spacing:.1em;color:#ffb020}.admhead span{flex:1;opacity:.7;font-size:12px}
 .admtabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.admtabs button{padding:6px 12px;background:rgba(244,239,230,.06);border:1px solid rgba(244,239,230,.16);color:var(--ink);font:600 13px/1 var(--f-display);letter-spacing:.06em;cursor:pointer}.admtabs button[aria-selected="true"]{background:#ffb020;color:#14161a;border-color:#ffb020}
@@ -438,6 +441,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
   </div>
 </div>
 
+<div id="admLogin" hidden role="dialog" aria-label="Admin"><b data-i18n="adm.pwTitle">PANNEAU ADMIN</b><p data-i18n="adm.pwAsk">Mot de passe admin :</p><input id="admPwIn" type="password" maxlength="64" autocomplete="off"><div class="admrow"><button type="button" class="btn3" id="admPwGo" data-i18n="adm.pwGo">Entrer</button><button type="button" class="btn3" id="admPwX">✕</button></div></div>
 <div id="admPanel" hidden role="dialog" aria-label="Admin">
   <div class="admhead"><b>PANNEAU ADMIN</b><span id="admWho"></span><button type="button" class="btn3" id="admClose">✕</button></div>
   <nav class="admtabs"><button type="button" data-t="players" data-i18n="adm.tabPlayers">Joueurs</button><button type="button" data-t="game" data-i18n="adm.tabGame">Partie</button><button type="button" data-t="cheats" data-i18n="adm.tabCheats">Triche</button><button type="button" data-t="access" data-i18n="adm.tabAccess">Accès admin</button><button type="button" data-t="accounts" data-i18n="adm.tabAccounts">Comptes</button><button type="button" data-t="reports" data-i18n="adm.tabReports">Signalements</button></nav>
@@ -1073,6 +1077,8 @@ Object.assign(I18N.fr, {"mode.label": "Mode", "mode.ffa": "Chacun pour soi", "mo
 Object.assign(I18N.en, {"mode.label": "Mode", "mode.ffa": "Free for all", "mode.teams": "2 teams", "mode.zombie": "Zombies", "mode.blue": "BLUE", "mode.red": "RED", "mode.youZombie": "YOU ARE A ZOMBIE: knife only, infect them all", "mode.youHuman": "HUMAN: survive", "mode.survive": "the robots are zombies, survive", "mode.firstZombie": "You are patient zero! Knife only, kill the humans.", "mode.roundStart": "New round: a zombie is among you…", "mode.zWin": "The zombies win!", "mode.hWin": "The humans survived!", "mode.infected": "infected: you come back as a zombie", "mode.set": "Game mode: {m}", "mode.hostOnly": "Only the host picks the mode.", "news.title": "What’s new", "news.ok": "Let’s go", "news.btn": "What’s new", "upd.new": "New version available ({v})", "upd.download": "Play the online version", "upd.reload": "Reload", "cm.import": "Import my model (.glb)", "cm.flip": "Rotate 180°", "cm.clear": "Remove", "cm.hint": "A .glb file, 4 MB max. With a Mixamo skeleton it uses the game’s animations; otherwise its own (idle, walk, run). Other players see it online.", "cm.tooBig": "Model too large (4 MB max).", "cm.bad": "This file isn’t a readable .glb model.", "cm.loaded": "Model “{name}” loaded: other players will see it.", "cm.option": "My model", "cm.none": "no model imported", "char.custom": "My model", "login.pass": "Password", "login.passPh": "optional", "login.banned": "You are banned from this match.", "login.needpw": "This name has an account: enter its password.", "login.badpw": "Wrong password.", "rep.title": "Report a player", "rep.r.cheat": "Cheating", "rep.r.insult": "Insults", "rep.r.spam": "Spam", "rep.r.afk": "AFK", "rep.r.other": "Other", "rep.ph": "Details (optional)", "rep.send": "Send", "rep.sent": "Report sent to the host. Thanks!", "rep.new": "New report: {name}", "rep.none": "No reports.", "rep.by": "by", "acc.note": "Accounts of players who join your matches. The first password typed creates the account. Passwords are hashed (salted SHA-256): nobody can read them, not even you, but you can reset them or set a new one. After a reset, the next password the player types becomes theirs.", "acc.require": "Password required to join", "acc.none": "No accounts yet.", "acc.last": "seen", "acc.pwSet": "password set", "acc.pwReset": "reset: waiting for a new one", "acc.newPw": "new password", "acc.reset": "Reset", "acc.setPw": "Set", "acc.pwChanged": "{name}’s password changed.", "acc.ban": "Ban", "acc.unban": "Unban", "acc.banned": "banned", "adm.tabAccounts": "Accounts", "adm.tabReports": "Reports", "set.easySnap": "Easy snap strafe (keyboard and controller)"});
 Object.assign(I18N.fr, { 'veh.ride': '{key} Monter en passager', 'veh.leave': '{key} Descendre', 'veh.passHint': 'Passager : tu peux viser et tirer · {key} pour descendre' });
 Object.assign(I18N.en, { 'veh.ride': '{key} Ride as passenger', 'veh.leave': '{key} Get out', 'veh.passHint': 'Passenger: you can aim and shoot · {key} to get out' });
+Object.assign(I18N.fr, { 'adm.pwTitle': 'PANNEAU ADMIN', 'adm.pwAsk': 'Mot de passe admin :', 'adm.pwGo': 'Entrer', 'adm.pwBad': 'Mot de passe incorrect.' });
+Object.assign(I18N.en, { 'adm.pwTitle': 'ADMIN PANEL', 'adm.pwAsk': 'Admin password:', 'adm.pwGo': 'Enter', 'adm.pwBad': 'Wrong password.' });
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -5254,7 +5260,7 @@ function snapshot() {
   return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
   if (m.k === 'snd') { csClientRecv(m); return; }
   if (m.k === 'mdl') { cmClientRecv(m); return; }
   if (m.k === 'zround' || m.k === 'zend' || m.k === 'zsync') { clientRecvMode(m); return; }
@@ -8557,7 +8563,24 @@ syncAdmin();
 /* ================= Panneau d'administration (touche Inser) ================= */
 // accès : le propriétaire (code secret) ou les joueurs à qui l'hôte a donné le droit admin
 const ADM = { granted: false, open: false, tab: 'players', list: (() => { const l = store.get('admins', {}); return l && typeof l === 'object' ? l : {}; })(), freezeT: 0 };
-const canAdmin = () => xUnlocked || ADM.granted;
+const canAdmin = () => xUnlocked || ADM.granted || ADM.pwOk;
+// mot de passe du panneau admin : seule son empreinte est dans le code ; en ligne, l'hôte vérifie le mot de passe lui-même
+const ADM_PW_HASH = '98b11be2da84a40864fc535d9e23a44a1253a85c8f918380af5ec6fc897e6705';
+ADM.pwOk = false;
+async function admPwCheck(pw) { return typeof pw === 'string' && pw.length <= 64 && await sha256(pw) === ADM_PW_HASH; }
+async function admPwTry(pw, quiet) {
+  if (!(await admPwCheck(pw))) { if (!quiet) { toast(t('adm.pwBad'), 2.5); $('admPwIn').select(); } return; }
+  ADM.pwOk = true; store.set('admKey', pw); $('admLogin').hidden = true;
+  if (NET.mode === 'client') netSend({ k: 'adm', act: 'claimPw', arg: pw });
+  if (!quiet) { toast(t('adm.granted'), 2.5); admShow(true); }
+}
+{ const k = store.get('admKey', ''); if (k) admPwTry(k, true); }
+function admLoginShow(v) { $('admLogin').hidden = !v; if (v) { if (document.pointerLockElement) document.exitPointerLock(); clearInput(); $('admPwIn').value = ''; setTimeout(() => $('admPwIn').focus(), 30); } }
+$('admPwGo').addEventListener('click', () => admPwTry($('admPwIn').value));
+$('admPwX').addEventListener('click', () => admLoginShow(false));
+$('admLogin').addEventListener('keydown', e => { e.stopPropagation(); if (e.code === 'Enter') admPwTry($('admPwIn').value); if (e.code === 'Escape' || e.code === 'Insert') admLoginShow(false); });
+$('admLogin').addEventListener('keyup', e => e.stopPropagation());
+$('admLogin').addEventListener('mousedown', e => e.stopPropagation());
 const admPanel = $('admPanel');
 function admSaveList() { store.set('admins', ADM.list); }
 function isListedAdmin(name) { return ADM.list[String(name || '').toLowerCase()] === true; }
@@ -8569,6 +8592,7 @@ function admAct(act, to, arg) {
 function admHost(from, m) {
   const pl = NET.players.get(from);
   if (m.act === 'claim') { if (m.arg === X_HASH && pl) pl.admin = true; return; }
+  if (m.act === 'claimPw') { admPwCheck(m.arg).then(ok => { if (ok && pl) { pl.admin = true; if (from !== NET.selfId) sendTo(from, { k: 'admx', act: 'admin', arg: true }); } }); return; }
   if (from !== NET.selfId && !(pl && pl.admin)) return;
   const tgt = NET.players.get(m.to);
   if (m.act === 'kick') { if (!tgt || m.to === NET.selfId) return; sendTo(m.to, { k: 'kick' }); setTimeout(() => { const c = NET.conns.get(m.to); try { c && c.close(); } catch (e) {} }, 300); NET.players.delete(m.to); broadcast({ k: 'sys', t: 'leave', name: tgt.name }); return; }
@@ -8593,7 +8617,7 @@ function admApply(act, arg) {
   else if (act === 'admin') { ADM.granted = !!arg; toast(t(arg ? 'adm.granted' : 'adm.revoked'), 3); if (!arg && !xUnlocked) admShow(false); }
 }
 function admShow(v) {
-  if (v && !canAdmin()) { toast(t('adm.denied'), 2); return; }
+  if (v && !canAdmin()) { admLoginShow($('admLogin').hidden); return; }
   if (ADM.open === v) return;
   ADM.open = v; admPanel.hidden = !v; clearInput();
   if (v) { ADM.inGame = playing && !unlockedMode; if (document.pointerLockElement) document.exitPointerLock(); admRender(); }
@@ -8947,10 +8971,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.10.31d';
+const GAME_VERSION = '2026.10.31e';
 const CHANGES = {
-  fr: ['Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://haze15.github.io/velocite/', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
