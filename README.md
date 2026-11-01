@@ -142,7 +142,7 @@ Onglet Personnage → **Importer mon modèle (.glb)**, 4 Mo maximum. Un modèle 
 
 ## Mises à jour
 
-Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écran (vérification toutes les 3 minutes) avec un bouton pour recharger (dans l'appli Windows, le bouton ouvre la version en ligne, déjà à jour). Les nouveautés s'affichent une fois à chaque nouvelle version, et le bouton **Nouveautés** du menu les remontre.
+Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écran (vérification toutes les 3 minutes) avec un bouton pour recharger (dans l'appli Windows, le bouton télécharge la nouvelle appli). Les nouveautés s'affichent une fois à chaque nouvelle version, et le bouton **Nouveautés** du menu les remontre.
 
 ## Sur mobile
 
@@ -259,6 +259,8 @@ Les bruitages des armes ont été refaits pour être moins agressifs : un coup g
 Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s sans dégâts.
 
 ## Appli Windows
+
+**Télécharger :** [Velocite.exe](https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe) (Windows 64 bits).
 
 `Velocite.exe` ouvre le jeu dans sa propre fenêtre (agrandie), grâce à WebView2, le moteur d'Edge déjà présent sur Windows 10 et 11. Comme la fenêtre appartient à `Velocite.exe`, Discord peut la détecter : Paramètres Discord → Jeux enregistrés → « Ajoute-le ! » → Velocite. Si WebView2 manque, ou si on lance `Velocite.exe -navigateur`, le jeu s'ouvre dans une fenêtre d'application Chrome, Edge ou Brave (sinon dans le navigateur par défaut). Le jeu et ses modèles sont dans l'exécutable : le solo marche hors ligne, le multijoueur demande internet. Les liens de partie partagés depuis l'appli pointent vers la version en ligne. L'appli se ferme toute seule quand on ferme la fenêtre du jeu.
 
