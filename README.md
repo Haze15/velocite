@@ -144,6 +144,18 @@ Onglet Personnage → **Importer mon modèle (.glb)**, 4 Mo maximum. Un modèle 
 
 Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écran (vérification toutes les 3 minutes) avec un bouton pour recharger (dans l'appli Windows, le bouton ouvre la version en ligne, déjà à jour). Les nouveautés s'affichent une fois à chaque nouvelle version, et le bouton **Nouveautés** du menu les remontre.
 
+## Sur mobile
+
+Le jeu se joue aussi sur téléphone, en mode paysage. Les commandes tactiles s'activent toutes seules sur un écran tactile (réglage « Commandes tactiles »).
+
+- **Se déplacer :** pose le pouce n'importe où sur la moitié gauche de l'écran, un joystick apparaît. Pousse-le à fond vers l'avant pour sprinter.
+- **Viser :** glisse le doigt sur la moitié droite. Le gros bouton TIR vise aussi quand tu glisses dessus ; un second bouton TIR est à gauche.
+- **Boutons :** saut, accroupi (glissade), viser (appui = on/off), recharger, prendre / monter dans un véhicule, capacités et grenade en haut à droite, armes en bas au milieu, pause en haut à gauche.
+- **Sensibilité tactile** et **inversion** dans les réglages.
+- **iPhone :** Safari ne permet pas le plein écran dans une page. Bouton **Partager** → **Sur l'écran d'accueil**, puis lance Vélocité depuis l'icône : il s'ouvre en plein écran, sans barre Safari. Sur Android, le jeu passe en plein écran au lancement.
+
+La souris peut aussi être inversée (haut / bas et gauche / droite) dans les réglages.
+
 ## Multijoueur
 
 1. Un joueur clique sur **Créer une partie** : il héberge la partie et reçoit un code de 5 caractères.

@@ -2,7 +2,14 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Vélocité">
+<meta name="theme-color" content="#0e1013">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>Vélocité</title>
 <meta name="description" content="FPS navigateur au mouvement nerveux : glissade, bhop, tap-strafe, superglide, multijoueur en pair-à-pair.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -378,6 +385,42 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #repBox select,#repBox input{background:#0e1013;color:inherit;border:1px solid rgba(255,255,255,.18);padding:5px 8px}
 #repBox input{flex:1;min-width:140px}
 .ntag.zmb span{color:#7aff5a}
+#touchUI{position:fixed;inset:0;z-index:30;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#touchUI[hidden]{display:none}
+#touchUI .tb{position:absolute;border-radius:50%;border:2px solid rgba(244,239,230,.35);background:rgba(14,18,22,.38);color:#f4efe6;font:700 12px/1 var(--f-display);letter-spacing:.06em;display:grid;place-items:center;padding:0;touch-action:none;-webkit-tap-highlight-color:transparent}
+#touchUI .tb.on{background:rgba(255,176,32,.55);border-color:#ffb020;color:#14110a}
+#touchUI .tb.fire{width:92px;height:92px;right:calc(26px + env(safe-area-inset-right,0px));bottom:calc(34px + env(safe-area-inset-bottom,0px));border-color:rgba(255,90,68,.8);background:rgba(255,90,68,.28);font-size:16px}
+#touchUI .tb.fire.small{width:60px;height:60px;right:auto;left:calc(26px + env(safe-area-inset-left,0px));bottom:calc(40% + 20px);font-size:12px}
+#tJump{width:70px;height:70px;right:calc(134px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+#tCrouch{width:58px;height:58px;right:calc(128px + env(safe-area-inset-right,0px));bottom:calc(104px + env(safe-area-inset-bottom,0px))}
+#tAds{width:58px;height:58px;right:calc(44px + env(safe-area-inset-right,0px));bottom:calc(144px + env(safe-area-inset-bottom,0px))}
+#tReload{width:50px;height:50px;right:calc(214px + env(safe-area-inset-right,0px));bottom:calc(22px + env(safe-area-inset-bottom,0px));font-size:10px}
+#tUse{width:56px;height:56px;right:calc(206px + env(safe-area-inset-right,0px));bottom:calc(86px + env(safe-area-inset-bottom,0px));font-size:10px}
+#tPause{width:42px;height:42px;left:calc(12px + env(safe-area-inset-left,0px));top:calc(10px + env(safe-area-inset-top,0px));font-size:13px;border-radius:10px}
+#tAbil{position:absolute;right:calc(14px + env(safe-area-inset-right,0px));top:calc(66px + env(safe-area-inset-top,0px));display:flex;gap:6px}
+#tAbil .tb{position:static;width:auto;min-width:64px;height:34px;border-radius:8px;padding:0 10px;font-size:11px;opacity:.6}
+#tAbil .tb.ready{opacity:1;border-color:#ffb020}
+#tSlots{position:absolute;left:50%;transform:translateX(-50%);bottom:calc(58px + env(safe-area-inset-bottom,0px));display:flex;gap:5px}
+#tSlots button{height:30px;padding:0 9px;border-radius:6px;border:1px solid rgba(244,239,230,.3);background:rgba(14,18,22,.45);color:#f4efe6;font:700 10px/1 var(--f-display);letter-spacing:.05em}
+#tSlots button.cur{border-color:#ffb020;color:#ffb020}
+#tStick{position:absolute;width:128px;height:128px;margin:-64px 0 0 -64px;border-radius:50%;border:2px solid rgba(244,239,230,.3);background:rgba(14,18,22,.22);pointer-events:none}
+#tStick i{position:absolute;left:50%;top:50%;width:54px;height:54px;border-radius:50%;background:rgba(244,239,230,.45);transform:translate(-50%,-50%)}
+#rotateHint{position:fixed;inset:0;z-index:31;display:grid;place-items:center;background:rgba(6,8,10,.82);color:#ffb020;font:700 18px/1.3 var(--f-display);text-align:center;padding:24px;pointer-events:none;letter-spacing:.05em}
+#rotateHint[hidden]{display:none}
+body.touch #abil,body.touch #stats,body.touch #spark,body.touch #speed .chips,body.touch #slots,body.touch #fps,body.touch .ew-hint{display:none}
+body.touch #minimap{width:96px;height:96px;top:calc(10px + env(safe-area-inset-top,0px));left:calc(62px + env(safe-area-inset-left,0px))}
+body.touch #speed{left:50%;transform:translateX(-50%);bottom:auto;top:calc(8px + env(safe-area-inset-top,0px));width:auto;text-align:center}
+body.touch #spd{font-size:26px}
+body.touch #weapon{bottom:auto;top:calc(8px + env(safe-area-inset-top,0px));right:calc(90px + env(safe-area-inset-right,0px))}
+body.touch #ammo{font-size:30px}
+body.touch #wname{font-size:11px}
+body.touch #me{bottom:calc(8px + env(safe-area-inset-bottom,0px));width:min(240px,34vw)}
+body.touch #topright{top:calc(10px + env(safe-area-inset-top,0px))}
+body.touch #usePrompt{top:62%}
+#iosTip{margin:10px 0 0;font-size:14px;color:var(--ink-dim);border-left:3px solid var(--amber);padding:6px 10px;background:rgba(255,176,32,.08)}
+#iosTip[hidden]{display:none}
+#news .newsbox{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
+@media (max-width:980px) and (pointer:coarse){.stage{order:1}}
 </style>
 </head>
 <body>
@@ -442,6 +485,20 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 </div>
 
 <div id="admLogin" hidden role="dialog" aria-label="Admin"><b data-i18n="adm.pwTitle">PANNEAU ADMIN</b><p data-i18n="adm.pwAsk">Mot de passe admin :</p><input id="admPwIn" type="password" maxlength="64" autocomplete="off"><div class="admrow"><button type="button" class="btn3" id="admPwGo" data-i18n="adm.pwGo">Entrer</button><button type="button" class="btn3" id="admPwX">✕</button></div></div>
+<div id="touchUI" hidden>
+  <div id="tStick" hidden><i></i></div>
+  <button type="button" class="tb" id="tPause" data-p="pause" aria-label="Pause">❚❚</button>
+  <div id="tAbil"><button type="button" class="tb ab2" id="tTac" data-p="tactical"></button><button type="button" class="tb ab2" id="tUlt" data-p="ultimate"></button><button type="button" class="tb ab2" id="tGren" data-p="grenade"></button></div>
+  <div id="tSlots"></div>
+  <button type="button" class="tb" id="tUse" data-p="use" data-i18n="tch.use">PRENDRE</button>
+  <button type="button" class="tb" id="tReload" data-p="reload" data-i18n="tch.reload">RECH.</button>
+  <button type="button" class="tb" id="tCrouch" data-h="crouch" data-p="crouch" data-i18n="tch.crouch">ACCR.</button>
+  <button type="button" class="tb" id="tJump" data-h="jump" data-p="jump" data-i18n="tch.jump">SAUT</button>
+  <button type="button" class="tb" id="tAds" data-p="adsT" data-i18n="tch.ads">VISER</button>
+  <button type="button" class="tb fire" id="tFire" data-h="fire" data-i18n="tch.fire">TIR</button>
+  <button type="button" class="tb fire small" id="tFire2" data-h="fire" data-i18n="tch.fire">TIR</button>
+</div>
+<div id="rotateHint" hidden><b data-i18n="tch.rotate">Tourne ton téléphone en mode paysage</b></div>
 <div id="admPanel" hidden role="dialog" aria-label="Admin">
   <div class="admhead"><b>PANNEAU ADMIN</b><span id="admWho"></span><button type="button" class="btn3" id="admClose">✕</button></div>
   <nav class="admtabs"><button type="button" data-t="players" data-i18n="adm.tabPlayers">Joueurs</button><button type="button" data-t="game" data-i18n="adm.tabGame">Partie</button><button type="button" data-t="cheats" data-i18n="adm.tabCheats">Triche</button><button type="button" data-t="access" data-i18n="adm.tabAccess">Accès admin</button><button type="button" data-t="accounts" data-i18n="adm.tabAccounts">Comptes</button><button type="button" data-t="reports" data-i18n="adm.tabReports">Signalements</button></nav>
@@ -459,7 +516,8 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       </div>
       <h1 class="logo"><span class="streak" aria-hidden="true"><i></i><i></i><i></i></span>VÉLOCITÉ</h1>
       <p class="lede" data-i18n="menu.lede">Une arène de canyon pour enchaîner glissades, bhops, tap-strafes et superglides. Entraîne-toi sur les robots, puis invite tes potes avec un code de partie.</p>
-      <p class="touch-note" data-i18n="menu.touch">Ce jeu se joue au clavier et à la souris, sur ordinateur.</p>
+      <p class="touch-note" data-i18n="menu.touch2">Sur mobile : joystick à gauche, glisse le doigt à droite pour viser. Joue en mode paysage.</p>
+      <p id="iosTip" hidden data-i18n-html="menu.ios">Sur iPhone, pour jouer en plein écran : bouton <b>Partager</b> de Safari → <b>Sur l’écran d’accueil</b>, puis lance Vélocité depuis l’icône.</p>
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
         <button class="btn ghost" id="specBtn" type="button" data-i18n="spec.btn">Spectateur</button>
@@ -530,6 +588,10 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
       <h2 data-i18n="set.title">Réglages</h2>
       <div class="grid">
         <label class="field"><span class="lab"><span data-i18n="set.sens">Sensibilité</span> <output id="oSens"></output></span><input type="range" id="sens" min="0.4" max="6" step="0.1"></label>
+        <label class="check"><input type="checkbox" id="invY"> <span data-i18n="set.invY">Inverser la souris (haut / bas)</span></label>
+        <label class="check"><input type="checkbox" id="invX"> <span data-i18n="set.invX">Inverser la souris (gauche / droite)</span></label>
+        <label class="check"><input type="checkbox" id="touchOn"> <span data-i18n="set.touch">Commandes tactiles (mobile)</span></label>
+        <label class="field"><span class="lab"><span data-i18n="set.touchSens">Sensibilité tactile</span> <output id="oTouchSens"></output></span><input type="range" id="touchSens" min="0.3" max="3" step="0.1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
         <div class="field"><span class="lab"><label for="music" data-i18n="set.music">Musique</label> <output id="oMusic"></output></span><input type="range" id="music" min="0" max="1" step="0.05">
@@ -1079,6 +1141,8 @@ Object.assign(I18N.fr, { 'veh.ride': '{key} Monter en passager', 'veh.leave': '{
 Object.assign(I18N.en, { 'veh.ride': '{key} Ride as passenger', 'veh.leave': '{key} Get out', 'veh.passHint': 'Passenger: you can aim and shoot · {key} to get out' });
 Object.assign(I18N.fr, { 'adm.pwTitle': 'PANNEAU ADMIN', 'adm.pwAsk': 'Mot de passe admin :', 'adm.pwGo': 'Entrer', 'adm.pwBad': 'Mot de passe incorrect.' });
 Object.assign(I18N.en, { 'adm.pwTitle': 'ADMIN PANEL', 'adm.pwAsk': 'Admin password:', 'adm.pwGo': 'Enter', 'adm.pwBad': 'Wrong password.' });
+Object.assign(I18N.fr, {"tch.use": "PRENDRE", "tch.reload": "RECH.", "tch.crouch": "ACCR.", "tch.jump": "SAUT", "tch.ads": "VISER", "tch.fire": "TIR", "tch.rotate": "Tourne ton téléphone en mode paysage", "menu.touch2": "Sur mobile : joystick à gauche, glisse le doigt à droite pour viser. Joue en mode paysage.", "menu.ios": "Sur iPhone, pour jouer en plein écran : bouton <b>Partager</b> de Safari → <b>Sur l’écran d’accueil</b>, puis lance Vélocité depuis l’icône.", "set.invY": "Inverser la souris (haut / bas)", "set.invX": "Inverser la souris (gauche / droite)", "set.touch": "Commandes tactiles (mobile)", "set.touchSens": "Sensibilité tactile"});
+Object.assign(I18N.en, {"tch.use": "USE", "tch.reload": "RELOAD", "tch.crouch": "CROUCH", "tch.jump": "JUMP", "tch.ads": "AIM", "tch.fire": "FIRE", "tch.rotate": "Turn your phone sideways (landscape)", "menu.touch2": "On mobile: joystick on the left, slide your finger on the right to aim. Play in landscape.", "menu.ios": "On iPhone, to play full screen: Safari’s <b>Share</b> button → <b>Add to Home Screen</b>, then open Vélocité from the icon.", "set.invY": "Invert mouse (up / down)", "set.invX": "Invert mouse (left / right)", "set.touch": "Touch controls (mobile)", "set.touchSens": "Touch sensitivity"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1109,6 +1173,7 @@ let xUnlocked = store.get('xu', false) === true;
 if (xUnlocked) Object.assign(X, store.get('xs', {}));
 const xActive = () => xUnlocked && Object.values(X).some(Boolean);
 S.quality = store.get('quality', 'auto');
+S.invY = store.get('invY', false) === true; S.invX = store.get('invX', false) === true;
 S.skin = store.get('skin', 'std');
 S.slideSnd = store.get('slideSnd', 'gravel');
 S.minimap = store.get('minimap', true);
@@ -5457,7 +5522,10 @@ const padDz = v => Math.abs(v) < 0.14 ? 0 : (v - Math.sign(v) * 0.14) / 0.86;
 function pollPad(dt) {
   const list = navigator.getGamepads ? navigator.getGamepads() : [];
   let gp = null; for (const g of list) if (g && g.connected) { gp = g; break; }
-  if (!gp) { if (PAD.active) { PAD.active = false; PAD.act = {}; } return; }
+  if (!gp) {
+    if (typeof TOUCH !== 'undefined' && TOUCH.on && playing) { PAD.active = true; PAD.mx = TOUCH.mx; PAD.my = TOUCH.my; PAD.act = TOUCH.act; PAD.lx = 0; return; }
+    if (PAD.active) { PAD.active = false; PAD.act = {}; } return;
+  }
   const btn = i => !!gp.buttons[i] && (gp.buttons[i].pressed || gp.buttons[i].value > 0.4);
   const lx = padDz(gp.axes[0] || 0), ly = padDz(gp.axes[1] || 0), rx = padDz(gp.axes[2] || 0), ry = padDz(gp.axes[3] || 0);
   const anyBtn = gp.buttons.some((b, i) => btn(i));
@@ -8135,13 +8203,15 @@ function updateHUD(dt) {
     const el = abEls[elId], cd = AB[k + 'Cd'], ready = abReady(k);
     setTxt(el.children[1], t('ab.' + k));
     el.classList.toggle('ready', ready && !active); el.classList.toggle('active', active);
+    if (TOUCH.on) { const tb = $(elId === 'abTac' ? 'tTac' : 'tUlt'); tb.classList.toggle('ready', ready && !active); const lb = el.children[1].textContent + (el.children[2].textContent ? ' ' + el.children[2].textContent : ''); if (tb.textContent !== lb) tb.textContent = lb; }
     el.lastChild.style.width = ready ? '100%' : ((1 - cd / AB_CD[k]) * 100).toFixed(1) + '%';
     setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active && k === 'scan' ? Math.ceil(AB.scanT) + ' s' : active && k === 'portal' ? Math.ceil(AB.portalAT) + ' s' : ready || active ? '' : Math.ceil(cd) + ' s');
   }
   {
     const el = abEls.abGren, k = GREN.type, n = GREN.charges[k];
     setTxt(el.children[1], t('gr.' + k)); setTxt(el.children[2], '×' + n);
-    el.classList.toggle('ready', n > 0); el.lastChild.style.width = n >= GREN_MAX ? '100%' : ((GREN.regen[k] / GREN_REGEN) * 100).toFixed(1) + '%';
+    el.classList.toggle('ready', n > 0); if (TOUCH.on) { const tb = $('tGren'), lb = el.children[1].textContent + ' ' + n; tb.classList.toggle('ready', n > 0); if (tb.textContent !== lb) tb.textContent = lb; }
+    el.lastChild.style.width = n >= GREN_MAX ? '100%' : ((GREN.regen[k] / GREN_REGEN) * 100).toFixed(1) + '%';
     el.style.setProperty('--gc', '#' + GREN_COL[k].toString(16).padStart(6, '0'));
   }
   stimFxEl.style.opacity = AB.stimT > 0 ? Math.min(1, AB.stimT).toFixed(2) : '0';
@@ -8218,19 +8288,22 @@ function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
   $('hint').classList.remove('warn'); hintKey = 'hint.default'; $('hint').textContent = t(hintKey);
   lastFrame = performance.now(); acc = 0;
+  try { touchShow(); } catch (e) {}
 }
 function pause() {
   playing = false; clearInput(); menu.hidden = false; hud.hidden = true; openEmoteMenu(false); endEmote();
   setPlayLbl(NET.mode !== 'off' ? 'play.back' : 'play.resume');
   if (AC && slideGain) { slideGain.gain.value = 0; }
+  try { touchShow(); } catch (e) {}
 }
 function startUnlocked() {
   if (playing) return;
   unlockedMode = true; startPlaying();
-  toast(t('toast.noLock'), 6);
+  if (!TOUCH.on) toast(t('toast.noLock'), 6);
 }
 async function requestPlay() {
   audioInit(); saveName();
+  if (TOUCH.on) { touchFullscreen(); startUnlocked(); return; }
   if (!canvas.requestPointerLock) { startUnlocked(); return; }
   try {
     let r;
@@ -8339,7 +8412,7 @@ addEventListener('mousemove', e => {
   if (Math.abs(mx) > 900 || Math.abs(my) > 900) return;
   const fovScale = Math.tan(curVfov * DEG / 2) / Math.tan(baseVfov * DEG / 2);
   const k = S.sens * 0.022 * DEG * fovScale;
-  P.yaw -= mx * k; P.pitch = clamp(P.pitch - my * k, -1.55, 1.55);
+  P.yaw -= mx * k * (S.invX ? -1 : 1); P.pitch = clamp(P.pitch - my * k * (S.invY ? -1 : 1), -1.55, 1.55);
   WS.swayX += mx * k; WS.swayY += my * k;
 });
 addEventListener('mousedown', e => {
@@ -8989,10 +9062,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.10.31f';
+const GAME_VERSION = '2026.11.01';
 const CHANGES = {
-  fr: ['Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://haze15.github.io/velocite/', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9040,6 +9113,126 @@ function sameSide(rp) {
   if (RULES.mode === 'zombie' && NET.mode !== 'off') return !!(rp.st && rp.st.z) === !!P.zombie;
   return false;
 }
+/* ================= Version mobile : joystick à gauche, visée au doigt à droite, boutons tactiles ================= */
+const TOUCH = { on: false, mx: 0, my: 0, act: {}, ads: false, stick: null, looks: new Map(), btns: new Map() };
+const IS_TOUCH = (window.matchMedia && matchMedia('(pointer:coarse)').matches) || (navigator.maxTouchPoints > 0 && 'ontouchstart' in window);
+const IS_IOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_STANDALONE = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+S.touchUI = store.get('touchUI', IS_TOUCH) === true; S.touchSens = +store.get('touchSens', 1) || 1;
+TOUCH.on = S.touchUI;
+document.body.classList.toggle('touch', TOUCH.on);
+const tUI = $('touchUI'), tStick = $('tStick'), tKnob = tStick.firstElementChild;
+const STICK_R = 58;
+function touchShow() {
+  const show = TOUCH.on && playing && !EDIT.on;
+  tUI.hidden = !show;
+  $('rotateHint').hidden = !(show && innerHeight > innerWidth * 1.05);
+  if (!show) { TOUCH.mx = TOUCH.my = 0; TOUCH.act = {}; TOUCH.stick = null; TOUCH.looks.clear(); TOUCH.btns.clear(); tStick.hidden = true; for (const b of tUI.querySelectorAll('.on')) b.classList.remove('on'); }
+  $('tAds').classList.toggle('on', TOUCH.ads);
+  if (show) requestAnimationFrame(() => { try { sizeMinimap(); } catch (e) {} });
+}
+function touchActs() {
+  const a = {};
+  for (const id of TOUCH.btns.values()) if (id) a[id] = true;
+  if (TOUCH.ads) a.ads = true;
+  const m = Math.hypot(TOUCH.mx, TOUCH.my);
+  if (TOUCH.my < -0.35) a.forward = true; if (TOUCH.my > 0.35) a.back = true; if (TOUCH.mx < -0.35) a.left = true; if (TOUCH.mx > 0.35) a.right = true;
+  if (m > 0.92 && TOUCH.my < -0.3) a.sprint = true;
+  TOUCH.act = a;
+}
+function lookBy(dx, dy) {
+  if (P.dead && !SPEC.on) return;
+  const zoom = Math.tan(curVfov * DEG / 2) / Math.tan(baseVfov * DEG / 2);
+  const k = 0.0052 * S.touchSens * zoom;
+  P.yaw -= dx * k * (S.invX ? -1 : 1); P.pitch = clamp(P.pitch - dy * k * (S.invY ? -1 : 1), -1.55, 1.55);
+  WS.swayX += dx * k * 0.5; WS.swayY += dy * k * 0.5;
+}
+function touchStart(e) {
+  if (!TOUCH.on || !playing) return;
+  e.preventDefault(); audioInit();
+  for (const tc of e.changedTouches) {
+    const el = document.elementFromPoint(tc.clientX, tc.clientY);
+    const hb = el && el.closest && el.closest('[data-h],[data-p],[data-slot]');
+    if (hb) {
+      hb.classList.add('on');
+      if (hb.dataset.slot !== undefined) { endEmote(); swapTo(+hb.dataset.slot); TOUCH.btns.set(tc.identifier, null); continue; }
+      const h = hb.dataset.h, pr = hb.dataset.p;
+      if (pr === 'pause') { pause(); return; }
+      if (pr === 'adsT') { TOUCH.ads = !TOUCH.ads; TOUCH.btns.set(tc.identifier, null); touchShow(); continue; }
+      if (pr) onAction(pr);
+      TOUCH.btns.set(tc.identifier, h || null);
+      // le bouton de tir sert aussi à viser en glissant le doigt
+      if (h === 'fire') TOUCH.looks.set(tc.identifier, { x: tc.clientX, y: tc.clientY, el: hb });
+      else hb._tid = tc.identifier;
+      continue;
+    }
+    if (tc.clientX < innerWidth * 0.42 && !TOUCH.stick) {
+      TOUCH.stick = { id: tc.identifier, x: tc.clientX, y: tc.clientY };
+      tStick.hidden = false; tStick.style.left = tc.clientX + 'px'; tStick.style.top = tc.clientY + 'px'; tKnob.style.transform = 'translate(-50%,-50%)';
+      continue;
+    }
+    TOUCH.looks.set(tc.identifier, { x: tc.clientX, y: tc.clientY });
+  }
+  touchActs();
+}
+function touchMove(e) {
+  if (!TOUCH.on || !playing) return;
+  e.preventDefault();
+  for (const tc of e.changedTouches) {
+    if (TOUCH.stick && TOUCH.stick.id === tc.identifier) {
+      let dx = tc.clientX - TOUCH.stick.x, dy = tc.clientY - TOUCH.stick.y; const d = Math.hypot(dx, dy);
+      // le joystick suit le doigt s'il dépasse le bord
+      if (d > STICK_R * 1.4) { const k = (d - STICK_R * 1.4) / d; TOUCH.stick.x += dx * k; TOUCH.stick.y += dy * k; tStick.style.left = TOUCH.stick.x + 'px'; tStick.style.top = TOUCH.stick.y + 'px'; dx = tc.clientX - TOUCH.stick.x; dy = tc.clientY - TOUCH.stick.y; }
+      const m = Math.min(1, Math.hypot(dx, dy) / STICK_R), a = Math.atan2(dy, dx);
+      TOUCH.mx = Math.cos(a) * m; TOUCH.my = Math.sin(a) * m;
+      tKnob.style.transform = `translate(calc(-50% + ${(TOUCH.mx * STICK_R).toFixed(1)}px), calc(-50% + ${(TOUCH.my * STICK_R).toFixed(1)}px))`;
+      continue;
+    }
+    const lk = TOUCH.looks.get(tc.identifier);
+    if (lk) { lookBy(tc.clientX - lk.x, tc.clientY - lk.y); lk.x = tc.clientX; lk.y = tc.clientY; }
+  }
+  touchActs();
+}
+function touchEnd(e) {
+  if (!TOUCH.on) return;
+  if (playing) e.preventDefault();
+  for (const tc of e.changedTouches) {
+    if (TOUCH.stick && TOUCH.stick.id === tc.identifier) { TOUCH.stick = null; TOUCH.mx = TOUCH.my = 0; tStick.hidden = true; }
+    const lk = TOUCH.looks.get(tc.identifier); if (lk && lk.el) lk.el.classList.remove('on'); TOUCH.looks.delete(tc.identifier);
+    if (TOUCH.btns.has(tc.identifier)) { TOUCH.btns.delete(tc.identifier); for (const b of tUI.querySelectorAll('.on')) if (!b.matches('#tAds') && b._tid === tc.identifier) b.classList.remove('on'); for (const b of tUI.querySelectorAll('[data-slot].on,[data-p].on')) if (!b.matches('#tAds')) b.classList.remove('on'); }
+  }
+  touchActs(); touchShow();
+}
+tUI.addEventListener('touchstart', touchStart, { passive: false });
+tUI.addEventListener('touchmove', touchMove, { passive: false });
+tUI.addEventListener('touchend', touchEnd, { passive: false });
+tUI.addEventListener('touchcancel', touchEnd, { passive: false });
+// au doigt, pas de clics « souris » simulés qui tireraient en double
+tUI.addEventListener('mousedown', e => { e.preventDefault(); e.stopPropagation(); }, true);
+// emplacements d'armes tactiles, recopiés de la barre d'armes
+function touchSlots() {
+  const box = $('tSlots'); const n = WEAPONS.length;
+  if (box.children.length !== n) { box.replaceChildren(); for (let i = 0; i < n; i++) { const b = document.createElement('button'); b.type = 'button'; b.dataset.slot = i; box.append(b); } }
+  for (let i = 0; i < n; i++) { const b = box.children[i]; b.hidden = !owns(i); b.textContent = wShort(i); b.classList.toggle('cur', WS.cur === i); }
+}
+// plein écran + paysage là où le navigateur le permet (Android) ; sur iPhone : ajout à l'écran d'accueil
+function touchFullscreen() {
+  const el = document.documentElement;
+  try { const r = (el.requestFullscreen || el.webkitRequestFullscreen || (() => null)).call(el, { navigationUI: 'hide' }); if (r && r.catch) r.catch(() => {}); } catch (e) {}
+  try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('landscape').catch(() => {}); } catch (e) {}
+}
+setInterval(() => { if (TOUCH.on && playing) touchSlots(); }, 300);
+addEventListener('resize', touchShow);
+// menu : explications pour mobile et iPhone
+$('iosTip').hidden = !(IS_IOS && !IS_STANDALONE);
+$('touchOn').checked = S.touchUI;
+$('touchOn').addEventListener('change', e => { S.touchUI = TOUCH.on = e.target.checked; store.set('touchUI', S.touchUI); document.body.classList.toggle('touch', TOUCH.on); touchShow(); });
+$('touchSens').value = S.touchSens; $('oTouchSens').textContent = S.touchSens.toFixed(1);
+$('touchSens').addEventListener('input', e => { S.touchSens = +e.target.value; store.set('touchSens', S.touchSens); $('oTouchSens').textContent = S.touchSens.toFixed(1); });
+
+$('invY').checked = S.invY; $('invX').checked = S.invX;
+$('invY').addEventListener('change', e => { S.invY = e.target.checked; store.set('invY', S.invY); });
+$('invX').addEventListener('change', e => { S.invX = e.target.checked; store.set('invX', S.invX); });
 const mapSel = $('mapSel'); mapSel.value = S.map;
 mapSel.addEventListener('change', () => {
   if (NET.mode === 'client') { mapSel.value = S.map; setNetStatus(t('map.hostOnly'), 'err'); return; }
