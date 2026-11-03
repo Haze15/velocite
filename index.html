@@ -276,25 +276,22 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #me{position:absolute;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));width:min(300px,44vw);transform:translateX(-50%)}
 #me .bar{height:9px}
 #me .tname{font-size:13px;color:var(--ink-dim)}
-#xh{position:absolute;left:50%;top:50%;--g:6px}
-#vret{position:absolute;left:0;top:0;width:44px;height:44px;margin:-22px 0 0 -22px;border:2px solid rgba(255,255,255,.92);border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.35),inset 0 0 0 1px rgba(0,0,0,.3);pointer-events:none;will-change:transform}
-#vret[hidden],#vaim[hidden]{display:none}
-#vret b{position:absolute;left:50%;top:50%;width:4px;height:4px;margin:-2px 0 0 -2px;border-radius:50%;background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.4)}
-#vret::before,#vret::after{content:'';position:absolute;background:rgba(255,255,255,.92)}
-#vret::before{left:50%;top:-9px;bottom:-9px;width:2px;margin-left:-1px;-webkit-mask:linear-gradient(#000 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px));mask:linear-gradient(#000 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px))}
-#vret::after{top:50%;left:-9px;right:-9px;height:2px;margin-top:-1px;-webkit-mask:linear-gradient(90deg,#000 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px));mask:linear-gradient(90deg,#000 7px,transparent 7px calc(100% - 7px),#000 calc(100% - 7px))}
-#vret.big{width:60px;height:60px;margin:-30px 0 0 -30px}
-#vret i{position:absolute;inset:-7px;border-radius:50%;background:conic-gradient(var(--acc,#ffb020) calc(var(--k,1)*360deg),rgba(255,255,255,.12) 0);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 3px));opacity:0}
-#vret.big i{opacity:1}#vret.big.ready i{opacity:.35}
-#vaim{position:absolute;left:50%;top:50%;width:12px;height:12px;margin:-6px 0 0 -6px;border:1.5px solid rgba(255,255,255,.55);border-radius:50%;box-shadow:0 0 0 1px rgba(0,0,0,.25);pointer-events:none}
-#xh i{position:absolute;background:var(--ink);box-shadow:0 0 0 1px rgba(0,0,0,.35)}
-#xh .d{width:3px;height:3px;left:-1.5px;top:-1.5px}
-#xh .t{width:2px;height:8px;left:-1px;top:calc(-8px - var(--g))}
-#xh .b{width:2px;height:8px;left:-1px;top:var(--g)}
-#xh .l{width:8px;height:2px;top:-1px;left:calc(-8px - var(--g))}
-#xh .r{width:8px;height:2px;top:-1px;left:var(--g)}
-#xh.ads i{opacity:0}
-#xh.hide{opacity:0}
+#xh{position:fixed;left:50%;top:50%}
+.xh{--g:6px;--len:8px;--th:2px;--col:#f4efe6;--dot:3px;--ol:1px;--op:1;opacity:var(--op)}
+.xh i{position:absolute;background:var(--col);box-shadow:0 0 0 var(--ol) rgba(0,0,0,.45)}
+.xh .d{width:var(--dot);height:var(--dot);left:calc(var(--dot) / -2);top:calc(var(--dot) / -2)}
+.xh .t{width:var(--th);height:var(--len);left:calc(var(--th) / -2);top:calc(-1 * var(--len) - var(--g))}
+.xh .b{width:var(--th);height:var(--len);left:calc(var(--th) / -2);top:var(--g)}
+.xh .l{width:var(--len);height:var(--th);top:calc(var(--th) / -2);left:calc(-1 * var(--len) - var(--g))}
+.xh .r{width:var(--len);height:var(--th);top:calc(var(--th) / -2);left:var(--g)}
+.xh .c{display:none;background:none;border:var(--th) solid var(--col);border-radius:50%;width:calc(2 * var(--g) + var(--len));height:calc(2 * var(--g) + var(--len));left:calc(-1 * var(--g) - var(--len) / 2 - var(--th));top:calc(-1 * var(--g) - var(--len) / 2 - var(--th));box-shadow:0 0 0 var(--ol) rgba(0,0,0,.35),inset 0 0 0 var(--ol) rgba(0,0,0,.35)}
+.xh.s-dot .t,.xh.s-dot .b,.xh.s-dot .l,.xh.s-dot .r,.xh.s-circle .t,.xh.s-circle .b,.xh.s-circle .l,.xh.s-circle .r{display:none}
+.xh.s-circle .c{display:block}
+.xh.s-t .t{display:none}
+.xh.s-x{transform:rotate(45deg)}
+.xh.nodot .d{display:none}
+#xh.ads i:not(.d){opacity:0}
+#xh.hide{opacity:0 !important}
 #hm{position:absolute;left:50%;top:50%;opacity:0}
 #hm i{position:absolute;width:2px;height:9px;background:var(--ink);left:-1px;top:-4.5px}
 #hm i:nth-child(1){transform:rotate(45deg) translateY(-11px)}
@@ -390,7 +387,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #touchUI .tb{position:absolute;border-radius:50%;border:2px solid rgba(244,239,230,.35);background:rgba(14,18,22,.38);color:#f4efe6;font:700 12px/1 var(--f-display);letter-spacing:.06em;display:grid;place-items:center;padding:0;touch-action:none;-webkit-tap-highlight-color:transparent}
 #touchUI .tb.on{background:rgba(255,176,32,.55);border-color:#ffb020;color:#14110a}
 #touchUI .tb.fire{width:92px;height:92px;right:calc(26px + env(safe-area-inset-right,0px));bottom:calc(34px + env(safe-area-inset-bottom,0px));border-color:rgba(255,90,68,.8);background:rgba(255,90,68,.28);font-size:16px}
-#touchUI .tb.fire.small{width:60px;height:60px;right:auto;left:calc(26px + env(safe-area-inset-left,0px));bottom:calc(40% + 20px);font-size:12px}
+#touchUI .tb.fire.small{width:60px;height:60px;right:auto;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(30% + 10px);font-size:12px}
 #tJump{width:70px;height:70px;right:calc(134px + env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px))}
 #tCrouch{width:58px;height:58px;right:calc(128px + env(safe-area-inset-right,0px));bottom:calc(104px + env(safe-area-inset-bottom,0px))}
 #tAds{width:58px;height:58px;right:calc(44px + env(safe-area-inset-right,0px));bottom:calc(144px + env(safe-area-inset-bottom,0px))}
@@ -421,6 +418,37 @@ body.touch #usePrompt{top:62%}
 #iosTip[hidden]{display:none}
 #news .newsbox{max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto}
 @media (max-width:980px) and (pointer:coarse){.stage{order:1}}
+.subh,.xhset,#padMap,.grid>p.hint{grid-column:1/-1}
+.subh{font:700 13px/1.2 var(--f-display);letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:18px 0 8px}
+.xhset{display:grid;grid-template-columns:140px minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:560px){.xhset{grid-template-columns:minmax(0,1fr)}}
+.xhprev{position:relative;height:120px;background:linear-gradient(#4a6a80,#c9b48e);border:1px solid rgba(255,255,255,.15)}
+.xhprev .xh{position:absolute;left:50%;top:50%}
+.xhfields{display:grid;gap:6px}
+#padMap{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:4px 14px;margin:8px 0}
+.pmrow{display:flex;align-items:center;gap:6px}.pmrow span{flex:1;font-size:13px}.pmrow .btn3{min-width:84px}.pmrow .btn3.on{border-color:var(--amber);color:var(--amber)}
+#chatLog{position:absolute;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(150px + env(safe-area-inset-bottom,0px));width:min(380px,60vw);display:flex;flex-direction:column;gap:3px;font:500 14px/1.3 var(--f-body);text-shadow:0 1px 2px #000}
+.cmsg{background:rgba(14,18,22,.55);padding:3px 8px;transition:opacity .6s}
+.cmsg.old{opacity:0}
+.cmsg i{font-style:normal;font-size:10px;color:var(--amber);margin-right:4px;letter-spacing:.08em}
+.cmsg b{font-weight:700}
+#chatLog.open .cmsg{opacity:1}
+#chatBar{position:fixed;left:calc(18px + env(safe-area-inset-left,0px));bottom:calc(110px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;gap:6px;width:min(480px,calc(100vw - 36px))}
+#chatBar[hidden]{display:none}
+#chatIn{flex:1;min-width:0;background:rgba(14,18,22,.85);color:#f4efe6;border:1px solid rgba(255,176,32,.5);padding:8px 10px;font:500 15px/1.2 var(--f-body)}
+#talkIcon{position:absolute;left:50%;top:calc(64px + env(safe-area-inset-top,0px));transform:translateX(-50%);font-size:20px;background:rgba(14,18,22,.6);border:1px solid rgba(155,227,106,.6);padding:2px 8px;border-radius:12px}
+.ntag.talk span::after{content:' 🔊'}
+#touchUI.edit{background:rgba(6,8,10,.35);z-index:45}
+#touchUI.edit .tb,#touchUI.edit #tAbil,#touchUI.edit #tSlots{outline:1px dashed rgba(255,176,32,.6);outline-offset:3px;cursor:move}
+#touchUI.edit .sel{outline:2px solid #ffb020 !important}
+#touchUI.edit #tSlots{min-width:120px;min-height:30px}
+#tChat{width:46px;height:46px;left:calc(12px + env(safe-area-inset-left,0px));top:calc(64px + env(safe-area-inset-top,0px));font-size:9px}
+#tTalk{width:52px;height:52px;left:calc(62px + env(safe-area-inset-left,0px));top:calc(112px + env(safe-area-inset-top,0px));font-size:9px}
+#tEdit{position:fixed;left:50%;top:calc(8px + env(safe-area-inset-top,0px));transform:translateX(-50%);z-index:46;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;background:rgba(14,17,21,.94);border:1px solid rgba(255,176,32,.5);padding:8px 12px;width:min(720px,calc(100vw - 24px));font:500 13px/1.3 var(--f-body);color:#f4efe6}
+#tEdit[hidden]{display:none}
+#tEdit b{color:#ffb020;min-width:80px}
+#tEdit .hint{flex-basis:100%;text-align:center;margin:0}
+#tEdit select{background:#0e1013;color:inherit;border:1px solid rgba(255,255,255,.2);padding:4px}
 </style>
 </head>
 <body>
@@ -443,7 +471,8 @@ body.touch #usePrompt{top:62%}
   <div id="tags"></div>
   <canvas id="espCv"></canvas>
   <div id="nums"></div>
-  <div id="xh"><i class="d"></i><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
+  <div id="xh" class="xh"><i class="c"></i><i class="d"></i><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div>
+  <div id="chatLog"></div><div id="talkIcon" hidden>🎙</div>
   <div id="vret" hidden><i></i><b></b></div><div id="vaim" hidden></div>
   <div id="hm"><i></i><i></i><i></i><i></i></div>
   <div id="feed"></div>
@@ -490,14 +519,21 @@ body.touch #usePrompt{top:62%}
   <button type="button" class="tb" id="tPause" data-p="pause" aria-label="Pause">❚❚</button>
   <div id="tAbil"><button type="button" class="tb ab2" id="tTac" data-p="tactical"></button><button type="button" class="tb ab2" id="tUlt" data-p="ultimate"></button><button type="button" class="tb ab2" id="tGren" data-p="grenade"></button></div>
   <div id="tSlots"></div>
-  <button type="button" class="tb" id="tUse" data-p="use" data-i18n="tch.use">PRENDRE</button>
-  <button type="button" class="tb" id="tReload" data-p="reload" data-i18n="tch.reload">RECH.</button>
-  <button type="button" class="tb" id="tCrouch" data-h="crouch" data-p="crouch" data-i18n="tch.crouch">ACCR.</button>
-  <button type="button" class="tb" id="tJump" data-h="jump" data-p="jump" data-i18n="tch.jump">SAUT</button>
-  <button type="button" class="tb" id="tAds" data-p="adsT" data-i18n="tch.ads">VISER</button>
-  <button type="button" class="tb fire" id="tFire" data-h="fire" data-i18n="tch.fire">TIR</button>
-  <button type="button" class="tb fire small" id="tFire2" data-h="fire" data-i18n="tch.fire">TIR</button>
+  <button type="button" class="tb" id="tUse" data-def="use"></button>
+  <button type="button" class="tb" id="tReload" data-def="reload"></button>
+  <button type="button" class="tb" id="tCrouch" data-def="crouch"></button>
+  <button type="button" class="tb" id="tJump" data-def="jump"></button>
+  <button type="button" class="tb" id="tAds" data-def="aim"></button>
+  <button type="button" class="tb fire" id="tFire" data-def="fire"></button>
+  <button type="button" class="tb fire small" id="tFire2" data-def="fire"></button>
+  <button type="button" class="tb" id="tChat" data-def="chat"></button>
+  <button type="button" class="tb" id="tTalk" data-def="talk"></button>
 </div>
+<div id="tEdit" hidden><b id="tEditName"></b><span class="hint" data-i18n="tch.editHint">Glisse les boutons pour les déplacer. Touche un bouton pour changer son action ou sa taille.</span>
+  <label><span data-i18n="tch.action">Action</span> <select id="tEditAct"></select></label>
+  <label><span data-i18n="tch.size">Taille</span> <input type="range" id="tEditSize" min="0.6" max="1.8" step="0.05" value="1"></label>
+  <button type="button" class="btn3" id="tEditReset" data-i18n="tch.reset">Par défaut</button><button type="button" class="btn3" id="tEditDone" data-i18n="tch.done">Terminé</button></div>
+<div id="chatBar" hidden><button type="button" class="btn3" id="chatMode"></button><input id="chatIn" maxlength="140" autocomplete="off" spellcheck="false" data-i18n-ph="chat.ph" placeholder="Message…"><button type="button" class="btn3" id="chatSend" data-i18n="chat.send">Envoyer</button></div>
 <div id="rotateHint" hidden><b data-i18n="tch.rotate">Tourne ton téléphone en mode paysage</b></div>
 <div id="admPanel" hidden role="dialog" aria-label="Admin">
   <div class="admhead"><b>PANNEAU ADMIN</b><span id="admWho"></span><button type="button" class="btn3" id="admClose">✕</button></div>
@@ -521,7 +557,7 @@ body.touch #usePrompt{top:62%}
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
         <button class="btn ghost" id="specBtn" type="button" data-i18n="spec.btn">Spectateur</button>
-        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option><option value="ocean" data-i18n="map.ocean">Océan (îles)</option><option value="arctic" data-i18n="map.arctic">Arctique</option><option value="world" data-i18n="map.world">Monde (toutes les cartes)</option></select></label>
+        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option><option value="ocean" data-i18n="map.ocean">Océan (îles)</option><option value="arctic" data-i18n="map.arctic">Arctique</option><option value="world" data-i18n="map.world">Monde (toutes les cartes)</option><option value="room" data-i18n="map.room">Chambre géante</option></select></label>
         <label class="mapsel"><span data-i18n="mode.label">Mode</span><select id="modeSel"><option value="ffa" data-i18n="mode.ffa">Chacun pour soi</option><option value="teams" data-i18n="mode.teams">2 équipes</option><option value="zombie" data-i18n="mode.zombie">Zombies</option></select></label>
         <button class="btn3" id="newsBtn" type="button" data-i18n="news.btn">Nouveautés</button>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
@@ -533,7 +569,7 @@ body.touch #usePrompt{top:62%}
       <div class="charbox">
         <canvas id="charPrev" width="440" height="620" aria-hidden="true"></canvas>
         <div class="charopts">
-          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option><option value="custom" hidden>Mon modèle</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option><option value="lynx" data-i18n="char.lynx">Lynx</option><option value="custom" hidden>Mon modèle</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
           <div class="cmrow"><label class="btn3 cmfile"><span data-i18n="cm.import">Importer mon modèle (.glb)</span><input type="file" id="cmFile" accept=".glb,model/gltf-binary"></label><span id="cmInfo"></span><label class="check"><input type="checkbox" id="cmFlip"> <span data-i18n="cm.flip">Tourner de 180°</span></label><button class="btn3" id="cmClear" type="button" data-i18n="cm.clear">Retirer</button></div>
@@ -592,6 +628,27 @@ body.touch #usePrompt{top:62%}
         <label class="check"><input type="checkbox" id="invX"> <span data-i18n="set.invX">Inverser la souris (gauche / droite)</span></label>
         <label class="check"><input type="checkbox" id="touchOn"> <span data-i18n="set.touch">Commandes tactiles (mobile)</span></label>
         <label class="field"><span class="lab"><span data-i18n="set.touchSens">Sensibilité tactile</span> <output id="oTouchSens"></output></span><input type="range" id="touchSens" min="0.3" max="3" step="0.1"></label>
+        <button type="button" class="btn3" id="touchEditBtn" data-i18n="tch.edit">Disposer les boutons tactiles</button>
+        <h3 class="subh" data-i18n="xh.title">Viseur</h3>
+        <div class="xhset">
+          <div class="xhprev"><div id="xhPrev" class="xh"><i class="c"></i><i class="d"></i><i class="t"></i><i class="b"></i><i class="l"></i><i class="r"></i></div></div>
+          <div class="xhfields">
+            <label class="field"><span class="lab" data-i18n="xh.style">Forme</span><select id="xhStyle"><option value="cross" data-i18n="xh.cross">Croix</option><option value="t" data-i18n="xh.t">Croix en T</option><option value="x" data-i18n="xh.x">Croix en X</option><option value="circle" data-i18n="xh.circle">Cercle</option><option value="dot" data-i18n="xh.dot">Point</option></select></label>
+            <label class="field"><span class="lab" data-i18n="xh.color">Couleur</span><input type="color" id="xhColor"></label>
+            <label class="field"><span class="lab" data-i18n="xh.len">Longueur</span><input type="range" id="xhLen" min="2" max="24" step="1"></label>
+            <label class="field"><span class="lab" data-i18n="xh.thick">Épaisseur</span><input type="range" id="xhThick" min="1" max="6" step="1"></label>
+            <label class="field"><span class="lab" data-i18n="xh.gap">Écart</span><input type="range" id="xhGapIn" min="0" max="24" step="1"></label>
+            <label class="field"><span class="lab" data-i18n="xh.op">Opacité</span><input type="range" id="xhOp" min="0.2" max="1" step="0.05"></label>
+            <label class="check"><input type="checkbox" id="xhDot"> <span data-i18n="xh.dotOn">Point au centre</span></label>
+            <label class="check"><input type="checkbox" id="xhDyn"> <span data-i18n="xh.dyn">S’écarte avec la dispersion</span></label>
+            <label class="check"><input type="checkbox" id="xhOutline"> <span data-i18n="xh.outline">Contour noir</span></label>
+            <button type="button" class="btn3" id="xhReset" data-i18n="xh.reset">Viseur par défaut</button>
+          </div>
+        </div>
+        <h3 class="subh" data-i18n="voice.title">Chat vocal de proximité</h3>
+        <label class="field"><span class="lab" data-i18n="voice.mode">Micro</span><select id="voiceMode"><option value="off" data-i18n="voice.off">Coupé</option><option value="ptt" data-i18n="voice.ptt">Appuyer pour parler (N)</option><option value="open" data-i18n="voice.open">Toujours ouvert</option></select></label>
+        <label class="field"><span class="lab" data-i18n="voice.vol">Volume des voix</span><input type="range" id="voiceVol" min="0" max="2" step="0.05"></label>
+        <p class="hint" data-i18n="voice.hint">On entend les joueurs à moins de 45 m, plus fort quand ils sont près. Le chat écrit (Entrée) est aussi de proximité par défaut (Tab dans la barre pour écrire à tous).</p>
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
         <label class="field"><span class="lab"><span data-i18n="set.vol">Volume</span> <output id="oVol"></output></span><input type="range" id="vol" min="0" max="1" step="0.05"></label>
         <div class="field"><span class="lab"><label for="music" data-i18n="set.music">Musique</label> <output id="oMusic"></output></span><input type="range" id="music" min="0" max="1" step="0.05">
@@ -615,6 +672,8 @@ body.touch #usePrompt{top:62%}
           <label class="check"><input type="checkbox" id="easySnap"> <span data-i18n="set.easySnap">Snap strafe facile (clavier et manette)</span></label>
           <label class="check"><input type="checkbox" id="padSnap"> <span data-i18n="pad.snap">Snap strafe facile à la manette</span></label>
           <label class="check"><input type="checkbox" id="padInvert"> <span data-i18n="pad.invert">Inverser la visée verticale</span></label>
+          <p class="hint" data-i18n="pad.mapHint">Clique sur un bouton puis appuie sur le bouton de la manette à utiliser (Start annule).</p>
+          <div id="padMap"></div><button type="button" class="btn3" id="padReset" data-i18n="pad.reset">Boutons par défaut</button>
           <p class="hint" data-i18n="pad.help">Stick gauche : bouger · stick droit : viser · A : sauter · B : glisser · X : recharger ou interagir · Y : arme suivante · LB/RB : capacités · LT/RT : viser/tirer · L3 : sprint · R3 : couteau · croix : emotes (haut), grenade (bas), arme précédente (gauche), type de grenade (droite) · Start : pause.</p>
         </div>
         <label class="check"><input type="checkbox" id="snapTap"> <span data-i18n="set.snapTap">Snap tap clavier (la dernière direction appuyée gagne)</span></label>
@@ -1143,6 +1202,8 @@ Object.assign(I18N.fr, { 'adm.pwTitle': 'PANNEAU ADMIN', 'adm.pwAsk': 'Mot de pa
 Object.assign(I18N.en, { 'adm.pwTitle': 'ADMIN PANEL', 'adm.pwAsk': 'Admin password:', 'adm.pwGo': 'Enter', 'adm.pwBad': 'Wrong password.' });
 Object.assign(I18N.fr, {"tch.use": "PRENDRE", "tch.reload": "RECH.", "tch.crouch": "ACCR.", "tch.jump": "SAUT", "tch.ads": "VISER", "tch.fire": "TIR", "tch.rotate": "Tourne ton téléphone en mode paysage", "menu.touch2": "Sur mobile : joystick à gauche, glisse le doigt à droite pour viser. Joue en mode paysage.", "menu.ios": "Sur iPhone, pour jouer en plein écran : bouton <b>Partager</b> de Safari → <b>Sur l’écran d’accueil</b>, puis lance Vélocité depuis l’icône.", "set.invY": "Inverser la souris (haut / bas)", "set.invX": "Inverser la souris (gauche / droite)", "set.touch": "Commandes tactiles (mobile)", "set.touchSens": "Sensibilité tactile"});
 Object.assign(I18N.en, {"tch.use": "USE", "tch.reload": "RELOAD", "tch.crouch": "CROUCH", "tch.jump": "JUMP", "tch.ads": "AIM", "tch.fire": "FIRE", "tch.rotate": "Turn your phone sideways (landscape)", "menu.touch2": "On mobile: joystick on the left, slide your finger on the right to aim. Play in landscape.", "menu.ios": "On iPhone, to play full screen: Safari’s <b>Share</b> button → <b>Add to Home Screen</b>, then open Vélocité from the icon.", "set.invY": "Invert mouse (up / down)", "set.invX": "Invert mouse (left / right)", "set.touch": "Touch controls (mobile)", "set.touchSens": "Touch sensitivity"});
+Object.assign(I18N.fr, {"map.room": "Chambre géante", "char.lynx": "Lynx", "cls.runner": "Coureuse de murs", "ab.overdrive": "SURVOLTAGE", "abd.overdrive": "8 s : +30 % de vitesse et course sur les murs sans limite. Passif : cours sur les murs (saute contre un mur sur le côté en avançant).", "wr.kick": "saut du mur", "act.chat": "Chat", "act.talk": "Parler (micro)", "chat.near": "PROCHE", "chat.modeNear": "Proche", "chat.modeAll": "Tous", "chat.ph": "Message… (Entrée pour envoyer)", "chat.send": "Envoyer", "chat.offline": "Le chat marche en partie en ligne.", "voice.title": "Chat vocal de proximité", "voice.mode": "Micro", "voice.off": "Coupé", "voice.ptt": "Appuyer pour parler (N)", "voice.open": "Toujours ouvert", "voice.vol": "Volume des voix", "voice.hint": "On entend les joueurs à moins de 45 m, plus fort quand ils sont près. Le chat écrit (Entrée) est aussi de proximité par défaut (Tab dans la barre pour écrire à tous).", "voice.denied": "Micro refusé : autorise-le dans le navigateur pour le chat vocal.", "xh.title": "Viseur", "xh.style": "Forme", "xh.cross": "Croix", "xh.t": "Croix en T", "xh.x": "Croix en X", "xh.circle": "Cercle", "xh.dot": "Point", "xh.color": "Couleur", "xh.len": "Longueur", "xh.thick": "Épaisseur", "xh.gap": "Écart", "xh.op": "Opacité", "xh.dotOn": "Point au centre", "xh.dyn": "S’écarte avec la dispersion", "xh.outline": "Contour noir", "xh.reset": "Viseur par défaut", "pad.mapHint": "Clique sur un bouton puis appuie sur le bouton de la manette à utiliser (Start annule).", "pad.reset": "Boutons par défaut", "pad.press": "Appuie…", "pad.clear": "Retirer", "pad.a.jump": "Sauter", "pad.a.crouch": "S’accroupir / glisser", "pad.a.use": "Utiliser / recharger", "pad.a.next": "Arme suivante", "pad.a.prev": "Arme précédente", "pad.a.tactical": "Capacité tactique", "pad.a.ultimate": "Capacité ultime", "pad.a.ads": "Viser", "pad.a.fire": "Tirer", "pad.a.board": "Scores", "pad.a.sprint": "Sprint", "pad.a.w6": "Couteau", "pad.a.emote": "Emotes", "pad.a.grenade": "Grenade", "pad.a.grenType": "Type de grenade", "pad.a.reload": "Recharger", "pad.a.chat": "Chat", "pad.a.talk": "Parler (micro)", "pad.a.inspect": "Inspecter", "pad.a.map": "Mini-carte", "tch.edit": "Disposer les boutons tactiles", "tch.editHint": "Glisse les boutons pour les déplacer. Touche un bouton pour changer son action ou sa taille.", "tch.action": "Action", "tch.size": "Taille", "tch.reset": "Par défaut", "tch.done": "Terminé", "tch.pick": "Choisis un bouton", "tch.abil": "Capacités", "tch.slots": "Armes", "tch.fire": "TIR", "tch.jump": "SAUT", "tch.crouch": "ACCR.", "tch.aim": "VISER", "tch.aimHold": "VISER (maintenu)", "tch.reload": "RECH.", "tch.use": "PRENDRE", "tch.tactical": "TACTIQUE", "tch.ultimate": "ULTIME", "tch.grenade": "GRENADE", "tch.next": "ARME +", "tch.prev": "ARME −", "tch.sprint": "SPRINT", "tch.knife": "COUTEAU", "tch.emote": "EMOTE", "tch.chat": "CHAT", "tch.talk": "MICRO", "tch.map": "CARTE", "tch.board": "SCORES", "tch.inspect": "INSPECTER"});
+Object.assign(I18N.en, {"map.room": "Giant bedroom", "char.lynx": "Lynx", "cls.runner": "Wall runner", "ab.overdrive": "OVERDRIVE", "abd.overdrive": "8 s: +30% speed and unlimited wall running. Passive: run along walls (jump into a wall at your side while moving).", "wr.kick": "wall kick", "act.chat": "Chat", "act.talk": "Talk (mic)", "chat.near": "NEARBY", "chat.modeNear": "Nearby", "chat.modeAll": "All", "chat.ph": "Message… (Enter to send)", "chat.send": "Send", "chat.offline": "Chat works in online matches.", "voice.title": "Proximity voice chat", "voice.mode": "Microphone", "voice.off": "Off", "voice.ptt": "Push to talk (N)", "voice.open": "Always on", "voice.vol": "Voice volume", "voice.hint": "You hear players within 45 m, louder when they are close. Text chat (Enter) is also nearby-only by default (Tab in the bar to write to everyone).", "voice.denied": "Microphone blocked: allow it in your browser for voice chat.", "xh.title": "Crosshair", "xh.style": "Shape", "xh.cross": "Cross", "xh.t": "T cross", "xh.x": "X cross", "xh.circle": "Circle", "xh.dot": "Dot", "xh.color": "Color", "xh.len": "Length", "xh.thick": "Thickness", "xh.gap": "Gap", "xh.op": "Opacity", "xh.dotOn": "Center dot", "xh.dyn": "Spreads with weapon spread", "xh.outline": "Black outline", "xh.reset": "Default crosshair", "pad.mapHint": "Click a button, then press the controller button to use (Start cancels).", "pad.reset": "Default buttons", "pad.press": "Press…", "pad.clear": "Clear", "pad.a.jump": "Jump", "pad.a.crouch": "Crouch / slide", "pad.a.use": "Use / reload", "pad.a.next": "Next weapon", "pad.a.prev": "Previous weapon", "pad.a.tactical": "Tactical ability", "pad.a.ultimate": "Ultimate", "pad.a.ads": "Aim", "pad.a.fire": "Fire", "pad.a.board": "Scores", "pad.a.sprint": "Sprint", "pad.a.w6": "Knife", "pad.a.emote": "Emotes", "pad.a.grenade": "Grenade", "pad.a.grenType": "Grenade type", "pad.a.reload": "Reload", "pad.a.chat": "Chat", "pad.a.talk": "Talk (mic)", "pad.a.inspect": "Inspect", "pad.a.map": "Minimap", "tch.edit": "Arrange touch buttons", "tch.editHint": "Drag buttons to move them. Tap a button to change its action or size.", "tch.action": "Action", "tch.size": "Size", "tch.reset": "Default", "tch.done": "Done", "tch.pick": "Pick a button", "tch.abil": "Abilities", "tch.slots": "Weapons", "tch.fire": "FIRE", "tch.jump": "JUMP", "tch.crouch": "CROUCH", "tch.aim": "AIM", "tch.aimHold": "AIM (hold)", "tch.reload": "RELOAD", "tch.use": "USE", "tch.tactical": "TACTICAL", "tch.ultimate": "ULTIMATE", "tch.grenade": "GRENADE", "tch.next": "WEAPON +", "tch.prev": "WEAPON −", "tch.sprint": "SPRINT", "tch.knife": "KNIFE", "tch.emote": "EMOTE", "tch.chat": "CHAT", "tch.talk": "MIC", "tch.map": "MAP", "tch.board": "SCORES", "tch.inspect": "INSPECT"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -2458,6 +2519,102 @@ const MAPS = {
   }
 };
 Object.assign(PAL, { ice: 0xcfe8f4, snow: 0xf2f6fa, pine: 0x2f4a32 });
+/* ================= Carte : chambre géante (tu fais la taille d'un jouet) ================= */
+Object.assign(PAL, { wallpaper: 0x9fc6d8, bedwood: 0xb07a4a, sheet: 0xf3f1ea, duvet: 0x4f7fc0, pillow: 0xfafafa, toyR: 0xe2402e, toyB: 0x2e6fe2, toyY: 0xf2c230, toyG: 0x3ab04a, toyP: 0xb05ad8, plastic: 0xff8a1a, ruler: 0xf0d060, shelf: 0x8a5a32, desktop: 0xd8b48a, skirting: 0xf4efe6, bookR: 0xa83a32, bookG: 0x3a7a4a, bookB: 0x324e8a });
+const ROOM_SPAWNS = [[0, 0, 40, 0], [-20, 0, 20, -0.6], [30, 0, 30, 0.6], [-60, 0, 30, -1.57], [60, 0, 10, 1.57], [0, 0, -10, 3.14], [-58, 16.2, -40, 0], [52, 24.2, -64, 3.14], [40, 0, 60, 0.5], [-40, 0, 64, -0.5], [20, 0, -30, 3.14], [-10, 0, 55, 0]];
+const ROOM_DUMMIES = [[10, 0, 10, 'static'], [-8, 0, 30, 'strafe', 'x'], [25, 0, 45, 'strafe', 'z'], [-45, 16.2, -45, 'static'], [52, 24.2, -62, 'jump'], [-25, 0, 0, 'circle'], [40, 0, -20, 'strafe', 'x'], [0, 12, 0, 'static']];
+function buildRoom() {
+  const W = 80, H = 70;
+  // murs papier peint + plinthes
+  box(0, -W - 2, 2 * W + 8, 4, 0, H, 'wallpaper'); box(0, W + 2, 2 * W + 8, 4, 0, H, 'wallpaper');
+  box(-W - 2, 0, 4, 2 * W, 0, H, 'wallpaper'); box(W + 2, 0, 4, 2 * W, 0, H, 'wallpaper');
+  // plinthes (décor : elles ne doivent pas tenir les joueurs loin du mur)
+  for (const [x, z, sx, sz] of [[0, -W + 0.15, 2 * W, 0.3], [0, W - 0.15, 2 * W, 0.3], [-W + 0.15, 0, 0.3, 2 * W], [W - 0.15, 0, 0.3, 2 * W]]) { const m = new THREE.Mesh(new THREE.BoxGeometry(sx, 2.4, sz), M('skirting')); m.position.set(x, 1.2, z); mapRoot.add(m); }
+  // lit au coin nord-ouest : cadre, matelas, oreillers, couette, tête de lit
+  box(-58, -48, 40, 60, 0, 12, 'bedwood'); box(-58, -48, 38, 58, 12, 4, 'sheet');
+  box(-66, -73, 12, 7, 16, 3, 'pillow'); box(-50, -73, 12, 7, 16, 3, 'pillow');
+  box(-58, -34, 38.4, 30, 16, 0.7, 'duvet');
+  box(-58, -79.5, 42, 2, 0, 30, 'bedwood');
+  // toboggan en plastique pour monter sur le lit
+  ramp(-38, -12, -32, -22, 'x', -1, 0, 16);
+  // bureau au coin nord-est, chaise, règle posée en pente
+  box(52, -64, 48, 30, 22, 2.2, 'desktop');
+  for (const [x, z] of [[30, -78], [74, -78], [30, -50], [74, -50]]) box(x, z, 2.4, 2.4, 0, 22, 'shelf');
+  box(50, -38, 14, 12, 11, 1.4, 'plastic'); box(50, -32.5, 14, 1.2, 12.4, 14, 'plastic');
+  for (const [x, z] of [[44, -43], [56, -43], [44, -33], [56, -33]]) box(x, z, 1.2, 1.2, 0, 11, 'steel');
+  ramp(62, 68, -48, -12, 'z', -1, 0, 22.2);
+  // affaires sur le bureau : livres, crayons, ordinateur
+  box(36, -70, 10, 14, 24.2, 1.6, 'bookR'); box(37, -70, 9, 13, 25.8, 1.4, 'bookG'); box(36, -71, 9, 12, 27.2, 1.6, 'bookB');
+  box(58, -70, 22, 14, 24.2, 0.8, 'ironblk'); box(58, -77, 22, 1, 25, 14, 'ironblk');
+  // étagère contre le mur est : planches où l'on grimpe
+  box(77, 15, 6, 54, 0, 1.2, 'shelf');
+  for (const y of [12, 24, 36, 48]) box(77, 15, 6, 54, y, 1.2, 'shelf');
+  box(77, -12.5, 6, 1.2, 0, 49.2, 'shelf'); box(77, 42.5, 6, 1.2, 0, 49.2, 'shelf');
+  // livres et jouets rangés sur les planches
+  let seed = 77; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const bookKeys = ['bookR', 'bookG', 'bookB', 'toyY', 'toyP'];
+  for (const y of [1.2, 13.2, 25.2, 37.2]) {
+    let z = -10;
+    while (z < 38) { const w = 1.4 + rnd() * 1.6, h = 6 + rnd() * 4; if (rnd() < 0.75) box(78, z + w / 2, 3.4, w, y, h, bookKeys[(rnd() * bookKeys.length) | 0]); z += w + (rnd() < 0.2 ? 4 : 0.15); }
+  }
+  // cubes alphabet : à couvert au milieu de la chambre, quelques tours
+  const toys = ['toyR', 'toyB', 'toyY', 'toyG', 'toyP'];
+  const cubes = [[0, 0, 0], [0, 0, 1], [0, 0, 2], [8, 6, 0], [-12, 12, 0], [-12, 12, 1], [-16, 12, 0], [20, -8, 0], [20, -8, 1], [24, -8, 0], [-28, 50, 0], [14, 58, 0], [14, 58, 1], [14, 58, 2], [14, 58, 3], [-4, -40, 0], [-40, 6, 0], [46, 20, 0], [46, 24, 0], [46, 24, 1]];
+  cubes.forEach(([x, z, k], i) => box(x, z, 4, 4, k * 4, 4, toys[i % toys.length]));
+  // dominos alignés
+  for (let i = 0; i < 9; i++) box(-50 + i * 3.4, 22, 0.9, 3.4, 0, 6, i % 2 ? 'ironblk' : 'white');
+  // petite voiture rouge : carrosserie et cabine
+  box(20, 32, 7, 14, 1.4, 3, 'toyR'); box(20, 33, 6, 7, 4.4, 2.8, 'toyR');
+  // ballon : collision en boîte, sphère visible
+  box(-30, 44, 7.6, 7.6, 0, 9.6, 'toyY');
+  // briques à tenons
+  for (const [x, z, sx, sz, k, y] of [[-48, 52, 8, 4, 'toyB', 0], [-48, 52, 4, 4, 'toyG', 1.6], [36, 52, 4, 8, 'toyY', 0], [52, 40, 8, 4, 'toyR', 0], [52, 40, 8, 4, 'toyB', 1.6]]) box(x, z, sx, sz, y, 1.6, k);
+  // trampolines et tyrolienne (ficelle) de l'étagère au lit
+  pad(-30, 0, -10); pad(60, 0, 0); pad(10, 0, -55);
+  zipline(73, 49.6, 30, -45, 17.6, -45);
+  zipline(40, 24.6, -64, 0, 4.6, 0);
+  // ---------- décor (sans collision) ----------
+  const deco = (geo, color, x, y, z, rx = 0, ry = 0, rz = 0, opt = {}) => { const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial(Object.assign({ color }, opt))); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.castShadow = !opt.noShadow; m.receiveShadow = true; mapRoot.add(m); return m; };
+  // tapis rond
+  deco(new THREE.CylinderGeometry(26, 26, 0.12, 48), 0xd8607a, 0, 0.06, 15, 0, 0, 0, { noShadow: true });
+  deco(new THREE.CylinderGeometry(20, 20, 0.14, 48), 0xf0c8d0, 0, 0.08, 15, 0, 0, 0, { noShadow: true });
+  // ballon rayé
+  const ball = deco(new THREE.SphereGeometry(5, 28, 18), 0xf2c230, -30, 5, 44);
+  const band = new THREE.Mesh(new THREE.TorusGeometry(5.02, 0.9, 8, 36), new THREE.MeshLambertMaterial({ color: 0xe2402e })); band.rotation.x = Math.PI / 2; ball.add(band);
+  const band2 = new THREE.Mesh(new THREE.TorusGeometry(5.02, 0.9, 8, 36), new THREE.MeshLambertMaterial({ color: 0x2e6fe2 })); ball.add(band2);
+  // roues de la voiture
+  for (const [x, z] of [[16.4, 27], [23.6, 27], [16.4, 37], [23.6, 37]]) deco(new THREE.CylinderGeometry(1.6, 1.6, 1, 16), 0x1e1e1e, x, 1.6, z, 0, 0, Math.PI / 2);
+  for (const [x, z] of [[17.5, 25], [22.5, 25]]) deco(new THREE.SphereGeometry(0.5, 8, 6), 0xfff0c8, x, 3.2, z);
+  // lettres sur les cubes
+  // tenons des briques
+  for (const [x, z, nx, nz, y] of [[-48, 52, 2, 1, 1.6], [-48, 52, 1, 1, 3.2], [36, 52, 1, 2, 1.6], [52, 40, 2, 1, 3.2]]) for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) deco(new THREE.CylinderGeometry(0.75, 0.75, 0.5, 12), 0xffffff, x + (i - (nx - 1) / 2) * 4 - (nx > 1 ? 0 : 0), y + 0.25, z + (j - (nz - 1) / 2) * 4).material.color.setHex(0xe8e8e8);
+  // nounours sur le lit
+  const bear = 0x9a6a3f;
+  deco(new THREE.SphereGeometry(3.4, 18, 12), bear, -46, 19.6, -60); deco(new THREE.SphereGeometry(2.4, 18, 12), bear, -46, 24.6, -60);
+  for (const s of [-1, 1]) { deco(new THREE.SphereGeometry(0.9, 10, 8), bear, -46 + s * 1.8, 26.6, -60); deco(new THREE.SphereGeometry(1.2, 10, 8), bear, -46 + s * 3.2, 19.8, -58.6); deco(new THREE.SphereGeometry(1.3, 10, 8), bear, -46 + s * 1.8, 16.9, -57.4); }
+  deco(new THREE.SphereGeometry(0.8, 10, 8), 0xd8b08a, -46, 24.2, -57.9);
+  // crayons sur le bureau, lampe de bureau
+  for (let i = 0; i < 4; i++) deco(new THREE.CylinderGeometry(0.35, 0.35, 12, 6), [0xe2402e, 0x2e6fe2, 0x3ab04a, 0xf2c230][i], 46 + i * 1.2, 24.6, -55, 0, 0, Math.PI / 2 + 0.2 * i);
+  deco(new THREE.CylinderGeometry(3, 3.4, 0.8, 20), 0x2a2a2c, 70, 24.6, -72); deco(new THREE.CylinderGeometry(0.4, 0.4, 14, 8), 0x2a2a2c, 70, 31.6, -72);
+  const shade = deco(new THREE.ConeGeometry(4, 5, 20, 1, true), 0xffb020, 67, 38, -70, 0, 0, 0.6, { side: THREE.DoubleSide }); shade.material.emissive = new THREE.Color(0x553300);
+  const bulb = new THREE.PointLight(0xffd59a, 1.2, 60, 1.6); bulb.position.set(66, 35, -69); mapRoot.add(bulb);
+  // écran d'ordinateur allumé
+  const scr = new THREE.Mesh(new THREE.PlaneGeometry(20, 12.4), new THREE.MeshBasicMaterial({ color: 0x3a7fd8 })); scr.position.set(58, 32, -76.4); mapRoot.add(scr);
+  // fenêtre lumineuse au sud, rideaux
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(50, 32), new THREE.MeshBasicMaterial({ color: 0xbfe2ff })); win.position.set(-10, 40, W - 0.1); win.rotation.y = Math.PI; mapRoot.add(win);
+  for (const x of [-16, -4]) { const f = deco(new THREE.BoxGeometry(1.2, 32, 0.6), 0xf4efe6, x, 40, W - 0.4); f.castShadow = false; }
+  deco(new THREE.BoxGeometry(50, 1.2, 0.6), 0xf4efe6, -10, 40, W - 0.4).castShadow = false;
+  for (const x of [-40, 20]) deco(new THREE.BoxGeometry(10, 44, 1), 0xd8607a, x, 36, W - 1.2).castShadow = false;
+  // affiches au mur ouest
+  for (const [z, c] of [[10, 0x3ab04a], [40, 0xf2c230]]) { const p = new THREE.Mesh(new THREE.PlaneGeometry(18, 24), new THREE.MeshLambertMaterial({ color: c })); p.position.set(-W + 0.1, 34, z); p.rotation.y = Math.PI / 2; mapRoot.add(p); }
+  // plafonnier (lumière douce)
+  const amb = new THREE.PointLight(0xfff2dc, 0.6, 260, 1); amb.position.set(0, 66, 0); mapRoot.add(amb);
+}
+MAPS.room = {
+  build: buildRoom, lim: 79.6, spawns: ROOM_SPAWNS, dummies: ROOM_DUMMIES,
+  theme: { top: 0xf6f1e8, mid: 0xefe4d0, hor: 0xe9d8bc, fog: 0xe6d6bc, fogFar: 320, hemiSky: 0xfff6e8, hemiGround: 0x9a7a5a, hemiI: 0.95, sun: 0xfff1d6, sunI: 0.8, sunDir: [0.35, 0.85, 0.3], ground: 0xb98a5a }
+};
+
 /* ---------- décor varié : tonneaux, caisses, rochers, cactus, lampadaires, feux, bouches d'incendie… (fusionnés par matériau) ---------- */
 Object.assign(PAL, { cactus: 0x5f8a4a, cone: 0xff6a1a, bush: 0x4c7536, leaf: 0x6a9a48, mush: 0xc8402e, flY: 0xffd84a, flW: 0xf4f0f0, flP: 0xd86ad8, flR: 0xe84a4a, tire: 0x1e1e1e,
   dump: 0x2f5a3a, sand: 0xb8a070, bin: 0x3a4a3e, hyd: 0xc8302a, news: 0x2f5fa8, woodlt: 0xc8a070, ironblk: 0x2a2a2c, banner1: 0x9e2a2a, banner2: 0x2a4a9e });
@@ -2838,7 +2995,7 @@ function spawnPlayer(random) {
       if (dmin > best) { best = dmin; s = c; }
     }
   }
-  P.pass = null; P.passHide = false;
+  P.pass = null; P.passHide = false; P.wr = null;
   P.pos.set(s[0], s[1], s[2]); P.prev.copy(P.pos); P.vel.set(0, 0, 0);
   if (S.loot && typeof resetLoadout === 'function') resetLoadout();
   P.yaw = s[3]; P.pitch = -0.03; P.grounded = true; P.sliding = false; P.climbing = false; P.mantle = null;
@@ -3024,7 +3181,7 @@ function groundMove(dt, wx, wz, hasWish, iz) {
   }
   P.sprinting = hasWish && iz > 0 && !P.crouch && !mouse.right && !mouse.left && (act('sprint') || S.autoSprint);
   if (hasWish) {
-    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1) * (WEAPONS[WS.cur].melee ? 1.1 : 1) * (AB.stimT > 0 ? STIM_MUL : 1) * RULES.s * (P.zombie ? 1.15 : 1);
+    let target = (P.crouch ? CROUCHWALK : P.sprinting ? SPRINT : WALK) * (X.speed ? 1.5 : 1) * (WEAPONS[WS.cur].melee ? 1.1 : 1) * (AB.stimT > 0 ? STIM_MUL : 1) * (AB.odT > 0 ? 1.3 : 1) * RULES.s * (P.zombie ? 1.15 : 1);
     if (iz < 0) target = Math.min(target, WALK * 0.9);
     if (mouse.right) target = Math.min(target, WALK * 0.75);
     accelerate(wx, wz, target, GACCEL, dt);
@@ -3118,7 +3275,7 @@ function onLand(vy) {
   const v = P.vel;
   P.landT = simTime; P.landSpeed = Math.hypot(v.x, v.z);
   P.landDir = P.landSpeed > 0.1 ? { x: v.x / P.landSpeed, z: v.z / P.landSpeed } : { x: 0, z: 0 };
-  P.wallJumps = 0;
+  P.wallJumps = 0; P.wr = null;
   P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.snapAcc = 0; P.doubleJump = false; P.airT = 0;
   const impact = clamp(-vy / 16, 0, 1);
   P.dip = Math.max(P.dip, impact * 0.16);
@@ -3148,7 +3305,7 @@ function useAbility(k) {
   if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
   else if (k === 'grapple') useGrapple(); else if (k === 'scan') useScan(); else if (k === 'launchpad') useLaunchpad();
   else if (k === 'dash') useDash(); else if (k === 'blink') useBlink();
-  else if (k === 'jet') useJet(); else if (k === 'strike') useStrike();
+  else if (k === 'jet') useJet(); else if (k === 'strike') useStrike(); else if (k === 'overdrive') useOverdrive();
 }
 const DOMES = [], PORTALS = [];
 const domeGeo = new THREE.SphereGeometry(5, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -3229,7 +3386,7 @@ function usePortal() {
   netSend({ k: 'portal', a, b });
 }
 function abilityStep(dt) {
-  AB.stimT = Math.max(0, AB.stimT - dt);
+  AB.stimT = Math.max(0, AB.stimT - dt); AB.odT = Math.max(0, (AB.odT || 0) - dt);
   for (const k of AB_KEYS) AB[k + 'Cd'] = Math.max(0, AB[k + 'Cd'] - dt);
   AB.scanT = Math.max(0, AB.scanT - dt);
   grappleStep(dt);
@@ -3486,7 +3643,7 @@ function step(dt) {
     else if (cEdge && hs > SLIDE_MIN) startSlide();
     else groundMove(dt, wx, wz, hasWish, iz);
   }
-  if (!P.grounded && !P.climbing) { airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz); if (P.mantle) return; }
+  if (!P.grounded && !P.climbing) { if (!wallrunStep(dt, wx, wz, hasWish)) airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz); if (P.mantle) return; }
 
   const vy = v.y;
   moveAndCollide(dt);
@@ -3964,11 +4121,13 @@ function tintChar(vis, ch, col) {
       else if (ch === 'titan') m.color.setHex(0x3a3f46).lerp(new THREE.Color(col), 0.18);
       else m.color.setHex(col).lerp(white, 0.7);
     } else if (ch === 'nova') { m.color.setHex(0xffffff).lerp(new THREE.Color(col), 0.18); }
+    else if (ch === 'lynx') { if (/Joints/i.test(m.name)) { m.color.setHex(0x1d2433); } else { m.color.setHex(0xe8ecf2); } if (m.emissive && /HighLimbs/i.test(m.name)) { m.color.setHex(0xe8ecf2).lerp(new THREE.Color(col), 0.35); } }
     else if (ch === 'skel') { m.color.setRGB(1.75, 1.7, 1.6); m.userData.keep = true; }
     else if (c.tintMat && c.tintMat.test(m.name)) m.color.setHex(col);
   });
   if (ch === 'spectre') phantomGear(vis, col);
   if (ch === 'titan') titanGear(vis, col);
+  if (ch === 'lynx' && typeof lynxGear === 'function') lynxGear(vis, col);
 }
 const modelWaiters = [];
 function prepModel(gltf, height) {
@@ -3994,6 +4153,7 @@ function cloneModel(m) {
   });
   obj.scale.setScalar(m.scale);
   obj.position.y = -m.minY * m.scale;
+  obj.traverse(o => { if (o.isBone) o.userData.rest = o.quaternion.clone(); });
   const mixer = new THREE.AnimationMixer(obj);
   const actions = {};
   for (const clip of m.anims) actions[clip.name] = mixer.clipAction(clip);
@@ -4012,7 +4172,7 @@ function playAnim(av, name, fade = 0.2, once = false) {
 const XCLIPS = {};
 // reciblage en repère monde des clips du X-Bot vers un autre squelette Mixamo :
 // les deux squelettes en T-pose, q_cible = D_parent⁻¹ × q_xbot × D_os, avec D = (monde X)⁻¹ × (monde cible)
-function retargetFromXbot(m, ownClips) {
+function retargetFromXbot(m, ownClips, prepOnly) {
   const norm = n => String(n).replace(/^mixamorig\d*[:_]?/i, '').replace(/_\d+$/, '').toLowerCase();
   const bonesOf = root => { const r = {}; root.traverse(o => { if (o.isBone) r[norm(o.name)] = o; }); return r; };
   const bx = bonesOf(MODELS.chars.xbot.scene), bn = bonesOf(m.scene);
@@ -4042,6 +4202,7 @@ function retargetFromXbot(m, ownClips) {
   for (const name in bn) { const a = bx[name], b = bn[name]; if (!a || !a.parent || !b.parent) continue; D[name] = wq(a).invert().multiply(wq(b)); DP[name] = wq(a.parent).invert().multiply(wq(b.parent)).invert(); }
   // les poses ajoutées par le code (saut, superglide, emotes, assis) sont réglées pour les axes du X-Bot : on garde D pour les convertir
   m.retD = {}; for (const k in D) m.retD[bn[k].name] = D[k].clone();
+  if (prepOnly) return null;
   const qa = new THREE.Quaternion(), qb = new THREE.Quaternion();
   return XCLIPS.list.map(c => new THREE.AnimationClip(c.name, c.duration, // une piste vers un os absent (yeux du X-Bot…) serait liée à la racine du modèle et la ferait pivoter : on l'écarte
     c.tracks.filter(tr => tr.name.endsWith('.quaternion') && bn[norm(tr.name.slice(0, -11))]).map(tr => {
@@ -4057,12 +4218,17 @@ if (THREE.GLTFLoader) {
   const loader = new THREE.GLTFLoader();
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
   loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); XCLIPS.list = g.animations; novaReady(); skelReady(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); soldierRig(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); XCLIPS.list = g.animations; novaReady(); skelReady(); soldierRig(); charLoaded(); }, undefined, () => {});
   // Nova : modèle à part (Michelle, Mixamo), animé avec les clips du X-Bot (même squelette ; on ne garde que les rotations)
   loader.load('assets/models/Nova.glb', g => { XCLIPS.nova = g; novaReady(); }, undefined, () => {});
   // squelette : version spéciale du Soldat réservée au propriétaire (les autres le voient quand il joue)
   loader.load('assets/models/Skeleton.glb', g => { XCLIPS.skel = g; skelReady(); }, undefined, () => {});
+  // Soldat / Titan : leurs propres animations, mais les poses ajoutées (arme tenue, saut…) passent par les axes du X-Bot
+  function soldierRig() {
+    const m = MODELS.chars.soldier; if (!m || !MODELS.chars.xbot || m.retD) return;
+    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD;
+  }
   function skelReady() {
     if (!XCLIPS.list || !XCLIPS.skel || MODELS.chars.skel) return;
     const m = prepModel(XCLIPS.skel, CHARS.skel.h);
@@ -5089,7 +5255,7 @@ function updateCamera(dt, alpha) {
     if (P.stepDist > (P.sprinting ? 2.4 : 1.9)) { P.stepDist = 0; if (P.swim) sfx.splash(); else sfx.step(); }
   }
   const strafe = ((act('right') ? 1 : 0) - (act('left') ? 1 : 0));
-  const rollT = P.dead ? 0.3 : (P.sliding ? -0.05 : P.climbing ? 0 : -strafe * 0.012 * Math.min(1, hs / 5)) * fx;
+  const rollT = P.dead ? 0.3 : (P.wr ? wrRoll() : P.sliding ? -0.05 : P.climbing ? 0 : -strafe * 0.012 * Math.min(1, hs / 5)) * fx;
   P.roll = lerp(P.roll, rollT, 1 - Math.exp(-8 * dt));
   CAM.t += dt; CAM.shake = Math.max(0, CAM.shake - dt * 3.2); CAM.kick = Math.max(0, CAM.kick - dt * 18);
   const sh = CAM.shake * CAM.shake * fx, sx = (Math.sin(CAM.t * 71) + Math.sin(CAM.t * 43.7)) * 0.5 * sh, sy = (Math.sin(CAM.t * 63.1) + Math.cos(CAM.t * 37.3)) * 0.5 * sh;
@@ -5106,45 +5272,96 @@ function updateCamera(dt, alpha) {
   sun.target.position.set(Math.round(rPos.x / 2) * 2, 0, Math.round(rPos.z / 2) * 2);
   sun.position.copy(sun.target.position).addScaledVector(sunDir, 150);
 }
-/* ---------- bras à la première personne : gants, avant-bras et manches qui suivent l'arme ---------- */
-const armMats = { glove: new THREE.MeshPhongMaterial({ color: 0x25282c, shininess: 30, specular: 0x333333 }), sleeve: new THREE.MeshPhongMaterial({ color: 0x4a5560, shininess: 8 }), cuff: new THREE.MeshPhongMaterial({ color: 0x17191c, shininess: 12 }) };
+/* ---------- bras à la première personne : main articulée, avant-bras et manche aux couleurs du perso ---------- */
+const armMats = {
+  glove: new THREE.MeshPhongMaterial({ color: 0x25282c, shininess: 30, specular: 0x333333 }),
+  sleeve: new THREE.MeshPhongMaterial({ color: 0x4a5560, shininess: 8 }),
+  cuff: new THREE.MeshPhongMaterial({ color: 0x17191c, shininess: 12 }),
+  upper: new THREE.MeshPhongMaterial({ color: 0x4a5560, shininess: 8 })
+};
+// apparence des bras selon le perso : gant/peau, manche, poignet ; r = épaisseur
+const ARM_STYLE = {
+  soldier: { glove: 0x2d241c, sleeve: 'light', upper: 'light', cuff: 0x3a3226, r: 1, hand: 1 },
+  titan: { glove: 0x2a2d31, sleeve: 'dark', upper: 'dark', cuff: 0x1b1e22, r: 1.3, hand: 1.15 },
+  xbot: { glove: 0x9aa0a8, sleeve: 'tint', upper: 0x3c3f45, cuff: 0x3c3f45, r: 0.9, hand: 1, shiny: true },
+  spectre: { glove: 0x15161b, sleeve: 0x1a1c22, upper: 0x1a1c22, cuff: 'glow', r: 0.92, hand: 1, shiny: true },
+  nova: { glove: 0x5a3a28, sleeve: 0x5a3a28, upper: 0x5a3a28, cuff: 0xd4a62a, r: 0.82, hand: 0.92 },
+  skel: { glove: 0xd8c8a8, sleeve: 0xd8c8a8, upper: 0xcab894, cuff: 0xb8a888, r: 0.5, hand: 0.9 },
+  lynx: { glove: 0x1d2433, sleeve: 0xe8ecf2, upper: 0x1d2433, cuff: 'glow', r: 0.88, hand: 0.95 },
+  robot: { glove: 0x8a8f96, sleeve: 0x5a6068, upper: 0x5a6068, cuff: 0x2a2d31, r: 1, hand: 1.05, shiny: true },
+  custom: { glove: 0x25282c, sleeve: 'tint', upper: 'tint', cuff: 0x17191c, r: 1, hand: 1 }
+};
 function makeArm(side) {
   const hand = new THREE.Group();
-  const add = (w, h, d, x, y, z, m = armMats.glove) => { const me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); me.position.set(x, y, z); hand.add(me); return me; };
-  add(0.078, 0.05, 0.095, 0, 0, 0.01);
-  add(0.074, 0.032, 0.06, 0, -0.012, -0.06);
-  add(0.024, 0.026, 0.06, side * 0.045, 0.012, -0.025);
-  add(0.05, 0.012, 0.06, 0, 0.03, 0.02, armMats.cuff);
-  const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.042, 1, 10), armMats.sleeve);
-  const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.041, 0.041, 0.05, 10), armMats.cuff);
-  const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.047, 0.052, 1, 10), armMats.sleeve);
-  for (const o of [hand, fore, cuff, upper]) { o.visible = false; wScene.add(o); }
-  return { hand, fore, cuff, upper };
+  const add = (parent, w, h, d, x, y, z, m = armMats.glove) => { const me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m); me.position.set(x, y, z); parent.add(me); return me; };
+  // paume, dos de la main, poignet
+  add(hand, 0.074, 0.03, 0.078, 0, 0, -0.004);
+  add(hand, 0.07, 0.012, 0.06, 0, 0.018, -0.01, armMats.cuff);
+  add(hand, 0.066, 0.042, 0.03, 0, 0.002, 0.048, armMats.cuff);
+  // quatre doigts en deux phalanges, refermés sur la poignée
+  const fingers = [];
+  for (let i = 0; i < 4; i++) {
+    const f = new THREE.Group(); f.position.set(side * (-0.026 + i * 0.0175), -0.002, -0.044); f.rotation.x = -1.05 - i * 0.06; hand.add(f);
+    add(f, 0.0155, 0.017, 0.038 - Math.abs(i - 1.5) * 0.004, 0, 0, -0.018);
+    const f2 = new THREE.Group(); f2.position.set(0, 0, -0.036); f2.rotation.x = -1.0; f.add(f2);
+    add(f2, 0.0145, 0.015, 0.026, 0, 0, -0.012);
+    fingers.push(f, f2);
+  }
+  // pouce posé le long de la poignée
+  const th = new THREE.Group(); th.position.set(side * 0.036, -0.006, -0.012); th.rotation.set(-0.35, side * 0.75, side * 0.35); hand.add(th);
+  add(th, 0.019, 0.018, 0.036, 0, 0, -0.016);
+  const th2 = new THREE.Group(); th2.position.set(0, 0, -0.034); th2.rotation.x = -0.4; th.add(th2); add(th2, 0.017, 0.016, 0.024, 0, 0, -0.01);
+  const fore = new THREE.Mesh(new THREE.CylinderGeometry(0.034, 0.042, 1, 12), armMats.sleeve);
+  const cuff = new THREE.Mesh(new THREE.CylinderGeometry(0.043, 0.043, 0.05, 12), armMats.cuff);
+  const upper = new THREE.Mesh(new THREE.CylinderGeometry(0.047, 0.054, 1, 12), armMats.upper);
+  const elbow = new THREE.Mesh(new THREE.SphereGeometry(0.046, 12, 8), armMats.upper);
+  for (const o of [hand, fore, cuff, upper, elbow]) { o.visible = false; wScene.add(o); }
+  return { hand, fore, cuff, upper, elbow, fingers };
 }
 const ARMS = { r: makeArm(1), l: makeArm(-1) };
 const SHOULDER = { r: new V3(0.3, -0.64, 0.22), l: new V3(-0.32, -0.66, 0.18) };
 const _ha = new V3(), _el = new V3(), _wr = new V3(), _ad = new V3(), _sd = new V3(), _negZ = new V3(0, 0, -1);
-function placeSeg(mesh, a, b) {
+function placeSeg(mesh, a, b, r = 1) {
   mesh.position.copy(a).add(b).multiplyScalar(0.5); _sd.copy(b).sub(a);
-  const L = _sd.length(); mesh.scale.set(1, Math.max(0.01, L), 1); mesh.quaternion.setFromUnitVectors(UP, _sd.divideScalar(L || 1));
+  const L = _sd.length(); mesh.scale.set(r, Math.max(0.01, L), r); mesh.quaternion.setFromUnitVectors(UP, _sd.divideScalar(L || 1));
 }
-let armTintT = 0;
+let armTintT = 0, armStyleKey = '', armR = 1;
+function applyArmStyle() {
+  const ch = typeof myChar === 'function' ? myChar() : S.char, col = myColor(), st = ARM_STYLE[ch] || ARM_STYLE[CHARS[ch] && CHARS[ch].custom ? 'custom' : 'soldier'];
+  const key = ch + '|' + col; if (key === armStyleKey) return; armStyleKey = key;
+  const c = new THREE.Color(col);
+  const pick = v => v === 'tint' ? c.clone().multiplyScalar(0.55).addScalar(0.06) : v === 'light' ? c.clone().lerp(new THREE.Color(1, 1, 1), 0.62) : v === 'dark' ? new THREE.Color(0x3a3f46).lerp(c, 0.18) : new THREE.Color(v);
+  armMats.glove.color.copy(pick(st.glove)); armMats.sleeve.color.copy(pick(st.sleeve)); armMats.upper.color.copy(pick(st.upper));
+  if (st.cuff === 'glow') { armMats.cuff.color.copy(c); armMats.cuff.emissive.copy(c).multiplyScalar(0.8); } else { armMats.cuff.color.copy(pick(st.cuff)); armMats.cuff.emissive.setHex(0); }
+  for (const m of [armMats.glove, armMats.sleeve, armMats.upper]) { m.shininess = st.shiny ? 70 : 10; m.specular.setHex(st.shiny ? 0x555555 : 0x222222); }
+  armR = st.r || 1;
+  for (const s of ['r', 'l']) ARMS[s].hand.scale.setScalar(st.hand || 1);
+}
+// tir : les doigts se resserrent ; rechargement : la main gauche va chercher le chargeur
 function updateArms(vm, dt) {
-  if ((armTintT -= dt) <= 0) { armTintT = 0.5; armMats.sleeve.color.setHex(myColor()).multiplyScalar(0.5).addScalar(0.06); }
+  if ((armTintT -= dt) <= 0) { armTintT = 0.5; applyArmStyle(); }
   const show = vm.g.visible && !!vm.hands;
   if (show) vm.g.updateMatrixWorld(true);
+  const relK = WS.reloading && vm.kind !== 5 ? Math.sin(Math.PI * clamp(1 - WS.reloadT / WS.reloadDur, 0, 1)) : 0;
   for (const side of ['r', 'l']) {
     const A = ARMS[side], h = show && vm.hands[side];
-    A.hand.visible = A.fore.visible = A.cuff.visible = A.upper.visible = !!h;
+    A.hand.visible = A.fore.visible = A.cuff.visible = A.upper.visible = A.elbow.visible = !!h;
     if (!h) continue;
     _ha.set(h[0], h[1], h[2]).applyMatrix4(vm.g.matrixWorld);
+    if (side === 'l' && relK > 0) { _ha.y -= 0.16 * relK; _ha.x += 0.04 * relK; _ha.z += 0.06 * relK; }
     const sh = SHOULDER[side];
     _el.copy(_ha).lerp(sh, 0.5); _el.y -= 0.1; _el.x += side === 'r' ? 0.08 : -0.08;
     _ad.copy(_el).sub(_ha).normalize();
     _wr.copy(_ha).addScaledVector(_ad, 0.07);
-    placeSeg(A.fore, _wr, _el); placeSeg(A.upper, _el, sh);
-    A.cuff.position.copy(_wr); A.cuff.quaternion.copy(A.fore.quaternion);
+    placeSeg(A.fore, _wr, _el, armR); placeSeg(A.upper, _el, sh, armR);
+    A.elbow.position.copy(_el); A.elbow.scale.setScalar(armR);
+    A.cuff.position.copy(_wr); A.cuff.quaternion.copy(A.fore.quaternion); A.cuff.scale.set(armR, 1, armR);
     A.hand.position.copy(_ha); A.hand.quaternion.setFromUnitVectors(_negZ, _ad.negate());
+    // main gauche sous le garde-main, paume vers le haut : les doigts remontent sur le côté de l'arme
+    if (side === 'l' && vm.kind !== 5) { A.hand.rotateZ(Math.PI * 0.72); A.hand.translateY(0.026); }
+    else if (side === 'r') { A.hand.rotateZ(-0.5); }
+    const grip = side === 'r' ? (WS.flashT > 0 ? 0.12 : 0) : -0.25 * relK;
+    for (let i = 0; i < A.fingers.length; i += 2) A.fingers[i].rotation.x = -1.05 - (i >> 1) * 0.06 - grip;
   }
 }
 const swPose = [0, 0, 0, 0, 0, 0], swFin = [0, 0, 0, 0, 0, 0], _vq = new THREE.Quaternion(), _zAxis = new V3(0, 0, 1), FLOUR_DUR = 0.62;
@@ -5162,19 +5379,31 @@ function updateViewmodel(dt) {
   let rx = 0, ry = lerp(0.04, 0, a), rz = 0;
   const bobAmt = P.grounded && !P.sliding ? Math.min(1, hs / SPRINT) : 0;
   // arme plus posée : balancement, inertie et inclinaisons réduits
-  x += Math.sin(P.bob) * 0.004 * bobAmt * (1 - a * 0.9);
-  y += -Math.abs(Math.cos(P.bob)) * 0.003 * bobAmt * (1 - a * 0.9);
+  // pas : balancement en huit, roulis léger ; respiration à l'arrêt
+  const bk = 1 - a * 0.9, tt = performance.now() / 1000;
+  x += Math.sin(P.bob) * 0.007 * bobAmt * bk;
+  y += -Math.abs(Math.cos(P.bob)) * 0.006 * bobAmt * bk;
+  rz += Math.sin(P.bob) * 0.018 * bobAmt * bk; ry += Math.cos(P.bob) * 0.008 * bobAmt * bk;
+  y += Math.sin(tt * 1.7) * 0.0016 * (1 - bobAmt) * bk; rx += Math.sin(tt * 1.7 + 0.6) * 0.004 * (1 - bobAmt) * bk;
+  // atterrissage : l'arme s'écrase puis remonte ; course sur les murs : arme inclinée
+  y -= (P.dip || 0) * 0.35 * bk; rx -= (P.dip || 0) * 0.6 * bk;
+  if (P.wr) { const wr = wrRoll(); rz += wr * 2.2 * hipK; x += wr * 0.06 * hipK; }
   x += clamp(WS.swayX * 0.1, -0.012, 0.012) * hipK; y += clamp(-WS.swayY * 0.1, -0.012, 0.012) * hipK;
   ry += clamp(WS.swayX * 0.25, -0.03, 0.03); rx += clamp(WS.swayY * 0.2, -0.025, 0.025);
   if (!P.grounded) y += clamp(-P.vel.y * 0.0012, -0.01, 0.01);
   const sk = easeOut(WS.sprintK) * hipK;
-  x -= 0.012 * sk; y -= 0.018 * sk; z += 0.01 * sk; rx -= 0.08 * sk; ry += 0.2 * sk; rz += 0.05 * sk;
+  // sprint : arme ramenée en travers du corps, balancement de course plus ample
+  x -= 0.03 * sk; y -= 0.035 * sk; z += 0.02 * sk; rx -= 0.16 * sk; ry += 0.42 * sk; rz += 0.22 * sk;
+  x += Math.sin(P.bob) * 0.012 * sk; y += -Math.abs(Math.sin(P.bob)) * 0.012 * sk; rz += Math.sin(P.bob) * 0.04 * sk;
   rz += 0.12 * WS.slideK * hipK; x -= 0.01 * WS.slideK * hipK;
   if (WS.reloading) {
-    const p = 1 - WS.reloadT / WS.reloadDur, k = Math.sin(Math.PI * clamp(p, 0, 1));
-    rx -= 0.55 * k; rz += 0.45 * k; y -= 0.06 * k;
+    // rechargement en trois temps : on penche l'arme, on change le chargeur (petit à-coup), on réarme
+    const p = clamp(1 - WS.reloadT / WS.reloadDur, 0, 1), k = Math.sin(Math.PI * p);
+    rx -= 0.5 * k; rz += 0.55 * k; y -= 0.06 * k; x -= 0.02 * k;
+    const ins = Math.max(0, 1 - Math.abs(p - 0.55) / 0.06); y += 0.012 * ins; rx += 0.08 * ins;
+    const rack = Math.max(0, 1 - Math.abs(p - 0.85) / 0.06); z += 0.03 * rack; ry -= 0.06 * rack;
   }
-  if (WS.swapT > 0) { const k = WS.swapT / 0.32; y -= 0.25 * k; rx -= 0.6 * k; }
+  if (WS.swapT > 0) { const k = easeOut(WS.swapT / 0.32); y -= 0.22 * k; rx -= 0.7 * k; rz += 0.3 * k; x += 0.04 * k; }
   if (P.mantle) { y -= 0.08; rx -= 0.4; }
   if (vm.kind === 5) {
     // lame tenue en diagonale, côté plat visible
@@ -5257,7 +5486,7 @@ function peerSupported() { return typeof window.Peer === 'function' && typeof wi
 function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, z: P.zombie ? 1 : 0 };
+  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (SPEC.on) { st.dead = true; st.spec = 1; }
   if (P.pass) { st.pv = P.pass.i + 1; st.ps = P.passSeat; st.a = 'ground'; }
@@ -5312,6 +5541,7 @@ function hostRecv(from, m) {
   }
   if (m.k === 'snd') { csHostRecv(from, m); return; }
   if (m.k === 'mdl') { cmHostRecv(from, m); return; }
+  if (m.k === 'chat') { chatHostRecv(from, m); return; }
   if (m.k === 'report') { hostReport(from, m.r || {}); return; }
   if (m.k === 'st') pl.st = m.s;
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, sp: typeof m.sp === 'string' ? m.sp.slice(0, 12) : undefined, bl: m.bl, a: m.a, e: m.e }, from);
@@ -5346,6 +5576,7 @@ function clientRecv(m) {
   if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); else if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
   if (m.k === 'snd') { csClientRecv(m); return; }
   if (m.k === 'mdl') { cmClientRecv(m); return; }
+  if (m.k === 'chat') { chatRecv(m); return; }
   if (m.k === 'zround' || m.k === 'zend' || m.k === 'zsync') { clientRecvMode(m); return; }
   if (m.k === 'reportx') { if (m.r && typeof m.r === 'object') { ACC.remoteReports.push({ at: +m.r.at || Date.now(), from: String(m.r.from || '?').slice(0, 14), target: String(m.r.target || '?').slice(0, 14), reason: REPORT_REASONS.includes(m.r.reason) ? m.r.reason : 'other', text: String(m.r.text || '').slice(0, 200) }); toast(t('rep.new', { name: String(m.r.target || '?').slice(0, 14) }), 4); if (ADM.open && ADM.tab === 'reports') admRender(); } return; }
   if (m.k === 'mapdef') { recvMapdef(m); return; }
@@ -5520,6 +5751,7 @@ const PAD_HOLD = { 0: 'jump', 1: 'crouch', 6: 'ads', 7: 'fire', 10: 'sprint', 8:
 const PAD_PRESS = { 0: 'jump', 1: 'crouch', 3: 'next', 4: 'tactical', 5: 'ultimate', 11: 'w6', 12: 'emote', 13: 'grenade', 14: 'prev', 15: 'grenType' };
 const padDz = v => Math.abs(v) < 0.14 ? 0 : (v - Math.sign(v) * 0.14) / 0.86;
 function pollPad(dt) {
+  if (typeof padCaptureTick === 'function' && padCaptureTick()) return;
   const list = navigator.getGamepads ? navigator.getGamepads() : [];
   let gp = null; for (const g of list) if (g && g.connected) { gp = g; break; }
   if (!gp) {
@@ -5547,7 +5779,7 @@ function pollPad(dt) {
   if (EMOTE.menu) { const map = [0, 1, 2, 3, 4, 5]; for (let k = 0; k < 6; k++) if (edge(map[k])) { startEmote(k); PAD.prev = now; return; } }
   for (const i in PAD_PRESS) if (edge(+i)) onAction(PAD_PRESS[i]);
   // X : interagir (buggy, tyrolienne) si possible, sinon recharger
-  if (edge(2)) { if (P.veh || P.zip || zipNear() || nearVehicle()) onAction('use'); else onAction('reload'); }
+  if (PAD_USE >= 0 && edge(PAD_USE)) { if (P.veh || P.pass || P.zip || zipNear() || nearVehicle() || nearPickup() || nearChest()) onAction('use'); else onAction('reload'); }
   PAD.prev = now;
   // visée au stick droit : courbe progressive, ralentie près d'une cible (aide à la visée)
   if (!P.dead) {
@@ -5830,7 +6062,26 @@ function animateAvatar(vis, dt, o) {
     if (k === 'dance') lower += -0.04 * Math.abs(Math.sin(vis.emT * 5.2)) * w;
   }
   vis.lower = lower;
+  // arme tenue à deux mains devant la poitrine (couteau : bras droit seulement) ; le buste suit la visée
+  const hw = vis.holdW = approach(vis.holdW || 0, o.hold ? 1 : 0, dt * 7);
+  if (hw > 0.001) {
+    const H = o.hold === 'knife' ? HOLD_KNIFE : HOLD_GUN;
+    for (const b in H) {
+      const bone = rig[b]; if (!bone || !bone.userData.rest) continue; const v = H[b];
+      _dq.identity(); for (let i = 2; i >= 0; i--) if (v[i]) _dq.multiply(_pq.setFromAxisAngle(_axes[i], v[i]));
+      const D = vis.retD && vis.retD[bone.name]; if (D) _dq.premultiply(_dqi.copy(D).invert()).multiply(D);
+      _hq.copy(bone.userData.rest).multiply(_dq); bone.quaternion.slerp(_hq, hw);
+    }
+    if (rig.spine && o.pitch) {
+      _dq.setFromAxisAngle(_axes[0], -clamp(o.pitch, -1.2, 1.2) * 0.55 * hw);
+      const D = vis.retD && vis.retD[rig.spine.name]; if (D) _dq.premultiply(_dqi.copy(D).invert()).multiply(D);
+      rig.spine.quaternion.multiply(_dq);
+    }
+  }
 }
+const HOLD_GUN = { rArm: [-0.26, 0.46, 1.0], rFore: [0, 0.81, 1.35], lArm: [0, -0.79, -1.8], lFore: [0, -0.73, -0.31] };
+const HOLD_KNIFE = { rArm: [-0.26, 0.46, 1.0], rFore: [0, 0.81, 1.35] };
+const _hq = new THREE.Quaternion();
 /* ---------- tenue Morgane : oreilles de chat, nœud, jupe plissée et couleur rose ---------- */
 const MG_PINK = 0xff9ad5;
 const mgMats = { pink: new THREE.MeshPhongMaterial({ color: 0xff8fcf, shininess: 30 }), white: new THREE.MeshPhongMaterial({ color: 0xfff4fa, shininess: 20 }), inner: new THREE.MeshPhongMaterial({ color: 0xffd0ea }), dark: new THREE.MeshPhongMaterial({ color: 0x3a1a2a }) };
@@ -7754,7 +8005,8 @@ function updateRemotes(dt) {
         const em = inVeh || pv ? 'sit' : st.em && EMOTES[st.em - 1];
         if (inVeh) rp.g.rotation.y = VEHICLES[st.vh - 1].yaw;
         else if (em) rp.g.rotation.y = typeof st.ey === 'number' ? st.ey : rp.yaw;
-        animateAvatar(rp.vis, dt, { loco: inVeh ? 'idle' : hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: inVeh ? 'ground' : st.a, em });
+        const holdK = !inVeh && !em && !st.dead && st.a !== 'zip' && st.a !== 'sg' ? ((st.w | 0) === 5 ? 'knife' : 'gun') : null;
+        animateAvatar(rp.vis, dt, { loco: inVeh ? 'idle' : hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: inVeh ? 'ground' : st.a, em, hold: holdK, pitch: st.pi || 0 });
         setOutfit(rp.vis, rp.g, !!st.mg, TINTS[rp.tc] || rp.color);
       }
       rp.vis.obj.scale.y = (rp.vis.mixer ? rp.vis.base : 1) * (1 - rp.crouchK * 0.33);
@@ -7837,6 +8089,7 @@ function hostGame() {
   $('hostBtn').disabled = true; $('joinBtn').disabled = true;
   const peer = new Peer(PREFIX + code, { debug: 0 });
   NET.peer = peer;
+  peer.on('call', c => { try { voiceOnCall(c); } catch (e) {} });
   peer.on('open', () => {
     NET.mode = 'host'; NET.selfId = 'host-' + code;
     NET.players.set(NET.selfId, { name: S.name, color: COLORS[0], kills: 0, deaths: 0, st: null });
@@ -7869,6 +8122,7 @@ function joinGame(code) {
   $('hostBtn').disabled = true; $('joinBtn').disabled = true;
   const peer = new Peer(undefined, { debug: 0 });
   NET.peer = peer;
+  peer.on('call', c => { try { voiceOnCall(c); } catch (e) {} });
   peer.on('open', () => {
     const conn = peer.connect(PREFIX + code, { reliable: true, serialization: 'json' });
     NET.hostConn = conn;
@@ -8154,7 +8408,7 @@ function updateHUD(dt) {
   const tt = Math.floor(stats.time); setTxt(hudEls.stT, Math.floor(tt / 60) + ':' + String(tt % 60).padStart(2, '0'));
   const Hh = window.innerHeight, Wd = window.innerWidth, sp = currentSpread();
   const gap = Math.tan(sp * DEG) / Math.tan(camera.fov * DEG / 2) * Hh / 2 + 3;
-  xhEl.style.setProperty('--g', Math.min(gap, 160).toFixed(1) + 'px');
+  xhEl.style.setProperty('--g', Math.min(xhGap(gap), 160).toFixed(1) + 'px');
   xhEl.classList.toggle('ads', WS.ads > 0.6);
   xhEl.classList.toggle('hide', P.dead || (W.scope && WS.ads > 0.85));
   hmT -= dt; hmEl.style.opacity = hmT > 0 ? 1 : 0;
@@ -8203,7 +8457,7 @@ function updateHUD(dt) {
     const el = abEls[elId], cd = AB[k + 'Cd'], ready = abReady(k);
     setTxt(el.children[1], t('ab.' + k));
     el.classList.toggle('ready', ready && !active); el.classList.toggle('active', active);
-    if (TOUCH.on) { const tb = $(elId === 'abTac' ? 'tTac' : 'tUlt'); tb.classList.toggle('ready', ready && !active); const lb = el.children[1].textContent + (el.children[2].textContent ? ' ' + el.children[2].textContent : ''); if (tb.textContent !== lb) tb.textContent = lb; }
+    if (TOUCH.on && !TOUCH.edit) { const tb = $(elId === 'abTac' ? 'tTac' : 'tUlt'); tb.classList.toggle('ready', ready && !active); const lb = el.children[1].textContent + (el.children[2].textContent ? ' ' + el.children[2].textContent : ''); if (tb.textContent !== lb) tb.textContent = lb; }
     el.lastChild.style.width = ready ? '100%' : ((1 - cd / AB_CD[k]) * 100).toFixed(1) + '%';
     setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active && k === 'scan' ? Math.ceil(AB.scanT) + ' s' : active && k === 'portal' ? Math.ceil(AB.portalAT) + ' s' : ready || active ? '' : Math.ceil(cd) + ' s');
   }
@@ -8294,6 +8548,7 @@ function pause() {
   playing = false; clearInput(); menu.hidden = false; hud.hidden = true; openEmoteMenu(false); endEmote();
   setPlayLbl(NET.mode !== 'off' ? 'play.back' : 'play.resume');
   if (AC && slideGain) { slideGain.gain.value = 0; }
+  try { if (CHAT.open) chatClose(); voiceTx(VOICE.mode === 'open'); } catch (e) {}
   try { touchShow(); } catch (e) {}
 }
 function startUnlocked() {
@@ -8333,7 +8588,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']], ['w7', 'Arme spéciale', ['Digit7', null]],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]], ['chat', 'Chat', ['Enter', 'KeyY']], ['talk', 'Parler (micro)', ['KeyN', null]]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -8358,6 +8613,7 @@ function onAction(id) {
   }
   if (P.veh && id === 'w6') { CP.on = !CP.on; sfx.ckBeep(); return; }
   if (id === 'left') SOCD.x = -1; else if (id === 'right') SOCD.x = 1; else if (id === 'forward') SOCD.z = 1; else if (id === 'back') SOCD.z = -1;
+  if (id === 'chat') { if (NET.mode !== 'off') chatOpen(); else toast(t('chat.offline'), 2); return; }
   if (id === 'jump') P.jumpBuf = 0.14;
   else if (id === 'crouch') { lastCrouchT = simTime; crouchEdge = true; }
   else if (id === 'forward') P.tapPulse = true;
@@ -9062,10 +9318,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.01';
+const GAME_VERSION = '2026.11.03';
 const CHANGES = {
-  fr: ['Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9124,7 +9380,9 @@ document.body.classList.toggle('touch', TOUCH.on);
 const tUI = $('touchUI'), tStick = $('tStick'), tKnob = tStick.firstElementChild;
 const STICK_R = 58;
 function touchShow() {
+  if (TOUCH.edit) return;
   const show = TOUCH.on && playing && !EDIT.on;
+  $('tTalk').hidden = VOICE.mode !== 'ptt' || NET.mode === 'off'; $('tChat').hidden = NET.mode === 'off';
   tUI.hidden = !show;
   $('rotateHint').hidden = !(show && innerHeight > innerWidth * 1.05);
   if (!show) { TOUCH.mx = TOUCH.my = 0; TOUCH.act = {}; TOUCH.stick = null; TOUCH.looks.clear(); TOUCH.btns.clear(); tStick.hidden = true; for (const b of tUI.querySelectorAll('.on')) b.classList.remove('on'); }
@@ -9233,6 +9491,349 @@ $('touchSens').addEventListener('input', e => { S.touchSens = +e.target.value; s
 $('invY').checked = S.invY; $('invX').checked = S.invX;
 $('invY').addEventListener('change', e => { S.invY = e.target.checked; store.set('invY', S.invY); });
 $('invX').addEventListener('change', e => { S.invX = e.target.checked; store.set('invX', S.invX); });
+/* ================= Lynx : coureuse de murs (course sur les murs + ultime Survoltage) ================= */
+const WR = { minSpeed: 5.2, time: 1.7, grav: 0.16, target: 9.2, kickOut: 6.4, kickUp: 7.6 };
+const isRunner = () => myClass().id === 'runner';
+// mur sur le côté de la trajectoire (pas devant) : renvoie la normale et le côté
+function wallSide() {
+  const v = P.vel, hs = Math.hypot(v.x, v.z); if (hs < 0.5) return null;
+  const dx = v.x / hs, dz = v.z / hs;
+  for (const s of [1, -1]) {
+    const sx = -dz * s, sz = dx * s;
+    for (const h of [0.5, 1.2]) {
+      const b = boxAtPoint(P.pos.x + sx * (R + 0.6), P.pos.y + h, P.pos.z + sz * (R + 0.6));
+      if (!b || b.ground) continue;
+      const n = faceNormal(b);
+      if (Math.abs(n.x * dx + n.z * dz) > 0.55) continue;
+      return n;
+    }
+  }
+  return null;
+}
+// renvoie true si le joueur court sur un mur (la physique en l'air est alors remplacée)
+function wallrunStep(dt, wx, wz, hasWish) {
+  if (!isRunner() || P.dead || P.veh || P.pass) { P.wr = null; return false; }
+  P.wrCd = Math.max(0, (P.wrCd || 0) - dt);
+  const v = P.vel, hs = Math.hypot(v.x, v.z);
+  if (!P.wr) {
+    if (P.wrCd > 0 || P.airT < 0.1 || hs < WR.minSpeed || !hasWish || v.y < -7 || act('crouch')) return false;
+    const n = wallSide(); if (!n) return false;
+    if (P.wrLast && P.wrLast.x === n.x && P.wrLast.z === n.z && simTime - P.wrLastT < 0.6) return false;
+    P.wr = { n, t: 0 }; v.y = Math.max(v.y, 1.2);
+    feed('WALL-RUN', hs.toFixed(1) + ' m/s', 'cyan', 'wr'); sfx.climb();
+  }
+  const w = P.wr; w.t += dt;
+  const over = AB.odT > 0;
+  const n = wallSide();
+  const stop = !n || n.x !== w.n.x || n.z !== w.n.z;
+  if (P.jumpBuf > 0) {
+    // saut : on se repousse du mur en gardant l'élan
+    const vn = v.x * w.n.x + v.z * w.n.z;
+    v.x = (v.x - w.n.x * vn) * 1.04 + w.n.x * WR.kickOut; v.z = (v.z - w.n.z * vn) * 1.04 + w.n.z * WR.kickOut; v.y = WR.kickUp;
+    if (hasWish) { v.x += wx * 1.6; v.z += wz * 1.6; }
+    P.jumpBuf = 0; P.doubleJump = true; wrEnd(0.22); feed('WALL-RUN', t('wr.kick'), 'cyan', 'wr'); sfx.jump();
+    return true;
+  }
+  if (stop || (!over && w.t > WR.time) || !hasWish || act('crouch') || hs < WR.minSpeed * 0.7) { wrEnd(0.3); return false; }
+  // collé au mur : vitesse le long du mur, presque pas de chute
+  const vn = v.x * w.n.x + v.z * w.n.z; v.x -= w.n.x * (vn + 0.4); v.z -= w.n.z * (vn + 0.4);
+  const along = Math.hypot(v.x, v.z), tgt = WR.target * (over ? 1.3 : 1);
+  const ns = along < tgt ? Math.min(tgt, along + 9 * dt) : along;
+  if (along > 0.01) { v.x *= ns / along; v.z *= ns / along; }
+  v.y = Math.max(Math.min(v.y, 2.2) - G * RULES.g * WR.grav * (over ? 0.4 : 1) * dt - (v.y > 0 ? v.y * 2.5 * dt : 0), w.t > 1 ? -2.5 : -1);
+  P.sliding = false; P.airT += dt;
+  return true;
+}
+function wrEnd(cd) { if (P.wr) { P.wrLast = P.wr.n; P.wrLastT = simTime; } P.wr = null; P.wrCd = cd; }
+// inclinaison de la caméra : on penche à l'opposé du mur
+function wrRoll() {
+  if (!P.wr) return 0;
+  const rx = Math.cos(P.yaw), rz = -Math.sin(P.yaw);
+  return (P.wr.n.x * rx + P.wr.n.z * rz) < 0 ? 0.13 : -0.13;
+}
+// ultime : Survoltage, 8 s plus rapide, course sur les murs sans limite
+AB.odT = 0; AB.overdriveCd = 0; AB_CD.overdrive = 45; AB_KEYS.push('overdrive');
+function useOverdrive() {
+  if (P.dead || !abReady('overdrive')) { sfx.empty(); return; }
+  AB.odT = 8; setCd('overdrive'); P.doubleJump = true;
+  feed(t('ab.overdrive'), '8 s', 'cyan'); sfx.stim(); camShake(0.2);
+}
+CLASSES.lynx = { id: 'runner', tac: 'dash', ult: 'overdrive' };
+CHARS.lynx = { file: 'Xbot.glb', h: 1.76, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i };
+MG_FIT.lynx = MG_FIT.xbot;
+// équipement : bandeau lumineux sur les yeux et écharpe qui flotte
+function lynxGear(vis, col) {
+  if (vis.lynx) { for (const m of vis.lynx) m.color.setHex(col); return; }
+  let head = null, chest = null;
+  vis.obj.traverse(o => { if (!o.isBone) return; if (!head && /mixamorigHead$/.test(o.name)) head = o; if (!chest && /Spine2$/.test(o.name)) chest = o; });
+  if (!head || !chest) return;
+  vis.obj.updateMatrixWorld(true);
+  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
+  const mats = []; vis.lynx = mats;
+  const glow = () => { const m = new THREE.MeshBasicMaterial({ color: col }); mats.push(m); return m; };
+  const cloth = new THREE.MeshLambertMaterial({ color: 0x1d2433, side: THREE.DoubleSide });
+  const mount = (bone, build) => { const g = new THREE.Group(); bone.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; build(g); bone.add(g); };
+  const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.castShadow = true; m.userData.gear = true; return m; };
+  mount(head, g => {
+    g.add(mk(new THREE.TorusGeometry(0.105, 0.016, 6, 24, Math.PI * 1.2), glow(), 0, 0.1, 0.0, Math.PI / 2, 0, -Math.PI * 0.1));
+    g.add(mk(new THREE.BoxGeometry(0.15, 0.028, 0.03), glow(), 0, 0.1, 0.1));
+  });
+  mount(chest, g => {
+    g.add(mk(new THREE.TorusGeometry(0.11, 0.035, 8, 20), cloth, 0, 0.14, 0, Math.PI / 2));
+    g.add(mk(new THREE.BoxGeometry(0.07, 0.36, 0.01), cloth, 0.05, 0.0, -0.14, 0.5, 0, 0.1));
+    g.add(mk(new THREE.BoxGeometry(0.06, 0.3, 0.01), glow(), -0.04, 0.02, -0.15, 0.6, 0, -0.12));
+  });
+}
+
+/* ================= Viseur personnalisable ================= */
+const XH_DEF = { style: 'cross', color: '#f4efe6', len: 8, thick: 2, gap: 6, dot: true, dyn: true, outline: true, op: 1 };
+S.xh = Object.assign({}, XH_DEF, store.get('xh', {}) || {});
+function xhApply(el) {
+  const c = S.xh;
+  el.style.setProperty('--col', c.color); el.style.setProperty('--len', c.len + 'px'); el.style.setProperty('--th', c.thick + 'px');
+  el.style.setProperty('--dot', Math.max(2, c.thick + 1) + 'px'); el.style.setProperty('--ol', c.outline ? '1px' : '0px'); el.style.opacity = '';
+  el.style.setProperty('--op', c.op);
+  el.classList.remove('s-cross', 's-dot', 's-circle', 's-t', 's-x'); el.classList.add('s-' + c.style);
+  el.classList.toggle('nodot', !c.dot && c.style !== 'dot');
+  if (el !== xhEl) el.style.setProperty('--g', c.gap + 'px');
+}
+function xhSave() { store.set('xh', S.xh); xhApply(xhEl); xhApply($('xhPrev')); }
+// écart des traits : fixe ou suivant la dispersion de l'arme
+function xhGap(dynGap) { return S.xh.dyn ? Math.max(S.xh.gap, dynGap) : S.xh.gap; }
+{
+  const bind = (id, key, conv) => { const el = $(id); if (!el) return; const v = S.xh[key]; if (el.type === 'checkbox') el.checked = !!v; else el.value = v; el.addEventListener(el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input', () => { S.xh[key] = el.type === 'checkbox' ? el.checked : conv ? conv(el.value) : el.value; xhSave(); }); };
+  bind('xhStyle', 'style'); bind('xhColor', 'color'); bind('xhLen', 'len', Number); bind('xhThick', 'thick', Number); bind('xhGapIn', 'gap', Number); bind('xhOp', 'op', Number);
+  bind('xhDot', 'dot'); bind('xhDyn', 'dyn'); bind('xhOutline', 'outline');
+  $('xhReset').addEventListener('click', () => { S.xh = Object.assign({}, XH_DEF); xhSave(); for (const [id, k] of [['xhStyle', 'style'], ['xhColor', 'color'], ['xhLen', 'len'], ['xhThick', 'thick'], ['xhGapIn', 'gap'], ['xhOp', 'op']]) $(id).value = S.xh[k]; for (const [id, k] of [['xhDot', 'dot'], ['xhDyn', 'dyn'], ['xhOutline', 'outline']]) $(id).checked = S.xh[k]; });
+  xhApply(xhEl); xhApply($('xhPrev'));
+}
+
+/* ================= Manette : boutons réassignables ================= */
+// action → bouton (numérotation standard des manettes : 0 = A/✕, 1 = B/○, 2 = X/□, 3 = Y/△, 4 = LB, 5 = RB, 6 = LT, 7 = RT…)
+const PAD_DEF = { jump: 0, crouch: 1, use: 2, next: 3, tactical: 4, ultimate: 5, ads: 6, fire: 7, board: 8, sprint: 10, w6: 11, emote: 12, grenade: 13, prev: 14, grenType: 15, reload: -1, chat: -1, talk: -1, inspect: -1, map: -1 };
+const PAD_HOLD_ACTS = ['jump', 'crouch', 'ads', 'fire', 'sprint', 'board', 'talk'];
+const PAD_PRESS_ACTS = ['jump', 'crouch', 'next', 'prev', 'tactical', 'ultimate', 'w6', 'emote', 'grenade', 'grenType', 'reload', 'chat', 'inspect', 'map'];
+const PAD_NAMES = ['A / ✕', 'B / ○', 'X / □', 'Y / △', 'LB / L1', 'RB / R1', 'LT / L2', 'RT / R2', 'Select', 'Start', 'L3', 'R3', '↑', '↓', '←', '→', 'Home'];
+S.padMap = Object.assign({}, PAD_DEF, store.get('padMap', {}) || {});
+let PAD_USE = 2;
+function padRebuild() {
+  for (const k in PAD_HOLD) delete PAD_HOLD[k]; for (const k in PAD_PRESS) delete PAD_PRESS[k];
+  for (const a of PAD_HOLD_ACTS) { const i = S.padMap[a]; if (i >= 0) PAD_HOLD[i] = a; }
+  for (const a of PAD_PRESS_ACTS) { const i = S.padMap[a]; if (i >= 0 && PAD_PRESS[i] === undefined) PAD_PRESS[i] = a; }
+  PAD_USE = S.padMap.use;
+}
+padRebuild();
+function renderPadMap() {
+  const box = $('padMap'); if (!box) return; box.replaceChildren();
+  for (const a of Object.keys(PAD_DEF)) {
+    const row = document.createElement('div'); row.className = 'pmrow';
+    const lab = document.createElement('span'); lab.textContent = t('pad.a.' + a);
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'btn3' + (PAD.capture === a ? ' on' : '');
+    const i = S.padMap[a]; b.textContent = PAD.capture === a ? t('pad.press') : i >= 0 ? (PAD_NAMES[i] || 'B' + i) : '—';
+    b.addEventListener('click', () => { PAD.capture = PAD.capture === a ? null : a; PAD.capPrev = null; renderPadMap(); });
+    const x = document.createElement('button'); x.type = 'button'; x.className = 'btn3'; x.textContent = '✕'; x.title = t('pad.clear');
+    x.addEventListener('click', () => { S.padMap[a] = -1; store.set('padMap', S.padMap); padRebuild(); renderPadMap(); });
+    row.append(lab, b, x); box.append(row);
+  }
+}
+// attente d'un bouton pour l'action choisie (fonctionne dans le menu)
+function padCaptureTick() {
+  if (!PAD.capture) return false;
+  const list = navigator.getGamepads ? navigator.getGamepads() : []; let gp = null; for (const g of list) if (g && g.connected) { gp = g; break; }
+  if (!gp) return true;
+  const now = gp.buttons.map(b => !!b && (b.pressed || b.value > 0.5));
+  if (!PAD.capPrev) { PAD.capPrev = now; return true; }
+  const i = now.findIndex((v, k) => v && !PAD.capPrev[k]); PAD.capPrev = now;
+  if (i < 0) return true;
+  if (i === 9) { PAD.capture = null; renderPadMap(); return true; }
+  // le bouton choisi quitte son ancienne action
+  for (const a in S.padMap) if (S.padMap[a] === i && a !== PAD.capture) S.padMap[a] = -1;
+  S.padMap[PAD.capture] = i; PAD.capture = null; store.set('padMap', S.padMap); padRebuild(); renderPadMap(); sfx.swap();
+  PAD.prev = now; return true;
+}
+$('padReset').addEventListener('click', () => { S.padMap = Object.assign({}, PAD_DEF); store.set('padMap', S.padMap); padRebuild(); renderPadMap(); });
+renderPadMap();
+
+/* ================= Chat écrit et vocal de proximité ================= */
+const CHAT = { open: false, prox: store.get('chatProx', true) !== false, range: 40, list: [] };
+const VOICE = { mode: store.get('voiceMode', 'off'), stream: null, calls: new Map(), nodes: new Map(), range: 45, talking: false, err: false };
+const chatLog = $('chatLog'), chatIn = $('chatIn'), chatBar = $('chatBar');
+function chatPush(name, txt, col, prox, me) {
+  const el = document.createElement('div'); el.className = 'cmsg' + (me ? ' me' : '');
+  const b = document.createElement('b'); b.textContent = name + (prox ? ' ·' : ':'); if (col !== undefined) b.style.color = '#' + col.toString(16).padStart(6, '0');
+  const s = document.createElement('span'); s.textContent = ' ' + txt;
+  if (prox) { const i = document.createElement('i'); i.textContent = t('chat.near'); el.append(i); }
+  el.append(b, s); el._t = performance.now(); chatLog.append(el);
+  while (chatLog.children.length > 8) chatLog.firstChild.remove();
+}
+function chatOpen() {
+  if (CHAT.open) return;
+  CHAT.open = true; chatBar.hidden = false; clearInput(); chatIn.value = ''; $('chatMode').textContent = t(CHAT.prox ? 'chat.modeNear' : 'chat.modeAll');
+  chatLog.classList.add('open'); chatIn.focus();
+}
+function chatClose() { CHAT.open = false; chatBar.hidden = true; chatLog.classList.remove('open'); chatIn.blur(); if (playing && !unlockedMode && !document.pointerLockElement && !TOUCH.on) { try { canvas.requestPointerLock(); } catch (e) {} } }
+function chatSend() {
+  const txt = chatIn.value.trim().slice(0, 140); chatClose(); if (!txt) return;
+  const m = { k: 'chat', txt, prox: CHAT.prox, p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)] };
+  chatPush(S.name, txt, myColor(), CHAT.prox, true);
+  if (NET.mode === 'host') broadcast(Object.assign({ from: NET.selfId, name: S.name }, m), NET.selfId); else if (NET.mode === 'client') netSend(m);
+}
+function chatRecv(m) {
+  if (typeof m.txt !== 'string') return;
+  if (m.prox && Array.isArray(m.p)) { const d = Math.hypot(+m.p[0] - P.pos.x, +m.p[1] - P.pos.y, +m.p[2] - P.pos.z); if (!(d <= CHAT.range) && !SPEC.on) return; }
+  const rp = remotes.get(m.from);
+  chatPush(String(m.name || (rp && rp.name) || '?').slice(0, 14), m.txt.slice(0, 140), rp ? rp.color : undefined, !!m.prox);
+  sfx.join();
+}
+function chatHostRecv(from, m) {
+  const pl = NET.players.get(from); if (!pl || typeof m.txt !== 'string') return;
+  const out = { k: 'chat', from, name: pl.name, txt: m.txt.slice(0, 140), prox: !!m.prox, p: Array.isArray(m.p) ? m.p.slice(0, 3).map(Number) : null };
+  broadcast(out, from); // l'hôte fait partie des joueurs : il reçoit le message par broadcast
+}
+chatIn.addEventListener('keydown', e => {
+  e.stopPropagation();
+  if (e.key === 'Enter') { e.preventDefault(); chatSend(); }
+  else if (e.key === 'Escape') { e.preventDefault(); chatClose(); }
+  else if (e.key === 'Tab') { e.preventDefault(); CHAT.prox = !CHAT.prox; store.set('chatProx', CHAT.prox); $('chatMode').textContent = t(CHAT.prox ? 'chat.modeNear' : 'chat.modeAll'); }
+});
+chatIn.addEventListener('keyup', e => e.stopPropagation());
+$('chatMode').addEventListener('click', () => { CHAT.prox = !CHAT.prox; store.set('chatProx', CHAT.prox); $('chatMode').textContent = t(CHAT.prox ? 'chat.modeNear' : 'chat.modeAll'); chatIn.focus(); });
+$('chatSend').addEventListener('click', chatSend);
+setInterval(() => { const now = performance.now(); for (const el of chatLog.children) el.classList.toggle('old', !CHAT.open && now - el._t > 12000); }, 500);
+/* ---------- vocal : appels WebRTC directs entre joueurs, volume selon la distance ---------- */
+async function voiceStart() {
+  if (VOICE.stream) return true;
+  try {
+    VOICE.stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true, autoGainControl: true }, video: false });
+    voiceTx(VOICE.mode === 'open'); voiceResetCalls(); return true;
+  } catch (e) { VOICE.err = true; toast(t('voice.denied'), 4); VOICE.mode = 'off'; store.set('voiceMode', 'off'); $('voiceMode').value = 'off'; return false; }
+}
+function voiceStop() { if (VOICE.stream) { for (const tr of VOICE.stream.getTracks()) tr.stop(); VOICE.stream = null; } voiceResetCalls(); }
+function voiceTx(on) { VOICE.talking = on; if (VOICE.stream) for (const tr of VOICE.stream.getAudioTracks()) tr.enabled = on; $('talkIcon').hidden = !on || !playing; }
+function voiceResetCalls() { for (const c of VOICE.calls.values()) { try { c.close(); } catch (e) {} } VOICE.calls.clear(); for (const id of [...VOICE.nodes.keys()]) voiceDrop(id); }
+function voiceDrop(id) { const n = VOICE.nodes.get(id); if (!n) return; try { n.src.disconnect(); n.el.srcObject = null; } catch (e) {} VOICE.nodes.delete(id); }
+function voiceAttach(id, call) {
+  VOICE.calls.set(id, call);
+  call.on('stream', rs => {
+    audioInit(); if (!AC) return; voiceDrop(id);
+    const el = new Audio(); el.srcObject = rs; el.muted = true; el.play().catch(() => {});
+    const src = AC.createMediaStreamSource(rs), gain = AC.createGain(), pan = AC.createStereoPanner ? AC.createStereoPanner() : null, an = AC.createAnalyser();
+    an.fftSize = 256; gain.gain.value = 0;
+    src.connect(an); src.connect(gain); if (pan) { gain.connect(pan); pan.connect(master); } else gain.connect(master);
+    VOICE.nodes.set(id, { el, src, gain, pan, an, buf: new Uint8Array(an.fftSize) });
+  });
+  call.on('close', () => { if (VOICE.calls.get(id) === call) VOICE.calls.delete(id); voiceDrop(id); });
+  call.on('error', () => { if (VOICE.calls.get(id) === call) VOICE.calls.delete(id); voiceDrop(id); });
+}
+// qui appelle qui : celui qui a un micro appelle ; si les deux en ont un, le plus petit identifiant appelle
+function voiceSync() {
+  if (NET.mode === 'off' || !NET.peer || typeof NET.peer.call !== 'function') { if (VOICE.calls.size) voiceResetCalls(); return; }
+  for (const [id, c] of VOICE.calls) if (!remotes.has(id)) { try { c.close(); } catch (e) {} VOICE.calls.delete(id); voiceDrop(id); }
+  if (!VOICE.stream) return;
+  for (const [id, rp] of remotes) {
+    if (VOICE.calls.has(id) || !rp.st) continue;
+    const theyMic = !!rp.st.mic;
+    if (theyMic && NET.selfId > id) continue;
+    try { const call = NET.peer.call(id, VOICE.stream, { metadata: { v: 1 } }); if (call) voiceAttach(id, call); } catch (e) {}
+  }
+}
+function voiceOnCall(call) {
+  const id = call.peer; if (!remotes.has(id)) { try { call.close(); } catch (e) {} return; }
+  const old = VOICE.calls.get(id); if (old && old !== call) { try { old.close(); } catch (e) {} }
+  try { call.answer(VOICE.stream || undefined); } catch (e) { return; }
+  voiceAttach(id, call);
+}
+const _vp = new V3();
+function voiceTick() {
+  if (VOICE.mode === 'ptt') { const on = playing && act('talk') && !CHAT.open; if (on !== VOICE.talking) voiceTx(on); }
+  if (!VOICE.nodes.size || !AC) return;
+  const cy = P.yaw;
+  for (const [id, n] of VOICE.nodes) {
+    const rp = remotes.get(id); if (!rp) { voiceDrop(id); continue; }
+    const d = rp.pos.distanceTo(SPEC.on ? camera.position : P.pos);
+    const g = rp.st && !rp.st.dead ? clamp(1 - (d - 4) / (VOICE.range - 4), 0, 1) : 0;
+    n.gain.gain.setTargetAtTime(g * g * (S.voiceVol ?? 1), AC.currentTime, 0.08);
+    if (n.pan) { const a = Math.atan2(rp.pos.x - P.pos.x, rp.pos.z - P.pos.z) - cy - Math.PI; n.pan.pan.setTargetAtTime(clamp(-Math.sin(a), -1, 1) * 0.8, AC.currentTime, 0.08); }
+    n.an.getByteTimeDomainData(n.buf); let pk = 0; for (let i = 0; i < n.buf.length; i += 4) pk = Math.max(pk, Math.abs(n.buf[i] - 128));
+    rp.talk = pk > 10 && g > 0.02;
+    if (rp.tag) rp.tag.classList.toggle('talk', !!rp.talk);
+  }
+}
+setInterval(voiceSync, 2000);
+$('voiceMode').value = VOICE.mode;
+$('voiceMode').addEventListener('change', async e => {
+  VOICE.mode = e.target.value; store.set('voiceMode', VOICE.mode);
+  if (VOICE.mode === 'off') { voiceStop(); voiceTx(false); return; }
+  audioInit(); if (await voiceStart()) voiceTx(VOICE.mode === 'open');
+});
+S.voiceVol = +store.get('voiceVol', 1); $('voiceVol').value = S.voiceVol;
+$('voiceVol').addEventListener('input', e => { S.voiceVol = +e.target.value; store.set('voiceVol', S.voiceVol); });
+if (VOICE.mode !== 'off') addEventListener('pointerdown', function once() { removeEventListener('pointerdown', once); audioInit(); voiceStart(); }, { once: true });
+
+/* ================= Téléphone : boutons déplaçables, redimensionnables et réassignables ================= */
+const TACT = { fire: { h: 'fire' }, jump: { h: 'jump', p: 'jump' }, crouch: { h: 'crouch', p: 'crouch' }, aim: { p: 'adsT' }, aimHold: { h: 'ads' }, reload: { p: 'reload' }, use: { p: 'use' },
+  tactical: { p: 'tactical' }, ultimate: { p: 'ultimate' }, grenade: { p: 'grenade' }, next: { p: 'next' }, prev: { p: 'prev' }, sprint: { h: 'sprint' }, knife: { p: 'w6' },
+  emote: { p: 'emote' }, chat: { p: 'chat' }, talk: { h: 'talk' }, map: { p: 'map' }, board: { h: 'board' }, inspect: { p: 'inspect' } };
+S.tLayout = store.get('tLayout', {}) || {};
+const tMovable = () => [...tUI.querySelectorAll(':scope > .tb, #tAbil, #tSlots')];
+function setTouchAction(el, a) {
+  const d = TACT[a]; if (!d) return;
+  el.dataset.act = a;
+  if (d.h) el.dataset.h = d.h; else delete el.dataset.h;
+  if (d.p) el.dataset.p = d.p; else delete el.dataset.p;
+  el.textContent = t('tch.' + a);
+}
+function applyTouchLayout() {
+  for (const el of tMovable()) {
+    if (el.dataset.def) setTouchAction(el, (S.tLayout[el.id] && S.tLayout[el.id].a) || el.dataset.def);
+    const L = S.tLayout[el.id];
+    if (L && typeof L.x === 'number') { el.style.left = (L.x * 100).toFixed(2) + '%'; el.style.top = (L.y * 100).toFixed(2) + '%'; el.style.right = 'auto'; el.style.bottom = 'auto'; el.style.transform = `translate(-50%,-50%) scale(${L.s || 1})`; }
+    else if (L && L.s) { el.style.left = el.style.top = el.style.right = el.style.bottom = ''; el.style.transform = `scale(${L.s})`; }
+    else { el.style.left = el.style.top = el.style.right = el.style.bottom = el.style.transform = ''; }
+  }
+}
+const TE = { sel: null, drag: null };
+function touchEditOpen() {
+  TOUCH.edit = true; menu.hidden = true; tUI.hidden = false; tUI.classList.add('edit'); $('tEdit').hidden = false; tStick.hidden = true;
+  for (const el of tMovable()) el.hidden = false;
+  touchEditSelect(null);
+}
+function touchEditClose() {
+  TOUCH.edit = false; tUI.classList.remove('edit'); $('tEdit').hidden = true; menu.hidden = false; touchEditSelect(null); touchShow();
+}
+function touchEditSelect(el) {
+  if (TE.sel) TE.sel.classList.remove('sel'); TE.sel = el; if (el) el.classList.add('sel');
+  const act = $('tEditAct'), size = $('tEditSize');
+  act.disabled = !el || !el.dataset.def; size.disabled = !el;
+  if (el) { const L = S.tLayout[el.id] || {}; size.value = L.s || 1; if (el.dataset.def) act.value = el.dataset.act; }
+  $('tEditName').textContent = el ? (el.dataset.def ? t('tch.' + el.dataset.act) : el.id === 'tAbil' ? t('tch.abil') : el.id === 'tSlots' ? t('tch.slots') : el.id === 'tPause' ? 'Pause' : el.textContent) : t('tch.pick');
+}
+function teSave() { store.set('tLayout', S.tLayout); }
+tUI.addEventListener('pointerdown', e => {
+  if (!TOUCH.edit) return;
+  const el = e.target.closest && e.target.closest('#touchUI > .tb, #tAbil, #tSlots'); if (!el) { touchEditSelect(null); return; }
+  e.preventDefault(); touchEditSelect(el);
+  const r = el.getBoundingClientRect(); TE.drag = { el, dx: e.clientX - (r.left + r.width / 2), dy: e.clientY - (r.top + r.height / 2), id: e.pointerId };
+  try { tUI.setPointerCapture(e.pointerId); } catch (er) {}
+});
+tUI.addEventListener('pointermove', e => {
+  if (!TOUCH.edit || !TE.drag || TE.drag.id !== e.pointerId) return;
+  const { el, dx, dy } = TE.drag, L = S.tLayout[el.id] || (S.tLayout[el.id] = {});
+  L.x = clamp((e.clientX - dx) / innerWidth, 0.02, 0.98); L.y = clamp((e.clientY - dy) / innerHeight, 0.03, 0.97);
+  applyTouchLayout();
+});
+tUI.addEventListener('pointerup', e => { if (TE.drag && TE.drag.id === e.pointerId) { TE.drag = null; teSave(); } });
+{
+  const sel = $('tEditAct'); sel.replaceChildren(...Object.keys(TACT).map(a => Object.assign(document.createElement('option'), { value: a, textContent: t('tch.' + a) })));
+  sel.addEventListener('change', () => { const el = TE.sel; if (!el || !el.dataset.def) return; (S.tLayout[el.id] || (S.tLayout[el.id] = {})).a = sel.value; teSave(); applyTouchLayout(); touchEditSelect(el); });
+  $('tEditSize').addEventListener('input', e => { const el = TE.sel; if (!el) return; (S.tLayout[el.id] || (S.tLayout[el.id] = {})).s = +e.target.value; applyTouchLayout(); });
+  $('tEditSize').addEventListener('change', teSave);
+  $('tEditReset').addEventListener('click', () => { S.tLayout = {}; teSave(); applyTouchLayout(); touchEditSelect(null); });
+  $('tEditDone').addEventListener('click', touchEditClose);
+  $('touchEditBtn').addEventListener('click', touchEditOpen);
+}
+applyTouchLayout();
+
 const mapSel = $('mapSel'); mapSel.value = S.map;
 mapSel.addEventListener('change', () => {
   if (NET.mode === 'client') { mapSel.value = S.map; setNetStatus(t('map.hostOnly'), 'err'); return; }
@@ -9596,6 +10197,7 @@ function frame(now) {
   drawEsp();
   if (MAP_TICK) MAP_TICK(dt);
   musicTick(dt);
+  voiceTick();
   if (playing) updateHazards(dt);
   updateAbilityFx(dt);
   if (playing) updateWeapon(dt);

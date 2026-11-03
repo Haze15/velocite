@@ -26,9 +26,12 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | Nova | Sentinelle | Scan : révèle robots et joueurs à travers les murs et sur la mini-carte 7 s (recharge 18 s) | Tremplin : pad violet posé au sol que tout le monde peut utiliser, 30 s (recharge 22 s) |
 | Titan | Assaut lourd | Jetpack : bond propulsé puis vol stationnaire en maintenant Espace (recharge 7 s) | Frappe aérienne : marque le point visé, 8 obus tombent du ciel 2 s plus tard (recharge 40 s) |
 | Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
+| Lynx | Coureuse de murs | Dash (recharge 3,5 s). Passif : **course sur les murs** — en l'air, en avançant avec un mur sur le côté, elle court dessus jusqu'à 1,7 s ; Espace la propulse loin du mur | Survoltage : 8 s à +30 % de vitesse, course sur les murs sans limite de temps (recharge 45 s) |
 
 
-Soldat, X-Bot, Nova, Spectre ou Titan, avec dix-huit couleurs. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+Soldat, X-Bot, Nova, Spectre, Titan ou Lynx, avec dix-huit couleurs. Lynx porte un bandeau lumineux et une écharpe aux couleurs choisies. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+
+Les autres joueurs tiennent leur arme à deux mains devant eux (le couteau d'une main), et leur buste suit leur visée vers le haut ou le bas. À la première personne, les bras et les mains (doigts refermés sur l'arme) ont les couleurs de ton perso : gants et manches du Soldat, peau et bracelet de Nova, os du squelette, bracelets lumineux du Spectre et de Lynx… Les animations ont été refaites : balancement de marche, respiration, sprint avec l'arme en travers, atterrissage, rechargement en trois temps (la main gauche va chercher le chargeur), changement d'arme.
 
 Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (jambes tendues vers l'avant). Pendant un superglide, tu vois aussi tes jambes tendues à la première personne (case « Voir mes jambes » dans les réglages pour les enlever).
 
@@ -47,6 +50,7 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 - **Océan** : six îles tropicales (palmiers, plages, cabanes, phare), pontons, deux ponts, une épave et une plateforme pétrolière avec héliport et tyrolienne. Dans l'eau profonde, on nage (lentement, sans glissade). Bateaux, chasseur et avion sur la piste de l'île principale, hélicos.
 - **Arctique** : collines enneigées sous la neige qui tombe, lac gelé qui sert de piste, base polaire avec tour et pad, chalets, tremplin de saut, forêt de sapins enneigés. Tanks, buggys, hélico, avion.
 - **Monde** : toutes les cartes réunies en une seule (Fusion au centre, Ville fantôme à l'est, Volcan à l'ouest, Océan au nord, Arctique au sud), reliées par une route en boucle et des routes vers chaque zone, avec lampadaires, pads et véhicules en plus.
+- **Chambre géante** : tu fais la taille d'un jouet dans une chambre d'enfant de 160 m. Lit (on y monte par un toboggan) avec oreillers et nounours, bureau avec ordinateur allumé, lampe et crayons (une règle sert de rampe), chaise, étagère à livres où l'on grimpe planche par planche, cubes alphabet empilés, dominos, petite voiture, ballon, briques à tenons, trampolines et deux tyroliennes (ficelles) depuis l'étagère et le bureau.
 - **Ville fantôme** : grande ville abandonnée de 320 m de côté au crépuscule, dans un brouillard verdâtre plein de poussière. Rues en damier, immeubles à fenêtres cassées ou condamnées (jusqu'à une tour de 52 m avec un pad sur le toit), immeuble en chantier à six étages avec escaliers, autoroute surélevée avec bretelles, voitures abandonnées, place centrale, parc d'herbes hautes, tyroliennes entre les toits et aérodrome à l'est avec piste, hangar, tour de contrôle et héliport.
 
 L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondule au vent.
@@ -154,7 +158,20 @@ Le jeu se joue aussi sur téléphone, en mode paysage. Les commandes tactiles s'
 - **Sensibilité tactile** et **inversion** dans les réglages.
 - **iPhone :** Safari ne permet pas le plein écran dans une page. Bouton **Partager** → **Sur l'écran d'accueil**, puis lance Vélocité depuis l'icône : il s'ouvre en plein écran, sans barre Safari. Sur Android, le jeu passe en plein écran au lancement.
 
+- **Disposer les boutons** (réglages → « Disposer les boutons tactiles ») : glisse chaque bouton où tu veux, change sa taille et l'action qu'il fait (tir, saut, sprint, viser maintenu, couteau, grenade, chat, micro…). « Par défaut » remet tout en place.
+- Le viseur reste visible au centre quand tu vises (le point reste affiché).
+
 La souris peut aussi être inversée (haut / bas et gauche / droite) dans les réglages.
+
+## Viseur
+
+Dans les réglages : forme (croix, croix en T, croix en X, cercle, point), couleur, longueur, épaisseur, écart, opacité, point au centre, contour noir, et s'il s'écarte avec la dispersion de l'arme. L'aperçu se met à jour en direct.
+
+## Chat écrit et vocal de proximité
+
+- **Écrit :** **Entrée** (ou **Y**) ouvre la barre de chat. Par défaut le message n'arrive qu'aux joueurs à moins de 40 m ; **Tab** (ou le bouton à gauche de la barre) bascule entre « Proche » et « Tous ».
+- **Vocal :** réglages → Micro : « Appuyer pour parler » (touche **N**) ou « Toujours ouvert ». On entend les joueurs à moins de 45 m, de plus en plus fort en s'approchant, à gauche ou à droite selon leur position. Une icône 🔊 s'affiche à côté du nom de celui qui parle. La voix passe directement entre les joueurs (WebRTC), le navigateur demande l'autorisation du micro.
+- Sur mobile : boutons CHAT et MICRO.
 
 ## Multijoueur
 
@@ -187,6 +204,8 @@ Les grenades ne traversent pas les murs (pas de dégâts derrière un obstacle) 
 ## Manette
 
 Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie sur un bouton pour qu'elle soit détectée, Start ou A pour lancer depuis le menu). Stick gauche : bouger · stick droit : viser · A : sauter · B : s'accroupir, glisser · X : recharger ou interagir (buggy, tyrolienne) · Y : arme suivante · LB / RB : capacités tactique et ultime · LT / RT : viser / tirer · L3 : sprint · R3 : couteau · croix : emotes, inspecter, arme précédente, mini-carte · Start : pause. Vibrations au tir.
+
+**Boutons réassignables :** dans les réglages (section Manette), clique sur une action puis appuie sur le bouton de la manette à utiliser ; Start annule, « Boutons par défaut » remet tout.
 
 Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d'une cible et légère traction quand tu bouges ou vises, de 0 à 100 %), **snap strafe facile** en l'air et inversion verticale. Au clavier, le **snap tap** est activé par défaut : si deux directions opposées sont enfoncées, la dernière appuyée gagne.
 
