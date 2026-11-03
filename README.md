@@ -150,6 +150,9 @@ Quand une nouvelle version est en ligne, un bandeau apparaît en haut de l'écra
 
 ## Sur mobile
 
+Le **panneau admin** s'ouvre aussi au doigt : bouton « Admin » dans le menu (demande le mot de passe) et bouton ADMIN en jeu quand tu as l'accès.
+
+
 Le jeu se joue aussi sur téléphone, en mode paysage. Les commandes tactiles s'activent toutes seules sur un écran tactile (réglage « Commandes tactiles »).
 
 - **Se déplacer :** pose le pouce n'importe où sur la moitié gauche de l'écran, un joystick apparaît. Pousse-le à fond vers l'avant pour sprinter.
@@ -241,6 +244,8 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 
 ## Armes
 
+**Couteaux :** combat, karambit, machette, dague, papillon, katana, hachette, épée longue, Morgane, trident. Le combat, la dague, la machette, la hachette et l'épée longue sont de vrais modèles 3D (KayKit, CC0). Le katana a un skin spécial **★ Lame céleste** : galaxie qui défile le long de la lame, tranchant arc-en-ciel, garde dorée et étincelles qui remontent la lame.
+
 | Arme | Dégâts | Cadence | Chargeur |
 | --- | --- | --- | --- |
 | Carabine K-31 | 14 (tête ×1,75) | 780 coups/min | 28 |
@@ -313,6 +318,8 @@ python3 -m http.server 8000
 - `assets/models/` : modèles de personnages animés.
 
 ## Crédits
+
+- **Couteaux** (`assets/models/knives/`) : couteau de combat, dague, machette, hachette et épée longue tirés des packs **KayKit** de Kay Lousberg (Adventurers et Skeletons), licence CC0 — [kaylousberg.com](https://www.kaylousberg.com).
 
 - **Squelette** (`assets/models/Skeleton.glb`) : modèle Sketchfab riggé Mixamo, fourni par le propriétaire du jeu ; c'est l'apparence de son Soldat. Il est animé avec les clips du X-Bot.
 

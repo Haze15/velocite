@@ -449,6 +449,12 @@ body.touch #usePrompt{top:62%}
 #tEdit b{color:#ffb020;min-width:80px}
 #tEdit .hint{flex-basis:100%;text-align:center;margin:0}
 #tEdit select{background:#0e1013;color:inherit;border:1px solid rgba(255,255,255,.2);padding:4px}
+#admMenuBtn{display:none}
+body.touch #admMenuBtn{display:inline-block}
+#tAdmin{width:58px;height:34px;border-radius:8px;left:calc(50% - 210px);top:calc(10px + env(safe-area-inset-top,0px));font-size:10px;border-color:#ffb020;color:#ffb020}
+body.touch #admPanel{width:calc(100vw - 16px);max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);font-size:15px}
+body.touch #admPanel .btn3{min-height:34px}
+body.touch #admPanel .admgrid label{padding:6px 0}
 </style>
 </head>
 <body>
@@ -517,6 +523,7 @@ body.touch #usePrompt{top:62%}
 <div id="touchUI" hidden>
   <div id="tStick" hidden><i></i></div>
   <button type="button" class="tb" id="tPause" data-p="pause" aria-label="Pause">❚❚</button>
+  <button type="button" class="tb" id="tAdmin" data-p="admin" hidden>ADMIN</button>
   <div id="tAbil"><button type="button" class="tb ab2" id="tTac" data-p="tactical"></button><button type="button" class="tb ab2" id="tUlt" data-p="ultimate"></button><button type="button" class="tb ab2" id="tGren" data-p="grenade"></button></div>
   <div id="tSlots"></div>
   <button type="button" class="tb" id="tUse" data-def="use"></button>
@@ -560,6 +567,7 @@ body.touch #usePrompt{top:62%}
         <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option><option value="ocean" data-i18n="map.ocean">Océan (îles)</option><option value="arctic" data-i18n="map.arctic">Arctique</option><option value="world" data-i18n="map.world">Monde (toutes les cartes)</option><option value="room" data-i18n="map.room">Chambre géante</option></select></label>
         <label class="mapsel"><span data-i18n="mode.label">Mode</span><select id="modeSel"><option value="ffa" data-i18n="mode.ffa">Chacun pour soi</option><option value="teams" data-i18n="mode.teams">2 équipes</option><option value="zombie" data-i18n="mode.zombie">Zombies</option></select></label>
         <button class="btn3" id="newsBtn" type="button" data-i18n="news.btn">Nouveautés</button>
+        <button class="btn3" id="admMenuBtn" type="button" data-i18n="adm.menuBtn">Admin</button>
         <span class="hint" id="hint">Le clic verrouille la souris. Échap met en pause.</span>
       </div>
     </header>
@@ -659,8 +667,8 @@ body.touch #usePrompt{top:62%}
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
-        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option><option value="trident" data-i18n="knife.trident">Trident (se lance et revient)</option></select></label>
-        <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="hatchet" data-i18n="knife.hatchet">Hachette</option><option value="longsword" data-i18n="knife.longsword">Épée longue</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option><option value="trident" data-i18n="knife.trident">Trident (se lance et revient)</option></select></label>
+        <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option><option value="ultra" data-i18n="ks.ultra">★ Lame céleste (ultra)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
         <label class="check"><input type="checkbox" id="lootOn"> <span data-i18n="set.loot">Départ au pistolet, armes dans les coffres</span></label>
@@ -1204,6 +1212,8 @@ Object.assign(I18N.fr, {"tch.use": "PRENDRE", "tch.reload": "RECH.", "tch.crouch
 Object.assign(I18N.en, {"tch.use": "USE", "tch.reload": "RELOAD", "tch.crouch": "CROUCH", "tch.jump": "JUMP", "tch.ads": "AIM", "tch.fire": "FIRE", "tch.rotate": "Turn your phone sideways (landscape)", "menu.touch2": "On mobile: joystick on the left, slide your finger on the right to aim. Play in landscape.", "menu.ios": "On iPhone, to play full screen: Safari’s <b>Share</b> button → <b>Add to Home Screen</b>, then open Vélocité from the icon.", "set.invY": "Invert mouse (up / down)", "set.invX": "Invert mouse (left / right)", "set.touch": "Touch controls (mobile)", "set.touchSens": "Touch sensitivity"});
 Object.assign(I18N.fr, {"map.room": "Chambre géante", "char.lynx": "Lynx", "cls.runner": "Coureuse de murs", "ab.overdrive": "SURVOLTAGE", "abd.overdrive": "8 s : +30 % de vitesse et course sur les murs sans limite. Passif : cours sur les murs (saute contre un mur sur le côté en avançant).", "wr.kick": "saut du mur", "act.chat": "Chat", "act.talk": "Parler (micro)", "chat.near": "PROCHE", "chat.modeNear": "Proche", "chat.modeAll": "Tous", "chat.ph": "Message… (Entrée pour envoyer)", "chat.send": "Envoyer", "chat.offline": "Le chat marche en partie en ligne.", "voice.title": "Chat vocal de proximité", "voice.mode": "Micro", "voice.off": "Coupé", "voice.ptt": "Appuyer pour parler (N)", "voice.open": "Toujours ouvert", "voice.vol": "Volume des voix", "voice.hint": "On entend les joueurs à moins de 45 m, plus fort quand ils sont près. Le chat écrit (Entrée) est aussi de proximité par défaut (Tab dans la barre pour écrire à tous).", "voice.denied": "Micro refusé : autorise-le dans le navigateur pour le chat vocal.", "xh.title": "Viseur", "xh.style": "Forme", "xh.cross": "Croix", "xh.t": "Croix en T", "xh.x": "Croix en X", "xh.circle": "Cercle", "xh.dot": "Point", "xh.color": "Couleur", "xh.len": "Longueur", "xh.thick": "Épaisseur", "xh.gap": "Écart", "xh.op": "Opacité", "xh.dotOn": "Point au centre", "xh.dyn": "S’écarte avec la dispersion", "xh.outline": "Contour noir", "xh.reset": "Viseur par défaut", "pad.mapHint": "Clique sur un bouton puis appuie sur le bouton de la manette à utiliser (Start annule).", "pad.reset": "Boutons par défaut", "pad.press": "Appuie…", "pad.clear": "Retirer", "pad.a.jump": "Sauter", "pad.a.crouch": "S’accroupir / glisser", "pad.a.use": "Utiliser / recharger", "pad.a.next": "Arme suivante", "pad.a.prev": "Arme précédente", "pad.a.tactical": "Capacité tactique", "pad.a.ultimate": "Capacité ultime", "pad.a.ads": "Viser", "pad.a.fire": "Tirer", "pad.a.board": "Scores", "pad.a.sprint": "Sprint", "pad.a.w6": "Couteau", "pad.a.emote": "Emotes", "pad.a.grenade": "Grenade", "pad.a.grenType": "Type de grenade", "pad.a.reload": "Recharger", "pad.a.chat": "Chat", "pad.a.talk": "Parler (micro)", "pad.a.inspect": "Inspecter", "pad.a.map": "Mini-carte", "tch.edit": "Disposer les boutons tactiles", "tch.editHint": "Glisse les boutons pour les déplacer. Touche un bouton pour changer son action ou sa taille.", "tch.action": "Action", "tch.size": "Taille", "tch.reset": "Par défaut", "tch.done": "Terminé", "tch.pick": "Choisis un bouton", "tch.abil": "Capacités", "tch.slots": "Armes", "tch.fire": "TIR", "tch.jump": "SAUT", "tch.crouch": "ACCR.", "tch.aim": "VISER", "tch.aimHold": "VISER (maintenu)", "tch.reload": "RECH.", "tch.use": "PRENDRE", "tch.tactical": "TACTIQUE", "tch.ultimate": "ULTIME", "tch.grenade": "GRENADE", "tch.next": "ARME +", "tch.prev": "ARME −", "tch.sprint": "SPRINT", "tch.knife": "COUTEAU", "tch.emote": "EMOTE", "tch.chat": "CHAT", "tch.talk": "MICRO", "tch.map": "CARTE", "tch.board": "SCORES", "tch.inspect": "INSPECTER"});
 Object.assign(I18N.en, {"map.room": "Giant bedroom", "char.lynx": "Lynx", "cls.runner": "Wall runner", "ab.overdrive": "OVERDRIVE", "abd.overdrive": "8 s: +30% speed and unlimited wall running. Passive: run along walls (jump into a wall at your side while moving).", "wr.kick": "wall kick", "act.chat": "Chat", "act.talk": "Talk (mic)", "chat.near": "NEARBY", "chat.modeNear": "Nearby", "chat.modeAll": "All", "chat.ph": "Message… (Enter to send)", "chat.send": "Send", "chat.offline": "Chat works in online matches.", "voice.title": "Proximity voice chat", "voice.mode": "Microphone", "voice.off": "Off", "voice.ptt": "Push to talk (N)", "voice.open": "Always on", "voice.vol": "Voice volume", "voice.hint": "You hear players within 45 m, louder when they are close. Text chat (Enter) is also nearby-only by default (Tab in the bar to write to everyone).", "voice.denied": "Microphone blocked: allow it in your browser for voice chat.", "xh.title": "Crosshair", "xh.style": "Shape", "xh.cross": "Cross", "xh.t": "T cross", "xh.x": "X cross", "xh.circle": "Circle", "xh.dot": "Dot", "xh.color": "Color", "xh.len": "Length", "xh.thick": "Thickness", "xh.gap": "Gap", "xh.op": "Opacity", "xh.dotOn": "Center dot", "xh.dyn": "Spreads with weapon spread", "xh.outline": "Black outline", "xh.reset": "Default crosshair", "pad.mapHint": "Click a button, then press the controller button to use (Start cancels).", "pad.reset": "Default buttons", "pad.press": "Press…", "pad.clear": "Clear", "pad.a.jump": "Jump", "pad.a.crouch": "Crouch / slide", "pad.a.use": "Use / reload", "pad.a.next": "Next weapon", "pad.a.prev": "Previous weapon", "pad.a.tactical": "Tactical ability", "pad.a.ultimate": "Ultimate", "pad.a.ads": "Aim", "pad.a.fire": "Fire", "pad.a.board": "Scores", "pad.a.sprint": "Sprint", "pad.a.w6": "Knife", "pad.a.emote": "Emotes", "pad.a.grenade": "Grenade", "pad.a.grenType": "Grenade type", "pad.a.reload": "Reload", "pad.a.chat": "Chat", "pad.a.talk": "Talk (mic)", "pad.a.inspect": "Inspect", "pad.a.map": "Minimap", "tch.edit": "Arrange touch buttons", "tch.editHint": "Drag buttons to move them. Tap a button to change its action or size.", "tch.action": "Action", "tch.size": "Size", "tch.reset": "Default", "tch.done": "Done", "tch.pick": "Pick a button", "tch.abil": "Abilities", "tch.slots": "Weapons", "tch.fire": "FIRE", "tch.jump": "JUMP", "tch.crouch": "CROUCH", "tch.aim": "AIM", "tch.aimHold": "AIM (hold)", "tch.reload": "RELOAD", "tch.use": "USE", "tch.tactical": "TACTICAL", "tch.ultimate": "ULTIMATE", "tch.grenade": "GRENADE", "tch.next": "WEAPON +", "tch.prev": "WEAPON −", "tch.sprint": "SPRINT", "tch.knife": "KNIFE", "tch.emote": "EMOTE", "tch.chat": "CHAT", "tch.talk": "MIC", "tch.map": "MAP", "tch.board": "SCORES", "tch.inspect": "INSPECT"});
+Object.assign(I18N.fr, {"knife.hatchet": "Hachette", "knife.longsword": "Épée longue", "ks.ultra": "★ Lame céleste (ultra)", "adm.menuBtn": "Admin", "adm.x.spin": "Spinbot (les autres te voient tourner)", "adm.x.glow": "Glow / chams (à travers les murs)", "adm.x.skel": "ESP squelette", "adm.x.radar": "Radar (tous sur la mini-carte)", "adm.x.silent": "Silent aim (balles vers la cible)", "adm.x.autobhop": "Auto-bhop (maintiens Saut)", "adm.x.third": "3e personne"});
+Object.assign(I18N.en, {"knife.hatchet": "Hatchet", "knife.longsword": "Longsword", "ks.ultra": "★ Celestial blade (ultra)", "adm.menuBtn": "Admin", "adm.x.spin": "Spinbot (others see you spin)", "adm.x.glow": "Glow / chams (through walls)", "adm.x.skel": "Skeleton ESP", "adm.x.radar": "Radar (everyone on the minimap)", "adm.x.silent": "Silent aim (bullets go to the target)", "adm.x.autobhop": "Auto-bhop (hold Jump)", "adm.x.third": "Third person"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1225,7 +1235,7 @@ const wName = i => i === 5 ? t('knife.' + (S.knife || 'combat')).toUpperCase() :
 
 /* ================= Mode secret ================= */
 const X_HASH = 'e99ca6495c4f655f8314f7af87026b5acca4978bed48525edfc8c05c16e5b8d3';
-const X = { god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false, aimbot: false, head: true, vis: true, trigger: false, esp: false, rapid: false, fly: false, superjump: false, tp: false };
+const X = { spin: false, glow: false, skel: false, silent: false, autobhop: false, radar: false, third: false, god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false, aimbot: false, head: true, vis: true, trigger: false, esp: false, rapid: false, fly: false, superjump: false, tp: false };
 const XV = Object.assign({ fov: 30, smooth: 0.15 }, store.get('xv', {}));
 const RULES = { g: 1, s: 1, bots: true, mode: 'ffa' };
 const LOCAL_RULES = Object.assign({}, RULES, store.get('rules', {}));
@@ -3606,6 +3616,7 @@ function step(dt) {
   if (ADM.freezeT > 0) { ADM.freezeT -= dt; P.vel.set(0, 0, 0); return; }
   if (EDIT.on) { editorStep(dt); return; }
   if (P.pass && !P.dead) { passStep(dt); return; }
+  if (X.autobhop && xUnlocked && P.grounded && act('jump')) P.jumpBuf = 0.14;
   if (X.fly && xUnlocked && !P.dead && !P.veh && !P.zip) { flyStep(dt); return; }
   if (AB.dashT > 0 && !P.dead && !P.veh && !P.zip) { dashStep(dt); return; }
   if (AB.jetT > 0 && !P.dead && !P.veh && !P.zip) jetStep(dt);
@@ -4392,6 +4403,19 @@ const SP = { held: null, prev: 0 };
 const OWN = [false, false, false, false, true, false];
 const WS = { cur: 0, ammo: WEAPONS.map(w => w.mag), swingT: 0, swingDur: 0.32, swingKind: 0, combo: 0, flourT: 0, inspT: 0, cool: 0, reloading: false, reloadT: 0, reloadDur: 1, swapT: 0, ads: 0, kick: 0, kickRot: 0, flashT: 0, trigger: false, swayX: 0, swayY: 0, bloom: 0, sprintK: 0, slideK: 0 };
 
+// modèles des couteaux : fichier, longueur totale (m), décalage de la main
+const KMODELS = { combat: { file: 'kk_dagger.glb', len: .32 }, dagger: { file: 'kk_sword1.glb', len: .4 }, machete: { file: 'kk_blade.glb', len: .5 }, hatchet: { file: 'kk_axe.glb', len: .4, z: .06, roll: -Math.PI / 2 }, longsword: { file: 'kk_sword2.glb', len: .82, z: .05 } };
+const KMESH = {};
+if (THREE.GLTFLoader) {
+  const kl = new THREE.GLTFLoader();
+  for (const k in KMODELS) kl.load('assets/models/knives/' + KMODELS[k].file, g => {
+    const bb = new THREE.Box3().setFromObject(g.scene);
+    // la poignée : du pommeau (y min) à la garde (y = 0) ; on tient le milieu
+    KMESH[k] = { scene: g.scene, h: Math.max(0.01, bb.max.y - bb.min.y), grip: bb.min.y / 2 };
+    if (S.knife === k) { wScene.remove(VM[5].g); VM[5] = buildViewmodel(5, S.knife); VM[5].g.visible = WS.cur === 5; applySkin(S.skin); }
+    for (const rp of remotes.values()) if (rp.gun && rp.gun.vm.kind === 5) rp.gun.key = '';
+  }, undefined, () => {});
+}
 function buildViewmodel(kind, knifeType) {
   const g = new THREE.Group();
   const L = (sh = 40) => new THREE.MeshPhongMaterial({ shininess: sh, specular: 0x2a2a2a });
@@ -4513,7 +4537,14 @@ function buildViewmodel(kind, knifeType) {
     };
     const wrap = (z0, len, r, n) => { for (let i = 0; i < n; i++) { const d = add(B(r * 2.1, r * 2.1, len / n * .45), i % 2 ? amb : blk, 0, 0, z0 + (i + .5) * len / n, 0, 0, Math.PI / 4); } };
     const parts = {};
-    if (kt === 'karambit') {
+    // couteaux en modèle 3D (KayKit, CC0) : manche dans la main, lame vers l'avant
+    const KM = KMODELS[kt], KMs = KMESH[kt];
+    if (KM && KMs) {
+      const o = KMs.scene.clone(true), s = KM.len / KMs.h;
+      o.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.castShadow = true; } });
+      o.rotation.set(-Math.PI / 2, KM.roll || 0, 0); o.scale.setScalar(s); o.position.set(0, 0, -KMs.grip * s + (KM.z || .035));
+      g.add(o); parts.model = o;
+    } else if (kt === 'karambit') {
       // griffe recourbée, manche courbe et anneau de pouce
       blade([[0, .01], [.04, .018], [.085, .014], [.12, -.004], [.145, -.035], [.152, -.062], [.13, -.04], [.1, -.016], [.06, -.004], [.02, -.006], [0, -.006]], .005, steel, -.02, .006);
       add(B(.026, .032, .1), tan, 0, -.006, .045, -.18); add(B(.028, .006, .09), amb, 0, .011, .042, -.18);
@@ -4682,7 +4713,7 @@ function buildViewmodel(kind, knifeType) {
   g.visible = false; wScene.add(g);
   // points de prise des mains (repère de l'arme) : main droite sur la poignée, gauche sur le garde-main
   const HANDS = { 0: { r: [0, -.095, .09], l: [0, -.035, -.3] }, 1: { r: [0, -.1, .105], l: [0, -.17, -.07] }, 2: { r: [0, -.09, .12], l: [0, -.06, -.38] }, 3: { r: [0, -.09, .16], l: [0, -.07, -.3] }, 4: { r: [0, -.075, .045], l: [-.025, -.1, .06] } };
-  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, trident: { r: [0, 0, .08], l: [0, 0, -.18] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] } };
+  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, trident: { r: [0, 0, .08], l: [0, 0, -.18] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] }, hatchet: { r: [0, 0, .06] }, longsword: { r: [0, 0, .05], l: [0, 0, .15] } };
   const SPHANDS = { crossbow: { r: [0, -.09, .14], l: [0, -.03, -.12] }, flamer: { r: [0, -.1, .15], l: [0, -.08, -.22] }, laser: { r: [0, -.09, .12], l: [0, -.03, -.28] }, autoshotgun: { r: [0, -.09, .12], l: [0, -.08, -.2] }, hsniper: { r: [0, -.1, .15], l: [0, -.03, -.36] }, lmg: { r: [0, -.1, .15], l: [0, -.04, -.32] }, gunblade: { r: [0, -.09, .14] }, minigun: { r: [0, -.1, .15], l: [0, .11, 0] }, rocket: { r: [0, -.09, .02], l: [0, -.08, -.26] }, railgun: { r: [0, -.09, .12], l: [0, -.04, -.3] }, revolver: { r: [0, -.075, .075] }, gl: { r: [0, -.09, .15], l: [0, -.1, -.18] }, burst: { r: [0, -.095, .1], l: [0, -.03, -.28] } };
   const hands = kind === 5 ? KHANDS[knifeType] || KHANDS.combat : kind === 6 ? SPHANDS[knifeType] || SPHANDS.burst : HANDS[kind] || HANDS[4];
   return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind, hands };
@@ -4691,7 +4722,7 @@ S.knife = store.get('knife', 'combat');
 const KNIVES = {
   combat: { dmg: 50, rpm: 115, range: 2.7 }, karambit: { dmg: 42, rpm: 145, range: 2.4 }, katana: { dmg: 70, rpm: 80, range: 3.6 },
   machete: { dmg: 65, rpm: 85, range: 3.3 }, dagger: { dmg: 55, rpm: 110, range: 2.6 }, butterfly: { dmg: 46, rpm: 135, range: 2.5 },
-  morgane: { dmg: 85, rpm: 62, range: 3.4 },
+  morgane: { dmg: 85, rpm: 62, range: 3.4 }, hatchet: { dmg: 75, rpm: 72, range: 3.1 }, longsword: { dmg: 80, rpm: 66, range: 3.9 },
   trident: { dmg: 70, rpm: 80, range: 3.6 }
 };
 function applyKnifeStats() { Object.assign(WEAPONS[5], KNIVES[S.knife] || KNIVES.combat); }
@@ -4859,6 +4890,14 @@ const kVoidTex = bladeTex((g, s) => {
   let seed = 81; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   for (let i = 0; i < 70; i++) { g.fillStyle = `rgba(255,255,255,${0.4 + rnd() * 0.6})`; g.beginPath(); g.arc(rnd() * s, rnd() * s, rnd() < 0.12 ? 1.5 : 0.6, 0, Math.PI * 2); g.fill(); }
 }, 4);
+const kUltraTex = bladeTex((g, s) => {
+  const gr = g.createLinearGradient(0, 0, s, 0); gr.addColorStop(0, '#1a0640'); gr.addColorStop(0.25, '#5a12c0'); gr.addColorStop(0.5, '#00c8ff'); gr.addColorStop(0.75, '#ff2ad8'); gr.addColorStop(1, '#1a0640');
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+  let seed = 97; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 9; i++) { let x = 0, y = rnd() * s; g.beginPath(); g.moveTo(x, y); while (x < s) { x += 6; y += (rnd() - 0.5) * 9; g.lineTo(x, y); } g.strokeStyle = `rgba(${150 + rnd() * 105 | 0},${200 + rnd() * 55 | 0},255,.55)`; g.lineWidth = 1 + rnd() * 2; g.stroke(); }
+  for (let i = 0; i < 90; i++) { g.fillStyle = `rgba(255,255,255,${0.5 + rnd() * 0.5})`; g.beginPath(); g.arc(rnd() * s, rnd() * s, rnd() < 0.1 ? 1.8 : 0.7, 0, Math.PI * 2); g.fill(); }
+}, 4);
 const KSKINS = {
   follow: null,
   tamahagane: { steel: 0xe4eaef, mid: 0xffffff, blk: 0x15151a, amb: 0xc9a040, trail: 0xd8ecff },
@@ -4869,7 +4908,9 @@ const KSKINS = {
   sakura: { steel: 0xffffff, mid: 0xffd0dc, blk: 0xf4ece8, amb: 0xff7aa0, map: kSakuraTex, mapRoles: ['steel'], trail: 0xff9ec0 },
   obsidian: { steel: [0x141018, 0x1a0630], mid: [0xb070ff, 0x7030d0], blk: 0x08060a, amb: 0x5a2a9e, trail: 0xa060ff, anim: 'pulse', pulseRoles: ['mid', 'steel'] },
   thunder: { steel: [0xfff6c0, 0x403000], mid: [0xffffff, 0xffe040], blk: 0x1a1a22, amb: [0xffd030, 0x403000], trail: 0xfff070, anim: 'flicker' },
-  void: { steel: 0xffffff, mid: [0xe0c0ff, 0x6030c0], blk: 0x0a0614, amb: 0x8a5ad0, map: kVoidTex, emap: kVoidTex, emapCol: 0x302050, mapRoles: ['steel'], trail: 0xc890ff, anim: 'scroll', spd: [0.06, 0.015] }
+  void: { steel: 0xffffff, mid: [0xe0c0ff, 0x6030c0], blk: 0x0a0614, amb: 0x8a5ad0, map: kVoidTex, emap: kVoidTex, emapCol: 0x302050, mapRoles: ['steel'], trail: 0xc890ff, anim: 'scroll', spd: [0.06, 0.015] },
+  // ★ lame céleste : galaxie qui coule le long de la lame, tranchant arc-en-ciel, garde en or, étincelles
+  ultra: { steel: 0xffffff, mid: [0xffffff, 0xffffff], blk: 0x0a0614, amb: [0xffd700, 0x8a5a00], map: kUltraTex, emap: kUltraTex, emapCol: 0xb090ff, mapRoles: ['steel'], trail: 0xff60ff, anim: 'ultra', spd: [0.18, 0.02] }
 };
 // Morgane : hache double à lames argent-violet et runes roses qui pulsent
 const TRIDENT_SKIN = { steel: [0x9ff4ff, 0x0a3a44], mid: 0x1f5f66, tan: 0x2a3d44, blk: 0x10181c, amb: [0xffd24a, 0x5a3a00], dark: 0x1f3a40, teal: 0x2a6a70, trail: 0x66f0ff, anim: 'pulse', pulseRoles: ['steel'] };
@@ -4899,7 +4940,29 @@ function applySkin(id) {
 applySkin(S.skin);
 const _hsl = new THREE.Color();
 function animSkin(vm, sk, t) {
+  if (vm.ultraFx) vm.ultraFx.visible = !!sk && sk.anim === 'ultra';
   if (!sk || !sk.anim) return;
+  if (sk.anim === 'ultra') {
+    const tx = sk.map; tx.offset.set((t * sk.spd[0]) % 1, (t * sk.spd[1]) % 1);
+    const m = vm.mats.mid; m.emissive.setHSL((t * 0.35) % 1, 1, 0.55); m.color.copy(m.emissive);
+    vm.mats.steel.emissive.setHSL((t * 0.1 + 0.7) % 1, 0.7, 0.32 + 0.12 * Math.sin(t * 5));
+    vm.mats.amb.emissive.setHex(0x8a5a00).multiplyScalar(0.6 + 0.4 * Math.sin(t * 3.1));
+    // étincelles qui scintillent le long de la lame
+    if (!vm.ultraFx) {
+      const n = 26, pos = new Float32Array(n * 3), col = new Float32Array(n * 3);
+      for (let i = 0; i < n; i++) { pos[i * 3] = (Math.random() - 0.5) * 0.03; pos[i * 3 + 1] = (Math.random() - 0.5) * 0.06; pos[i * 3 + 2] = -0.05 - Math.random() * 0.6; }
+      const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+      vm.ultraFx = new THREE.Points(geo, new THREE.PointsMaterial({ size: 0.012, map: glowTex, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+      vm.ultraFx.frustumCulled = false; vm.g.add(vm.ultraFx);
+    }
+    const p = vm.ultraFx.geometry.attributes.position, c = vm.ultraFx.geometry.attributes.color;
+    for (let i = 0; i < p.count; i++) {
+      let z = p.getZ(i) - 0.0035; if (z < -0.66) z = -0.05; p.setZ(i, z);
+      const k = 0.5 + 0.5 * Math.sin(t * 9 + i * 1.7); _hsl.setHSL((t * 0.3 + i * 0.07) % 1, 1, 0.6); c.setXYZ(i, _hsl.r * k, _hsl.g * k, _hsl.b * k);
+    }
+    p.needsUpdate = true; c.needsUpdate = true;
+    return;
+  }
   if (sk.anim === 'scroll') { const tx = sk.map || sk.emap; tx.offset.set((t * sk.spd[0]) % 1, (t * sk.spd[1]) % 1); return; }
   if (sk.anim === 'hue') {
     ['dark', 'mid', 'teal', 'tan', 'amb'].forEach((role, i) => { const m = vm.mats[role]; m.color.setHSL((t * 0.12 + i * 0.17) % 1, 0.85, role === 'mid' ? 0.38 : 0.55); });
@@ -5033,7 +5096,7 @@ function melee() {
   }
 }
 const INSPECT_DUR = 2.4;
-const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38, trident: 0.42 };
+const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38, trident: 0.42, hatchet: 0.5, longsword: 0.52 };
 /* ---------- poses de frappe : [dx, dy, dz, rx, ry, rz] ; préparation → frappe rapide → retour ----------
    rx incline la lame vers le haut, ry la tourne vers la gauche, rz la fait rouler sur son axe */
 const SWINGS = {
@@ -5116,6 +5179,7 @@ function fire(blast) {
   camera.getWorldPosition(_o);
   const e = camera.matrixWorld.elements;
   _r.set(e[0], e[1], e[2]); _u.set(e[4], e[5], e[6]); _f.set(-e[8], -e[9], -e[10]);
+  if (X.silent && xUnlocked) silentAim(_o, _f);
   const vm = VM[WS.cur];
   _m.set(lerp(vm.hip[0] + 0.01, 0.0, WS.ads), lerp(-0.13, -0.07, WS.ads), -0.75); camera.localToWorld(_m);
   const spId = WS.cur === 6 ? WEAPONS[6].special : undefined;
@@ -5369,7 +5433,7 @@ function updateViewmodel(dt) {
   const vm = VM[WS.cur], g = vm.g, a = easeOut(WS.ads), hs = Math.hypot(P.vel.x, P.vel.z);
   let swingP = -1, viewSpin = 0;
   const scoped = WEAPONS[WS.cur].scope && WS.ads > 0.85;
-  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on && !SPEC.on && !(vm.kind === 5 && TRI.state !== 'hand');
+  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on && !SPEC.on && !thirdOn() && !(vm.kind === 5 && TRI.state !== 'hand');
   WS.sprintK = approach(WS.sprintK, P.sprinting && P.grounded && !mouse.left && !WS.reloading ? 1 : 0, dt * 6);
   WS.slideK = approach(WS.slideK, P.sliding ? 1 : 0, dt * 6);
   WS.swayX *= Math.exp(-10 * dt); WS.swayY *= Math.exp(-10 * dt);
@@ -5487,6 +5551,7 @@ function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
   const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
+  if (X.spin && xUnlocked && !P.veh) { st.y = r2((performance.now() / 1000 * 22) % (Math.PI * 2)); st.pi = -1.35; }
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (SPEC.on) { st.dead = true; st.spec = 1; }
   if (P.pass) { st.pv = P.pass.i + 1; st.ps = P.passSeat; st.a = 'ground'; }
@@ -5878,7 +5943,7 @@ function drawMinimap() {
   c.fillStyle = '#E88A4A';
   for (const d of dummies) if (d.alive && RULES.bots) { c.beginPath(); c.arc(d.g.position.x, d.g.position.z, 1.1, 0, Math.PI * 2); c.fill(); }
   for (const rp of remotes.values()) {
-    if (!rp.st || rp.st.dead || !(rp.pingT > 0 || AB.scanT > 0 || ((X.wall || X.esp) && xUnlocked))) continue;
+    if (!rp.st || rp.st.dead || !(rp.pingT > 0 || AB.scanT > 0 || ((X.wall || X.esp || X.radar) && xUnlocked))) continue;
     c.fillStyle = '#FF5A44'; c.beginPath(); c.arc(rp.pos.x, rp.pos.z, 1.6, 0, Math.PI * 2); c.fill();
   }
   c.restore();
@@ -5912,6 +5977,17 @@ function xVisible(eye, x, y, z) {
   _d.set(x - eye.x, y - eye.y, z - eye.z); const d = _d.length(); _d.divideScalar(d);
   raycaster.set(eye, _d); raycaster.far = d - 0.3;
   return raycaster.intersectObjects(WORLD, false).length === 0;
+}
+function silentAim(eye, f) {
+  let best = null, bestAng = XV.fov / 2 * DEG;
+  for (const tg of xTargets()) {
+    const ty = tg.y + (X.head ? tg.head : tg.body), dx = tg.x - eye.x, dy = ty - eye.y, dz = tg.z - eye.z, d = Math.hypot(dx, dy, dz);
+    if (d < 0.5 || d > 400) continue;
+    const ang = Math.acos(clamp((dx * f.x + dy * f.y + dz * f.z) / d, -1, 1));
+    if (ang >= bestAng || (X.vis && !xVisible(eye, tg.x, ty, tg.z))) continue;
+    bestAng = ang; best = [dx / d, dy / d, dz / d];
+  }
+  if (best) f.set(best[0], best[1], best[2]);
 }
 function xAimbot(dt) {
   if (!xUnlocked || !playing || P.dead || EDIT.on || P.veh) return;
@@ -5957,8 +6033,55 @@ addEventListener('keydown', e => {
 // ESP : dessin 2D par-dessus la scène
 const espCv = $('espCv'), espCtx = espCv.getContext('2d');
 const _ep = new V3();
+// glow / chams : une copie du perso dessinée par-dessus les murs, en couleur
+const GLOW_COL = { enemy: 0xff3040, mate: 0x40ff80, bot: 0xffb020 };
+function glowVis(vis, on, col) {
+  if (!vis || !vis.obj) return;
+  if (!on) { if (vis.glow) { for (const gm of vis.glow) gm.parent && gm.parent.remove(gm); vis.glow = null; } return; }
+  if (!vis.glow) {
+    vis.glow = [];
+    const meshes = []; vis.obj.traverse(m => { if (m.isMesh && !m.userData.glowCopy) meshes.push(m); });
+    for (const m of meshes) {
+      const mat = new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.45, depthTest: false, depthWrite: false, skinning: !!m.isSkinnedMesh });
+      const gm = m.isSkinnedMesh ? new THREE.SkinnedMesh(m.geometry, mat) : new THREE.Mesh(m.geometry, mat);
+      if (m.isSkinnedMesh) gm.bind(m.skeleton, m.bindMatrix);
+      gm.userData.glowCopy = true; gm.userData.gear = true; gm.renderOrder = 999; gm.frustumCulled = false; m.add(gm); vis.glow.push(gm);
+    }
+  }
+  const k = 0.32 + 0.18 * Math.sin(performance.now() / 160);
+  for (const gm of vis.glow) { gm.material.color.setHex(col); gm.material.opacity = k; }
+}
+function xGlowTick() {
+  const on = xUnlocked && X.glow;
+  for (const rp of remotes.values()) glowVis(rp.vis, on && rp.st && !rp.st.dead, typeof sameSide === 'function' && sameSide(rp) && RULES.mode !== 'ffa' ? GLOW_COL.mate : GLOW_COL.enemy);
+  for (const d of dummies) glowVis(d.vis, on && d.alive && RULES.bots, GLOW_COL.bot);
+}
+// squelette : traits entre les os, projetés à l'écran
+const SKEL_LINKS = [['hips', 'spine'], ['spine', 'head'], ['spine', 'lArm'], ['lArm', 'lFore'], ['lFore', 'lHand'], ['spine', 'rArm'], ['rArm', 'rFore'], ['rFore', 'rHand'], ['hips', 'lUp'], ['lUp', 'lLeg'], ['lLeg', 'lFoot'], ['hips', 'rUp'], ['rUp', 'rLeg'], ['rLeg', 'rFoot']];
+const _sk1 = new V3(), _sk2 = new V3();
+function drawSkeletons(c, W, H) {
+  const list = [];
+  for (const rp of remotes.values()) if (rp.st && !rp.st.dead && rp.vis && rp.vis.mixer && rp.g.visible) list.push([rp.vis, '#ff4050']);
+  for (const d of dummies) if (d.alive && RULES.bots && d.vis && d.vis.mixer && d.g.visible) list.push([d.vis, '#ffb020']);
+  c.lineWidth = 1.6;
+  for (const [vis, col] of list) {
+    const rig = rigOf(vis);
+    if (!vis._skx) { vis._skx = {}; vis.obj.traverse(o => { if (!o.isBone) return; const n = o.name.replace(/_\d+$/, ''); if (!vis._skx.lHand && /LeftHand$/.test(n)) vis._skx.lHand = o; if (!vis._skx.rHand && /RightHand$/.test(n)) vis._skx.rHand = o; if (!vis._skx.lFoot && /LeftFoot$/.test(n)) vis._skx.lFoot = o; if (!vis._skx.rFoot && /RightFoot$/.test(n)) vis._skx.rFoot = o; }); }
+    const B = k => rig[k] || vis._skx[k];
+    c.strokeStyle = col; c.beginPath();
+    for (const [a, b] of SKEL_LINKS) {
+      const A = B(a), Bb = B(b); if (!A || !Bb) continue;
+      A.getWorldPosition(_sk1).project(camera); Bb.getWorldPosition(_sk2).project(camera);
+      if (_sk1.z > 1 || _sk2.z > 1) continue;
+      c.moveTo((_sk1.x * 0.5 + 0.5) * W, (-_sk1.y * 0.5 + 0.5) * H); c.lineTo((_sk2.x * 0.5 + 0.5) * W, (-_sk2.y * 0.5 + 0.5) * H);
+    }
+    c.stroke();
+    const hd = B('head'); if (hd) { hd.getWorldPosition(_sk1).project(camera); if (_sk1.z <= 1) { c.beginPath(); c.arc((_sk1.x * 0.5 + 0.5) * W, (-_sk1.y * 0.5 + 0.5) * H, 4, 0, Math.PI * 2); c.stroke(); } }
+  }
+}
 function drawEsp() {
-  const on = xUnlocked && playing && (X.esp || X.aimbot);
+  xGlowTick();
+  const on = xUnlocked && playing && (X.esp || X.aimbot || X.skel);
   if (!on) { if (espCv.dataset.on) { espCtx.clearRect(0, 0, espCv.width, espCv.height); delete espCv.dataset.on; } return; }
   espCv.dataset.on = '1';
   const W = window.innerWidth, H = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -5969,6 +6092,7 @@ function drawEsp() {
     const r = Math.tan(Math.min(89, XV.fov / 2) * DEG) / Math.tan(camera.fov * DEG / 2) * H / 2;
     c.strokeStyle = 'rgba(255,255,255,.35)'; c.lineWidth = 1; c.beginPath(); c.arc(W / 2, H / 2, r, 0, Math.PI * 2); c.stroke();
   }
+  if (X.skel) drawSkeletons(c, W, H);
   if (!X.esp) return;
   c.font = '600 12px "Saira Condensed", sans-serif'; c.textAlign = 'center';
   for (const tg of xTargets()) {
@@ -6171,7 +6295,17 @@ function updateSelfAvatar(dt) {
   if (EMOTE.on && (P.dead || !P.grounded || act('forward') || act('back') || act('left') || act('right') || act('jump') || act('crouch') || mouse.left || !playing)) endEmote();
   if (P.mgT > 0) P.mgT -= dt;
   hud.classList.toggle('emoting', EMOTE.on || !!P.veh); hud.classList.toggle('inveh', !!P.veh);
-  if (!EMOTE.on) return;
+  if (!EMOTE.on && thirdOn()) {
+    const vis = ensureSelfAvatar(); if (!vis) return;
+    SELF.g.visible = true; SELF.g.position.copy(rPos); SELF.g.rotation.y = X.spin ? (performance.now() / 1000 * 22) % (Math.PI * 2) : P.yaw;
+    setOutfit(vis, SELF.g, P.mgT > 0, myColor());
+    const hs = Math.hypot(P.vel.x, P.vel.z), air = !P.grounded && !P.climbing;
+    animateAvatar(vis, dt, { loco: hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: P.sliding ? 'slide' : air ? 'air' : 'ground', hold: WS.cur === 5 ? 'knife' : 'gun', pitch: X.spin ? -1.35 : P.pitch });
+    vis.obj.position.y = -MODELS.chars[vis.ch].minY * vis.base - (vis.lower || 0);
+    updateOutfit(vis, SELF.g);
+    return;
+  }
+  if (!EMOTE.on) { if (SELF.g.visible && !thirdOn()) SELF.g.visible = false; return; }
   const vis = ensureSelfAvatar(); if (!vis) { endEmote(); return; }
   SELF.g.visible = true;
   SELF.g.position.copy(rPos); SELF.g.rotation.y = EMOTE.yaw;
@@ -6181,8 +6315,9 @@ function updateSelfAvatar(dt) {
   updateOutfit(vis, SELF.g);
 }
 // caméra à la troisième personne qui tourne autour de l'avatar ; recule moins si un mur gêne
+const thirdOn = () => X.third && xUnlocked && playing && !P.veh && !P.dead && !SPEC.on;
 function emoteCamera() {
-  if (!EMOTE.on && !P.veh) return;
+  if (!EMOTE.on && !P.veh && !thirdOn()) return;
   if (P.veh && CP.on) { cockpitCamera(); return; }
   const PR = P.veh ? VEHP[P.veh.type] || VEH : null, cp = Math.cos(P.pitch), far = PR ? PR.cam : EMOTE.dist;
   _d.set(Math.sin(P.yaw) * cp, -Math.sin(P.pitch), Math.cos(P.yaw) * cp);
@@ -8975,7 +9110,7 @@ function admShow(v) {
   }
 }
 // panneau ouvert : la souris sert au panneau, pas à viser ; un clic hors du panneau le ferme et rend la main au jeu
-addEventListener('mousedown', e => { if (ADM.open && !admPanel.contains(e.target)) { e.preventDefault(); e.stopPropagation(); if (playing) admShow(false); } }, true);
+addEventListener('mousedown', e => { if (ADM.open && !admPanel.contains(e.target) && !(e.target.closest && e.target.closest('#touchUI'))) { e.preventDefault(); e.stopPropagation(); if (playing) admShow(false); } }, true);
 addEventListener('keydown', e => { if (e.code === 'Insert') { e.preventDefault(); admShow(!ADM.open); } }, true);
 admPanel.addEventListener('keydown', e => { if (e.code !== 'Insert' && e.code !== 'Escape') e.stopPropagation(); if (e.code === 'Escape') admShow(false); });
 admPanel.addEventListener('keyup', e => e.stopPropagation());
@@ -9039,7 +9174,7 @@ function admRender() {
     row(msg, admBtn(t('adm.send'), () => { const v = msg.value.trim(); if (!v) return; if (NET.mode === 'host') broadcast({ k: 'sys', msg: '[ADMIN] ' + v }); else if (NET.mode === 'client') netSend({ k: 'adm', act: 'say', arg: v }); toast('[ADMIN] ' + v, 3); msg.value = ''; }));
   } else if (ADM.tab === 'cheats') {
     const grid = document.createElement('div'); grid.className = 'admgrid';
-    for (const k of ['god', 'oneshot', 'norecoil', 'ammo', 'nocd', 'rapid', 'speed', 'jumps', 'superjump', 'fly', 'tp', 'wall', 'esp', 'aimbot', 'trigger']) {
+    for (const k of ['god', 'oneshot', 'norecoil', 'ammo', 'nocd', 'rapid', 'speed', 'jumps', 'superjump', 'fly', 'tp', 'wall', 'esp', 'glow', 'skel', 'radar', 'aimbot', 'silent', 'trigger', 'autobhop', 'spin', 'third']) {
       const l = document.createElement('label'); l.className = 'check'; const i = document.createElement('input'); i.type = 'checkbox'; i.checked = !!X[k];
       i.addEventListener('change', () => { X[k] = i.checked; const el = $('x_' + k); if (el) el.checked = i.checked; });
       l.append(i, ' ' + t('adm.x.' + k)); grid.append(l);
@@ -9071,6 +9206,7 @@ function admSyncGrants() {
 }
 for (const b of admPanel.querySelectorAll('.admtabs button')) b.addEventListener('click', () => { ADM.tab = b.dataset.t; admRender(); });
 $('admClose').addEventListener('click', () => admShow(false));
+$('admMenuBtn').addEventListener('click', () => { if (canAdmin()) admShow(true); else admLoginShow(true); });
 setInterval(() => { if (ADM.open && ADM.tab === 'players') admRender(); }, 2500);
 // véhicules ajoutés par un admin (synchronisés : même ordre partout)
 function spawnVehicleNet(type, p, yaw) { addVehicleAt(type, p, yaw); netSend({ k: 'vspawn', t: type, p, y: yaw }); }
@@ -9318,10 +9454,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.03';
+const GAME_VERSION = '2026.11.03b';
 const CHANGES = {
-  fr: ['Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9382,7 +9518,7 @@ const STICK_R = 58;
 function touchShow() {
   if (TOUCH.edit) return;
   const show = TOUCH.on && playing && !EDIT.on;
-  $('tTalk').hidden = VOICE.mode !== 'ptt' || NET.mode === 'off'; $('tChat').hidden = NET.mode === 'off';
+  $('tTalk').hidden = VOICE.mode !== 'ptt' || NET.mode === 'off'; $('tAdmin').hidden = !canAdmin(); $('tChat').hidden = NET.mode === 'off';
   tUI.hidden = !show;
   $('rotateHint').hidden = !(show && innerHeight > innerWidth * 1.05);
   if (!show) { TOUCH.mx = TOUCH.my = 0; TOUCH.act = {}; TOUCH.stick = null; TOUCH.looks.clear(); TOUCH.btns.clear(); tStick.hidden = true; for (const b of tUI.querySelectorAll('.on')) b.classList.remove('on'); }
@@ -9416,6 +9552,7 @@ function touchStart(e) {
       if (hb.dataset.slot !== undefined) { endEmote(); swapTo(+hb.dataset.slot); TOUCH.btns.set(tc.identifier, null); continue; }
       const h = hb.dataset.h, pr = hb.dataset.p;
       if (pr === 'pause') { pause(); return; }
+      if (pr === 'admin') { hb.classList.remove('on'); admShow(true); return; }
       if (pr === 'adsT') { TOUCH.ads = !TOUCH.ads; TOUCH.btns.set(tc.identifier, null); touchShow(); continue; }
       if (pr) onAction(pr);
       TOUCH.btns.set(tc.identifier, h || null);
