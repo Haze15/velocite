@@ -3466,7 +3466,7 @@ const CLASSES = {
 const myClass = () => CLASSES[S.char] || CLASSES.soldier;
 // le Soldat du propriétaire est le squelette
 const isAdminSkin = () => xUnlocked || ADM.pwOk || ADM.granted;
-const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && (needModel('skel'), MODELS.chars.skel) ? 'skel' : S.char === 'xbot' && isAdminSkin() && MODELS.chars.xadm ? 'xadm' : S.char === 'titan' && isAdminSkin() && MODELS.chars.tadm ? 'tadm' : S.char === 'spectre' && isAdminSkin() && MODELS.chars.sadm ? 'sadm' : S.char;
+const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && (needModel('skel'), MODELS.chars.skel) ? 'skel' : S.char === 'xbot' && isAdminSkin() && MODELS.chars.xadm ? 'xadm' : S.char === 'titan' && isAdminSkin() && (needModel('tadm'), MODELS.chars.tadm) ? 'tadm' : S.char === 'spectre' && isAdminSkin() && MODELS.chars.sadm ? 'sadm' : S.char;
 // chargement à la demande des gros modèles (moins de mémoire au départ)
 function needModel(ch) { (needModel.q || (needModel.q = new Set())).add(ch); if (needModel.fn) needModel.fn(ch); }
 function useAbility(k) {
@@ -4197,7 +4197,7 @@ function titanGear(vis, col) {
   vis.obj.updateMatrixWorld(true);
   if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
   const glowMats = [], glow = () => { const m = new THREE.MeshBasicMaterial({ color: col }); glowMats.push(m); return m; };
-  const F = vis.ch === 'titan' || vis.ch === 'tadm' ? (CHARS.titan.gearFz || 1) : 1;
+  const F = vis.ch === 'titan' ? (CHARS.titan.gearFz || 1) : 1;
   const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z * F); m.rotation.set(rx * F, ry, rz); m.scale.set(sx, sy, sz); m.castShadow = true; m.userData.gear = true; return m; };
   const mount = (bone, build) => { if (!bone) return; const g = new THREE.Group(); bone.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; build(g); bone.add(g); };
   mount(bones.head, g => {
@@ -4288,8 +4288,7 @@ function tintChar(vis, ch, col) {
       // Spectre : carrosserie noire laquée, articulations qui brillent de la couleur choisie
       if (/Joints/i.test(m.name)) { m.color.setHex(0x1a1c22); if (m.emissive) { m.emissive.setHex(col); m.emissiveIntensity = 1; } m.userData.keep = true; }
       else { m.color.setHex(0x15161b); if (m.shininess !== undefined) m.shininess = 80; }
-    } else if (ch === 'tadm') {
-      if (/visor/i.test(o.name)) { m.emissive.setHex(0xff2a3a); m.emissiveIntensity = 0.9; m.userData.keep = true; } else { m.color.setHex(0x16171a); m.userData.keep = true; }
+    } else if (ch === 'tadm') { m.userData.keep = true;
     } else if (ch === 'sadm') {
       if (/Joints/i.test(m.name)) { m.color.setHex(0xb79cff); if (m.emissive) { m.emissive.setHex(0x6a44d8); m.emissiveIntensity = 0.6; } } else { m.color.setHex(0xffe1f0); if (m.shininess !== undefined) m.shininess = 60; } m.userData.keep = true;
     } else if (ch === 'raven') {
@@ -4308,7 +4307,6 @@ function tintChar(vis, ch, col) {
   if (ch === 'titan') titanGear(vis, col);
   if (ch === 'lynx' && typeof lynxGear === 'function') lynxGear(vis, col);
   if (ch === 'xadm' && typeof adminGear === 'function') adminGear(vis);
-  if (ch === 'tadm') { titanGear(vis, 0xff2a3a); tadmGear(vis); }
   if (ch === 'sadm') sadmGear(vis);
   if (ch === 'raven') ravenGear(vis, col);
 }
@@ -4401,12 +4399,13 @@ if (THREE.GLTFLoader) {
   const loader = new THREE.GLTFLoader();
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
   loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); MODELS.chars.tadm = prepModel(g, CHARS.tadm.h); soldierRig(); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); MODELS.chars.xadm = prepModel(g, CHARS.xadm.h); MODELS.chars.raven = prepModel(g, CHARS.raven.h); MODELS.chars.sadm = prepModel(g, CHARS.sadm.h); XCLIPS.list = g.animations; novaReady(); skelReady(); soldierRig(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); soldierRig(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); MODELS.chars.xadm = prepModel(g, CHARS.xadm.h); MODELS.chars.raven = prepModel(g, CHARS.raven.h); MODELS.chars.sadm = prepModel(g, CHARS.sadm.h); XCLIPS.list = g.animations; novaReady(); skelReady(); gmReady(); soldierRig(); charLoaded(); }, undefined, () => {});
   // Nova : modèle à part (Michelle, Mixamo), animé avec les clips du X-Bot (même squelette ; on ne garde que les rotations)
   const lazy = {};
   needModel.fn = ch => {
     if (ch === 'nova' && !lazy.nova) { lazy.nova = 1; loader.load('assets/models/Nova.glb', g => { XCLIPS.nova = g; novaReady(); }, undefined, () => {}); }
+    if (ch === 'tadm' && !lazy.tadm) { lazy.tadm = 1; loader.load('assets/models/GasmaskGirl.glb', g => { XCLIPS.gm = g; gmReady(); }, undefined, () => {}); }
     if (ch === 'skel' && !lazy.skel) { lazy.skel = 1; loader.load('assets/models/Skeleton.glb', g => { XCLIPS.skel = g; skelReady(); }, undefined, () => {}); }
   };
   for (const c of needModel.q || []) needModel.fn(c);
@@ -4416,13 +4415,33 @@ if (THREE.GLTFLoader) {
   // Soldat / Titan : leurs propres animations, mais les poses ajoutées (arme tenue, saut…) passent par les axes du X-Bot
   function soldierRig() {
     const m = MODELS.chars.soldier; if (!m || !MODELS.chars.xbot || m.retD) return;
-    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD; if (MODELS.chars.tadm) MODELS.chars.tadm.retD = m.retD;
+    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD;
   }
   function skelReady() {
     if (!XCLIPS.list || !XCLIPS.skel || MODELS.chars.skel) return;
     const m = prepModel(XCLIPS.skel, CHARS.skel.h);
     m.anims = retargetFromXbot(m, []);
     MODELS.chars.skel = m; charLoaded();
+  }
+  // Gasmask girl (Xinus22, CC BY) : squelette « bip_ » de Source renommé à la Mixamo, une seule expression gardée
+  function gmReady() {
+    if (!XCLIPS.list || !XCLIPS.gm || MODELS.chars.tadm) return;
+    const MAP = { pelvis: 'Hips', spine_0: 'Spine', spine_1: 'Spine1', spine_2: 'Spine2', neck: 'Neck', head: 'Head' };
+    const side = { L: 'Left', R: 'Right' }, limb = { collar: 'Shoulder', upperArm: 'Arm', lowerArm: 'ForeArm', hand: 'Hand', hip: 'UpLeg', knee: 'Leg', foot: 'Foot', toe: 'ToeBase' };
+    const fing = { index: 'Index', thumb: 'Thumb', middle: 'Middle', ring: 'Ring', pinky: 'Pinky' };
+    const drop = [];
+    XCLIPS.gm.scene.traverse(o => {
+      if (o.isBone) {
+        const n = o.name.replace(/^bip_/, ''); let m;
+        if (MAP[n]) o.name = 'mixamorig' + MAP[n];
+        else if ((m = /^(\w+?)_([LR])$/.exec(n)) && limb[m[1]]) o.name = 'mixamorig' + side[m[2]] + limb[m[1]];
+        else if ((m = /^(\w+?)_(\d)_([LR])$/.exec(n)) && fing[m[1]]) o.name = 'mixamorig' + side[m[3]] + 'Hand' + fing[m[1]] + (+m[2] + 1);
+      } else if (/^(eyes|mouth)_/i.test(o.name) && !/_default_/i.test(o.name)) drop.push(o);
+    });
+    for (const o of drop) if (o.parent) o.parent.remove(o);
+    const m = prepModel(XCLIPS.gm, CHARS.tadm.h);
+    m.anims = retargetFromXbot(m, []);
+    MODELS.chars.tadm = m; charLoaded();
   }
   function novaReady() {
     if (!XCLIPS.list || !XCLIPS.nova || MODELS.chars.nova) return;
@@ -9762,10 +9781,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.05';
+const GAME_VERSION = '2026.11.05b';
 const CHANGES = {
-  fr: ['Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin pour Titan (masque à gaz) et Spectre (pastel)', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins for Titan (gas mask) and Spectre (pastel)', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -10328,30 +10347,13 @@ function ravenGear(vis, col) {
 }
 
 /* ================= Skins admin pour Titan et Spectre (créations originales) ================= */
-// Titan admin : armure noire, masque à gaz avec deux cartouches et verres rouges
-CHARS.tadm = Object.assign({}, CHARS.titan); CLASSES.tadm = CLASSES.titan; MG_FIT.tadm = MG_FIT.titan;
+// Titan admin : « Gasmask girl » de Xinus22 (Sketchfab, CC BY 4.0), animée avec les clips du X-Bot
+CHARS.tadm = { file: 'GasmaskGirl.glb', h: 1.74, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ }; CLASSES.tadm = CLASSES.titan; MG_FIT.tadm = MG_FIT.titan;
 // Spectre admin : carrosserie pastel, oreilles de chat, nœud et petites ailes
 CHARS.sadm = { file: 'Xbot.glb', h: 1.84, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ }; CLASSES.sadm = CLASSES.spectre; MG_FIT.sadm = MG_FIT.spectre;
 function gearMount(vis, re) {
   let bone = null; vis.obj.traverse(o => { if (!bone && o.isBone && re.test(o.name)) bone = o; });
   return bone;
-}
-function tadmGear(vis) {
-  if (vis.tadmG) return; vis.tadmG = true;
-  const head = gearMount(vis, /Head$/); if (!head) return;
-  vis.obj.updateMatrixWorld(true);
-  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
-  const rub = new THREE.MeshPhongMaterial({ color: 0x1b1c1f, shininess: 30 }), can = new THREE.MeshPhongMaterial({ color: 0x3b4036, shininess: 60 }), lens = new THREE.MeshBasicMaterial({ color: 0xff2a3a });
-  const F = CHARS.titan.gearFz || 1;
-  const g = new THREE.Group(); head.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; head.add(g);
-  const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z * F); m.rotation.set(rx * F, ry, rz); m.castShadow = true; m.userData.gear = true; g.add(m); return m; };
-  mk(new THREE.BoxGeometry(0.17, 0.1, 0.06), rub, 0, 0.0, 0.16);
-  mk(new THREE.CylinderGeometry(0.035, 0.045, 0.06, 12), rub, 0, -0.03, 0.2, Math.PI / 2);
-  for (const s of [1, -1]) {
-    mk(new THREE.CylinderGeometry(0.045, 0.045, 0.1, 14), can, s * 0.1, -0.04, 0.17, Math.PI / 2, 0, s * 0.6);
-    mk(new THREE.CylinderGeometry(0.04, 0.04, 0.012, 16), lens, s * 0.055, 0.085, 0.165, Math.PI / 2);
-  }
-  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xff2a3a, transparent: true, opacity: 0.45, depthWrite: false, blending: THREE.AdditiveBlending })); sp.position.set(0, 0.085, 0.17 * F); sp.scale.setScalar(0.28); sp.userData.gear = true; g.add(sp);
 }
 function sadmGear(vis) {
   if (vis.sadmG) return; vis.sadmG = true;

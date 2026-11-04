@@ -149,7 +149,7 @@ Le mode se choisit dans le menu (à côté de la carte) ou dans le panneau admin
 ## Skins réservés
 
 - **Squelette** : le Soldat du propriétaire.
-- **Titan admin** : armure noire, masque à gaz avec deux cartouches et verres rouges lumineux.
+- **Titan admin** : le Titan devient « Gasmask girl » (capuche, masque à gaz), animée avec les mouvements du X-Bot.
 - **Spectre admin** : carrosserie pastel rose et lavande, oreilles de chat, nœud, yeux brillants et petites ailes.
 - **X-Bot admin** : quand tu as l'accès admin (mot de passe ou accès donné par l'hôte), ton X-Bot devient noir laqué avec articulations en or, auréole, visière rouge et insignes dorés. Les autres le voient en ligne.
 
@@ -339,6 +339,7 @@ python3 -m http.server 8000
 
 ## Crédits
 
+- **Gasmask girl** (`assets/models/GasmaskGirl.glb`) : créée par **Xinus22**, publiée sur Sketchfab par photon (that one larry), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — [sketchfab.com/3d-models/gasmask-girl-d5b54d5358fb42368faf47b1cfbab18f](https://sketchfab.com/3d-models/gasmask-girl-d5b54d5358fb42368faf47b1cfbab18f). Squelette renommé pour les animations du jeu, une seule expression du visage gardée.
 - **Karambit** (`assets/models/knives/karambit.glb`) : modèle « Karambit » par **Astral** sur Sketchfab, licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ; simplifié (moins de triangles) pour le jeu.
 
 - **Squelette** (`assets/models/Skeleton.glb`) : modèle Sketchfab riggé Mixamo, fourni par le propriétaire du jeu ; c'est l'apparence de son Soldat. Il est animé avec les clips du X-Bot.
