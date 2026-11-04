@@ -27,9 +27,10 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | Titan | Assaut lourd | Jetpack : bond propulsé puis vol stationnaire en maintenant Espace (recharge 7 s) | Frappe aérienne : marque le point visé, 8 obus tombent du ciel 2 s plus tard (recharge 40 s) |
 | Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
 | Lynx | Coureuse de murs | Dash (recharge 3,5 s). Passif : **course sur les murs** — en l'air, en avançant avec un mur sur le côté, elle court dessus jusqu'à 1,7 s ; Espace la propulse loin du mur | Survoltage : 8 s à +30 % de vitesse, course sur les murs sans limite de temps (recharge 45 s) |
+| Corbeau | Voltigeur | Double grappin : deux câbles tirés de part et d'autre de la visée (70 m), tu te balances entre eux ; **Avancer** = jet de gaz dans la direction regardée, **Espace** = lâcher, Q de nouveau = lâcher avec un petit saut. Le gaz se recharge (vite au sol) (recharge 1,2 s) | Spirale : ruée en vrille de 1,3 s qui tranche tout autour de toi (40 dégâts par passage, 3 passages max par cible) (recharge 40 s) |
 
 
-Soldat, X-Bot, Nova, Spectre, Titan ou Lynx, avec dix-huit couleurs. Lynx porte un bandeau lumineux et une écharpe aux couleurs choisies. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+Soldat, X-Bot, Nova, Spectre, Titan, Lynx ou Corbeau, avec dix-huit couleurs. Le Corbeau porte un harnais croisé, deux bonbonnes de gaz aux hanches et une cape courte. Lynx porte un bandeau lumineux et une écharpe aux couleurs choisies. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
 Les autres joueurs tiennent leur arme à deux mains devant eux (le couteau d'une main), et leur buste suit leur visée vers le haut ou le bas. À la première personne, les bras et les mains (doigts refermés sur l'arme) ont les couleurs de ton perso : gants et manches du Soldat, peau et bracelet de Nova, os du squelette, bracelets lumineux du Spectre et de Lynx… Les animations ont été refaites : balancement de marche, respiration, sprint avec l'arme en travers, atterrissage, rechargement en trois temps (la main gauche va chercher le chargeur), changement d'arme.
 
@@ -51,6 +52,7 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 - **Arctique** : collines enneigées sous la neige qui tombe, lac gelé qui sert de piste, base polaire avec tour et pad, chalets, tremplin de saut, forêt de sapins enneigés. Tanks, buggys, hélico, avion.
 - **Monde** : toutes les cartes réunies en une seule (Fusion au centre, Ville fantôme à l'est, Volcan à l'ouest, Océan au nord, Arctique au sud), reliées par une route en boucle et des routes vers chaque zone, avec lampadaires, pads et véhicules en plus.
 - **Chambre géante** : tu fais la taille d'un jouet dans une chambre d'enfant de 160 m. Lit (on y monte par un toboggan) avec oreillers et nounours, bureau avec ordinateur allumé, lampe et crayons (une règle sert de rampe), chaise, étagère à livres où l'on grimpe planche par planche, cubes alphabet empilés, dominos, petite voiture, ballon, briques à tenons, trampolines et deux tyroliennes (ficelles) depuis l'étagère et le bureau.
+- **Mine** : grande caverne sous un plafond rocheux de 40 m (idéal pour le double grappin) : pilier central entouré d'un échafaudage avec deux rampes, passerelles en bois le long des parois, tyroliennes, rails et wagonnets, cristaux de minerai qui brillent, stalactites ; tout autour, quatre galeries basses étayées de poutres, reliées à la caverne par des portes.
 - **Ville fantôme** : grande ville abandonnée de 320 m de côté au crépuscule, dans un brouillard verdâtre plein de poussière. Rues en damier, immeubles à fenêtres cassées ou condamnées (jusqu'à une tour de 52 m avec un pad sur le toit), immeuble en chantier à six étages avec escaliers, autoroute surélevée avec bretelles, voitures abandonnées, place centrale, parc d'herbes hautes, tyroliennes entre les toits et aérodrome à l'est avec piste, hangar, tour de contrôle et héliport.
 
 L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondule au vent.
@@ -58,6 +60,10 @@ L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondul
 Chaque carte a son décor : tonneaux, caisses, pneus, cactus et rochers sur le Canyon ; palettes, cônes, glissières en béton, tuyaux et lampadaires à la Raffinerie ; troncs couchés, souches, champignons, buissons et fleurs en Forêt ; bottes de foin, charrettes, torches, bannières et fleurs au Château ; rochers de basalte, cristaux brûlants et arbres calcinés sur le Volcan ; lampadaires, feux tricolores, bouches d'incendie, poubelles, bennes, gravats et barricades dans la Ville fantôme. Les gros objets bloquent le passage et arrêtent les balles : ils servent de couverture.
 
 La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui choisit et les invités suivent automatiquement.
+
+## Équipement
+
+En cliquant sur **Jouer**, l'écran **Équipement** s'ouvre : choisis ton personnage et ton couteau, avec la description de leurs capacités. Tu peux le rouvrir à tout moment en partie avec **L** (bouton ⚙ sur téléphone) pour changer de perso ou de couteau sans attendre de mourir. La case « Demander avant chaque partie » le désactive.
 
 ## Tyroliennes
 
@@ -143,6 +149,8 @@ Le mode se choisit dans le menu (à côté de la carte) ou dans le panneau admin
 ## Skins réservés
 
 - **Squelette** : le Soldat du propriétaire.
+- **Titan admin** : armure noire, masque à gaz avec deux cartouches et verres rouges lumineux.
+- **Spectre admin** : carrosserie pastel rose et lavande, oreilles de chat, nœud, yeux brillants et petites ailes.
 - **X-Bot admin** : quand tu as l'accès admin (mot de passe ou accès donné par l'hôte), ton X-Bot devient noir laqué avec articulations en or, auréole, visière rouge et insignes dorés. Les autres le voient en ligne.
 
 Sur mobile, le mot de passe admin débloque aussi l'onglet Triche du panneau.
@@ -221,7 +229,7 @@ Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d
 
 ## Optimisation
 
-Les collisions utilisent une grille spatiale (seuls les blocs proches sont testés), le décor est fusionné par morceaux de 96 m pour que la carte graphique et les tirs ignorent ce qui est hors champ, l'herbe disparaît au-delà de 130 m et la distance d'affichage suit le brouillard. Sur la carte Monde, la physique est environ 4 fois plus rapide et les tirs 2,5 fois. En qualité « auto », la résolution baisse toute seule si les images par seconde chutent.
+Les collisions utilisent une grille spatiale (seuls les blocs proches sont testés), le décor est fusionné par morceaux de 96 m pour que la carte graphique et les tirs ignorent ce qui est hors champ, l'herbe disparaît au-delà de 130 m et la distance d'affichage suit le brouillard. Sur la carte Monde, la physique est environ 4 fois plus rapide et les tirs 2,5 fois. En qualité « auto », la résolution baisse toute seule si les images par seconde chutent, et sur les petites machines (4 Go de mémoire ou moins, ou 3 cœurs ou moins) le jeu passe directement en qualité basse (pas d'anticrénelage, pas d'ombres, moins d'herbe, résolution réduite). Les gros modèles (Nova, Squelette) ne se chargent que quand quelqu'un les utilise.
 
 ## Commandes
 
@@ -244,6 +252,8 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | G / H | Lancer une grenade / changer de type |
 | F | Capacité ultime de ta classe |
 | M | Mini-carte |
+| L | Équipement (changer de perso ou de couteau) |
+| Clic droit (couteau en main) | Capacité du couteau |
 | R | Recharger |
 | Tab | Tableau des scores en ligne |
 | T | Réapparaître |
@@ -251,7 +261,9 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 
 ## Armes
 
-**Couteaux :** combat, karambit, machette, dague, papillon, katana, hachette, épée longue, Morgane, trident. Le combat, la dague, la machette, la hachette et l'épée longue sont de vrais modèles 3D (KayKit, CC0). Le katana a été refait : lame courbe à section en losange (tranchant, arête, dos), ligne de trempe d'une autre teinte, pointe kissaki, gorge le long du dos, habaki doré, tsuba ajourée à quatre lobes, poignée tressée en losanges avec ornements dorés. **Inspection (X)** : le katana monte à la verticale devant les yeux avec un reflet qui glisse sur l'acier, se balance pour montrer les deux faces, double moulinet et retour en arc ; les couteaux en modèle tournent dans le poignet, sont lancés en l'air avec double vrille, rattrapés et font un moulinet entre les doigts. Le katana a un skin spécial **★ Lame céleste** : galaxie qui défile le long de la lame, tranchant arc-en-ciel, garde dorée et étincelles qui remontent la lame.
+**Couteaux :** combat, karambit, machette, dague, papillon, katana, hachette, épée longue, épée géante, Morgane, trident. Le karambit est un vrai modèle 3D (Astral, CC BY 4.0) ; les autres lames sont modélisées dans le jeu (lames à facettes, gorge, garde, fusée, pommeau).
+
+**Capacités des couteaux (clic droit / viser) :** combat — Fente (bond de 4 m qui poignarde, 65) ; karambit — Frénésie (4 s de frappes deux fois plus rapides) ; machette — Moulinet (coup circulaire, 70) ; dague — Lancer (85, tête ×1,5) ; hachette — Lancer (100) ; papillon — Esquive (pas de côté, invulnérable 0,5 s) ; katana — Iai (ruée de 8 m qui tranche, 95) ; épée longue — Parade (1,2 s à 20 % des dégâts) ; épée géante — Fracas (saut puis onde à l'atterrissage, 110 sur 5,5 m) ; Morgane — Tourbillon (4 coups de 34 autour de toi) ; trident — se lance et revient. Le katana a été refait : lame courbe à section en losange (tranchant, arête, dos), ligne de trempe d'une autre teinte, pointe kissaki, gorge le long du dos, habaki doré, tsuba ajourée à quatre lobes, poignée tressée en losanges avec ornements dorés. **Inspection (X)** : le katana monte à la verticale devant les yeux avec un reflet qui glisse sur l'acier, se balance pour montrer les deux faces, double moulinet et retour en arc ; les couteaux en modèle tournent dans le poignet, sont lancés en l'air avec double vrille, rattrapés et font un moulinet entre les doigts. Le katana a un skin spécial **★ Lame céleste** : galaxie qui défile le long de la lame, tranchant arc-en-ciel, garde dorée et étincelles qui remontent la lame.
 
 | Arme | Dégâts | Cadence | Chargeur |
 | --- | --- | --- | --- |
@@ -266,6 +278,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Dague | 55, portée 2,6 m | 110 coups/min | — |
 | Papillon | 46, portée 2,5 m | 135 coups/min | — |
 | Katana | 70, portée 3,6 m | 80 coups/min | — |
+| Épée géante | 120, portée 4,4 m | 42 coups/min | — |
 | Morgane (hache double) | 85, portée 3,4 m | 62 coups/min | — |
 | Trident | 70 au corps à corps, 95 lancé (tête ×1,4) | 80 coups/min | — |
 
@@ -326,7 +339,7 @@ python3 -m http.server 8000
 
 ## Crédits
 
-- **Couteaux** (`assets/models/knives/`) : couteau de combat, dague, machette, hachette et épée longue tirés des packs **KayKit** de Kay Lousberg (Adventurers et Skeletons), licence CC0 — [kaylousberg.com](https://www.kaylousberg.com).
+- **Karambit** (`assets/models/knives/karambit.glb`) : modèle « Karambit » par **Astral** sur Sketchfab, licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ; simplifié (moins de triangles) pour le jeu.
 
 - **Squelette** (`assets/models/Skeleton.glb`) : modèle Sketchfab riggé Mixamo, fourni par le propriétaire du jeu ; c'est l'apparence de son Soldat. Il est animé avec les clips du X-Bot.
 

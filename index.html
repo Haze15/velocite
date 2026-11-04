@@ -455,11 +455,70 @@ body.touch #admMenuBtn{display:inline-block}
 body.touch #admPanel{width:calc(100vw - 16px);max-height:calc(100vh - 16px);max-height:calc(100dvh - 16px);font-size:15px}
 body.touch #admPanel .btn3{min-height:34px}
 body.touch #admPanel .admgrid label{padding:6px 0}
+/* ================= interface lissée : coins arrondis, panneaux en verre, transitions douces ================= */
+:root{--glass:rgba(16,20,26,.58);--glass-b:rgba(244,239,230,.10);--ease:cubic-bezier(.2,.8,.2,1)}
+html{scroll-behavior:smooth}
+.btn{border-radius:14px;transform:none;box-shadow:0 10px 28px rgba(255,176,32,.22);transition:background .25s var(--ease),transform .25s var(--ease),box-shadow .25s var(--ease)}
+.btn span,.btn2 span{transform:none}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(255,176,32,.34)}
+.btn:active{transform:translateY(0) scale(.98)}
+.btn2{border-radius:12px;transform:none;transition:border-color .2s,color .2s,background .2s,transform .2s var(--ease)}
+.btn2:hover{background:rgba(255,176,32,.08);transform:translateY(-1px)}
+.btn3,.kb,.field select,.netrow input,input[type=text],input[type=password]{border-radius:9px!important;transition:border-color .2s,background .2s}
+.block{background:var(--glass);border:1px solid var(--glass-b);border-radius:18px;padding:18px 20px;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.block h2::before{transform:none;border-radius:3px}
+.tabs{border-radius:16px 16px 0 0;padding-left:6px;padding-right:6px}
+.tabs button{border-radius:10px 10px 0 0;transition:color .2s,background .2s}
+.tabs button:hover{background:rgba(244,239,230,.05)}
+.tabs button[aria-selected="true"]::after{transform:none;border-radius:3px;left:14px;right:14px}
+#menu:not([hidden]) .menu-inner{animation:velUp .4s var(--ease) both}
+@keyframes velUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.ab{border-radius:12px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);transition:background .2s,box-shadow .2s}
+.ab.ready{box-shadow:0 0 0 1px rgba(255,176,32,.35)}
+.slot{border-radius:8px;transition:color .15s,box-shadow .15s}
+.fi{border-radius:0 10px 10px 0}
+#me .bar,#me .bar i{border-radius:6px}
+#hint{transition:opacity .3s}
+.ab.kab{--gc:#dfe8f0}
+.ab.kab kbd{min-width:24px}
+/* équipement */
+#loadout{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;background:rgba(6,8,11,.62);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);animation:loFade .25s var(--ease) both}
+#loadout[hidden]{display:none}
+@keyframes loFade{from{opacity:0}to{opacity:1}}
+.lo-box{position:relative;width:min(880px,100%);max-height:calc(100dvh - 32px);overflow:auto;background:rgba(18,22,28,.92);border:1px solid var(--glass-b);border-radius:22px;padding:24px 26px 20px;box-shadow:0 30px 80px rgba(0,0,0,.5);animation:velUp .35s var(--ease) both}
+.lo-box h2{font:800 34px/1 var(--f-display);letter-spacing:.02em;text-transform:uppercase;margin:6px 0 14px;color:var(--ink)}
+.lo-box h3{font:700 13px/1 var(--f-display);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin:16px 0 10px}
+.lo-x{position:absolute;right:14px;top:14px;width:36px;height:36px;border-radius:50%;border:1px solid var(--glass-b);background:rgba(244,239,230,.06);color:var(--ink);cursor:pointer;font-size:15px}
+.lo-x:hover{border-color:var(--amber);color:var(--amber)}
+.lo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:8px}
+.lo-card{display:flex;flex-direction:column;align-items:flex-start;gap:5px;text-align:left;padding:11px 12px 10px;border-radius:14px;border:1px solid rgba(244,239,230,.14);background:rgba(244,239,230,.04);color:var(--ink);cursor:pointer;transition:transform .2s var(--ease),border-color .2s,background .2s}
+.lo-card:hover{transform:translateY(-2px);border-color:rgba(255,176,32,.55)}
+.lo-card.on{border-color:var(--amber);background:rgba(255,176,32,.14);box-shadow:inset 0 0 0 1px var(--amber)}
+.lo-card b{font:700 15px/1.1 var(--f-display);letter-spacing:.04em;text-transform:uppercase}
+.lo-card span{font:500 12px/1.2 var(--f-body);color:var(--ink-dim)}
+.lo-desc{display:grid;gap:4px;margin:10px 2px 0;font:400 13.5px/1.4 var(--f-body);color:var(--ink-dim)}
+.lo-desc b{color:var(--amber);font-weight:700}
+.lo-foot{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin-top:20px}
+.lo-foot .btn{margin-left:auto;font-size:20px;padding:13px 36px 12px}
+.lo-ask{display:flex;gap:7px;align-items:center;font:500 13px var(--f-body);color:var(--ink-dim);cursor:pointer}
+.lo-key{font:500 12px var(--f-body);color:var(--ink-faint)}
+#loMenuBtn{margin-left:12px}
+#touchUI #tLoad{width:42px;height:42px;left:calc(12px + env(safe-area-inset-left,0px));top:calc(60px + env(safe-area-inset-top,0px));font-size:18px;border-radius:12px}
+body:not(.touch) .lo-key{display:inline}
+body.touch .lo-key{display:none}
+@media (max-width:600px){.lo-box{padding:18px 14px 16px}.lo-box h2{font-size:26px}.lo-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}.lo-foot .btn{width:100%;margin-left:0}}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 
+<div id="loadout" hidden><div class="lo-box" role="dialog" aria-labelledby="loTitle">
+  <button type="button" class="lo-x" id="loClose" aria-label="Fermer">✕</button>
+  <p class="kicker" data-i18n="lo.kicker">Avant de jouer</p><h2 id="loTitle" data-i18n="lo.title">Équipement</h2>
+  <h3 data-i18n="lo.char">Personnage</h3><div id="loChars" class="lo-grid"></div><p id="loCls" class="lo-desc"></p>
+  <h3 data-i18n="lo.knife">Couteau</h3><div id="loKnives" class="lo-grid"></div><p id="loKdesc" class="lo-desc"></p>
+  <div class="lo-foot"><label class="lo-ask"><input type="checkbox" id="loAsk"> <span data-i18n="lo.ask">Demander avant chaque partie</span></label><span class="lo-key" data-i18n="lo.key">Change à tout moment avec L</span><button type="button" class="btn" id="loGo"><span data-i18n="lo.go">Jouer</span></button></div>
+</div></div>
 <div id="hud" hidden>
   <div id="hurt"></div>
   <div id="hurtDir"><i></i></div>
@@ -486,6 +545,7 @@ body.touch #admPanel .admgrid label{padding:6px 0}
     <div class="ab" id="abTac"><kbd data-act="tactical">Q</kbd><b>STIM</b><em></em><i></i></div>
     <div class="ab ult" id="abUlt"><kbd data-act="ultimate">F</kbd><b>DÔME</b><em></em><i></i></div>
     <div class="ab gren" id="abGren"><kbd data-act="grenade">G</kbd><b>FRAG</b><em></em><i></i></div>
+    <div class="ab kab" id="abKnife" hidden><kbd data-act="ads">M2</kbd><b>FENTE</b><em></em><i></i></div>
   </div>
   <div id="stimFx"></div>
   <div id="me" hidden><div class="tname"><span data-i18n="hud.you">TOI</span><span id="meVal">175</span></div><div class="bar sh"><i id="meSh"></i></div><div class="bar hp"><i id="meHp"></i></div></div>
@@ -524,6 +584,7 @@ body.touch #admPanel .admgrid label{padding:6px 0}
   <div id="tStick" hidden><i></i></div>
   <button type="button" class="tb" id="tPause" data-p="pause" aria-label="Pause">❚❚</button>
   <button type="button" class="tb" id="tAdmin" data-p="admin" hidden>ADMIN</button>
+  <button type="button" class="tb" id="tLoad" data-p="loadout" aria-label="Équipement">⚙</button>
   <div id="tAbil"><button type="button" class="tb ab2" id="tTac" data-p="tactical"></button><button type="button" class="tb ab2" id="tUlt" data-p="ultimate"></button><button type="button" class="tb ab2" id="tGren" data-p="grenade"></button></div>
   <div id="tSlots"></div>
   <button type="button" class="tb" id="tUse" data-def="use"></button>
@@ -564,7 +625,7 @@ body.touch #admPanel .admgrid label{padding:6px 0}
       <div class="cta">
         <button class="btn" id="play" type="button"><span id="playLbl">Jouer en solo</span></button>
         <button class="btn ghost" id="specBtn" type="button" data-i18n="spec.btn">Spectateur</button>
-        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option><option value="ocean" data-i18n="map.ocean">Océan (îles)</option><option value="arctic" data-i18n="map.arctic">Arctique</option><option value="world" data-i18n="map.world">Monde (toutes les cartes)</option><option value="room" data-i18n="map.room">Chambre géante</option></select></label>
+        <label class="mapsel"><span data-i18n="map.label">Carte</span><select id="mapSel"><option value="canyon" data-i18n="map.canyon">Canyon</option><option value="refinery" data-i18n="map.refinery">Raffinerie</option><option value="forest" data-i18n="map.forest">Forêt</option><option value="castle" data-i18n="map.castle">Château</option><option value="volcano" data-i18n="map.volcano">Volcan (énorme)</option><option value="mega" data-i18n="map.mega">Fusion (toutes les cartes)</option><option value="ghost" data-i18n="map.ghost">Ville fantôme (énorme)</option><option value="ocean" data-i18n="map.ocean">Océan (îles)</option><option value="arctic" data-i18n="map.arctic">Arctique</option><option value="world" data-i18n="map.world">Monde (toutes les cartes)</option><option value="room" data-i18n="map.room">Chambre géante</option><option value="mine" data-i18n="map.mine">Mine</option></select></label>
         <label class="mapsel"><span data-i18n="mode.label">Mode</span><select id="modeSel"><option value="ffa" data-i18n="mode.ffa">Chacun pour soi</option><option value="teams" data-i18n="mode.teams">2 équipes</option><option value="zombie" data-i18n="mode.zombie">Zombies</option></select></label>
         <button class="btn3" id="newsBtn" type="button" data-i18n="news.btn">Nouveautés</button>
         <button class="btn3" id="admMenuBtn" type="button" data-i18n="adm.menuBtn">Admin</button>
@@ -577,7 +638,7 @@ body.touch #admPanel .admgrid label{padding:6px 0}
       <div class="charbox">
         <canvas id="charPrev" width="440" height="620" aria-hidden="true"></canvas>
         <div class="charopts">
-          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option><option value="lynx" data-i18n="char.lynx">Lynx</option><option value="custom" hidden>Mon modèle</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option><option value="lynx" data-i18n="char.lynx">Lynx</option><option value="raven" data-i18n="char.raven">Corbeau</option><option value="custom" hidden>Mon modèle</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
           <div class="cmrow"><label class="btn3 cmfile"><span data-i18n="cm.import">Importer mon modèle (.glb)</span><input type="file" id="cmFile" accept=".glb,model/gltf-binary"></label><span id="cmInfo"></span><label class="check"><input type="checkbox" id="cmFlip"> <span data-i18n="cm.flip">Tourner de 180°</span></label><button class="btn3" id="cmClear" type="button" data-i18n="cm.clear">Retirer</button></div>
@@ -667,7 +728,7 @@ body.touch #admPanel .admgrid label{padding:6px 0}
         <div class="field"><span class="lab"><label for="slideSnd" data-i18n="set.slideSnd">Son de glissade</label></span>
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
-        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="hatchet" data-i18n="knife.hatchet">Hachette</option><option value="longsword" data-i18n="knife.longsword">Épée longue</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option><option value="trident" data-i18n="knife.trident">Trident (se lance et revient)</option></select></label>
+        <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="hatchet" data-i18n="knife.hatchet">Hachette</option><option value="longsword" data-i18n="knife.longsword">Épée longue</option><option value="greatsword" data-i18n="knife.greatsword">Épée géante</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option><option value="trident" data-i18n="knife.trident">Trident (se lance et revient)</option></select></label>
         <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option><option value="ultra" data-i18n="ks.ultra">★ Lame céleste (ultra)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
@@ -1216,6 +1277,8 @@ Object.assign(I18N.fr, {"knife.hatchet": "Hachette", "knife.longsword": "Épée 
 Object.assign(I18N.en, {"knife.hatchet": "Hatchet", "knife.longsword": "Longsword", "ks.ultra": "★ Celestial blade (ultra)", "adm.menuBtn": "Admin", "adm.x.spin": "Spinbot (others see you spin)", "adm.x.glow": "Glow / chams (through walls)", "adm.x.skel": "Skeleton ESP", "adm.x.radar": "Radar (everyone on the minimap)", "adm.x.silent": "Silent aim (bullets go to the target)", "adm.x.autobhop": "Auto-bhop (hold Jump)", "adm.x.third": "Third person"});
 Object.assign(I18N.fr, {"char.xadm": "X-Bot admin", "tch.admin": "ADMIN"});
 Object.assign(I18N.en, {"char.xadm": "Admin X-Bot", "tch.admin": "ADMIN"});
+Object.assign(I18N.fr, {"knife.greatsword": "Épée géante", "map.mine": "Mine", "char.raven": "Corbeau", "char.tadm": "Titan admin", "char.sadm": "Spectre admin", "cls.aerial": "Voltigeur", "ab.odm": "DOUBLE GRAPPIN", "abd.odm": "tire deux câbles (70 m) et te balance entre eux ; Avancer = jet de gaz, Saut = lâcher. Le gaz se recharge au sol.", "ab.spiral": "SPIRALE", "abd.spiral": "ruée en vrille de 1,3 s qui tranche tout ce qui est autour de toi", "odm.noGas": "Plus de gaz", "kab.lunge": "FENTE", "kab.frenzy": "FRÉNÉSIE", "kab.cleave": "MOULINET", "kab.throwk": "LANCER", "kab.dodge": "ESQUIVE", "kab.iai": "IAI", "kab.parry": "PARADE", "kab.slam": "FRACAS", "kab.whirl": "TOURBILLON", "kab.trid": "LANCER", "kab.parried": "coup paré", "kabd.lunge": "bond en avant de 4 m qui poignarde (65).", "kabd.frenzy": "4 s : frappes deux fois plus rapides.", "kabd.cleave": "coup circulaire autour de toi (70, 3,4 m).", "kabd.throwk": "lance la lame jusqu'à 45 m (85 à 100, tête ×1,5).", "kabd.dodge": "pas de côté, invulnérable 0,5 s.", "kabd.iai": "ruée de 8 m qui tranche tout sur le passage (95).", "kabd.parry": "1,2 s : tu ne prends que 20 % des dégâts.", "kabd.slam": "saut puis fracas à l'atterrissage (110, 5,5 m).", "kabd.whirl": "1 s de rotation, 4 coups de 34 autour de toi.", "kabd.trid": "se lance et revient.", "lo.kicker": "Avant de jouer", "lo.title": "Équipement", "lo.char": "Personnage", "lo.knife": "Couteau", "lo.ask": "Demander avant chaque partie", "lo.key": "Change à tout moment avec L", "lo.go": "Jouer", "lo.alt": "(clic droit / viser) :", "act.loadout": "Équipement", "tch.loadout": "ÉQUIP."});
+Object.assign(I18N.en, {"knife.greatsword": "Greatsword", "map.mine": "Mine", "char.raven": "Raven", "char.tadm": "Admin Titan", "char.sadm": "Admin Spectre", "cls.aerial": "Aerialist", "ab.odm": "TWIN HOOKS", "abd.odm": "fires two cables (70 m) and swings you between them; Forward = gas boost, Jump = let go. Gas refills on the ground.", "ab.spiral": "SPIRAL", "abd.spiral": "1.3 s spinning rush that slices everything around you", "odm.noGas": "Out of gas", "kab.lunge": "LUNGE", "kab.frenzy": "FRENZY", "kab.cleave": "CLEAVE", "kab.throwk": "THROW", "kab.dodge": "DODGE", "kab.iai": "IAI", "kab.parry": "PARRY", "kab.slam": "SLAM", "kab.whirl": "WHIRL", "kab.trid": "THROW", "kab.parried": "blow parried", "kabd.lunge": "4 m leap forward that stabs (65).", "kabd.frenzy": "4 s: swings twice as fast.", "kabd.cleave": "circular slash around you (70, 3.4 m).", "kabd.throwk": "throws the blade up to 45 m (85 to 100, head ×1.5).", "kabd.dodge": "sidestep, invulnerable for 0.5 s.", "kabd.iai": "8 m rush that cuts everything in the way (95).", "kabd.parry": "1.2 s: you only take 20% damage.", "kabd.slam": "jump, then crash down on landing (110, 5.5 m).", "kabd.whirl": "1 s spin, 4 hits of 34 around you.", "kabd.trid": "thrown, then comes back.", "lo.kicker": "Before you play", "lo.title": "Loadout", "lo.char": "Character", "lo.knife": "Knife", "lo.ask": "Ask before every match", "lo.key": "Change anytime with L", "lo.go": "Play", "lo.alt": "(right click / aim):", "act.loadout": "Loadout", "tch.loadout": "LOADOUT"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -1246,6 +1309,9 @@ let xUnlocked = store.get('xu', false) === true;
 if (xUnlocked) Object.assign(X, store.get('xs', {}));
 const xActive = () => xUnlocked && Object.values(X).some(Boolean);
 S.quality = store.get('quality', 'auto');
+// petites machines (peu de mémoire ou de cœurs) : qualité basse d'office
+const LOWEND = (navigator.deviceMemory && navigator.deviceMemory <= 4) || (navigator.hardwareConcurrency || 8) <= 3;
+if (S.quality === 'auto' && LOWEND) S.quality = 'low';
 S.invY = store.get('invY', false) === true; S.invX = store.get('invX', false) === true;
 S.skin = store.get('skin', 'std');
 S.slideSnd = store.get('slideSnd', 'gravel');
@@ -1272,9 +1338,9 @@ const MAX_SH = 75, MAX_HP = 100;
 
 /* ================= Rendu ================= */
 const canvas = $('c');
-const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: S.quality !== 'low', powerPreference: 'high-performance' });
 const DPR = window.devicePixelRatio || 1;
-let pixelRatio = S.quality === 'low' ? Math.min(DPR, 0.85) : S.quality === 'high' ? Math.min(DPR, 1.5) : Math.min(DPR, 1.25);
+let pixelRatio = S.quality === 'low' ? Math.min(DPR, LOWEND ? 0.75 : 0.85) : S.quality === 'high' ? Math.min(DPR, 1.5) : Math.min(DPR, 1.25);
 renderer.setPixelRatio(pixelRatio);
 renderer.shadowMap.enabled = S.quality !== 'low';
 renderer.shadowMap.type = S.quality === 'high' ? THREE.PCFSoftShadowMap : THREE.PCFShadowMap;
@@ -2627,6 +2693,90 @@ MAPS.room = {
   theme: { top: 0xf6f1e8, mid: 0xefe4d0, hor: 0xe9d8bc, fog: 0xe6d6bc, fogFar: 320, hemiSky: 0xfff6e8, hemiGround: 0x9a7a5a, hemiI: 0.95, sun: 0xfff1d6, sunI: 0.8, sunDir: [0.35, 0.85, 0.3], ground: 0xb98a5a }
 };
 
+/* ---------- Mine : grande caverne sous un plafond rocheux, galeries étayées, rails et wagonnets, cristaux ---------- */
+Object.assign(PAL, { minerock: 0x5a4c40, mineceil: 0x3e342c, plank: 0x8a6236, minecart: 0x5b5f64, rail: 0x6a6f75 });
+const MINE_SPAWNS = [[0, 0, 30, 0], [25, 0, -30, 2.4], [-25, 0, 30, -0.8], [30, 0, 15, 1.57], [0, 0, 57, 0], [-30, 0, -57, 3.14], [57, 0, 20, 1.57], [-57, 0, -20, -1.57], [0, 13.2, -7, 3.14], [-34, 9.2, 0, -1.57], [34, 9.2, -10, 1.57], [-20, 0, -5, 0]];
+const MINE_DUMMIES = [[10, 0, 25, 'static'], [-12, 0, -15, 'strafe', 'x'], [0, 0, 57, 'strafe', 'x'], [57, 0, 0, 'strafe', 'z'], [-57, 0, 10, 'jump'], [0, 13, -7, 'static'], [-34, 9, -10, 'strafe', 'z'], [20, 0, -10, 'circle']];
+function buildMine() {
+  const W = 72, H = 40;
+  // enceinte et plafond (le plafond ne projette pas d'ombre : sinon tout serait noir)
+  box(0, -W, 2 * W + 4, 4, 0, H, 'minerock'); box(0, W, 2 * W + 4, 4, 0, H, 'minerock');
+  box(-W, 0, 4, 2 * W, 0, H, 'minerock'); box(W, 0, 4, 2 * W, 0, H, 'minerock');
+  box(0, 0, 2 * W + 4, 2 * W + 4, H, 4, 'mineceil');
+  // coins pleins
+  for (const sx of [-1, 1]) for (const sz of [-1, 1]) box(sx * 58, sz * 58, 24, 24, 0, H, 'minerock');
+  // parois de la caverne avec deux portes par côté, et galeries basses derrière
+  for (const s of [-1, 1]) {
+    for (const [c, w] of [[-34, 24], [0, 20], [34, 24]]) { box(c, s * 42, w, 4, 0, H, 'minerock'); box(s * 42, c, 4, w, 0, H, 'minerock'); }
+    for (const c of [-16, 16]) { box(c, s * 42, 12, 4, 8, H - 8, 'minerock'); box(s * 42, c, 4, 12, 8, H - 8, 'minerock'); }
+    box(0, s * 57, 92, 26, 9, H - 9, 'minerock'); box(s * 57, 0, 26, 92, 9, H - 9, 'minerock');
+    // étais des galeries : poteaux (solides) tous les 10 m
+    for (let k = -40; k <= 40; k += 10) {
+      if (Math.abs(Math.abs(k) - 16) < 5) continue;
+      box(k, s * 45, 0.6, 0.6, 0, 9, 'plank'); box(k, s * 69, 0.6, 0.6, 0, 9, 'plank');
+      box(s * 45, k, 0.6, 0.6, 0, 9, 'plank'); box(s * 69, k, 0.6, 0.6, 0, 9, 'plank');
+    }
+  }
+  // pilier central et échafaudage tout autour (y = 12), deux rampes
+  box(0, 0, 8, 8, 0, H, 'minerock');
+  box(0, -7, 22, 6, 12, 1, 'plank'); box(0, 7, 22, 6, 12, 1, 'plank'); box(-7, 0, 6, 8, 12, 1, 'plank'); box(7, 0, 6, 8, 12, 1, 'plank');
+  for (const [x, z] of [[-10.5, -9.5], [10.5, -9.5], [-10.5, 9.5], [10.5, 9.5]]) box(x, z, 0.6, 0.6, 0, 12, 'plank');
+  ramp(11, 31, -10, -4, 'x', -1, 0, 13); ramp(-31, -11, 4, 10, 'x', 1, 0, 13);
+  // passerelles le long des parois est et ouest (y = 8)
+  box(-34, -3, 6, 54, 8, 1, 'plank'); box(34, -3, 6, 54, 8, 1, 'plank');
+  for (let z = -28; z <= 22; z += 10) { box(-31.3, z, 0.5, 0.5, 0, 8, 'plank'); box(31.3, z, 0.5, 0.5, 0, 8, 'plank'); }
+  ramp(-37, -31, 24, 38, 'z', -1, 0, 9); ramp(31, 37, 24, 38, 'z', -1, 0, 9);
+  zipline(-4, 13.8, -9.5, -33, 9.8, -27); zipline(4, 13.8, 9.5, 33, 9.8, 20);
+  // rochers à couvert
+  for (const [x, z, w, d, h] of [[-18, 20, 6, 5, 3.2], [20, -22, 5, 7, 4], [-22, -24, 7, 4, 2.6], [22, 26, 4, 4, 5], [-6, 30, 5, 3, 2.4], [26, 6, 3, 6, 3], [-26, 6, 4, 3, 1.6], [6, -30, 6, 3, 2.2]]) box(x, z, w, d, 0, h, 'minerock');
+  // wagonnets
+  for (const [x, z, ry] of [[16, -26, 0], [16, 54, 0], [-16, -56, 0], [56, -16, 1], [-56, 16, 1], [-16, 24, 0]]) box(x, z, ry ? 3.6 : 2.4, ry ? 2.4 : 3.6, 0.3, 1.5, 'minecart');
+  // caisses et tonneaux dans les galeries
+  for (const [x, z, s2] of [[-30, 60, 1.6], [-28, 62, 1.2], [36, -60, 1.6], [60, 30, 1.4], [-60, -34, 1.6], [-62, -32, 1.1], [8, 64, 1.3], [62, -6, 1.2]]) box(x, z, s2, s2, 0, s2, 'wood');
+  pad(-20, 0, -34); pad(24, 0, 34); pad(0, 0, -57);
+  // ---------- décor (sans collision) ----------
+  const decoM = new Map();
+  const dm = (col, basic) => { const k = col + (basic ? 'b' : ''); if (!decoM.has(k)) decoM.set(k, basic ? new THREE.MeshBasicMaterial({ color: col }) : new THREE.MeshLambertMaterial({ color: col })); return decoM.get(k); };
+  const deco = (geo, col, x, y, z, rx = 0, ry = 0, rz = 0, basic = false) => { const m = new THREE.Mesh(geo, dm(col, basic)); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.castShadow = !basic; m.receiveShadow = !basic; mapRoot.add(m); return m; };
+  // rails : deux barres et des traverses, du nord au sud par les portes (x = ±16) et d'est en ouest (z = ±16)
+  const railG = new THREE.BoxGeometry(0.12, 0.12, 140), tieG = new THREE.BoxGeometry(1.8, 0.1, 0.3);
+  for (const c of [-16, 16]) {
+    for (const o of [-0.6, 0.6]) { deco(railG, 0x6a6f75, c + o, 0.12, 0); deco(railG, 0x6a6f75, 0, 0.12, c + o, 0, Math.PI / 2); }
+    for (let k = -68; k <= 68; k += 2) { if (Math.abs(k) < 5) continue; deco(tieG, 0x4a3420, c, 0.05, k); deco(tieG, 0x4a3420, k, 0.05, c, 0, Math.PI / 2); }
+  }
+  // poutres des galeries
+  const beamG = new THREE.BoxGeometry(0.5, 0.5, 26);
+  for (const s of [-1, 1]) for (let k = -40; k <= 40; k += 10) { if (Math.abs(Math.abs(k) - 16) < 5) continue; deco(beamG, 0x6e4c2a, k, 8.7, s * 57); deco(beamG, 0x6e4c2a, s * 57, 8.7, k, 0, Math.PI / 2); }
+  // lanternes (lumineuses) et quelques vraies lumières
+  let seed = 31; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const lampG = new THREE.BoxGeometry(0.3, 0.42, 0.3);
+  const lamps = [[0, 6, -4.4], [4.4, 6, 0], [-4.4, 6, 0], [0, 6, 4.4], [-31, 11, -10], [31, 11, 0], [-40, 6, -16], [40, 6, 16], [-16, 6, 40], [16, 6, -40]];
+  for (let k = -36; k <= 36; k += 12) lamps.push([k, 7.6, 46], [k, 7.6, -46], [46, 7.6, k], [-46, 7.6, k]);
+  for (const [x, y, z] of lamps) {
+    deco(lampG, 0xffc870, x, y, z, 0, 0, 0, true);
+    const h = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffa040, transparent: true, opacity: 0.6, depthWrite: false, blending: THREE.AdditiveBlending })); h.scale.setScalar(2.6); h.position.set(x, y, z); mapRoot.add(h);
+  }
+  for (const [x, y, z, d] of [[0, 26, 0, 110], [0, 7, 57, 55], [0, 7, -57, 55], [57, 7, 0, 55], [-57, 7, 0, 55]]) { const L = new THREE.PointLight(0xffb870, 1.1, d, 1.2); L.position.set(x, y, z); mapRoot.add(L); }
+  // cristaux de minerai qui brillent
+  const crG = new THREE.OctahedronGeometry(0.5, 0);
+  for (let i = 0; i < 22; i++) {
+    const side = i % 4, t2 = (rnd() - 0.5) * 70, col = rnd() < 0.5 ? 0x4ff0ff : 0xc06aff;
+    const [x, z] = side === 0 ? [t2, 39.4] : side === 1 ? [t2, -39.4] : side === 2 ? [39.4, t2] : [-39.4, t2];
+    if (Math.abs(Math.abs(t2) - 16) < 7) continue;
+    const y = 1 + rnd() * 14;
+    for (let k = 0; k < 4; k++) { const c = deco(crG, col, x + (rnd() - 0.5) * 1.2, y + (rnd() - 0.5) * 1.2, z + (rnd() - 0.5) * 1.2, rnd() * 3, rnd() * 3, rnd() * 3, true); c.scale.set(0.6 + rnd() * 0.5, 1 + rnd() * 1.4, 0.6 + rnd() * 0.5); }
+    const h = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, opacity: 0.35, depthWrite: false, blending: THREE.AdditiveBlending })); h.scale.setScalar(4); h.position.set(x, y, z); mapRoot.add(h);
+  }
+  // stalactites
+  const stG = new THREE.ConeGeometry(0.8, 4, 6);
+  for (let i = 0; i < 40; i++) { const x = (rnd() - 0.5) * 76, z = (rnd() - 0.5) * 76; if (Math.abs(x) < 6 && Math.abs(z) < 6) continue; const st = deco(stG, 0x3e342c, x, H - 1.6, z, Math.PI, rnd() * 3, 0); st.scale.set(0.6 + rnd(), 0.5 + rnd() * 1.4, 0.6 + rnd()); st.castShadow = false; }
+}
+MAPS.mine = {
+  build: buildMine, lim: 69.6, spawns: MINE_SPAWNS, dummies: MINE_DUMMIES,
+  after() { const m = M('mineceil'); mapRoot.traverse(o => { if (o.isMesh && o.material === m) o.castShadow = false; }); },
+  theme: { top: 0x1a1410, mid: 0x2a2018, hor: 0x3a2c20, fog: 0x1e1712, fogFar: 170, hemiSky: 0xbfa890, hemiGround: 0x4a3a2c, hemiI: 0.95, sun: 0xffd6a8, sunI: 0.45, sunDir: [0.25, 0.9, 0.3], ground: 0x5b4b3d }
+};
+
 /* ---------- décor varié : tonneaux, caisses, rochers, cactus, lampadaires, feux, bouches d'incendie… (fusionnés par matériau) ---------- */
 Object.assign(PAL, { cactus: 0x5f8a4a, cone: 0xff6a1a, bush: 0x4c7536, leaf: 0x6a9a48, mush: 0xc8402e, flY: 0xffd84a, flW: 0xf4f0f0, flP: 0xd86ad8, flR: 0xe84a4a, tire: 0x1e1e1e,
   dump: 0x2f5a3a, sand: 0xb8a070, bin: 0x3a4a3e, hyd: 0xc8302a, news: 0x2f5fa8, woodlt: 0xc8a070, ironblk: 0x2a2a2c, banner1: 0x9e2a2a, banner2: 0x2a4a9e });
@@ -2891,6 +3041,7 @@ function buildMap(id) {
   MAP_LIM = MAPS[id].lim || 61.6;
   MAPS[id].build();
   mergeStatic();
+  if (MAPS[id].after) MAPS[id].after();
   for (const m of TERRAIN_MESHES) { mapRoot.add(m); WORLD.push(m); }
   groundMesh.visible = !MAPS[id].noGround; groundMesh.scale.setScalar(Math.max(1, MAP_LIM / 360));
   if (typeof resetVehicles === 'function') resetVehicles();
@@ -3315,13 +3466,16 @@ const CLASSES = {
 const myClass = () => CLASSES[S.char] || CLASSES.soldier;
 // le Soldat du propriétaire est le squelette
 const isAdminSkin = () => xUnlocked || ADM.pwOk || ADM.granted;
-const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && MODELS.chars.skel ? 'skel' : S.char === 'xbot' && isAdminSkin() && MODELS.chars.xadm ? 'xadm' : S.char;
+const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && (needModel('skel'), MODELS.chars.skel) ? 'skel' : S.char === 'xbot' && isAdminSkin() && MODELS.chars.xadm ? 'xadm' : S.char === 'titan' && isAdminSkin() && MODELS.chars.tadm ? 'tadm' : S.char === 'spectre' && isAdminSkin() && MODELS.chars.sadm ? 'sadm' : S.char;
+// chargement à la demande des gros modèles (moins de mémoire au départ)
+function needModel(ch) { (needModel.q || (needModel.q = new Set())).add(ch); if (needModel.fn) needModel.fn(ch); }
 function useAbility(k) {
   if (P.veh || P.pass || EDIT.on) return;
   if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
   else if (k === 'grapple') useGrapple(); else if (k === 'scan') useScan(); else if (k === 'launchpad') useLaunchpad();
   else if (k === 'dash') useDash(); else if (k === 'blink') useBlink();
   else if (k === 'jet') useJet(); else if (k === 'strike') useStrike(); else if (k === 'overdrive') useOverdrive();
+  else if (k === 'odm') useOdm(); else if (k === 'spiral') useSpiral();
 }
 const DOMES = [], PORTALS = [];
 const domeGeo = new THREE.SphereGeometry(5, 40, 20, 0, Math.PI * 2, 0, Math.PI / 2);
@@ -3405,7 +3559,7 @@ function abilityStep(dt) {
   AB.stimT = Math.max(0, AB.stimT - dt); AB.odT = Math.max(0, (AB.odT || 0) - dt);
   for (const k of AB_KEYS) AB[k + 'Cd'] = Math.max(0, AB[k + 'Cd'] - dt);
   AB.scanT = Math.max(0, AB.scanT - dt);
-  grappleStep(dt);
+  grappleStep(dt); odmStep(dt); kabStep(dt);
   AB.portT = Math.max(0, AB.portT - dt);
   if (AB.portalA && (AB.portalAT -= dt) <= 0) { scene.remove(AB.marker); AB.marker = null; AB.portalA = null; AB.portalCd = Math.max(AB.portalCd, 5); }
   // traverser un portail : téléportation en gardant l'élan
@@ -3603,6 +3757,7 @@ function updateClassFx(dt) {
     const pa = hookLine.geometry.attributes.position; pa.setXYZ(0, _m.x, _m.y, _m.z); pa.setXYZ(1, HOOK.p.x, HOOK.p.y, HOOK.p.z); pa.needsUpdate = true;
     hookClaw.position.copy(HOOK.p); hookClaw.rotation.y += dt * 6;
   }
+  odmFrame(dt);
   // robots révélés par le scan
   for (const d of dummies) if (d.vis && d.alive) d.scanned = AB.scanT > 0 && d.g.position.distanceTo(P.pos) < 70;
 }
@@ -4042,7 +4197,7 @@ function titanGear(vis, col) {
   vis.obj.updateMatrixWorld(true);
   if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
   const glowMats = [], glow = () => { const m = new THREE.MeshBasicMaterial({ color: col }); glowMats.push(m); return m; };
-  const F = vis.ch === 'titan' ? (CHARS.titan.gearFz || 1) : 1;
+  const F = vis.ch === 'titan' || vis.ch === 'tadm' ? (CHARS.titan.gearFz || 1) : 1;
   const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z * F); m.rotation.set(rx * F, ry, rz); m.scale.set(sx, sy, sz); m.castShadow = true; m.userData.gear = true; return m; };
   const mount = (bone, build) => { if (!bone) return; const g = new THREE.Group(); bone.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; build(g); bone.add(g); };
   mount(bones.head, g => {
@@ -4133,6 +4288,12 @@ function tintChar(vis, ch, col) {
       // Spectre : carrosserie noire laquée, articulations qui brillent de la couleur choisie
       if (/Joints/i.test(m.name)) { m.color.setHex(0x1a1c22); if (m.emissive) { m.emissive.setHex(col); m.emissiveIntensity = 1; } m.userData.keep = true; }
       else { m.color.setHex(0x15161b); if (m.shininess !== undefined) m.shininess = 80; }
+    } else if (ch === 'tadm') {
+      if (/visor/i.test(o.name)) { m.emissive.setHex(0xff2a3a); m.emissiveIntensity = 0.9; m.userData.keep = true; } else { m.color.setHex(0x16171a); m.userData.keep = true; }
+    } else if (ch === 'sadm') {
+      if (/Joints/i.test(m.name)) { m.color.setHex(0xb79cff); if (m.emissive) { m.emissive.setHex(0x6a44d8); m.emissiveIntensity = 0.6; } } else { m.color.setHex(0xffe1f0); if (m.shininess !== undefined) m.shininess = 60; } m.userData.keep = true;
+    } else if (ch === 'raven') {
+      if (/Joints/i.test(m.name)) { m.color.setHex(0x2b2f36); } else { m.color.setHex(0x3a3f47).lerp(new THREE.Color(col), 0.12); }
     } else if (ch === 'soldier' || ch === 'titan') {
       if (/visor/i.test(o.name)) { m.emissive.setHex(col); m.emissiveIntensity = 0.8; m.userData.keep = true; }
       else if (ch === 'titan') m.color.setHex(0x3a3f46).lerp(new THREE.Color(col), 0.18);
@@ -4147,6 +4308,9 @@ function tintChar(vis, ch, col) {
   if (ch === 'titan') titanGear(vis, col);
   if (ch === 'lynx' && typeof lynxGear === 'function') lynxGear(vis, col);
   if (ch === 'xadm' && typeof adminGear === 'function') adminGear(vis);
+  if (ch === 'tadm') { titanGear(vis, 0xff2a3a); tadmGear(vis); }
+  if (ch === 'sadm') sadmGear(vis);
+  if (ch === 'raven') ravenGear(vis, col);
 }
 const modelWaiters = [];
 function prepModel(gltf, height) {
@@ -4237,16 +4401,22 @@ if (THREE.GLTFLoader) {
   const loader = new THREE.GLTFLoader();
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
   loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); soldierRig(); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); MODELS.chars.xadm = prepModel(g, CHARS.xadm.h); XCLIPS.list = g.animations; novaReady(); skelReady(); soldierRig(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); MODELS.chars.tadm = prepModel(g, CHARS.tadm.h); soldierRig(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); MODELS.chars.xadm = prepModel(g, CHARS.xadm.h); MODELS.chars.raven = prepModel(g, CHARS.raven.h); MODELS.chars.sadm = prepModel(g, CHARS.sadm.h); XCLIPS.list = g.animations; novaReady(); skelReady(); soldierRig(); charLoaded(); }, undefined, () => {});
   // Nova : modèle à part (Michelle, Mixamo), animé avec les clips du X-Bot (même squelette ; on ne garde que les rotations)
-  loader.load('assets/models/Nova.glb', g => { XCLIPS.nova = g; novaReady(); }, undefined, () => {});
+  const lazy = {};
+  needModel.fn = ch => {
+    if (ch === 'nova' && !lazy.nova) { lazy.nova = 1; loader.load('assets/models/Nova.glb', g => { XCLIPS.nova = g; novaReady(); }, undefined, () => {}); }
+    if (ch === 'skel' && !lazy.skel) { lazy.skel = 1; loader.load('assets/models/Skeleton.glb', g => { XCLIPS.skel = g; skelReady(); }, undefined, () => {}); }
+  };
+  for (const c of needModel.q || []) needModel.fn(c);
+  // machines correctes : Nova se charge quand même un peu après le démarrage
+  if (!LOWEND) setTimeout(() => needModel('nova'), 15000);
   // squelette : version spéciale du Soldat réservée au propriétaire (les autres le voient quand il joue)
-  loader.load('assets/models/Skeleton.glb', g => { XCLIPS.skel = g; skelReady(); }, undefined, () => {});
   // Soldat / Titan : leurs propres animations, mais les poses ajoutées (arme tenue, saut…) passent par les axes du X-Bot
   function soldierRig() {
     const m = MODELS.chars.soldier; if (!m || !MODELS.chars.xbot || m.retD) return;
-    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD;
+    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD; if (MODELS.chars.tadm) MODELS.chars.tadm.retD = m.retD;
   }
   function skelReady() {
     if (!XCLIPS.list || !XCLIPS.skel || MODELS.chars.skel) return;
@@ -4412,7 +4582,7 @@ const OWN = [false, false, false, false, true, false];
 const WS = { cur: 0, ammo: WEAPONS.map(w => w.mag), swingT: 0, swingDur: 0.32, swingKind: 0, combo: 0, flourT: 0, inspT: 0, cool: 0, reloading: false, reloadT: 0, reloadDur: 1, swapT: 0, ads: 0, kick: 0, kickRot: 0, flashT: 0, trigger: false, swayX: 0, swayY: 0, bloom: 0, sprintK: 0, slideK: 0 };
 
 // modèles des couteaux : fichier, longueur totale (m), décalage de la main
-const KMODELS = { combat: { file: 'kk_dagger.glb', len: .32 }, dagger: { file: 'kk_sword1.glb', len: .4 }, machete: { file: 'kk_blade.glb', len: .5 }, hatchet: { file: 'kk_axe.glb', len: .4, z: .06, roll: -Math.PI / 2 }, longsword: { file: 'kk_sword2.glb', len: .82, z: .05 } };
+const KMODELS = { karambit: { file: 'karambit.glb', len: .3, basis: [[0, -.7071, .7071], [0, .7071, .7071], [-1, 0, 0]], grip: [.08, 1.7, 0], z: .02 } };
 const KMESH = {};
 if (THREE.GLTFLoader) {
   const kl = new THREE.GLTFLoader();
@@ -4545,12 +4715,40 @@ function buildViewmodel(kind, knifeType) {
     };
     const wrap = (z0, len, r, n) => { for (let i = 0; i < n; i++) { const d = add(B(r * 2.1, r * 2.1, len / n * .45), i % 2 ? amb : blk, 0, 0, z0 + (i + .5) * len / n, 0, 0, Math.PI / 4); } };
     const parts = {};
-    // couteaux en modèle 3D (KayKit, CC0) : manche dans la main, lame vers l'avant
+    // forge : lame à facettes de longueur L, largeur w(q), centre c(q), simple ou double tranchant
+    const forge = (o) => {
+      const L = o.L, N = o.N || 18, Z0 = o.z0 ?? -.03, dbl = !!o.dbl, ring = [], pos = [], uv = [], iS = [], iM = [];
+      for (let i = 0; i <= N; i++) {
+        const u = i / N * L, q = u / L, c = o.c ? o.c(q) : 0, w = o.w(q), tk = o.tk(q), z = Z0 - u;
+        const pts = dbl
+          ? [[0, c - w / 2], [tk * .3, c - w * .28], [tk / 2, c], [tk * .3, c + w * .28], [0, c + w / 2], [-tk * .3, c + w * .28], [-tk / 2, c], [-tk * .3, c - w * .28]]
+          : [[0, c - w / 2], [tk * .34, c - w * .2], [tk / 2, c + w * .15], [tk * .45, c + w / 2], [-tk * .45, c + w / 2], [-tk / 2, c + w * .15], [-tk * .34, c - w * .2]];
+        ring.push(pos.length / 3); pts.forEach(([x, y], k) => { pos.push(x, y, z); uv.push(q * (o.uvL || 2), k / pts.length); });
+      }
+      const K = dbl ? 8 : 7, edgeF = dbl ? [0, 3, 4, 7] : [0, 6];
+      const tip = pos.length / 3, cT = o.c ? o.c(1) : 0; pos.push(0, cT + (o.tipY || 0) * o.w(1), Z0 - L - (o.tipL || .02)); uv.push(o.uvL || 2, .5);
+      const quad = (a, b, cc, d, l) => l.push(a, b, cc, a, cc, d);
+      for (let i = 0; i < N; i++) for (let k = 0; k < K; k++) quad(ring[i] + k, ring[i] + (k + 1) % K, ring[i + 1] + (k + 1) % K, ring[i + 1] + k, edgeF.includes(k) ? iM : iS);
+      for (let k = 0; k < K; k++) (edgeF.includes(k) ? iM : iS).push(ring[N] + k, ring[N] + (k + 1) % K, tip);
+      for (let k = 1; k < K - 1; k++) iS.push(ring[0], ring[0] + k + 1, ring[0] + k);
+      const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); bg.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      bg.setIndex(iS.concat(iM)); bg.addGroup(0, iS.length, 0); bg.addGroup(iS.length, iM.length, 1);
+      const nf = bg.toNonIndexed(); nf.computeVertexNormals(); const m = new THREE.Mesh(nf, [steel, mid]); g.add(m); parts.blade = m; return m;
+    };
+    // poignée : âme, bagues
+    const hilt = (z0, len, r, wrapN, wrapM = blk, coreM = tan) => {
+      add(C(r, len, 14, r * 1.06), coreM, 0, 0, z0 + len / 2, Math.PI / 2);
+      for (let i = 0; i < wrapN; i++) add(C(r * 1.12, len / wrapN * .3, 14), wrapM, 0, 0, z0 + (i + .5) * len / wrapN, Math.PI / 2);
+    };
+    // modèle 3D (karambit fourni, CC BY) : manche dans la main, lame vers l'avant
     const KM = KMODELS[kt], KMs = KMESH[kt];
     if (KM && KMs) {
       const o = KMs.scene.clone(true), s = KM.len / KMs.h;
-      o.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.castShadow = true; } });
-      o.rotation.set(-Math.PI / 2, KM.roll || 0, 0); o.scale.setScalar(s); o.position.set(0, 0, -KMs.grip * s + (KM.z || .035));
+      o.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.castShadow = true; if (m.material.metalness !== undefined) { m.material.metalness = Math.min(m.material.metalness, .3); m.material.roughness = Math.max(m.material.roughness, .45); } } });
+      if (KM.basis) { const b = KM.basis; o.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new V3(...b[0]), new V3(...b[1]), new V3(...b[2]))); }
+      else o.rotation.set(-Math.PI / 2, KM.roll || 0, 0);
+      o.scale.setScalar(s); o.updateMatrix();
+      const gp = new V3(...(KM.grip || [0, KMs.grip, 0])).applyMatrix4(o.matrix); o.position.set(-gp.x, -gp.y, -gp.z + (KM.z || .035));
       g.add(o); parts.model = o;
     } else if (kt === 'karambit') {
       // griffe recourbée, manche courbe et anneau de pouce
@@ -4558,16 +4756,16 @@ function buildViewmodel(kind, knifeType) {
       add(B(.026, .032, .1), tan, 0, -.006, .045, -.18); add(B(.028, .006, .09), amb, 0, .011, .042, -.18);
       const ring = new THREE.Mesh(new THREE.TorusGeometry(.022, .006, 8, 22), blk); ring.position.set(0, -.022, .112); ring.rotation.y = Math.PI / 2; g.add(ring);
     } else if (kt === 'machete') {
-      blade([[0, -.02], [.27, -.026], [.33, -.016], [.35, .006], [.31, .03], [.18, .026], [0, .022]], .005, steel, -.02, .002);
-      add(B(.007, .004, .25), mid, 0, .02, -.15);
-      add(B(.03, .036, .13), tan, 0, -.002, .045); for (let i = 0; i < 3; i++) add(B(.032, .038, .006), blk, 0, -.002, .0 + i * .045);
-      add(B(.008, .008, .02), steel, 0, -.002, .11);
+      // machette : lame large qui s'élargit vers l'avant, légère courbe, manche à plaquettes rivetées
+      forge({ L: .36, w: q => .042 + .022 * q, tk: q => .0055 - .002 * q, c: q => -.004 * q * q, tipY: .32, tipL: .03 });
+      add(B(.032, .036, .13), tan, 0, -.003, .045); for (let i = 0; i < 3; i++) add(C(.005, .036, 8), amb, 0, -.003, i * .045, 0, 0, Math.PI / 2);
+      add(B(.034, .04, .012), blk, 0, -.003, -.022); add(B(.034, .038, .014), blk, 0, -.003, .115);
     } else if (kt === 'dagger') {
-      blade([[0, -.014], [.15, -.011], [.215, 0], [.15, .011], [0, .014]], .006);
-      add(B(.004, .003, .19), mid, 0, 0, -.11);
-      add(B(.08, .012, .014), amb, 0, 0, -.024); add(new THREE.SphereGeometry(.009, 10, 8), amb, -.04, 0, -.024); add(new THREE.SphereGeometry(.009, 10, 8), amb, .04, 0, -.024);
-      add(C(.012, .095, 12, .014), blk, 0, 0, .032, Math.PI / 2); wrap(-.012, .09, .013, 6);
-      add(new THREE.SphereGeometry(.017, 14, 10), amb, 0, 0, .09);
+      // dague : double tranchant, gorge centrale, garde à quillons ronds, fusée filetée, pommeau sphérique
+      forge({ L: .21, dbl: true, w: q => .03 - .012 * q, tk: q => .0075 - .003 * q, tipL: .025 });
+      add(B(.0018, .004, .14), blk, .0035, 0, -.1); add(B(.0018, .004, .14), blk, -.0035, 0, -.1);
+      add(B(.012, .085, .014), amb, 0, 0, -.022); add(new THREE.SphereGeometry(.009, 10, 8), amb, 0, .045, -.022); add(new THREE.SphereGeometry(.009, 10, 8), amb, 0, -.045, -.022);
+      hilt(-.014, .1, .012, 7); add(new THREE.SphereGeometry(.017, 14, 10), amb, 0, 0, .095);
     } else if (kt === 'butterfly') {
       blade([[0, -.009], [.12, -.01], [.155, .004], [.12, .012], [0, .011]], .005, steel, -.025);
       // deux moitiés de manche montées sur pivot, elles tournent pendant l'inspection
@@ -4648,14 +4846,29 @@ function buildViewmodel(kind, knifeType) {
         add(B(.012, .006, .05), amb, 0, sg * .12, -.46); add(B(.012, .03, .006), amb, 0, sg * .1, -.46);
       }
       add(B(.01, .19, .01), amb, 0, 0, -.42);
+    } else if (kt === 'hatchet') {
+      // hachette : manche en bois, tête en acier avec tranchant en croissant et marteau à l'arrière
+      add(B(.026, .032, .36), tan, 0, 0, -.06); for (let i = 0; i < 4; i++) add(B(.028, .034, .006), blk, 0, 0, .06 + i * .02);
+      const hs = new THREE.Shape(); hs.moveTo(-.02, .018); hs.lineTo(.02, .018); hs.quadraticCurveTo(.05, -.02, .085, -.065); hs.quadraticCurveTo(.03, -.075, -.02, -.075); hs.quadraticCurveTo(.005, -.04, -.02, .018);
+      const hg = new THREE.ExtrudeGeometry(hs, { depth: .012, bevelEnabled: true, bevelThickness: .003, bevelSize: .003, bevelSegments: 2 }); hg.translate(0, 0, -.006);
+      const head = new THREE.Mesh(hg, steel); head.rotation.set(0, Math.PI / 2, 0); head.position.set(0, .012, -.2); head.scale.set(1.5, 1.5, 1); g.add(head);
+      add(B(.03, .036, .05), mid, 0, .012, -.215); add(B(.026, .03, .03), blk, 0, .05, -.215);
+    } else if (kt === 'longsword' || kt === 'greatsword') {
+      // épée longue / épée géante : double tranchant, gorge, talon, grande garde, longue fusée, pommeau
+      const big = kt === 'greatsword', L = big ? 1.0 : .64, W = big ? .078 : .044, z0 = big ? -.07 : -.04;
+      forge({ L, dbl: true, N: 20, w: q => W * (1 - .25 * q), tk: q => (big ? .012 : .008) * (1 - .35 * q), tipL: big ? .06 : .04, z0 });
+      add(B(.002, .006, L * .7), blk, big ? .006 : .004, 0, z0 - L * .38); add(B(.002, .006, L * .7), blk, -(big ? .006 : .004), 0, z0 - L * .38);
+      if (big) { add(B(.016, W * 1.05, .06), steel, 0, 0, -.045); for (const sg of [1, -1]) add(C(0, .05, 6, .008), steel, 0, sg * .1, -.012, 0, 0, sg * Math.PI / 2); }
+      add(B(.02, big ? .2 : .13, .02), amb, 0, 0, -.012); for (const sg of [1, -1]) add(new THREE.SphereGeometry(big ? .016 : .011, 10, 8), amb, 0, sg * (big ? .1 : .065), -.012);
+      hilt(0, big ? .3 : .2, big ? .017 : .014, big ? 12 : 8);
+      add(new THREE.CylinderGeometry(big ? .03 : .022, big ? .03 : .022, .016, 16), amb, 0, 0, big ? .315 : .212, Math.PI / 2);
     } else {
-      // couteau de combat : pointe en clip, gorge, dos cranté, garde, manche strié, pommeau
-      blade([[0, -.013], [.15, -.016], [.2, -.006], [.218, .006], [.17, .015], [.12, .017], [0, .017]], .006);
-      add(B(.008, .005, .12), mid, 0, .004, -.1);
-      for (let i = 0; i < 6; i++) add(B(.008, .006, .006), steel, 0, .02, -.04 - i * .014, Math.PI / 4);
-      add(B(.05, .014, .016), blk, 0, 0, -.03);
-      add(B(.026, .032, .11), tan, 0, -.002, .035); for (let i = 0; i < 4; i++) add(B(.028, .034, .005), blk, 0, -.002, -.008 + i * .028);
-      add(B(.03, .036, .018), blk, 0, -.002, .095);
+      // couteau de combat : pointe en clip, dos cranté, garde, manche strié, pommeau
+      forge({ L: .17, w: q => .032 - .006 * q, tk: q => .0065 - .002 * q, c: q => q > .7 ? -(q - .7) * .02 : 0, tipY: .35, tipL: .03 });
+      for (let i = 0; i < 6; i++) add(B(.006, .006, .006), steel, 0, .017, -.045 - i * .013, Math.PI / 4);
+      add(B(.016, .05, .014), blk, 0, 0, -.026);
+      add(B(.026, .034, .11), tan, 0, -.002, .035); for (let i = 0; i < 5; i++) add(B(.028, .036, .005), blk, 0, -.002, -.012 + i * .024);
+      add(B(.03, .036, .018), blk, 0, -.002, .097);
     }
     g.userData.parts = parts;
     sightY = .03; adsZ = .3; muzzle = new V3(0, 0, -.24); hip = [0.15, -0.16, -0.33];
@@ -4753,7 +4966,7 @@ function buildViewmodel(kind, knifeType) {
   g.visible = false; wScene.add(g);
   // points de prise des mains (repère de l'arme) : main droite sur la poignée, gauche sur le garde-main
   const HANDS = { 0: { r: [0, -.095, .09], l: [0, -.035, -.3] }, 1: { r: [0, -.1, .105], l: [0, -.17, -.07] }, 2: { r: [0, -.09, .12], l: [0, -.06, -.38] }, 3: { r: [0, -.09, .16], l: [0, -.07, -.3] }, 4: { r: [0, -.075, .045], l: [-.025, -.1, .06] } };
-  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, trident: { r: [0, 0, .08], l: [0, 0, -.18] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] }, hatchet: { r: [0, 0, .06] }, longsword: { r: [0, 0, .05], l: [0, 0, .15] } };
+  const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, trident: { r: [0, 0, .08], l: [0, 0, -.18] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] }, hatchet: { r: [0, 0, .1] }, longsword: { r: [0, 0, .05], l: [0, 0, .15] }, greatsword: { r: [0, 0, .06], l: [0, 0, .22] } };
   const SPHANDS = { crossbow: { r: [0, -.09, .14], l: [0, -.03, -.12] }, flamer: { r: [0, -.1, .15], l: [0, -.08, -.22] }, laser: { r: [0, -.09, .12], l: [0, -.03, -.28] }, autoshotgun: { r: [0, -.09, .12], l: [0, -.08, -.2] }, hsniper: { r: [0, -.1, .15], l: [0, -.03, -.36] }, lmg: { r: [0, -.1, .15], l: [0, -.04, -.32] }, gunblade: { r: [0, -.09, .14] }, minigun: { r: [0, -.1, .15], l: [0, .11, 0] }, rocket: { r: [0, -.09, .02], l: [0, -.08, -.26] }, railgun: { r: [0, -.09, .12], l: [0, -.04, -.3] }, revolver: { r: [0, -.075, .075] }, gl: { r: [0, -.09, .15], l: [0, -.1, -.18] }, burst: { r: [0, -.095, .1], l: [0, -.03, -.28] } };
   const hands = kind === 5 ? KHANDS[knifeType] || KHANDS.combat : kind === 6 ? SPHANDS[knifeType] || SPHANDS.burst : HANDS[kind] || HANDS[4];
   return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind, hands };
@@ -4762,7 +4975,7 @@ S.knife = store.get('knife', 'combat');
 const KNIVES = {
   combat: { dmg: 50, rpm: 115, range: 2.7 }, karambit: { dmg: 42, rpm: 145, range: 2.4 }, katana: { dmg: 70, rpm: 80, range: 3.6 },
   machete: { dmg: 65, rpm: 85, range: 3.3 }, dagger: { dmg: 55, rpm: 110, range: 2.6 }, butterfly: { dmg: 46, rpm: 135, range: 2.5 },
-  morgane: { dmg: 85, rpm: 62, range: 3.4 }, hatchet: { dmg: 75, rpm: 72, range: 3.1 }, longsword: { dmg: 80, rpm: 66, range: 3.9 },
+  morgane: { dmg: 85, rpm: 62, range: 3.4 }, hatchet: { dmg: 75, rpm: 72, range: 3.1 }, longsword: { dmg: 80, rpm: 66, range: 3.9 }, greatsword: { dmg: 120, rpm: 42, range: 4.4 },
   trident: { dmg: 70, rpm: 80, range: 3.6 }
 };
 function applyKnifeStats() { Object.assign(WEAPONS[5], KNIVES[S.knife] || KNIVES.combat); }
@@ -4954,12 +5167,15 @@ const KSKINS = {
 };
 // Morgane : hache double à lames argent-violet et runes roses qui pulsent
 const TRIDENT_SKIN = { steel: [0x9ff4ff, 0x0a3a44], mid: 0x1f5f66, tan: 0x2a3d44, blk: 0x10181c, amb: [0xffd24a, 0x5a3a00], dark: 0x1f3a40, teal: 0x2a6a70, trail: 0x66f0ff, anim: 'pulse', pulseRoles: ['steel'] };
+// couteaux sans skin : acier poli, tranchant clair, manches noirs ou en bois, laiton
+const KNIFE_STD = { steel: 0xc3cad1, mid: 0xf2f5f8, blk: 0x1b1d20, tan: 0x5e4029, amb: 0xb48c3c, dark: 0x2a2d31, teal: 0x3a3f45, trail: 0xdfe8f0 };
 const MORGANE_SKIN = { steel: [0xeedcff, 0x24082e], mid: 0x3a1a4a, tan: 0x4a1e30, blk: 0x1a0a14, amb: [0xff7ad0, 0xff2aa0], dark: 0x2a1020, teal: 0x3a1a4a, trail: 0xff6ad0, anim: 'pulse', pulseRoles: ['amb'] };
 S.kskin = KSKINS[store.get('kskin', 'follow')] !== undefined ? store.get('kskin', 'follow') : 'follow';
 function vmSkin(i) {
   if (i === 5 && S.knife === 'katana' && KSKINS[S.kskin]) return KSKINS[S.kskin];
   if (i === 5 && S.knife === 'morgane') return MORGANE_SKIN;
   if (i === 5 && S.knife === 'trident') return TRIDENT_SKIN;
+  if (i === 5 && (S.skin || 'std') === 'std') return KNIFE_STD;
   return SKINS[S.skin] || SKINS.std;
 }
 function applySkinVM(vm, sk) {
@@ -5096,7 +5312,7 @@ function damageRemote(rp, amount, part) {
 function melee() {
   const KN = WS.cur === 6 ? 'katana' : S.knife;
   const W = WEAPONS[WS.cur];
-  WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm; WS.swingDur = SWING_DUR[KN] || 0.32; WS.swingT = WS.swingDur; WS.inspT = 0; WS.flourT = 0;
+  WS.cool = Math.max(WS.cool, 0) + 60 / W.rpm * (WS.cur === 5 && KAB.frenzy > 0 ? 0.5 : 1); WS.swingDur = SWING_DUR[KN] || 0.32; WS.swingT = WS.swingDur; WS.inspT = 0; WS.flourT = 0;
   WS.combo = (WS.combo + 1) % 3; WS.swingKind = KN === 'morgane' || KN === 'trident' ? WS.combo % 2 : WS.combo;
   camera.updateMatrixWorld(); camera.getWorldPosition(_o);
   const e = camera.matrixWorld.elements;
@@ -5136,7 +5352,7 @@ function melee() {
   }
 }
 const INSPECT_DUR = 2.4;
-const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38, trident: 0.42, hatchet: 0.5, longsword: 0.52 };
+const SWING_DUR = { katana: 0.46, morgane: 0.6, machete: 0.38, trident: 0.42, hatchet: 0.5, longsword: 0.52, greatsword: 0.72 };
 /* ---------- poses de frappe : [dx, dy, dz, rx, ry, rz] ; préparation → frappe rapide → retour ----------
    rx incline la lame vers le haut, ry la tourne vers la gauche, rz la fait rouler sur son axe */
 const SWINGS = {
@@ -5332,6 +5548,7 @@ function updateWeapon(dt) {
   if (WS.swingT > 0) WS.swingT -= dt;
   if (WS.inspT > 0) { WS.inspT -= dt; if (mouse.right || WS.reloading) WS.inspT = 0; }
   if (WS.cur === 5 && S.knife === 'trident' && mouse.right && !WS.rightPrev && !P.dead && !P.veh && !P.passHide && !EDIT.on) throwTrident();
+  else if (WS.cur === 5 && mouse.right && !WS.rightPrev && !P.dead && !P.veh && !P.passHide && !EDIT.on) useKnifeAb();
   WS.rightPrev = mouse.right;
   WS.ads = approach(WS.ads, mouse.right && !W.melee && !WS.reloading && WS.swapT <= 0 && !P.mantle && !P.dead ? 1 : 0, dt * (W.scope ? 5 : 7));
 }
@@ -5680,6 +5897,7 @@ function hostRecv(from, m) {
   else if (m.k === 'strike' && Array.isArray(m.p)) broadcast({ k: 'strike', p: m.p.slice(0, 3).map(Number) }, from);
   else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'lpad' && Array.isArray(m.p)) broadcast({ k: 'lpad', p: m.p.slice(0, 3).map(Number), o: from }, from);
+  else if (m.k === 'odm' && Array.isArray(m.a)) broadcast({ k: 'odm', o: from, a: m.a.slice(0, 2).filter(Array.isArray).map(p => p.slice(0, 3).map(Number)) }, from);
   else if (m.k === 'blink' && Array.isArray(m.a)) broadcast({ k: 'blink', a: m.a.slice(0, 3).map(Number), b: Array.isArray(m.b) ? m.b.slice(0, 3).map(Number) : undefined }, from);
   else if (m.k === 'trid' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'trid', p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
   else if (m.k === 'vdmg') broadcast({ k: 'vdmg', i: m.i | 0, d: +m.d || 0, by: from }, from);
@@ -5745,6 +5963,7 @@ function clientRecv(m) {
   if (m.k === 'hit') { applyHit(m); return; }
   if (m.k === 'dome') { SND_OWNER = m.o || null; spawnDome(m.p); SND_OWNER = null; return; }
   if (m.k === 'lpad') { spawnLaunchpad(m.p); return; }
+  if (m.k === 'odm') { const rp = remotes.get(m.o); if (rp) { rp.odm = m.a; rp.odmT = 6; } return; }
   if (m.k === 'blink') { if (m.b) spawnBlinkTrail(m.a, m.b); else spawnGhost(m.a); return; }
   if (m.k === 'trid') { spawnOtherTrident(m.o, m.p, m.v); return; }
   if (m.k === 'admx') { admApply(m.act, m.arg); return; }
@@ -5799,6 +6018,7 @@ function wLabel(i, kt) { if (i === 6) return SPECIALS[kt] ? t('sp.' + kt).toUppe
 // dégâts de l'environnement (lave) : marche aussi hors ligne
 function hurtSelf(dmg, w) {
   if (P.dead || X.god || SPEC.on) return;
+  if (KAB.guard > 0) { if (KAB.guardMul <= 0) return; dmg *= KAB.guardMul; if (KAB.parry) { KAB.parry = false; sfx.clank && sfx.clank(); feed(t('kab.parry'), t('kab.parried'), 'gold'); } }
   const shBefore = P.sh, toSh = Math.min(P.sh, dmg); P.sh -= toSh;
   P.hp = Math.max(0, P.hp - (dmg - toSh)); P.hurtT = 0; P.lastHit = performance.now();
   if (shBefore > 0 && P.sh <= 0) sfx.shieldBreak();
@@ -5847,6 +6067,7 @@ function addRemote(id, name, color) {
   return rp;
 }
 function attachChar(rp) {
+  needModel(rp.ch);
   const uk = 'u:' + rp.id;
   const ch = rp.ch === 'custom' ? (CHARS[uk] && MODELS.chars[uk] ? uk : 'soldier') : CHARS[rp.ch] ? rp.ch : 'soldier';
   const model = MODELS.chars[ch] || MODELS.chars.soldier;
@@ -7799,9 +8020,9 @@ function resetVehicles() {
   });
   try { rebuildShootable(); } catch (e) { /* au chargement, les joueurs distants ne sont pas encore prêts */ }
 }
-function vehGround(x, z, y, step = VEH.step) {
+function vehGround(x, z, y, step = VEH.step, rampTol = 1.3) {
   let h = rampAt(x, z).h;
-  if (h > y + 1.3) h = -Infinity;
+  if (h > y + rampTol) h = -Infinity;
   for (const b of boxesNear(x, z, 0.5)) if (x > b.min.x && x < b.max.x && z > b.min.z && z < b.max.z && b.max.y <= y + step && b.max.y > h) h = b.max.y;
   return h;
 }
@@ -7809,8 +8030,8 @@ function vehGround(x, z, y, step = VEH.step) {
 function placeVehicleMesh(v, pos, yaw, k) {
   if (VEHP[v.type] && VEHP[v.type].air && (v.driver || !v.grounded)) { v.g.position.copy(pos); v.g.rotation.set(v.pitch, yaw, -v.roll, 'YXZ'); return; }
   const fx = -Math.sin(yaw), fz = -Math.cos(yaw), rx = Math.cos(yaw), rz = -Math.sin(yaw), y = pos.y + 0.5;
-  const gf = vehGround(pos.x + fx * 1.3, pos.z + fz * 1.3, y), gb = vehGround(pos.x - fx * 1.3, pos.z - fz * 1.3, y);
-  const gl = vehGround(pos.x - rx * 0.9, pos.z - rz * 0.9, y), gr = vehGround(pos.x + rx * 0.9, pos.z + rz * 0.9, y);
+  const gf = vehGround(pos.x + fx * 1.3, pos.z + fz * 1.3, y, VEH.step, 2.6), gb = vehGround(pos.x - fx * 1.3, pos.z - fz * 1.3, y, VEH.step, 2.6);
+  const gl = vehGround(pos.x - rx * 0.9, pos.z - rz * 0.9, y, VEH.step, 2.6), gr = vehGround(pos.x + rx * 0.9, pos.z + rz * 0.9, y, VEH.step, 2.6);
   const air = !v.grounded;
   const tp = air ? clamp(-v.vel.y * 0.02, -0.3, 0.3) : Number.isFinite(gf + gb) ? Math.atan2(gf - gb, 2.6) : 0;
   const tr = air ? 0 : Number.isFinite(gl + gr) ? Math.atan2(gr - gl, 1.8) : 0;
@@ -7871,9 +8092,17 @@ function vehStep(v, dt) {
   }
   if (hitWall > 6) { sfx.land(Math.min(1, hitWall / 20)); P.dip = Math.min(0.2, hitWall * 0.01); if (hitWall > 11 && !tank) vehDamage(v, (hitWall - 11) * 9); }
   // vertical : suit le sol, décolle au sommet des tremplins
-  const gh = vehGround(v.pos.x, v.pos.z, v.pos.y, PR.step);
+  // sol sous le centre et sous les roues : le châssis ne s'enfonce plus dans les pentes
+  const gc = vehGround(v.pos.x, v.pos.z, v.pos.y, PR.step);
+  const wf = vehGround(v.pos.x + fx * 1.2, v.pos.z + fz * 1.2, v.pos.y, PR.step, 2.6), wb = vehGround(v.pos.x - fx * 1.2, v.pos.z - fz * 1.2, v.pos.y, PR.step, 2.6);
+  const wl2 = vehGround(v.pos.x - rx * 0.8, v.pos.z - rz * 0.8, v.pos.y, PR.step, 2.6), wr2 = vehGround(v.pos.x + rx * 0.8, v.pos.z + rz * 0.8, v.pos.y, PR.step, 2.6);
+  let gh = gc;
+  if (Number.isFinite(wf) && Number.isFinite(wb)) gh = Math.max(gh, (wf + wb) / 2);
+  if (Number.isFinite(wl2) && Number.isFinite(wr2)) gh = Math.max(gh, (wl2 + wr2) / 2);
   if (v.grounded) {
-    if (gh > -Infinity && gh >= v.pos.y - 0.35 - sp * dt * 0.6) { const vy = (gh - v.pos.y) / dt; v.vel.y = clamp(v.vel.y * 0.5 + vy * 0.5, -20, 22); v.pos.y = gh; }
+    // sommet d'une bosse ou d'un tremplin : si le sol s'éloigne plus vite que la trajectoire, la voiture décolle
+    const yb = v.pos.y + v.vel.y * dt - 0.5 * G * dt * dt;
+    if (gh > -Infinity && gh >= v.pos.y - 0.35 - sp * dt * 0.6 && !(v.vel.y > 1.5 && yb > gh + 0.03)) { const vy = (gh - v.pos.y) / dt; v.vel.y = clamp(v.vel.y * 0.35 + vy * 0.65, -20, 26); v.pos.y = gh; }
     else v.grounded = false;
   } else {
     v.pos.y += v.vel.y * dt;
@@ -8661,7 +8890,7 @@ function updateHUD(dt) {
   let sparkNew = false;
   while (sparkAcc > 1 / 30) { sparkAcc -= 1 / 30; sparkData.copyWithin(0, 1); sparkData[SPARK_N - 1] = hs; sparkNew = true; }
   if (sparkNew) drawSpark();
-  const cls = myClass(), isActive = k => k === 'stim' ? AB.stimT > 0 : k === 'portal' ? !!AB.portalA : k === 'scan' ? AB.scanT > 0 : k === 'grapple' ? !!HOOK.p : false;
+  const cls = myClass(), isActive = k => k === 'stim' ? AB.stimT > 0 : k === 'portal' ? !!AB.portalA : k === 'scan' ? AB.scanT > 0 : k === 'grapple' ? !!HOOK.p : k === 'odm' ? ODM.a.length > 0 : k === 'spiral' ? SPIRAL.t > 0 : false;
   for (const [elId, k] of [['abTac', cls.tac], ['abUlt', cls.ult]]) {
     const active = isActive(k);
     const el = abEls[elId], cd = AB[k + 'Cd'], ready = abReady(k);
@@ -8669,7 +8898,7 @@ function updateHUD(dt) {
     el.classList.toggle('ready', ready && !active); el.classList.toggle('active', active);
     if (TOUCH.on && !TOUCH.edit) { const tb = $(elId === 'abTac' ? 'tTac' : 'tUlt'); tb.classList.toggle('ready', ready && !active); const lb = el.children[1].textContent + (el.children[2].textContent ? ' ' + el.children[2].textContent : ''); if (tb.textContent !== lb) tb.textContent = lb; }
     el.lastChild.style.width = ready ? '100%' : ((1 - cd / AB_CD[k]) * 100).toFixed(1) + '%';
-    setTxt(el.children[2], active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active && k === 'scan' ? Math.ceil(AB.scanT) + ' s' : active && k === 'portal' ? Math.ceil(AB.portalAT) + ' s' : ready || active ? '' : Math.ceil(cd) + ' s');
+    setTxt(el.children[2], k === 'odm' ? Math.round(ODM.gas) + ' %' : active && k === 'stim' ? Math.ceil(AB.stimT) + ' s' : active && k === 'scan' ? Math.ceil(AB.scanT) + ' s' : active && k === 'portal' ? Math.ceil(AB.portalAT) + ' s' : ready || active ? '' : Math.ceil(cd) + ' s');
   }
   {
     const el = abEls.abGren, k = GREN.type, n = GREN.charges[k];
@@ -8678,6 +8907,7 @@ function updateHUD(dt) {
     el.lastChild.style.width = n >= GREN_MAX ? '100%' : ((GREN.regen[k] / GREN_REGEN) * 100).toFixed(1) + '%';
     el.style.setProperty('--gc', '#' + GREN_COL[k].toString(16).padStart(6, '0'));
   }
+  kabHud();
   stimFxEl.style.opacity = AB.stimT > 0 ? Math.min(1, AB.stimT).toFixed(2) : '0';
   mmAcc += dt;
   if (S.minimap && mmAcc > 1 / 30) { mmAcc = 0; drawMinimap(); }
@@ -8747,7 +8977,7 @@ function toast(msg, sec = 3.5) { const t = $('toast'); t.textContent = msg; t.cl
 /* ================= Entrées ================= */
 let playing = false, everLocked = false, unlockedMode = false, everPlayed = false;
 function clearInput() { for (const k in keys) keys[k] = false; for (const k in wheelT) wheelT[k] = 0; mouse.left = mouse.right = false; }
-const abEls = { abTac: $('abTac'), abUlt: $('abUlt'), abGren: $('abGren') }, stimFxEl = $('stimFx');
+const abEls = { abTac: $('abTac'), abUlt: $('abUlt'), abGren: $('abGren'), abKnife: $('abKnife') }, stimFxEl = $('stimFx');
 function startPlaying() {
   playing = true; everPlayed = true; menu.hidden = true; hud.hidden = false;
   $('hint').classList.remove('warn'); hintKey = 'hint.default'; $('hint').textContent = t(hintKey);
@@ -8768,6 +8998,7 @@ function startUnlocked() {
 }
 async function requestPlay() {
   audioInit(); saveName();
+  if (!playing && S.loAsk && !LO.done && !SPEC.on) { loShow(true); return; }
   if (TOUCH.on) { touchFullscreen(); startUnlocked(); return; }
   if (!canvas.requestPointerLock) { startUnlocked(); return; }
   try {
@@ -8798,7 +9029,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']], ['w7', 'Arme spéciale', ['Digit7', null]],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]], ['chat', 'Chat', ['Enter', 'KeyY']], ['talk', 'Parler (micro)', ['KeyN', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]], ['chat', 'Chat', ['Enter', 'KeyY']], ['talk', 'Parler (micro)', ['KeyN', null]], ['loadout', 'Équipement', ['KeyL', null]]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -8823,6 +9054,7 @@ function onAction(id) {
   }
   if (P.veh && id === 'w6') { CP.on = !CP.on; sfx.ckBeep(); return; }
   if (id === 'left') SOCD.x = -1; else if (id === 'right') SOCD.x = 1; else if (id === 'forward') SOCD.z = 1; else if (id === 'back') SOCD.z = -1;
+  if (id === 'loadout') { loShow(true); return; }
   if (id === 'chat') { if (NET.mode !== 'off') chatOpen(); else toast(t('chat.offline'), 2); return; }
   if (id === 'jump') P.jumpBuf = 0.14;
   else if (id === 'crouch') { lastCrouchT = simTime; crouchEdge = true; }
@@ -9530,10 +9762,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.04';
+const GAME_VERSION = '2026.11.05';
 const CHANGES = {
-  fr: ['Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin pour Titan (masque à gaz) et Spectre (pastel)', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins for Titan (gas mask) and Spectre (pastel)', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9820,6 +10052,337 @@ function lynxGear(vis, col) {
   });
 }
 
+/* ================= dégâts de zone au corps à corps (pas sur soi) ================= */
+const _ah = new V3(), _aD = new V3(), _q1 = new V3(), _q2 = new V3();
+function areaHit(c, r, dmg, hits, maxN = 1, cone = null) {
+  dmg = Math.round(dmg) * (X.oneshot && xUnlocked ? 10 : 1);
+  let res = null;
+  const ok = (key, x, y, z) => {
+    _ah.set(x, y, z); const d = _ah.distanceTo(c); if (d > r) return false;
+    if (cone && d > 0.6) { _aD.subVectors(_ah, c).divideScalar(d); if (_aD.dot(cone) < 0.3) return false; }
+    if (!losClear(c, _ah)) return false;
+    if (hits) { const n = hits.get(key) || 0; if (n >= maxN) return false; hits.set(key, n + 1); }
+    return true;
+  };
+  for (const d of dummies) {
+    if (!d.alive || !RULES.bots || !ok(d, d.g.position.x, d.g.position.y + 1, d.g.position.z)) continue;
+    const q = damageDummy(d, dmg, 'body'); res = q === 'kill' ? 'kill' : res || q; spawnSpark(_ah, false);
+  }
+  for (const rp of remotes.values()) {
+    if (!rp.st || rp.st.dead || !ok(rp, rp.pos.x, rp.pos.y + 1, rp.pos.z)) continue;
+    damageRemote(rp, dmg, 'body'); res = res || 'hit'; spawnSpark(_ah, false);
+  }
+  if (res) { stats.hits++; sfx.hit(false); hmEl.className = res === 'kill' ? 'kill' : ''; hmT = res === 'kill' ? 0.35 : 0.14; }
+  return res;
+}
+
+/* ================= Couteaux : une capacité chacun (clic droit / viser) ================= */
+const KAB_DEF = { combat: ['lunge', 5], karambit: ['frenzy', 12], machete: ['cleave', 7], dagger: ['throwk', 6], butterfly: ['dodge', 4], katana: ['iai', 9],
+  hatchet: ['throwk', 7], longsword: ['parry', 8], greatsword: ['slam', 12], morgane: ['whirl', 10], trident: ['trid', 0] };
+const KAB = { cd: 0, cdMax: 1, t: 0, kind: null, hits: null, frenzy: 0, guard: 0, guardMul: 1, parry: false, air: 0, tick: 0, from: null, proj: [] };
+const kabOf = () => KAB_DEF[S.knife] || KAB_DEF.combat;
+function kabSwing() {
+  const KN = S.knife; WS.swingDur = SWING_DUR[KN] || 0.32; WS.swingT = WS.swingDur;
+  WS.combo = (WS.combo + 1) % 3; WS.swingKind = KN === 'morgane' || KN === 'trident' ? WS.combo % 2 : WS.combo; WS.inspT = 0; WS.flourT = 0;
+}
+// lame lancée (visuel) : petite lame qui tourne jusqu'au point touché
+const kabProjMat = [new THREE.MeshLambertMaterial({ color: 0xd8dee4 }), new THREE.MeshLambertMaterial({ color: 0x2a2420 })];
+function kabProj(a, b, axe) {
+  const g = new THREE.Group();
+  const bl = new THREE.Mesh(axe ? new THREE.BoxGeometry(0.03, 0.16, 0.12) : new THREE.BoxGeometry(0.02, 0.05, 0.24), kabProjMat[0]); bl.position.set(0, axe ? 0.05 : 0, axe ? -0.14 : -0.12); g.add(bl);
+  const hd = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.035, axe ? 0.3 : 0.11), kabProjMat[1]); hd.position.z = axe ? 0 : 0.05; g.add(hd);
+  g.position.copy(a); g.lookAt(b); scene.add(g);
+  KAB.proj.push({ g, a: a.clone(), b: b.clone(), t: 0, dur: Math.max(0.08, a.distanceTo(b) / 55) });
+}
+function useKnifeAb() {
+  const [id, cd] = kabOf(); if (id === 'trid' || WS.swapT > 0 || TRI.state !== 'hand') return;
+  if (KAB.cd > 0) { sfx.empty(); return; }
+  KAB.cd = X.nocd && xUnlocked ? 0.3 : cd; KAB.cdMax = cd;
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]); _r.set(e[0], e[1], e[2]);
+  const fl = Math.hypot(_f.x, _f.z) || 1, fx = _f.x / fl, fz = _f.z / fl;
+  const c = _q1.set(P.pos.x, P.pos.y + 1, P.pos.z);
+  if (id === 'lunge' || id === 'iai') {
+    AB.dashDir.set(fx, 0, fz); AB.dashT = id === 'iai' ? 0.3 : 0.17; P.mantle = null; P.climbing = false; P.sliding = false;
+    KAB.kind = id; KAB.t = AB.dashT + 0.08; KAB.hits = new Map(); KAB.from = [P.pos.x, P.pos.y + 1, P.pos.z];
+    kabSwing(); sfx.dash(); if (id === 'iai') sfx.katana(); camKick(6);
+    netSend({ k: 'blink', a: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)] });
+  } else if (id === 'frenzy') { KAB.frenzy = 4; sfx.stim(); feed(t('kab.frenzy'), '4 s', 'cyan'); kabSwing(); }
+  else if (id === 'cleave') { kabSwing(); sfx.axe(); camShake(0.25); areaHit(c, 3.4, 70, null); blastFx(new V3(P.pos.x, P.pos.y + 0.4, P.pos.z), 0xdfe8f0, 2.6, 0.25); }
+  else if (id === 'throwk') {
+    raycaster.set(_o, _f); raycaster.far = 45; let end = null, tgt = null;
+    for (const h of raycaster.intersectObjects(SHOOTABLE, false)) {
+      const ud = h.object.userData;
+      if (ud && ud.d && (!ud.d.alive || !RULES.bots)) continue;
+      if (ud && ud.rp && (!ud.rp.st || ud.rp.st.dead)) continue;
+      if (ud && ud.veh && (ud.veh.dead || ud.veh === P.veh)) continue;
+      end = h.point.clone(); if (ud && (ud.d || ud.rp || ud.veh)) tgt = h; break;
+    }
+    if (!end) end = _o.clone().addScaledVector(_f, 45);
+    const axe = S.knife === 'hatchet', dmg = axe ? 100 : 85;
+    if (tgt) {
+      const ud = tgt.object.userData, dd = Math.round(dmg * (ud.part === 'head' ? 1.5 : 1)) * (X.oneshot && xUnlocked ? 10 : 1); let res = null;
+      if (ud.veh) hitVehicle(ud.veh, dd, 'bullet', tgt.point); else { res = ud.d ? damageDummy(ud.d, dd, ud.part) : damageRemote(ud.rp, dd, ud.part); spawnSpark(tgt.point, false); }
+      if (res) { stats.hits++; sfx.hit(res === 'head'); hmEl.className = res === 'kill' ? 'kill' : res === 'head' ? 'crit' : ''; hmT = 0.25; }
+    }
+    kabProj(_q2.copy(_o).addScaledVector(_f, 0.6).addScaledVector(_r, 0.2), end, axe);
+    stats.shots++; sfx.throwG(); kabSwing();
+  } else if (id === 'dodge') {
+    let ix = (act('right') ? 1 : 0) - (act('left') ? 1 : 0); if (PAD.active && Math.abs(PAD.mx) > 0.3) ix = Math.sign(PAD.mx);
+    let dx = ix ? _r.x * ix : -fx, dz = ix ? _r.z * ix : -fz; const l = Math.hypot(dx, dz) || 1;
+    AB.dashDir.set(dx / l, 0, dz / l); AB.dashT = 0.14; KAB.guard = 0.5; KAB.guardMul = 0;
+    spawnGhost([P.pos.x, P.pos.y, P.pos.z]); sfx.dash(); camKick(4);
+  } else if (id === 'parry') { KAB.guard = 1.2; KAB.guardMul = 0.2; KAB.parry = true; sfx.unsheathe(); kabSwing(); feed(t('kab.parry'), '1.2 s', 'gold'); }
+  else if (id === 'slam') {
+    P.vel.y = 10.5; P.vel.x += fx * 7; P.vel.z += fz * 7; P.grounded = false; P.pos.y += 0.05; P.mantle = null; P.sliding = false;
+    KAB.kind = 'slam'; KAB.t = 2.5; KAB.air = 0; sfx.jump(); camKick(5);
+  } else if (id === 'whirl') { KAB.kind = 'whirl'; KAB.t = 1.05; KAB.tick = 0; KAB.hits = new Map(); }
+}
+function kabStep(dt) {
+  KAB.cd = Math.max(0, KAB.cd - dt); KAB.frenzy = Math.max(0, KAB.frenzy - dt); KAB.guard = Math.max(0, KAB.guard - dt);
+  if (KAB.guard <= 0) KAB.parry = false;
+  if (SPIRAL.t > 0) spiralStep(dt);
+  if (!KAB.kind) return;
+  KAB.t -= dt;
+  if (P.dead || P.veh) { KAB.kind = null; return; }
+  const c = _q1.set(P.pos.x, P.pos.y + 1, P.pos.z);
+  if (KAB.kind === 'lunge') areaHit(c, 2.3, 65, KAB.hits, 1, AB.dashDir);
+  else if (KAB.kind === 'iai') { areaHit(c, 2.6, 95, KAB.hits, 1); if (KAB.t <= 0) spawnBlinkTrail(KAB.from, [P.pos.x, P.pos.y + 1, P.pos.z]); }
+  else if (KAB.kind === 'whirl') { KAB.tick -= dt; if (KAB.tick <= 0) { KAB.tick = 0.25; areaHit(c, 3, 34, KAB.hits, 4); kabSwing(); sfx.axe(); camKick(2); } }
+  else if (KAB.kind === 'slam') {
+    KAB.air += dt;
+    if (KAB.air > 0.15 && (P.grounded || KAB.t <= 0)) {
+      KAB.kind = null; areaHit(c, 5.5, 110, null);
+      blastFx(new V3(P.pos.x, P.pos.y, P.pos.z), 0xffd28a, 5, 0.4); camShake(0.6); sfx.boom(0.7); kabSwing();
+      netSend({ k: 'blink', a: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)] });
+    }
+    return;
+  }
+  if (KAB.t <= 0) KAB.kind = null;
+}
+function kabFrame(dt) {
+  for (let i = KAB.proj.length - 1; i >= 0; i--) {
+    const p = KAB.proj[i]; p.t += dt; const k = Math.min(1, p.t / p.dur);
+    p.g.position.lerpVectors(p.a, p.b, k); p.g.children.forEach(m => { m.rotation.x -= dt * 26; });
+    if (p.t > p.dur + 0.6) { scene.remove(p.g); p.g.traverse(o => o.geometry && o.geometry.dispose()); KAB.proj.splice(i, 1); }
+  }
+}
+function kabHud() {
+  const el = abEls.abKnife; if (!el) return;
+  const show = WS.cur === 5 && S.knife !== 'trident' && !P.veh;
+  if (el.hidden === show) el.hidden = !show;
+  if (!show) return;
+  const [id] = kabOf(), ready = KAB.cd <= 0;
+  setTxt(el.children[1], t('kab.' + id));
+  el.classList.toggle('ready', ready); el.classList.toggle('active', KAB.frenzy > 0 || KAB.guard > 0 || !!KAB.kind);
+  el.lastChild.style.width = ready ? '100%' : ((1 - KAB.cd / (KAB.cdMax || 1)) * 100).toFixed(1) + '%';
+  setTxt(el.children[2], KAB.frenzy > 0 ? Math.ceil(KAB.frenzy) + ' s' : ready ? '' : Math.ceil(KAB.cd) + ' s');
+}
+
+/* ================= Corbeau : double grappin (manœuvre aérienne) ================= */
+// tactique : deux câbles tirés de part et d'autre de la visée ; on se balance au bout, Avancer = jet de gaz, Saut = lâcher
+// ultime : Spirale, une ruée en vrille qui tranche tout autour pendant 1,3 s
+AB.odmCd = 0; AB.spiralCd = 0; AB_CD.odm = 1.2; AB_CD.spiral = 40; AB_KEYS.push('odm', 'spiral');
+CLASSES.raven = { id: 'aerial', tac: 'odm', ult: 'spiral' };
+CHARS.raven = { file: 'Xbot.glb', h: 1.78, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ };
+MG_FIT.raven = MG_FIT.xbot;
+const ODM = { a: [], len: [], t: 0, gas: 100, puff: 0 };
+const odmMat = new THREE.LineBasicMaterial({ color: 0xd9d2c4 });
+const odmTipMat = new THREE.MeshLambertMaterial({ color: 0xc0c6cc, emissive: 0x222222 });
+function odmLines() {
+  return [0, 1].map(() => {
+    const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new V3(), new V3()]), odmMat); l.frustumCulled = false; l.visible = false; scene.add(l);
+    const tip = new THREE.Mesh(new THREE.ConeGeometry(0.07, 0.24, 6), odmTipMat); tip.visible = false; scene.add(tip);
+    return { l, tip };
+  });
+}
+ODM.lines = odmLines();
+function useOdm() {
+  if (P.dead || P.veh || P.pass) return;
+  if (ODM.a.length) { odmRelease(4); return; }
+  if (!abReady('odm')) { sfx.empty(); return; }
+  if (ODM.gas < 10) { sfx.empty(); toast(t('odm.noGas'), 1.2); return; }
+  camera.updateMatrixWorld(); camera.getWorldPosition(_o);
+  const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]); _r.set(e[0], e[1], e[2]);
+  const hits = [];
+  for (const sd of [-1, 1]) {
+    _d.copy(_f).addScaledVector(_r, sd * 0.22).normalize();
+    raycaster.set(_o, _d); raycaster.far = 70;
+    let h = raycaster.intersectObjects(WORLD, false)[0];
+    if (!h) { raycaster.set(_o, _f); h = raycaster.intersectObjects(WORLD, false)[0]; }
+    if (h) hits.push(h.point.clone());
+  }
+  if (!hits.length) { AB.odmCd = 0.5; sfx.empty(); toast(t('ab.grappleMiss'), 1); return; }
+  releaseHook(0);
+  ODM.a = hits; ODM.len = hits.map(p => p.distanceTo(_q1.set(P.pos.x, P.pos.y + 1, P.pos.z))); ODM.t = 0; ODM.gas -= 8; setCd('odm');
+  P.mantle = null; P.climbing = false; P.sliding = false;
+  if (P.grounded) { P.grounded = false; P.vel.y = Math.max(P.vel.y, 6.5); P.pos.y += 0.05; }
+  sfx.grapple(); camKick(5);
+  netSend({ k: 'odm', a: hits.map(p => [r2(p.x), r2(p.y), r2(p.z)]) });
+}
+function odmRelease(up) {
+  if (!ODM.a.length) return;
+  ODM.a = []; if (up && !P.grounded) P.vel.y = Math.max(P.vel.y, 0) + up;
+  netSend({ k: 'odm', a: [] });
+}
+function odmStep(dt) {
+  if (!ODM.a.length) { ODM.gas = Math.min(100, ODM.gas + dt * (P.grounded ? 30 : 12)); return; }
+  ODM.t += dt;
+  if (P.dead || P.veh || P.pass || P.zip || ODM.t > 6) { odmRelease(0); return; }
+  if (P.jumpBuf > 0) { P.jumpBuf = 0; odmRelease(0); P.vel.y = Math.max(P.vel.y, 0) + JUMP_V; sfx.jump(); return; }
+  const hp = _q1.set(P.pos.x, P.pos.y + 1, P.pos.z); let near = 0;
+  for (let i = 0; i < ODM.a.length; i++) {
+    _d.subVectors(ODM.a[i], hp); const dist = Math.max(0.01, _d.length()); _d.divideScalar(dist); near += dist;
+    // le câble s'enroule : il raccourcit, et tient comme un pendule (pas d'allongement)
+    ODM.len[i] = Math.max(1.5, Math.min(ODM.len[i], dist) - 10 * dt);
+    P.vel.addScaledVector(_d, 26 * dt / ODM.a.length);
+    if (dist > ODM.len[i] + 0.05) { const away = P.vel.dot(_d); if (away < 0) P.vel.addScaledVector(_d, -away); }
+  }
+  P.vel.y += G * 0.4 * dt;
+  // gaz : Avancer pousse dans la direction regardée
+  const fwd = act('forward') || (PAD.active && PAD.my < -0.3);
+  if (fwd && ODM.gas > 0) {
+    camera.updateMatrixWorld(); const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]);
+    P.vel.addScaledVector(_f, 18 * dt); ODM.gas = Math.max(0, ODM.gas - 20 * dt); ODM.puff = 0.12;
+  }
+  const sp = P.vel.length(); if (sp > 36) P.vel.multiplyScalar(36 / sp);
+  if (P.grounded && P.vel.y > 0) { P.grounded = false; P.pos.y += 0.02; }
+  if (near / ODM.a.length < 2.4) odmRelease(5);
+}
+function setLine(L, a, b) {
+  const pa = L.l.geometry.attributes.position; pa.setXYZ(0, a.x, a.y, a.z); pa.setXYZ(1, b.x, b.y, b.z); pa.needsUpdate = true;
+  L.l.visible = L.tip.visible = true; L.tip.position.copy(b); L.tip.lookAt(a); L.tip.rotateX(-Math.PI / 2);
+}
+function odmFrame(dt) {
+  kabFrame(dt);
+  for (let i = 0; i < 2; i++) {
+    const L = ODM.lines[i], a = ODM.a[i];
+    if (!a) { if (L.l.visible) L.l.visible = L.tip.visible = false; continue; }
+    _q2.set(i ? 0.3 : -0.3, -0.75, -0.15); camera.localToWorld(_q2); setLine(L, _q2, a);
+  }
+  if (ODM.puff > 0) { ODM.puff -= dt; if (Math.random() < 0.5) { _q2.set(0, -0.9, 0.3); camera.localToWorld(_q2); spawnSpark(_q2, true); } }
+  for (const rp of remotes.values()) {
+    if (!rp.odm && !rp.odmL) continue;
+    if (rp.odm && rp.odm.length && (rp.odmT -= dt) > 0 && rp.st && !rp.st.dead) {
+      if (!rp.odmL) rp.odmL = odmLines();
+      for (let i = 0; i < 2; i++) {
+        const L = rp.odmL[i], p = rp.odm[i];
+        if (!p) { L.l.visible = L.tip.visible = false; continue; }
+        _q1.set(rp.pos.x + (i ? 0.25 : -0.25), rp.pos.y + 0.95, rp.pos.z); _q2.set(p[0], p[1], p[2]); setLine(L, _q1, _q2);
+      }
+    } else if (rp.odmL) { for (const L of rp.odmL) L.l.visible = L.tip.visible = false; rp.odm = null; }
+  }
+}
+const SPIRAL = { t: 0, dir: new V3(), hits: null, tick: 0 };
+function useSpiral() {
+  if (P.dead || !abReady('spiral')) { sfx.empty(); return; }
+  setCd('spiral'); odmRelease(0);
+  camera.updateMatrixWorld(); const e = camera.matrixWorld.elements; _f.set(-e[8], -e[9], -e[10]);
+  SPIRAL.dir.copy(_f); SPIRAL.dir.y = clamp(SPIRAL.dir.y, -0.45, 0.6); SPIRAL.dir.normalize();
+  SPIRAL.t = 1.3; SPIRAL.hits = new Map(); SPIRAL.tick = 0;
+  P.grounded = false; P.pos.y += 0.05; P.mantle = null; P.sliding = false;
+  sfx.dash(); sfx.katana(); camShake(0.3); feed(t('ab.spiral'), '1,3 s', 'cyan');
+}
+function spiralStep(dt) {
+  SPIRAL.t -= dt;
+  if (P.dead || P.veh) { SPIRAL.t = 0; return; }
+  P.vel.copy(SPIRAL.dir).multiplyScalar(24);
+  SPIRAL.tick -= dt;
+  if (SPIRAL.tick <= 0) {
+    SPIRAL.tick = 0.15;
+    areaHit(_q1.set(P.pos.x, P.pos.y + 1, P.pos.z), 3.6, 40, SPIRAL.hits, 3);
+    spawnGhost([P.pos.x, P.pos.y, P.pos.z]); sfx.katana(); camKick(2);
+    netSend({ k: 'blink', a: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)] });
+  }
+  if (SPIRAL.t <= 0) P.vel.multiplyScalar(0.6);
+}
+// équipement visible : harnais croisé, deux bonbonnes de gaz aux hanches, cape courte
+function ravenGear(vis, col) {
+  if (vis.raven) { for (const m of vis.raven) m.color.setHex(col); return; }
+  let head = null, chest = null, hips = null;
+  vis.obj.traverse(o => { if (!o.isBone) return; if (!head && /mixamorigHead$/.test(o.name)) head = o; if (!chest && /Spine2$/.test(o.name)) chest = o; if (!hips && /Hips$/.test(o.name)) hips = o; });
+  if (!head || !chest || !hips) return;
+  vis.obj.updateMatrixWorld(true);
+  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
+  const mats = []; vis.raven = mats;
+  const glow = () => { const m = new THREE.MeshBasicMaterial({ color: col }); mats.push(m); return m; };
+  const leather = new THREE.MeshLambertMaterial({ color: 0x6b4a2e }), steel = new THREE.MeshPhongMaterial({ color: 0xb8c0c8, shininess: 90 });
+  const cape = new THREE.MeshLambertMaterial({ color: 0x23302e, side: THREE.DoubleSide });
+  const mount = (bone, build) => { const g = new THREE.Group(); bone.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; build(g); bone.add(g); };
+  const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.castShadow = true; m.userData.gear = true; return m; };
+  mount(head, g => { g.add(mk(new THREE.BoxGeometry(0.16, 0.035, 0.03), glow(), 0, 0.1, 0.105)); g.add(mk(new THREE.TorusGeometry(0.1, 0.012, 6, 20), leather, 0, 0.1, 0, Math.PI / 2)); });
+  mount(chest, g => {
+    for (const s of [1, -1]) g.add(mk(new THREE.BoxGeometry(0.04, 0.42, 0.012), leather, 0, 0.02, 0.125, 0, 0, s * 0.55));
+    g.add(mk(new THREE.BoxGeometry(0.06, 0.06, 0.02), steel, 0, 0.02, 0.135));
+    g.add(mk(new THREE.BoxGeometry(0.34, 0.4, 0.012), cape, 0, -0.1, -0.15, 0.18, 0, 0));
+    g.add(mk(new THREE.BoxGeometry(0.36, 0.05, 0.08), cape, 0, 0.17, -0.11));
+  });
+  mount(hips, g => {
+    g.add(mk(new THREE.BoxGeometry(0.34, 0.05, 0.24), leather, 0, 0.02, 0));
+    for (const s of [1, -1]) {
+      g.add(mk(new THREE.CylinderGeometry(0.045, 0.045, 0.3, 12), steel, s * 0.19, -0.03, -0.17, Math.PI / 2 - 0.35, 0, 0));
+      g.add(mk(new THREE.CylinderGeometry(0.03, 0.03, 0.05, 10), glow(), s * 0.19, -0.08, -0.32, Math.PI / 2 - 0.35, 0, 0));
+      g.add(mk(new THREE.BoxGeometry(0.05, 0.08, 0.12), leather, s * 0.2, 0.01, 0.1));
+    }
+  });
+}
+
+/* ================= Skins admin pour Titan et Spectre (créations originales) ================= */
+// Titan admin : armure noire, masque à gaz avec deux cartouches et verres rouges
+CHARS.tadm = Object.assign({}, CHARS.titan); CLASSES.tadm = CLASSES.titan; MG_FIT.tadm = MG_FIT.titan;
+// Spectre admin : carrosserie pastel, oreilles de chat, nœud et petites ailes
+CHARS.sadm = { file: 'Xbot.glb', h: 1.84, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ }; CLASSES.sadm = CLASSES.spectre; MG_FIT.sadm = MG_FIT.spectre;
+function gearMount(vis, re) {
+  let bone = null; vis.obj.traverse(o => { if (!bone && o.isBone && re.test(o.name)) bone = o; });
+  return bone;
+}
+function tadmGear(vis) {
+  if (vis.tadmG) return; vis.tadmG = true;
+  const head = gearMount(vis, /Head$/); if (!head) return;
+  vis.obj.updateMatrixWorld(true);
+  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
+  const rub = new THREE.MeshPhongMaterial({ color: 0x1b1c1f, shininess: 30 }), can = new THREE.MeshPhongMaterial({ color: 0x3b4036, shininess: 60 }), lens = new THREE.MeshBasicMaterial({ color: 0xff2a3a });
+  const F = CHARS.titan.gearFz || 1;
+  const g = new THREE.Group(); head.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; head.add(g);
+  const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z * F); m.rotation.set(rx * F, ry, rz); m.castShadow = true; m.userData.gear = true; g.add(m); return m; };
+  mk(new THREE.BoxGeometry(0.17, 0.1, 0.06), rub, 0, 0.0, 0.16);
+  mk(new THREE.CylinderGeometry(0.035, 0.045, 0.06, 12), rub, 0, -0.03, 0.2, Math.PI / 2);
+  for (const s of [1, -1]) {
+    mk(new THREE.CylinderGeometry(0.045, 0.045, 0.1, 14), can, s * 0.1, -0.04, 0.17, Math.PI / 2, 0, s * 0.6);
+    mk(new THREE.CylinderGeometry(0.04, 0.04, 0.012, 16), lens, s * 0.055, 0.085, 0.165, Math.PI / 2);
+  }
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xff2a3a, transparent: true, opacity: 0.45, depthWrite: false, blending: THREE.AdditiveBlending })); sp.position.set(0, 0.085, 0.17 * F); sp.scale.setScalar(0.28); sp.userData.gear = true; g.add(sp);
+}
+function sadmGear(vis) {
+  if (vis.sadmG) return; vis.sadmG = true;
+  const head = gearMount(vis, /mixamorigHead$/), chest = gearMount(vis, /Spine2$/); if (!head || !chest) return;
+  vis.obj.updateMatrixWorld(true);
+  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
+  const pink = new THREE.MeshPhongMaterial({ color: 0xffb7d8, shininess: 40 }), inner = new THREE.MeshBasicMaterial({ color: 0xff7fb8 }), lav = new THREE.MeshPhongMaterial({ color: 0xc9b5ff, shininess: 50, transparent: true, opacity: 0.85 });
+  const eye = new THREE.MeshBasicMaterial({ color: 0xfff0fa }), heart = new THREE.MeshBasicMaterial({ color: 0xff5fa8 });
+  const mount = (bone, build) => { const g = new THREE.Group(); bone.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; build(g); bone.add(g); };
+  const mk = (g, geo, mat, x, y, z, rx = 0, ry = 0, rz = 0, sx = 1, sy = 1, sz = 1) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.scale.set(sx, sy, sz); m.castShadow = true; m.userData.gear = true; g.add(m); return m; };
+  mount(head, g => {
+    for (const s of [1, -1]) {
+      mk(g, new THREE.ConeGeometry(0.055, 0.12, 4), pink, s * 0.075, 0.25, 0.0, 0, Math.PI / 4, s * -0.25);
+      mk(g, new THREE.ConeGeometry(0.03, 0.07, 4), inner, s * 0.075, 0.245, 0.02, 0, Math.PI / 4, s * -0.25);
+      mk(g, new THREE.SphereGeometry(0.022, 10, 8), eye, s * 0.045, 0.11, 0.105);
+      mk(g, new THREE.SphereGeometry(0.018, 8, 6), heart, s * 0.075, 0.07, 0.1, 0, 0, 0, 1.3, 0.7, 0.5);
+    }
+    // nœud à l'arrière de la tête
+    for (const s of [1, -1]) mk(g, new THREE.ConeGeometry(0.04, 0.08, 3), heart, s * 0.045, 0.17, -0.1, 0, 0, s * Math.PI / 2);
+    mk(g, new THREE.SphereGeometry(0.022, 8, 6), heart, 0, 0.17, -0.1);
+  });
+  mount(chest, g => {
+    mk(g, new THREE.TorusGeometry(0.1, 0.03, 8, 20), pink, 0, 0.15, 0, Math.PI / 2);
+    for (const s of [1, -1]) mk(g, new THREE.SphereGeometry(0.14, 14, 10), lav, s * 0.13, 0.08, -0.17, 0, s * 0.5, s * 0.35, 1, 0.75, 0.18);
+    mk(g, new THREE.SphereGeometry(0.03, 10, 8), heart, 0, 0.05, 0.13, 0, 0, 0, 1.2, 1, 0.6);
+  });
+}
+ARM_STYLE.raven = { glove: 0x2b2f36, sleeve: 0x3a3f47, upper: 0x23302e, cuff: 'glow', r: 0.9, hand: 0.97 };
+ARM_STYLE.tadm = { glove: 0x16171a, sleeve: 0x1e2024, upper: 0x16171a, cuff: 0xff2a3a, r: 1.3, hand: 1.15 };
+ARM_STYLE.sadm = { glove: 0xb79cff, sleeve: 0xffe1f0, upper: 0xffb7d8, cuff: 0xff5fa8, r: 0.88, hand: 0.95, shiny: true };
+
 /* ================= Viseur personnalisable ================= */
 const XH_DEF = { style: 'cross', color: '#f4efe6', len: 8, thick: 2, gap: 6, dot: true, dyn: true, outline: true, op: 1 };
 S.xh = Object.assign({}, XH_DEF, store.get('xh', {}) || {});
@@ -10078,6 +10641,7 @@ mapSel.addEventListener('change', () => {
 const prevCanvas = $('charPrev');
 let prevR = null, prevScene = null, prevCam = null, prevVis = null;
 function refreshPreview() {
+  needModel(S.char);
   if (!prevR) {
     try { prevR = new THREE.WebGLRenderer({ canvas: prevCanvas, alpha: true, antialias: true }); } catch (e) { return; }
     prevR.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2)); prevR.setSize(440, 620, false);
@@ -10163,6 +10727,49 @@ const kskinSel = $('kskinSel'); kskinSel.value = S.kskin;
 function syncKskin() { $('kskinField').hidden = S.knife !== 'katana'; }
 syncKskin();
 kskinSel.addEventListener('change', () => { S.kskin = kskinSel.value; store.set('kskin', S.kskin); applySkin(S.skin); });
+/* ================= Équipement : personnage + couteau, avant la partie et à tout moment (L) ================= */
+const LO = { open: false, done: false };
+S.loAsk = store.get('loAsk', true);
+function loCard(label, sub, on, click) {
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'lo-card' + (on ? ' on' : '');
+  const n = document.createElement('b'); n.textContent = label; b.append(n);
+  if (sub) { const s2 = document.createElement('span'); s2.textContent = sub; b.append(s2); }
+  b.addEventListener('click', click); return b;
+}
+function loRender() {
+  $('loChars').replaceChildren(...[...charSel.options].filter(o => !o.hidden).map(o => {
+    const c = CLASSES[o.value] || CLASSES.soldier;
+    return loCard(o.textContent, t('cls.' + c.id), S.char === o.value, () => { charSel.value = o.value; charSel.dispatchEvent(new Event('change')); loRender(); sfx.swap(); });
+  }));
+  $('loKnives').replaceChildren(...[...knifeSel.options].map(o => {
+    const id = (KAB_DEF[o.value] || KAB_DEF.combat)[0];
+    return loCard(o.textContent.replace(/\s*\(.*\)\s*$/, ''), t('kab.' + id), S.knife === o.value, () => { knifeSel.value = o.value; knifeSel.dispatchEvent(new Event('change')); loRender(); sfx.swap(); });
+  }));
+  const c = myClass();
+  $('loCls').replaceChildren(...[[t('ab.' + c.tac), t('abd.' + c.tac)], [t('ab.' + c.ult), t('abd.' + c.ult)]].map(([a, b]) => { const p = document.createElement('span'); const k = document.createElement('b'); k.textContent = a; p.append(k, ' ' + b); return p; }));
+  const kid = kabOf()[0], kp = document.createElement('span'), kb = document.createElement('b');
+  kb.textContent = t('kab.' + kid); kp.append(kb, ' ' + t('lo.alt') + ' ' + t('kabd.' + kid)); $('loKdesc').replaceChildren(kp);
+  $('loAsk').checked = !!S.loAsk;
+}
+function loShow(v) {
+  if (LO.open === v) return;
+  LO.open = v; $('loadout').hidden = !v;
+  if (v) {
+    if (playing) { if (document.pointerLockElement) document.exitPointerLock(); else pause(); }
+    loRender(); setTimeout(() => { try { $('loGo').focus(); } catch (e) {} }, 0);
+  }
+}
+$('loGo').addEventListener('click', () => { LO.done = true; loShow(false); requestPlay(); });
+$('loClose').addEventListener('click', () => loShow(false));
+$('loAsk').addEventListener('change', e => { S.loAsk = e.target.checked; store.set('loAsk', S.loAsk); });
+$('loadout').addEventListener('mousedown', e => { e.stopPropagation(); if (e.target.id === 'loadout') loShow(false); });
+$('loadout').addEventListener('keydown', e => { e.stopPropagation(); if (e.code === 'Escape') loShow(false); });
+// bouton dans le menu
+{
+  const pb = $('play');
+  if (pb && pb.parentNode) { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn2'; b.id = 'loMenuBtn'; b.innerHTML = '<span data-i18n="lo.title"></span>'; b.firstChild.textContent = t('lo.title'); b.addEventListener('click', () => loShow(true)); pb.parentNode.insertBefore(b, pb.nextSibling); }
+}
+
 const skinSel = $('skin'); skinSel.value = S.skin;
 skinSel.addEventListener('change', () => { S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
 /* ---------- aperçu 3D des armes dans le menu (onglet Armes) ---------- */
