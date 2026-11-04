@@ -1214,6 +1214,8 @@ Object.assign(I18N.fr, {"map.room": "Chambre géante", "char.lynx": "Lynx", "cls
 Object.assign(I18N.en, {"map.room": "Giant bedroom", "char.lynx": "Lynx", "cls.runner": "Wall runner", "ab.overdrive": "OVERDRIVE", "abd.overdrive": "8 s: +30% speed and unlimited wall running. Passive: run along walls (jump into a wall at your side while moving).", "wr.kick": "wall kick", "act.chat": "Chat", "act.talk": "Talk (mic)", "chat.near": "NEARBY", "chat.modeNear": "Nearby", "chat.modeAll": "All", "chat.ph": "Message… (Enter to send)", "chat.send": "Send", "chat.offline": "Chat works in online matches.", "voice.title": "Proximity voice chat", "voice.mode": "Microphone", "voice.off": "Off", "voice.ptt": "Push to talk (N)", "voice.open": "Always on", "voice.vol": "Voice volume", "voice.hint": "You hear players within 45 m, louder when they are close. Text chat (Enter) is also nearby-only by default (Tab in the bar to write to everyone).", "voice.denied": "Microphone blocked: allow it in your browser for voice chat.", "xh.title": "Crosshair", "xh.style": "Shape", "xh.cross": "Cross", "xh.t": "T cross", "xh.x": "X cross", "xh.circle": "Circle", "xh.dot": "Dot", "xh.color": "Color", "xh.len": "Length", "xh.thick": "Thickness", "xh.gap": "Gap", "xh.op": "Opacity", "xh.dotOn": "Center dot", "xh.dyn": "Spreads with weapon spread", "xh.outline": "Black outline", "xh.reset": "Default crosshair", "pad.mapHint": "Click a button, then press the controller button to use (Start cancels).", "pad.reset": "Default buttons", "pad.press": "Press…", "pad.clear": "Clear", "pad.a.jump": "Jump", "pad.a.crouch": "Crouch / slide", "pad.a.use": "Use / reload", "pad.a.next": "Next weapon", "pad.a.prev": "Previous weapon", "pad.a.tactical": "Tactical ability", "pad.a.ultimate": "Ultimate", "pad.a.ads": "Aim", "pad.a.fire": "Fire", "pad.a.board": "Scores", "pad.a.sprint": "Sprint", "pad.a.w6": "Knife", "pad.a.emote": "Emotes", "pad.a.grenade": "Grenade", "pad.a.grenType": "Grenade type", "pad.a.reload": "Reload", "pad.a.chat": "Chat", "pad.a.talk": "Talk (mic)", "pad.a.inspect": "Inspect", "pad.a.map": "Minimap", "tch.edit": "Arrange touch buttons", "tch.editHint": "Drag buttons to move them. Tap a button to change its action or size.", "tch.action": "Action", "tch.size": "Size", "tch.reset": "Default", "tch.done": "Done", "tch.pick": "Pick a button", "tch.abil": "Abilities", "tch.slots": "Weapons", "tch.fire": "FIRE", "tch.jump": "JUMP", "tch.crouch": "CROUCH", "tch.aim": "AIM", "tch.aimHold": "AIM (hold)", "tch.reload": "RELOAD", "tch.use": "USE", "tch.tactical": "TACTICAL", "tch.ultimate": "ULTIMATE", "tch.grenade": "GRENADE", "tch.next": "WEAPON +", "tch.prev": "WEAPON −", "tch.sprint": "SPRINT", "tch.knife": "KNIFE", "tch.emote": "EMOTE", "tch.chat": "CHAT", "tch.talk": "MIC", "tch.map": "MAP", "tch.board": "SCORES", "tch.inspect": "INSPECT"});
 Object.assign(I18N.fr, {"knife.hatchet": "Hachette", "knife.longsword": "Épée longue", "ks.ultra": "★ Lame céleste (ultra)", "adm.menuBtn": "Admin", "adm.x.spin": "Spinbot (les autres te voient tourner)", "adm.x.glow": "Glow / chams (à travers les murs)", "adm.x.skel": "ESP squelette", "adm.x.radar": "Radar (tous sur la mini-carte)", "adm.x.silent": "Silent aim (balles vers la cible)", "adm.x.autobhop": "Auto-bhop (maintiens Saut)", "adm.x.third": "3e personne"});
 Object.assign(I18N.en, {"knife.hatchet": "Hatchet", "knife.longsword": "Longsword", "ks.ultra": "★ Celestial blade (ultra)", "adm.menuBtn": "Admin", "adm.x.spin": "Spinbot (others see you spin)", "adm.x.glow": "Glow / chams (through walls)", "adm.x.skel": "Skeleton ESP", "adm.x.radar": "Radar (everyone on the minimap)", "adm.x.silent": "Silent aim (bullets go to the target)", "adm.x.autobhop": "Auto-bhop (hold Jump)", "adm.x.third": "Third person"});
+Object.assign(I18N.fr, {"char.xadm": "X-Bot admin", "tch.admin": "ADMIN"});
+Object.assign(I18N.en, {"char.xadm": "Admin X-Bot", "tch.admin": "ADMIN"});
 const LANGS = Object.keys(I18N);
 function detectLang() {
   const saved = store.get('lang', null);
@@ -2552,7 +2554,7 @@ function buildRoom() {
   for (const [x, z] of [[30, -78], [74, -78], [30, -50], [74, -50]]) box(x, z, 2.4, 2.4, 0, 22, 'shelf');
   box(50, -38, 14, 12, 11, 1.4, 'plastic'); box(50, -32.5, 14, 1.2, 12.4, 14, 'plastic');
   for (const [x, z] of [[44, -43], [56, -43], [44, -33], [56, -33]]) box(x, z, 1.2, 1.2, 0, 11, 'steel');
-  ramp(62, 68, -48, -12, 'z', -1, 0, 22.2);
+  ramp(62, 68, -49.2, -10, 'z', -1, 0, 24.2);
   // affaires sur le bureau : livres, crayons, ordinateur
   box(36, -70, 10, 14, 24.2, 1.6, 'bookR'); box(37, -70, 9, 13, 25.8, 1.4, 'bookG'); box(36, -71, 9, 12, 27.2, 1.6, 'bookB');
   box(58, -70, 22, 14, 24.2, 0.8, 'ironblk'); box(58, -77, 22, 1, 25, 14, 'ironblk');
@@ -3030,7 +3032,10 @@ function moveAxis(ax, d) {
     P.vel[ax] = 0;
   }
   const rh = rampAt(p.x, p.z).h;
-  if (rh > p.y + STEP_H) { p[ax] -= d; P.vel[ax] = 0; }
+  // bord avant du joueur (rayon R dans le sens du mouvement) : on ne rentre plus dans le flanc d'une rampe
+  const lx = ax === 'x' ? p.x + Math.sign(d) * R * 0.9 : p.x, lz = ax === 'z' ? p.z + Math.sign(d) * R * 0.9 : p.z;
+  const lh = rampAt(lx, lz).h;
+  if (rh > p.y + STEP_H || lh > p.y + STEP_H + 0.15) { p[ax] -= d; P.vel[ax] = 0; }
   else if (rh > p.y && P.grounded) p.y = rh;
 }
 function groundBelow() {
@@ -3309,7 +3314,8 @@ const CLASSES = {
 };
 const myClass = () => CLASSES[S.char] || CLASSES.soldier;
 // le Soldat du propriétaire est le squelette
-const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && MODELS.chars.skel ? 'skel' : S.char;
+const isAdminSkin = () => xUnlocked || ADM.pwOk || ADM.granted;
+const myChar = () => S.char === 'soldier' && (xUnlocked || ADM.pwOk) && MODELS.chars.skel ? 'skel' : S.char === 'xbot' && isAdminSkin() && MODELS.chars.xadm ? 'xadm' : S.char;
 function useAbility(k) {
   if (P.veh || P.pass || EDIT.on) return;
   if (k === 'stim') useStim(); else if (k === 'dome') useDome(); else if (k === 'portal') usePortal();
@@ -4132,6 +4138,7 @@ function tintChar(vis, ch, col) {
       else if (ch === 'titan') m.color.setHex(0x3a3f46).lerp(new THREE.Color(col), 0.18);
       else m.color.setHex(col).lerp(white, 0.7);
     } else if (ch === 'nova') { m.color.setHex(0xffffff).lerp(new THREE.Color(col), 0.18); }
+    else if (ch === 'xadm') { if (/Joints/i.test(m.name)) { m.color.setHex(0xffc23a); if (m.emissive) { m.emissive.setHex(0x7a4a00); } m.userData.keep = true; } else { m.color.setHex(0x101014); } if (m.shininess !== undefined) m.shininess = 120; if (m.specular) m.specular.setHex(0x888888); if (m.metalness !== undefined) { m.metalness = 0.9; m.roughness = 0.25; } }
     else if (ch === 'lynx') { if (/Joints/i.test(m.name)) { m.color.setHex(0x1d2433); } else { m.color.setHex(0xe8ecf2); } if (m.emissive && /HighLimbs/i.test(m.name)) { m.color.setHex(0xe8ecf2).lerp(new THREE.Color(col), 0.35); } }
     else if (ch === 'skel') { m.color.setRGB(1.75, 1.7, 1.6); m.userData.keep = true; }
     else if (c.tintMat && c.tintMat.test(m.name)) m.color.setHex(col);
@@ -4139,6 +4146,7 @@ function tintChar(vis, ch, col) {
   if (ch === 'spectre') phantomGear(vis, col);
   if (ch === 'titan') titanGear(vis, col);
   if (ch === 'lynx' && typeof lynxGear === 'function') lynxGear(vis, col);
+  if (ch === 'xadm' && typeof adminGear === 'function') adminGear(vis);
 }
 const modelWaiters = [];
 function prepModel(gltf, height) {
@@ -4230,7 +4238,7 @@ if (THREE.GLTFLoader) {
   const charLoaded = () => { for (const rp of remotes.values()) attachChar(rp); refreshPreview(); };
   loader.load('assets/models/RobotExpressive.glb', g => { MODELS.robot = prepModel(g, 2.0); MODELS.chars.robot = prepModel(g, CHARS.robot.h); dummies.forEach(attachRobot); charLoaded(); }, undefined, () => {});
   loader.load('assets/models/Soldier.glb', g => { MODELS.soldier = MODELS.chars.soldier = prepModel(g, 1.8); MODELS.chars.titan = prepModel(g, CHARS.titan.h); soldierRig(); charLoaded(); }, undefined, () => {});
-  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); XCLIPS.list = g.animations; novaReady(); skelReady(); soldierRig(); charLoaded(); }, undefined, () => {});
+  loader.load('assets/models/Xbot.glb', g => { MODELS.chars.xbot = prepModel(g, CHARS.xbot.h); MODELS.chars.spectre = prepModel(g, CHARS.spectre.h); MODELS.chars.lynx = prepModel(g, CHARS.lynx.h); MODELS.chars.xadm = prepModel(g, CHARS.xadm.h); XCLIPS.list = g.animations; novaReady(); skelReady(); soldierRig(); charLoaded(); }, undefined, () => {});
   // Nova : modèle à part (Michelle, Mixamo), animé avec les clips du X-Bot (même squelette ; on ne garde que les rotations)
   loader.load('assets/models/Nova.glb', g => { XCLIPS.nova = g; novaReady(); }, undefined, () => {});
   // squelette : version spéciale du Soldat réservée au propriétaire (les autres le voient quand il joue)
@@ -4571,17 +4579,49 @@ function buildViewmodel(kind, knifeType) {
       }
       add(B(.03, .008, .012), amb, 0, .012, .1);
     } else if (kt === 'katana') {
-      // lame longue légèrement courbe, kissaki, tsuba ronde, poignée tressée
-      const L = .6, pts = [];
-      for (let i = 0; i <= 10; i++) { const u = i / 10 * L; pts.push([u, -.013 + .028 * Math.pow(u / L, 2)]); }
-      pts.push([L + .035, .024]);
-      for (let i = 10; i >= 0; i--) { const u = i / 10 * L; pts.push([u, .013 + .028 * Math.pow(u / L, 2)]); }
-      blade(pts, .006, steel, -.035);
-      add(B(.003, .004, .5), mid, 0, .012, -.3);
-      add(B(.012, .03, .025), amb, 0, 0, -.03);
-      const tsuba = add(C(.042, .008, 24), blk, 0, 0, -.014, Math.PI / 2);
-      add(B(.026, .03, .24), blk, 0, 0, .11); wrap(.0, .23, .014, 10);
-      add(B(.028, .032, .014), amb, 0, 0, .235);
+      // katana : lame courbe à section en losange (tranchant, shinogi, dos), ligne de trempe (hamon) distincte,
+      // pointe kissaki, habaki doré, tsuba ajourée, seppa, poignée tressée en losanges, menuki et kashira
+      const L = .66, N = 28, Z0 = -.04, ring = [], pos = [], uv = [], idxS = [], idxM = [];
+      const cy = u => .032 * Math.pow(u / L, 2), wd = u => .032 - .007 * (u / L), th = u => .0075 - .0025 * (u / L);
+      for (let i = 0; i <= N; i++) {
+        const u = i / N * L, c = cy(u), w = wd(u), tk = th(u), z = Z0 - u, e = c - w / 2;
+        const pts = [[0, e], [tk * .32, e + w * .2], [tk / 2, e + w * .62], [tk * .34, c + w / 2], [-tk * .34, c + w / 2], [-tk / 2, e + w * .62], [-tk * .32, e + w * .2]];
+        ring.push(pos.length / 3);
+        pts.forEach(([x, y], k) => { pos.push(x, y, z); uv.push(i / N * 3, k / 6); });
+      }
+      const tipI = pos.length / 3, cL = cy(L), wL = wd(L); pos.push(0, cL + wL * .18, Z0 - L - .05); uv.push(3.2, .5);
+      const quad = (a, b, c, d, list) => list.push(a, b, c, a, c, d);
+      for (let i = 0; i < N; i++) for (let k = 0; k < 7; k++) {
+        const a = ring[i] + k, b = ring[i] + (k + 1) % 7, c = ring[i + 1] + (k + 1) % 7, d = ring[i + 1] + k;
+        quad(a, b, c, d, k === 0 || k === 6 ? idxM : idxS);
+      }
+      for (let k = 0; k < 7; k++) (k === 0 || k === 6 ? idxM : idxS).push(ring[N] + k, ring[N] + (k + 1) % 7, tipI);
+      for (let k = 1; k < 6; k++) idxS.push(ring[0], ring[0] + k + 1, ring[0] + k);
+      const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); bg.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2));
+      bg.setIndex(idxS.concat(idxM)); bg.addGroup(0, idxS.length, 0); bg.addGroup(idxS.length, idxM.length, 1);
+      const bgf = bg.toNonIndexed(); bgf.computeVertexNormals();
+      const bladeM = new THREE.Mesh(bgf, [steel, mid]); g.add(bladeM); parts.blade = bladeM;
+      // gorge (bo-hi) le long du dos
+      add(B(.0015, .005, L * .62), blk, .0026, .006, Z0 - L * .33, -.035); add(B(.0015, .005, L * .62), blk, -.0026, .006, Z0 - L * .33, -.035);
+      // habaki et seppa
+      add(B(.012, .036, .03), amb, 0, -.001, Z0 + .012);
+      add(C(.03, .004, 24), amb, 0, 0, Z0 + .03, Math.PI / 2); add(C(.03, .004, 24), amb, 0, 0, Z0 + .047, Math.PI / 2);
+      // tsuba ajourée : disque à quatre lobes, deux ouvertures en croissant
+      const ts = new THREE.Shape(); for (let a = 0; a <= 64; a++) { const t = a / 64 * Math.PI * 2, r = .046 + .005 * Math.cos(t * 4); a ? ts.lineTo(Math.cos(t) * r, Math.sin(t) * r) : ts.moveTo(Math.cos(t) * r, Math.sin(t) * r); }
+      for (const sg of [1, -1]) { const hp = new THREE.Path(); hp.absarc(sg * .029, 0, .009, 0, Math.PI * 2, false); ts.holes.push(hp); }
+      const slot = new THREE.Path(); slot.moveTo(-.005, -.015); slot.lineTo(.005, -.015); slot.lineTo(.005, .015); slot.lineTo(-.005, .015); slot.closePath(); ts.holes.push(slot);
+      const tg = new THREE.ExtrudeGeometry(ts, { depth: .009, bevelEnabled: true, bevelThickness: .0015, bevelSize: .0015, bevelSegments: 2 });
+      const tm = new THREE.Mesh(tg, blk); tm.position.set(0, 0, Z0 + .044); g.add(tm);
+      for (let a = 0; a < 8; a++) { const t = a / 8 * Math.PI * 2; add(new THREE.SphereGeometry(.0035, 6, 4), amb, Math.cos(t) * .04, Math.sin(t) * .04, Z0 + .054); }
+      // poignée : âme ovale claire (peau de raie), tresse en losanges sombres, menuki dorés, kashira
+      const tsuka = add(C(.0145, .25, 16, .0155), tan, 0, 0, .085, Math.PI / 2); tsuka.scale.set(1, 1, 1.25);
+      for (let i = 0; i < 9; i++) {
+        const z = -.02 + i * .026;
+        for (const sg of [1, -1]) { const band = add(B(.036, .007, .02), blk, 0, 0, z, 0, 0, 0); band.rotation.set(sg * .55, 0, 0); band.scale.set(1, 1, 1); }
+        add(B(.033, .036, .004), blk, 0, 0, z + .013);
+      }
+      for (const sg of [1, -1]) add(B(.012, .006, .03), amb, sg * .0165, 0, .06 + sg * .05);
+      add(C(.017, .022, 16, .015), blk, 0, 0, .222, Math.PI / 2); add(new THREE.SphereGeometry(.007, 8, 6), amb, 0, 0, .236);
     } else if (kt === 'trident') {
       // trident : long manche, garde, trois dents barbelées
       add(C(.012, .82, 10), tan, 0, 0, -.26, Math.PI / 2);
@@ -5352,6 +5392,7 @@ const ARM_STYLE = {
   nova: { glove: 0x5a3a28, sleeve: 0x5a3a28, upper: 0x5a3a28, cuff: 0xd4a62a, r: 0.82, hand: 0.92 },
   skel: { glove: 0xd8c8a8, sleeve: 0xd8c8a8, upper: 0xcab894, cuff: 0xb8a888, r: 0.5, hand: 0.9 },
   lynx: { glove: 0x1d2433, sleeve: 0xe8ecf2, upper: 0x1d2433, cuff: 'glow', r: 0.88, hand: 0.95 },
+  xadm: { glove: 0xffc23a, sleeve: 0x101014, upper: 0x101014, cuff: 0xffd24a, r: 0.9, hand: 1, shiny: true },
   robot: { glove: 0x8a8f96, sleeve: 0x5a6068, upper: 0x5a6068, cuff: 0x2a2d31, r: 1, hand: 1.05, shiny: true },
   custom: { glove: 0x25282c, sleeve: 'tint', upper: 'tint', cuff: 0x17191c, r: 1, hand: 1 }
 };
@@ -5429,6 +5470,12 @@ function updateArms(vm, dt) {
   }
 }
 const swPose = [0, 0, 0, 0, 0, 0], swFin = [0, 0, 0, 0, 0, 0], _vq = new THREE.Quaternion(), _zAxis = new V3(0, 0, 1), FLOUR_DUR = 0.62;
+// reflet qui glisse sur la lame pendant l'inspection (k : 0 → 1)
+function inspGlint(vm, k) {
+  const m = vm.mats.steel; if (!m || !m.emissive || k <= 0 || k >= 1) return;
+  const f = Math.sin(k * Math.PI); m.emissive.setRGB(0.55 * f, 0.6 * f, 0.7 * f);
+  if (vm.g.userData.parts && vm.g.userData.parts.model) vm.g.userData.parts.model.traverse(o => { if (o.isMesh && o.material.emissive) o.material.emissive.setRGB(0.35 * f, 0.38 * f, 0.45 * f); });
+}
 function updateViewmodel(dt) {
   const vm = VM[WS.cur], g = vm.g, a = easeOut(WS.ads), hs = Math.hypot(P.vel.x, P.vel.z);
   let swingP = -1, viewSpin = 0;
@@ -5503,11 +5550,26 @@ function updateViewmodel(dt) {
       if (kt === 'karambit') { rz += sm(e(0.15, 0.8)) * Math.PI * 4; ry += 0.5 * up; }
       else if (kt === 'butterfly') { const f = Math.sin(e(0.15, 0.85) * Math.PI * 3); if (parts.h1) { parts.h1.rotation.y = f * 2.7; parts.h2.rotation.y = -f * 2.7; } rx += 0.3 * up; ry += 0.8 * up; }
       else if (kt === 'katana') {
-        // lève la lame à la verticale, la fait pivoter pour montrer les deux faces, puis un moulinet
-        const lift = sm(e(0.04, 0.22)) * (1 - sm(e(0.7, 0.84)));
-        x -= 0.1 * lift; y += 0.05 * lift; z -= 0.04 * lift; rx += 0.85 * lift; ry -= 0.75 * lift;
-        rz += Math.sin(e(0.24, 0.68) * Math.PI * 2) * 1.4 * lift;
-        viewSpin = -sm(e(0.8, 1)) * Math.PI * 2;
+        // inspection stylée : la lame monte à la verticale devant les yeux, tranchant vers soi,
+        // un reflet glisse sur l'acier, demi-tour lent pour l'autre face, double moulinet, puis on rengaine en arc
+        const lift = sm(e(0.03, 0.16)) * (1 - sm(e(0.74, 0.86)));
+        x -= 0.07 * lift; y += 0.035 * lift; z -= 0.03 * lift; rx += 0.95 * lift; ry -= 0.85 * lift; rz += Math.PI / 2 * lift;
+        rz += Math.sin(e(0.18, 0.66) * Math.PI * 2) * 0.55 * lift; ry += Math.sin(e(0.18, 0.66) * Math.PI) * 0.25 * lift;
+        y += Math.sin(e(0.18, 0.66) * Math.PI) * 0.015;
+        viewSpin = -sm(e(0.7, 0.86)) * Math.PI * 4;
+        const back = sm(e(0.86, 0.94)) * (1 - sm(e(0.94, 1))); rx -= 0.5 * back; ry += 0.6 * back; x += 0.05 * back;
+        inspGlint(vm, e(0.2, 0.55));
+      }
+      else if (KMODELS[kt]) {
+        // couteaux en modèle : rotation du poignet pour montrer la lame, lancer en l'air avec double vrille,
+        // rattrapé, moulinet entre les doigts, puis présentation de la pointe
+        const show = sm(e(0.04, 0.18)) * (1 - sm(e(0.3, 0.38)));
+        ry += 1.25 * show; rz += 0.4 * show; x -= 0.04 * show;
+        const toss = e(0.36, 0.62), arc = Math.sin(toss * Math.PI);
+        y += arc * 0.12; z -= arc * 0.04; x -= arc * 0.02; rx += sm(toss) * Math.PI * 4;
+        viewSpin = sm(e(0.64, 0.8)) * Math.PI * 2;
+        const pt = sm(e(0.8, 0.88)) * (1 - sm(e(0.92, 1))); rx += 0.55 * pt; ry -= 0.5 * pt; z -= 0.04 * pt;
+        inspGlint(vm, e(0.06, 0.3));
       }
       else if (kt === 'morgane') {
         // fait rouler la hache dans la main, puis la pose sur l'épaule un instant
@@ -8222,7 +8284,7 @@ function hostGame() {
   const code = makeCode();
   setNetStatus(t('net.creating'));
   $('hostBtn').disabled = true; $('joinBtn').disabled = true;
-  const peer = new Peer(PREFIX + code, { debug: 0 });
+  const peer = new Peer(PREFIX + code, { debug: 0, config: iceConfig() });
   NET.peer = peer;
   peer.on('call', c => { try { voiceOnCall(c); } catch (e) {} });
   peer.on('open', () => {
@@ -8248,6 +8310,19 @@ function hostGame() {
     if (NET.mode !== 'host') { setNetStatus(t('net.createFail', { err: err.type }), 'err'); leaveNet(); }
   });
 }
+// serveurs ICE : STUN publics + relais TURN « Open Relay » (identifiants temporaires calculés avec le secret public du service)
+// sans relais, deux téléphones en 4G ou derrière certaines box ne se trouvent pas
+const ICE = { servers: [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.google.com:19302'] }, { urls: 'stun:staticauth.openrelay.metered.ca:80' }] };
+(async () => {
+  try {
+    const user = (Math.floor(Date.now() / 1000) + 24 * 3600) + ':velocite';
+    const key = await crypto.subtle.importKey('raw', new TextEncoder().encode('openrelayprojectsecret'), { name: 'HMAC', hash: 'SHA-1' }, false, ['sign']);
+    const sig = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(user));
+    const cred = btoa(String.fromCharCode(...new Uint8Array(sig)));
+    ICE.servers.push({ urls: ['turn:staticauth.openrelay.metered.ca:80', 'turn:staticauth.openrelay.metered.ca:80?transport=tcp', 'turn:staticauth.openrelay.metered.ca:443', 'turns:staticauth.openrelay.metered.ca:443?transport=tcp'], username: user, credential: cred });
+  } catch (e) {}
+})();
+function iceConfig() { return { iceServers: ICE.servers, sdpSemantics: 'unified-plan' }; }
 function joinGame(code) {
   code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
   if (code.length !== 5) { setNetStatus(t('net.codeLen'), 'err'); return; }
@@ -8255,13 +8330,13 @@ function joinGame(code) {
   leaveNet(); saveName();
   setNetStatus(t('net.connecting', { code }));
   $('hostBtn').disabled = true; $('joinBtn').disabled = true;
-  const peer = new Peer(undefined, { debug: 0 });
+  const peer = new Peer(undefined, { debug: 0, config: iceConfig() });
   NET.peer = peer;
   peer.on('call', c => { try { voiceOnCall(c); } catch (e) {} });
   peer.on('open', () => {
     const conn = peer.connect(PREFIX + code, { reliable: true, serialization: 'json' });
     NET.hostConn = conn;
-    const timeout = setTimeout(() => { if (NET.mode !== 'client') { setNetStatus(t('net.noAnswer'), 'err'); leaveNet(); } }, 12000);
+    const timeout = setTimeout(() => { if (NET.mode !== 'client') { setNetStatus(t('net.noAnswer'), 'err'); leaveNet(); } }, 20000);
     conn.on('open', () => {
       clearTimeout(timeout);
       NET.mode = 'client'; mapSel.disabled = true;
@@ -9053,6 +9128,7 @@ async function admPwCheck(pw) { return typeof pw === 'string' && pw.length <= 64
 async function admPwTry(pw, quiet) {
   if (!(await admPwCheck(pw))) { if (!quiet) { toast(t('adm.pwBad'), 2.5); $('admPwIn').select(); } return; }
   ADM.pwOk = true; store.set('admKey', pw); $('admLogin').hidden = true;
+  if (!xUnlocked) { xUnlocked = true; store.set('xu', true); try { renderX(); } catch (e) {} }
   if (NET.mode === 'client') netSend({ k: 'adm', act: 'claimPw', arg: pw });
   if (!quiet) { toast(t('adm.granted'), 2.5); admShow(true); }
 }
@@ -9454,10 +9530,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.03b';
+const GAME_VERSION = '2026.11.04';
 const CHANGES = {
-  fr: ['Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9696,6 +9772,28 @@ function useOverdrive() {
   feed(t('ab.overdrive'), '8 s', 'cyan'); sfx.stim(); camShake(0.2);
 }
 CLASSES.lynx = { id: 'runner', tac: 'dash', ult: 'overdrive' };
+// X-Bot admin : carrosserie noire laquée, articulations en or, auréole et insignes ; réservé aux admins, visible par tous
+CHARS.xadm = { file: 'Xbot.glb', h: 1.8, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/ };
+CLASSES.xadm = CLASSES.xbot; MG_FIT.xadm = MG_FIT.xbot;
+function adminGear(vis) {
+  if (vis.adminG) return; vis.adminG = true;
+  let head = null, chest = null, lArm = null, rArm = null;
+  vis.obj.traverse(o => { if (!o.isBone) return; if (!head && /mixamorigHead$/.test(o.name)) head = o; if (!chest && /Spine2$/.test(o.name)) chest = o; if (!lArm && /LeftArm$/.test(o.name)) lArm = o; if (!rArm && /RightArm$/.test(o.name)) rArm = o; });
+  if (!head || !chest) return;
+  vis.obj.updateMatrixWorld(true);
+  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
+  const gold = new THREE.MeshBasicMaterial({ color: 0xffd24a }), red = new THREE.MeshBasicMaterial({ color: 0xff2a3a });
+  const mount = (bone, build) => { const g = new THREE.Group(); bone.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; build(g); bone.add(g); };
+  const mk = (geo, mat, x, y, z, rx = 0, ry = 0, rz = 0) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.rotation.set(rx, ry, rz); m.userData.gear = true; return m; };
+  mount(head, g => {
+    const halo = mk(new THREE.TorusGeometry(0.13, 0.012, 8, 32), gold, 0, 0.3, -0.02, Math.PI / 2 - 0.2); g.add(halo);
+    const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xffc23a, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending })); sp.position.set(0, 0.3, -0.02); sp.scale.setScalar(0.42); sp.userData.gear = true; g.add(sp);
+    g.add(mk(new THREE.BoxGeometry(0.15, 0.024, 0.02), red, 0, 0.1, 0.11));
+  });
+  mount(chest, g => { g.add(mk(new THREE.OctahedronGeometry(0.035, 0), gold, 0, 0.08, 0.13)); });
+  for (const arm of [lArm, rArm]) if (arm) mount(arm, g => { g.add(mk(new THREE.BoxGeometry(0.07, 0.05, 0.09), gold, 0, 0.06, 0)); });
+}
+
 CHARS.lynx = { file: 'Xbot.glb', h: 1.76, yaw: Math.PI, anim: { idle: 'idle', walk: 'walk', run: 'run' }, hand: /RightHand$/, tintMat: /HighLimbs/i };
 MG_FIT.lynx = MG_FIT.xbot;
 // équipement : bandeau lumineux sur les yeux et écharpe qui flotte

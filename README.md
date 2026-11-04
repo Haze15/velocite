@@ -140,6 +140,13 @@ Le mode se choisit dans le menu (à côté de la carte) ou dans le panneau admin
 - **Panneau admin, onglet Comptes :** liste des comptes, dernière connexion, réinitialiser ou définir un mot de passe, bannir ou débannir, supprimer. Les mots de passe sont stockés sous forme d'empreinte SHA-256 salée : personne ne peut les lire, on peut seulement les remplacer. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien.
 - **Signaler :** en ligne, l'onglet Multijoueur propose de signaler un joueur (triche, insultes, spam, inactif, autre). Les signalements arrivent chez l'hôte et chez les admins, dans l'onglet **Signalements** du panneau admin, avec un bouton pour expulser ou bannir.
 
+## Skins réservés
+
+- **Squelette** : le Soldat du propriétaire.
+- **X-Bot admin** : quand tu as l'accès admin (mot de passe ou accès donné par l'hôte), ton X-Bot devient noir laqué avec articulations en or, auréole, visière rouge et insignes dorés. Les autres le voient en ligne.
+
+Sur mobile, le mot de passe admin débloque aussi l'onglet Triche du panneau.
+
 ## Mon propre modèle 3D
 
 Onglet Personnage → **Importer mon modèle (.glb)**, 4 Mo maximum. Un modèle avec un squelette Mixamo reprend les animations du jeu ; sinon il utilise ses propres animations nommées idle, walk et run. Une case permet de le tourner de 180° s'il regarde dans le mauvais sens. Le modèle est mémorisé dans le navigateur et envoyé aux autres joueurs de la partie, qui le voient à ta place.
@@ -188,7 +195,7 @@ Fermer l'onglet ou la fenêtre fait quitter la partie tout de suite (les autres 
 
 La connexion passe par WebRTC avec [PeerJS](https://peerjs.com/) et son serveur de mise en relation public. Il n'y a pas de serveur de jeu : l'hôte relaie positions, tirs et éliminations. Si l'hôte quitte, la partie se ferme.
 
-Sur certains réseaux (4G, réseaux d'entreprise), la connexion directe entre deux joueurs peut échouer faute de serveur TURN.
+Sur certains réseaux (4G, réseaux d'entreprise), la connexion directe entre deux joueurs échoue : le jeu passe alors par le relais TURN gratuit « Open Relay » de Metered (identifiants temporaires calculés dans le navigateur, 20 Go par mois partagés).
 
 ## Grenades
 
@@ -244,7 +251,7 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 
 ## Armes
 
-**Couteaux :** combat, karambit, machette, dague, papillon, katana, hachette, épée longue, Morgane, trident. Le combat, la dague, la machette, la hachette et l'épée longue sont de vrais modèles 3D (KayKit, CC0). Le katana a un skin spécial **★ Lame céleste** : galaxie qui défile le long de la lame, tranchant arc-en-ciel, garde dorée et étincelles qui remontent la lame.
+**Couteaux :** combat, karambit, machette, dague, papillon, katana, hachette, épée longue, Morgane, trident. Le combat, la dague, la machette, la hachette et l'épée longue sont de vrais modèles 3D (KayKit, CC0). Le katana a été refait : lame courbe à section en losange (tranchant, arête, dos), ligne de trempe d'une autre teinte, pointe kissaki, gorge le long du dos, habaki doré, tsuba ajourée à quatre lobes, poignée tressée en losanges avec ornements dorés. **Inspection (X)** : le katana monte à la verticale devant les yeux avec un reflet qui glisse sur l'acier, se balance pour montrer les deux faces, double moulinet et retour en arc ; les couteaux en modèle tournent dans le poignet, sont lancés en l'air avec double vrille, rattrapés et font un moulinet entre les doigts. Le katana a un skin spécial **★ Lame céleste** : galaxie qui défile le long de la lame, tranchant arc-en-ciel, garde dorée et étincelles qui remontent la lame.
 
 | Arme | Dégâts | Cadence | Chargeur |
 | --- | --- | --- | --- |
