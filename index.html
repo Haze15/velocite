@@ -3267,14 +3267,50 @@ function climbStep(dt, fwdHeld, fx, fz, wx, wz, hasWish) {
   }
   v.y = lerp(CLIMB_V0, CLIMB_V1, P.climbT / CLIMB_TIME); v.x = -n.x * 0.6; v.z = -n.z * 0.6;
 }
-// Mur proche dans n'importe quelle direction (pour le wall-jump en l'air)
+// côté d'une rampe au point (x, y, z) : normale horizontale du bord le plus proche du joueur, sinon null
+function rampWallAt(x, y, z) {
+  for (const r of RAMPS) {
+    if (x < r.x0 || x > r.x1 || z < r.z0 || z > r.z1) continue;
+    let t;
+    if (r.axis === 'z') t = r.hi > 0 ? (z - r.z0) / (r.z1 - r.z0) : (r.z1 - z) / (r.z1 - r.z0);
+    else t = r.hi > 0 ? (x - r.x0) / (r.x1 - r.x0) : (r.x1 - x) / (r.x1 - r.x0);
+    if (r.hLow + (r.hHigh - r.hLow) * t < y + 0.15) continue;
+    const p = P.pos, dx = p.x < r.x0 ? r.x0 - p.x : p.x > r.x1 ? p.x - r.x1 : 0, dz = p.z < r.z0 ? r.z0 - p.z : p.z > r.z1 ? p.z - r.z1 : 0;
+    if (dx >= dz && dx > 0) return new V3(p.x < r.x0 ? -1 : 1, 0, 0);
+    if (dz > 0) return new V3(0, 0, p.z < r.z0 ? -1 : 1);
+    return null;
+  }
+  return null;
+}
+// Mur proche dans n'importe quelle direction (pour le wall-jump en l'air) : blocs et côtés des rampes
 function wallNear() {
   const p = P.pos, reach = R + 0.55;
   for (const h of [0.5, 1.15]) for (let i = 0; i < 8; i++) {
-    const a = i * Math.PI / 4, b = boxAtPoint(p.x + Math.cos(a) * reach, p.y + h, p.z + Math.sin(a) * reach);
+    const a = i * Math.PI / 4, x = p.x + Math.cos(a) * reach, y = p.y + h, z = p.z + Math.sin(a) * reach, b = boxAtPoint(x, y, z);
     if (b) return faceNormal(b);
+    const rn = rampWallAt(x, y, z); if (rn) return rn;
   }
   return null;
+}
+// saut contre une rampe : en l'air tout près de la pente (dessous ou devant), on rebondit dessus en gardant l'élan le long de la pente
+function rampKickN() {
+  const p = P.pos, v = P.vel, hs = Math.hypot(v.x, v.z), ax = hs > 0.5 ? v.x / hs * 0.7 : 0, az = hs > 0.5 ? v.z / hs * 0.7 : 0;
+  for (const [x, z] of [[p.x, p.z], [p.x + ax, p.z + az]]) for (const r of RAMPS) {
+    if (x < r.x0 || x > r.x1 || z < r.z0 || z > r.z1) continue;
+    const t = r.axis === 'z' ? (r.hi > 0 ? (z - r.z0) / (r.z1 - r.z0) : (r.z1 - z) / (r.z1 - r.z0)) : (r.hi > 0 ? (x - r.x0) / (r.x1 - r.x0) : (r.x1 - x) / (r.x1 - r.x0));
+    const h = r.hLow + (r.hHigh - r.hLow) * t;
+    if (h > p.y - 1.0 && h < p.y + 1.3) return r.n;
+  }
+  return null;
+}
+function rampKick(n, wx, wz, hasWish) {
+  const v = P.vel, vn = v.dot(n);
+  if (vn < 0) v.addScaledVector(n, -vn);
+  if (hasWish) { v.x += wx * WJ_SIDE * 0.6; v.z += wz * WJ_SIDE * 0.6; }
+  v.addScaledVector(n, WJ_OUT * 0.45); v.y = Math.max(v.y, WJ_UP);
+  const hs = Math.hypot(v.x, v.z); if (hs > 19) { v.x *= 19 / hs; v.z *= 19 / hs; }
+  P.climbing = false; P.jumpBuf = 0; P.wallJumps++; P.wjCd = 0.18; P.airT = 0;
+  feed('WALL-JUMP', '×' + P.wallJumps + ' · ' + Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan', 'wj'); sfx.jump();
 }
 // Garde la vitesse le long du mur, remplace la composante vers le mur par une poussée
 function wallKick(n, wx, wz, hasWish) {
@@ -3398,6 +3434,7 @@ function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
   if (P.jumpBuf > 0 && P.airT > 0.08 && P.wjCd <= 0 && (P.wallJumps < WJ_MAX || X.jumps)) {
     const n = wallNear();
     if (n) wallKick(n, wx, wz, hasWish);
+    else { const rn = rampKickN(); if (rn) rampKick(rn, wx, wz, hasWish); }
   }
   if (P.jumpBuf > 0 && (P.doubleJump || X.jumps)) {
     P.doubleJump = false; P.jumpBuf = 0; v.y = 7.4;
@@ -4439,6 +4476,7 @@ if (THREE.GLTFLoader) {
       } else if (/^(eyes|mouth)_/i.test(o.name) && !/_default_/i.test(o.name)) drop.push(o);
     });
     for (const o of drop) if (o.parent) o.parent.remove(o);
+    XCLIPS.gm.scene.traverse(o => { if (o.isMesh) for (const mt of [].concat(o.material)) { if (mt.metalness !== undefined) { mt.metalness = 0; mt.roughness = Math.max(mt.roughness, 0.7); } } });
     const m = prepModel(XCLIPS.gm, CHARS.tadm.h);
     m.anims = retargetFromXbot(m, []);
     MODELS.chars.tadm = m; charLoaded();
@@ -5847,7 +5885,7 @@ function makeCode() { const A = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'; let s = ''; 
 function peerSupported() { return typeof window.Peer === 'function' && typeof window.RTCPeerConnection === 'function'; }
 function myState() {
   const air = !P.grounded && !P.climbing;
-  const a = P.dead ? 'dead' : P.zip ? 'zip' : P.sgT > 0.1 && air ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
+  const a = P.dead ? 'dead' : P.zip || (ODM.a.length && air) ? 'zip' : (SPIRAL.t > 0 || (P.sgT > 0.1 && air)) ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
   const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
   if (X.spin && xUnlocked && !P.veh) { st.y = r2((performance.now() / 1000 * 22) % (Math.PI * 2)); st.pi = -1.35; }
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
@@ -6602,7 +6640,7 @@ function updateSelfAvatar(dt) {
     SELF.g.visible = true; SELF.g.position.copy(rPos); SELF.g.rotation.y = X.spin ? (performance.now() / 1000 * 22) % (Math.PI * 2) : P.yaw;
     setOutfit(vis, SELF.g, P.mgT > 0, myColor());
     const hs = Math.hypot(P.vel.x, P.vel.z), air = !P.grounded && !P.climbing;
-    animateAvatar(vis, dt, { loco: hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: P.sliding ? 'slide' : air ? 'air' : 'ground', hold: WS.cur === 5 ? 'knife' : 'gun', pitch: X.spin ? -1.35 : P.pitch });
+    animateAvatar(vis, dt, { loco: hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: P.zip || (ODM.a.length && air) ? 'zip' : SPIRAL.t > 0 || (P.sgT > 0.1 && air) ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground', hold: WS.cur === 5 ? 'knife' : 'gun', pitch: X.spin ? -1.35 : P.pitch });
     vis.obj.position.y = -MODELS.chars[vis.ch].minY * vis.base - (vis.lower || 0);
     updateOutfit(vis, SELF.g);
     return;
@@ -6621,9 +6659,10 @@ const thirdOn = () => X.third && xUnlocked && playing && !P.veh && !P.dead && !S
 function emoteCamera() {
   if (!EMOTE.on && !P.veh && !thirdOn()) return;
   if (P.veh && CP.on) { cockpitCamera(); return; }
-  const PR = P.veh ? VEHP[P.veh.type] || VEH : null, cp = Math.cos(P.pitch), far = PR ? PR.cam : EMOTE.dist;
+  const PR = P.veh ? VEHP[P.veh.type] || VEH : null, cp = Math.cos(P.pitch), tp = !PR && !EMOTE.on, far = PR ? PR.cam : tp ? 4.2 : EMOTE.dist;
   _d.set(Math.sin(P.yaw) * cp, -Math.sin(P.pitch), Math.cos(P.yaw) * cp);
-  _p.set(rPos.x, rPos.y + (PR ? PR.camH : 1.05), rPos.z);
+  // 3e personne : pivot au-dessus de la tête pour voir par-dessus le perso
+  _p.set(rPos.x, rPos.y + (PR ? PR.camH : tp ? 2.9 : 1.05), rPos.z);
   raycaster.set(_p, _d); raycaster.far = far;
   const hit = raycaster.intersectObjects(WORLD, false)[0];
   const dist = hit ? Math.max(0.6, hit.distance - 0.25) : far;
@@ -9782,10 +9821,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.05c';
+const GAME_VERSION = '2026.11.05d';
 const CHANGES = {
-  fr: ['Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -9966,9 +10005,9 @@ function wallSide() {
   for (const s of [1, -1]) {
     const sx = -dz * s, sz = dx * s;
     for (const h of [0.5, 1.2]) {
-      const b = boxAtPoint(P.pos.x + sx * (R + 0.6), P.pos.y + h, P.pos.z + sz * (R + 0.6));
-      if (!b || b.ground) continue;
-      const n = faceNormal(b);
+      const qx = P.pos.x + sx * (R + 0.6), qy = P.pos.y + h, qz = P.pos.z + sz * (R + 0.6), b = boxAtPoint(qx, qy, qz);
+      const n = b && !b.ground ? faceNormal(b) : rampWallAt(qx, qy, qz);
+      if (!n) continue;
       if (Math.abs(n.x * dx + n.z * dz) > 0.55) continue;
       return n;
     }

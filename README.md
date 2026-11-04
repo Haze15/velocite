@@ -65,6 +65,8 @@ La carte se choisit à côté du bouton Jouer. En ligne, c'est l'hôte qui chois
 
 En cliquant sur **Jouer**, l'écran **Équipement** s'ouvre : choisis ton personnage et ton couteau, avec la description de leurs capacités. Tu peux le rouvrir à tout moment en partie avec **L** (bouton ⚙ sur téléphone) pour changer de perso ou de couteau sans attendre de mourir. La case « Demander avant chaque partie » le désactive.
 
+**Rampes :** en l'air tout près d'une rampe (au-dessus de la pente ou devant), **Saut** rebondit dessus comme un wall-jump, en gardant l'élan le long de la pente (compte dans la limite de 3 wall-jumps).
+
 ## Tyroliennes
 
 Des câbles ambre lumineux relient les toits et les tours sur toutes les cartes (lampes ambre aux deux bouts, traits ambre sur la mini-carte), dont une verticale sur le Canyon et cinq géantes sur le Volcan qui montent jusqu'au cratère. Approche-toi d'un câble et appuie sur **E** : tu pars dans le sens où tu regardes (vers le haut sur un câble vertical) et tu montes jusqu'à 17 m/s. **S** fait demi-tour, **Espace** saute en gardant l'élan (double saut disponible ensuite), **C** lâche. Tu peux tirer pendant le trajet.
