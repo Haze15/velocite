@@ -71,7 +71,7 @@ Des câbles ambre lumineux relient les toits et les tours sur toutes les cartes 
 
 ## Coffres
 
-Par défaut, tu commences chaque vie avec seulement le **pistolet**. Les autres armes, les couteaux et les armes spéciales se trouvent dans des **coffres** dorés qui brillent un peu partout sur la carte. Approche-toi, **E** pour l'ouvrir : une ou deux armes jaillissent devant, **E** encore pour les ramasser. Le coffre se referme et se remplit 75 s plus tard. Tu perds tout à la mort. En ligne, tout le monde voit les mêmes coffres s'ouvrir. La case « Départ au pistolet, armes dans les coffres » des réglages remet l'arsenal complet.
+Par défaut, tu commences chaque vie avec le **pistolet** et le **couteau choisi dans l'Équipement**. Les autres armes, d'autres couteaux et les armes spéciales se trouvent dans des **coffres** dorés qui brillent un peu partout sur la carte. Approche-toi, **E** pour l'ouvrir : une ou deux armes jaillissent devant, **E** encore pour les ramasser. Le coffre se referme et se remplit 75 s plus tard. Tu perds tout à la mort. En ligne, tout le monde voit les mêmes coffres s'ouvrir. La case « Départ au pistolet, armes dans les coffres » des réglages remet l'arsenal complet.
 
 ## Armes spéciales
 
