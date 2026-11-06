@@ -321,7 +321,6 @@ Avec le couteau en main, tu cours 10 % plus vite. Vingt-quatre skins d'arme au c
 
 **Trident :** clic gauche pour frapper d'estoc, clic droit pour le lancer. Il file droit devant à 48 m/s et touche tout ce qu'il traverse ; s'il touche un mur, il s'y plante une fraction de seconde, puis il revient vers toi en accélérant et touche encore sur le chemin du retour. Tu le rattrapes automatiquement. En ligne, les autres le voient voler.
 
-**Sons personnalisés :** dans les réglages, tu peux remplacer le son de chaque arme, du couteau, du saut, de l'atterrissage, des éliminations, des touches, du superglide et des capacités par ton propre fichier (300 Ko et 4 s maximum). En ligne, les autres joueurs entendent tes sons quand c'est toi qui tires ou qui utilises la capacité (chacun peut couper ça dans ses réglages).
 
 **Bras et armes :** tu vois tes bras (gants et manches à ta couleur) tenir chaque arme à deux mains quand c'est possible. Les autres joueurs portent leur vraie arme en main, avec leur skin. Quand un joueur vise au sniper dans ta direction, le reflet de sa lunette brille, même de loin.
 
@@ -370,6 +369,7 @@ python3 -m http.server 8000
 
 ## Crédits
 
+- **Sons des armes** (`assets/sfx/`) : coups de feu synthétisés pour Vélocité (onde de bouche de Friedlander, corps, mécanique, réverbération extérieure et échos) par `tools/gunsfx.py`, d'après les modèles physiques de *PyGunShot* (H. Hacıhabiboğlu, licence MIT).
 - **Armes** (`assets/models/guns/`) : « Ultimate Gun Pack » de **[Quaternius](https://quaternius.com/)**, licence [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) (domaine public) ; convertis d'OBJ en GLB avec des coordonnées de texture ajoutées pour les skins.
 - **Gasmask girl** (`assets/models/GasmaskGirl.glb`) : créée par **Xinus22**, publiée sur Sketchfab par photon (that one larry), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — [sketchfab.com/3d-models/gasmask-girl-d5b54d5358fb42368faf47b1cfbab18f](https://sketchfab.com/3d-models/gasmask-girl-d5b54d5358fb42368faf47b1cfbab18f). Squelette renommé pour les animations du jeu, une seule expression du visage gardée.
 - **Karambit** (`assets/models/knives/karambit.glb`) : modèle « Karambit » par **Astral** sur Sketchfab, licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ; simplifié (moins de triangles) pour le jeu.
