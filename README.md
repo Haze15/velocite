@@ -250,6 +250,8 @@ Télécharge **[Velocite.apk](https://github.com/Haze15/velocite/releases/downlo
 - **Textures** : béton en panneaux, pierre de taille, tôle rivetée, roche, bois, tuiles, et un sol par carte (sable, herbe, pavés, neige, cendre…). Elles sont générées au lancement (rien à télécharger) et prennent la couleur de chaque carte.
 - **Ciel** : nuages procéduraux qui défilent (couverture différente par carte), soleil, étoiles sur les cartes de nuit.
 - **Skins de perso** (onglet Personnage → Skin du perso) : 12 motifs ou matières sur tout le modèle, vus par les autres joueurs.
+- **Skins de mêlée** (onglet Armes → Skin de mêlée) : pour toutes les lames ; les 8 légendaires ✦ ajoutent des effets autour de la lame (flammes, glace, arcs électriques, gouttes de sang, feux follets, pétales, runes, anneaux du vide) et un halo qui pulse.
+- **Masques** (onglet Personnage → Masque) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne, posés sur le visage et vus par les autres joueurs.
 - **Skins d'arme légendaires** (✦ dans la liste des skins) : comme dans Apex, ils ajoutent des pièces au modèle de l'arme : Dragon, Cyber, Cristal, Royal, Ange, Os, Démon, Mecha, Nature, Glace, Pirate, Steampunk, Cosmos, Samouraï, Toxique, Synthwave (16 en tout, certains avec des pièces animées : flammes, engrenages, planètes en orbite, gouttes…).
 
 ## Graphismes Ultra

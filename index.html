@@ -742,7 +742,7 @@ body.touch .lo-key{display:none}
           <div class="sndrow"><select id="slideSnd"><option value="gravel" data-i18n="snd.gravel">Gravier</option><option value="metal" data-i18n="snd.metal">Métal</option><option value="wind" data-i18n="snd.wind">Souffle</option><option value="electric" data-i18n="snd.electric">Électrique</option><option value="custom" data-i18n="snd.custom">Mon fichier</option><option value="off" data-i18n="snd.off">Aucun</option></select><button class="btn3" id="sndTest" type="button" data-i18n="snd.test">Écouter</button><button class="btn3" id="sndImport" type="button" data-i18n="snd.import">Importer un son</button><input type="file" id="sndFile" accept="audio/*" hidden></div>
           <span id="sndMsg"></span></div>
         <label class="field"><span class="lab" data-i18n="set.knife">Couteau</span><select id="knifeSel"><option value="combat" data-i18n="knife.combat">Couteau de combat</option><option value="karambit" data-i18n="knife.karambit">Karambit</option><option value="machete" data-i18n="knife.machete">Machette</option><option value="dagger" data-i18n="knife.dagger">Dague</option><option value="hatchet" data-i18n="knife.hatchet">Hachette</option><option value="longsword" data-i18n="knife.longsword">Épée longue</option><option value="greatsword" data-i18n="knife.greatsword">Épée géante</option><option value="butterfly" data-i18n="knife.butterfly">Papillon</option><option value="katana" data-i18n="knife.katana">Katana</option><option value="morgane" data-i18n="knife.morgane">Morgane (hache double)</option><option value="trident" data-i18n="knife.trident">Trident (se lance et revient)</option></select></label>
-        <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin du katana</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option><option value="ultra" data-i18n="ks.ultra">★ Lame céleste (ultra)</option></select></label>
+        <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin de mêlée (toutes les lames)</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option><option value="ultra" data-i18n="ks.ultra">★ Lame céleste (ultra)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
         <label class="check"><input type="checkbox" id="lootOn"> <span data-i18n="set.loot">Départ au pistolet, armes dans les coffres</span></label>
@@ -1126,13 +1126,13 @@ const I18N = {
 // textes ajoutés avec la liste des parties, les emotes, Morgane et les skins animés
 const I18N_ADD = {
   fr: { 'lob.title': 'Parties en cours', 'lob.public': 'Afficher ma partie dans la liste', 'lob.none': 'Aucune partie publique pour l’instant. Crée la tienne !', 'lob.loading': 'Recherche des parties…', 'lob.down': 'Liste des parties indisponible sur ce réseau. Le code de partie marche toujours.', 'lob.off': 'Liste des parties indisponible dans ce navigateur.',
-    'net.leave': 'Quitter la partie', 'net.left': 'Tu as quitté la partie.', 'knife.morgane': 'Morgane (hache double)', 'set.kskin': 'Skin du katana',
+    'net.leave': 'Quitter la partie', 'net.left': 'Tu as quitté la partie.', 'knife.morgane': 'Morgane (hache double)', 'set.kskin': 'Skin de mêlée (toutes les lames)',
     'ks.follow': 'Comme les armes', 'ks.tamahagane': 'Tamahagane', 'ks.damascus': 'Damas', 'ks.blood': 'Lame de sang', 'ks.dragon': 'Dragon (animé)', 'ks.energy': 'Énergie (animé)', 'ks.sakura': 'Sakura', 'ks.obsidian': 'Obsidienne', 'ks.thunder': 'Éclair (animé)', 'ks.void': 'Néant (animé)',
     'skin.plasma': 'Plasma (animé)', 'skin.rainbow': 'Arc-en-ciel (animé)', 'skin.pulse': 'Pulsation (animé)', 'skin.circuit': 'Circuit (animé)', 'skin.flames': 'Flammes (animé)',
     'em.title': 'Emotes', 'em.wave': 'Salut', 'em.dance': 'Danse', 'em.thumbs': 'Pouce levé', 'em.clap': 'Bravo', 'em.sit': 'Assis', 'em.flex': 'Muscles', 'em.hint': 'Choisis avec <kbd>1</kbd>–<kbd>6</kbd>. Bouger ou tirer arrête l’emote.', 'em.loading': 'Modèle du personnage encore en chargement.',
     'mg.feed': 'tenue Morgane !', 'mg.you': 'Morgane t’a eu : te voilà en tenue Morgane jusqu’à ta prochaine mort.', 'act.emote': 'Emotes' },
   en: { 'lob.title': 'Open matches', 'lob.public': 'List my match publicly', 'lob.none': 'No public matches right now. Host one!', 'lob.loading': 'Looking for matches…', 'lob.down': 'Match list unavailable on this network. Match codes still work.', 'lob.off': 'Match list unavailable in this browser.',
-    'net.leave': 'Leave match', 'net.left': 'You left the match.', 'knife.morgane': 'Morgane (double axe)', 'set.kskin': 'Katana skin',
+    'net.leave': 'Leave match', 'net.left': 'You left the match.', 'knife.morgane': 'Morgane (double axe)', 'set.kskin': 'Melee skin (all blades)',
     'ks.follow': 'Same as weapons', 'ks.tamahagane': 'Tamahagane', 'ks.damascus': 'Damascus', 'ks.blood': 'Blood blade', 'ks.dragon': 'Dragon (animated)', 'ks.energy': 'Energy (animated)', 'ks.sakura': 'Sakura', 'ks.obsidian': 'Obsidian', 'ks.thunder': 'Thunder (animated)', 'ks.void': 'Void (animated)',
     'skin.plasma': 'Plasma (animated)', 'skin.rainbow': 'Rainbow (animated)', 'skin.pulse': 'Pulse (animated)', 'skin.circuit': 'Circuit (animated)', 'skin.flames': 'Flames (animated)',
     'em.title': 'Emotes', 'em.wave': 'Wave', 'em.dance': 'Dance', 'em.thumbs': 'Thumbs up', 'em.clap': 'Clap', 'em.sit': 'Sit', 'em.flex': 'Flex', 'em.hint': 'Pick with <kbd>1</kbd>–<kbd>6</kbd>. Moving or shooting stops the emote.', 'em.loading': 'Character model still loading.',
@@ -1288,6 +1288,10 @@ Object.assign(I18N.fr, {"skin.lg_dragon": "Légendaire : Dragon (cornes, écaill
 Object.assign(I18N.en, {"skin.lg_dragon": "Legendary: Dragon (horns, scales)", "skin.lg_cyber": "Legendary: Cyber (fins, holo rings)", "skin.lg_crystal": "Legendary: Crystal (crystals)", "skin.lg_royal": "Legendary: Royal (gold, crown)", "skin.lg_angel": "Legendary: Angel (wings, halo)", "skin.lg_bone": "Legendary: Bone (ribs, skull)"});
 Object.assign(I18N.fr, {"skin.lg_demon": "Légendaire : Démon (cornes, flammes)", "skin.lg_mecha": "Légendaire : Mecha (blindage, propulseurs)", "skin.lg_nature": "Légendaire : Nature (lianes, fleurs)", "skin.lg_ice": "Légendaire : Glace (stalactites)", "skin.lg_pirate": "Légendaire : Pirate (cordages, crâne)", "skin.lg_steam": "Légendaire : Steampunk (engrenages qui tournent)", "skin.lg_cosmos": "Légendaire : Cosmos (planètes en orbite)", "skin.lg_samurai": "Légendaire : Samouraï (laque, pompon)", "skin.lg_toxic": "Légendaire : Toxique (cuves, gouttes)", "skin.lg_synth": "Légendaire : Synthwave (néons)"});
 Object.assign(I18N.en, {"skin.lg_demon": "Legendary: Demon (horns, flames)", "skin.lg_mecha": "Legendary: Mecha (armor, thrusters)", "skin.lg_nature": "Legendary: Nature (vines, flowers)", "skin.lg_ice": "Legendary: Ice (icicles)", "skin.lg_pirate": "Legendary: Pirate (ropes, skull)", "skin.lg_steam": "Legendary: Steampunk (spinning gears)", "skin.lg_cosmos": "Legendary: Cosmos (orbiting planets)", "skin.lg_samurai": "Legendary: Samurai (lacquer, tassel)", "skin.lg_toxic": "Legendary: Toxic (tanks, drips)", "skin.lg_synth": "Legendary: Synthwave (neon)"});
+Object.assign(I18N.fr, {"mk.lab": "Masque", "mk.none": "Aucun", "mk.chat": "Chat tout mignon", "mk.kitsune": "Kitsune (renard)", "mk.oni": "Oni (démon)", "mk.hockey": "Masque de hockey", "mk.smile": "Smiley", "mk.skull": "Crâne"});
+Object.assign(I18N.en, {"mk.lab": "Mask", "mk.none": "None", "mk.chat": "Cute cat", "mk.kitsune": "Kitsune (fox)", "mk.oni": "Oni (demon)", "mk.hockey": "Hockey mask", "mk.smile": "Smiley", "mk.skull": "Skull"});
+Object.assign(I18N.fr, {"ks.inferno": "✦ Brasier (flammes sur la lame)", "ks.glacier": "✦ Glacier (cristaux de glace)", "ks.tempest": "✦ Tempête (arcs électriques)", "ks.bloodmoon": "✦ Lune de sang (gouttes)", "ks.spirit": "✦ Esprits (feux follets en orbite)", "ks.hanami": "✦ Hanami (pétales qui tourbillonnent)", "ks.runic": "✦ Runique (runes dorées)", "ks.abyss": "✦ Abysse (anneaux du vide)", "ks.gold": "Or massif", "ks.carbon": "Carbone", "ks.neon": "Néon", "ks.toxic": "Toxique (animé)"});
+Object.assign(I18N.en, {"ks.inferno": "✦ Inferno (flames on the blade)", "ks.glacier": "✦ Glacier (ice crystals)", "ks.tempest": "✦ Tempest (electric arcs)", "ks.bloodmoon": "✦ Blood moon (drips)", "ks.spirit": "✦ Spirits (orbiting wisps)", "ks.hanami": "✦ Hanami (swirling petals)", "ks.runic": "✦ Runic (golden runes)", "ks.abyss": "✦ Abyss (void rings)", "ks.gold": "Solid gold", "ks.carbon": "Carbon", "ks.neon": "Neon", "ks.toxic": "Toxic (animated)"});
 Object.assign(I18N.fr, {"cs.lab": "Skin du perso", "cs.none": "Aucun (tenue d’origine)", "cs.camo": "Camouflage", "cs.jungle": "Jungle", "cs.urban": "Urbain", "cs.tiger": "Tigre", "cs.carbon": "Carbone", "cs.sakura": "Sakura", "cs.ocean": "Océan", "cs.galaxy": "Galaxie (lumineux)", "cs.neon": "Néon (lumineux)", "cs.lava": "Lave (lumineux)", "cs.gold": "Or", "cs.chrome": "Chrome"});
 Object.assign(I18N.en, {"cs.lab": "Character skin", "cs.none": "None (original outfit)", "cs.camo": "Camo", "cs.jungle": "Jungle", "cs.urban": "Urban", "cs.tiger": "Tiger", "cs.carbon": "Carbon", "cs.sakura": "Sakura", "cs.ocean": "Ocean", "cs.galaxy": "Galaxy (glowing)", "cs.neon": "Neon (glowing)", "cs.lava": "Lava (glowing)", "cs.gold": "Gold", "cs.chrome": "Chrome"});
 Object.assign(I18N.fr, {"q.ultra": "Ultra (effets de lumière)"});
@@ -1356,6 +1360,7 @@ S.map = store.get('map', 'canyon');
 S.char = store.get('char', 'soldier'); if (S.char === 'robot') S.char = 'nova';
 S.tint = store.get('tint', 'auto');
 S.cskin = store.get('cskin2', '');
+S.mask = store.get('mask', '');
 
 /* ================= Constantes de mouvement (mètres, secondes) ================= */
 const STEP = 1 / 120;
@@ -4483,7 +4488,7 @@ function updateStrikes(dt) {
     if (s2.t < -2.4 || (!s2.mine && s2.t < -1.2)) { scene.remove(s2.beam); scene.remove(s2.flare); STRIKE.splice(i, 1); }
   }
 }
-function tintChar(vis, ch, col) { tintCharBase(vis, ch, col); try { applyCharSkin(vis); } catch (e) {} }
+function tintChar(vis, ch, col) { tintCharBase(vis, ch, col); try { applyCharSkin(vis); } catch (e) {} try { applyMask(vis); } catch (e) {} }
 function tintCharBase(vis, ch, col) {
   const c = CHARS[ch] || CHARS.soldier, white = new THREE.Color(1, 1, 1);
   vis.obj.traverse(o => {
@@ -5226,6 +5231,11 @@ function buildViewmodel(kind, knifeType) {
   }
   const fl = new THREE.Mesh(new THREE.PlaneGeometry(.22, .22), new THREE.MeshBasicMaterial({ map: flashTex, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
   fl.position.copy(muzzle); fl.visible = false; g.add(fl);
+  if (kind === 5) { // boîte de la lame (pour les effets des skins de mêlée légendaires)
+    g.updateMatrixWorld(true); const bb = new THREE.Box3();
+    g.traverse(o => { if (o.isMesh && o !== fl && o.geometry) bb.union(new THREE.Box3().setFromObject(o)); });
+    if (!bb.isEmpty()) g.userData.gb = { z0: bb.max.z, z1: bb.min.z, yb: (bb.min.y + bb.max.y) / 2, yt: bb.max.y, w: Math.max(0.004, (bb.max.x - bb.min.x) / 2), knife: true };
+  }
   const VS = 0.82; g.scale.setScalar(VS);
   g.visible = false; wScene.add(g);
   // points de prise des mains (repère de l'arme) : main droite sur la poignée, gauche sur le garde-main
@@ -5340,6 +5350,34 @@ const sunsetTex = canvasTex((g, s) => {
   g.fillStyle = gr; g.fillRect(0, 0, s, s);
   g.fillStyle = 'rgba(255,240,200,.35)'; g.beginPath(); g.arc(s * 0.3, s * 0.35, s * 0.18, 0, Math.PI * 2); g.fill();
 }, 128);
+/* ---------- masques : posés sur le visage du perso (suivent la tête) ---------- */
+const MASK_TEX = {};
+const maskCanvas = draw => { const t = canvasTex((g, s) => { g.clearRect(0, 0, s, s); draw(g, s); }, 256); t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping; return t; };
+const MASKS = {
+  chat: () => { const t = new THREE.TextureLoader().load('assets/masks/chat.png'); t.encoding = THREE.sRGBEncoding; return t; },
+  kitsune: () => maskCanvas((g, s) => { g.fillStyle = '#f6f2ea'; g.beginPath(); g.moveTo(s * .5, s * .95); g.lineTo(s * .08, s * .35); g.lineTo(s * .12, s * .02); g.lineTo(s * .38, s * .22); g.lineTo(s * .62, s * .22); g.lineTo(s * .88, s * .02); g.lineTo(s * .92, s * .35); g.closePath(); g.fill();
+    g.fillStyle = '#d8283a'; for (const x of [.3, .7]) { g.beginPath(); g.ellipse(s * x, s * .45, s * .09, s * .03, x < .5 ? .4 : -.4, 0, 7); g.fill(); } g.fillRect(s * .48, s * .25, s * .04, s * .12); g.fillStyle = '#111'; g.beginPath(); g.arc(s * .5, s * .82, s * .035, 0, 7); g.fill(); }),
+  oni: () => maskCanvas((g, s) => { g.fillStyle = '#c0201a'; g.beginPath(); g.ellipse(s * .5, s * .55, s * .42, s * .44, 0, 0, 7); g.fill(); g.fillStyle = '#f0e6c8'; for (const x of [.25, .75]) { g.beginPath(); g.moveTo(s * x - 20, s * .2); g.lineTo(s * x, 0); g.lineTo(s * x + 20, s * .2); g.fill(); }
+    g.fillStyle = '#ffd23a'; for (const x of [.33, .67]) { g.beginPath(); g.ellipse(s * x, s * .45, s * .08, s * .05, 0, 0, 7); g.fill(); } g.fillStyle = '#111'; g.fillRect(s * .3, s * .7, s * .4, s * .08); g.fillStyle = '#fff'; for (let i = 0; i < 5; i++) g.fillRect(s * (.31 + i * .08), s * .7, s * .05, s * .05); }),
+  hockey: () => maskCanvas((g, s) => { g.fillStyle = '#eceae4'; g.beginPath(); g.ellipse(s * .5, s * .52, s * .38, s * .46, 0, 0, 7); g.fill(); g.fillStyle = '#c0201a'; for (const [x, y] of [[.35, .2], [.65, .2], [.5, .15], [.3, .62], [.7, .62]]) { g.beginPath(); g.moveTo(s * x, s * y - 10); g.lineTo(s * x + 9, s * y + 8); g.lineTo(s * x - 9, s * y + 8); g.fill(); }
+    g.fillStyle = '#111'; for (const x of [.36, .64]) { g.beginPath(); g.ellipse(s * x, s * .42, s * .08, s * .06, 0, 0, 7); g.fill(); } for (let i = 0; i < 12; i++) { g.beginPath(); g.arc(s * (.38 + (i % 4) * .08), s * (.68 + ((i / 4) | 0) * .06), 4, 0, 7); g.fill(); } }),
+  smile: () => maskCanvas((g, s) => { g.fillStyle = '#ffd23a'; g.beginPath(); g.arc(s * .5, s * .5, s * .46, 0, 7); g.fill(); g.fillStyle = '#111'; for (const x of [.36, .64]) { g.beginPath(); g.ellipse(s * x, s * .4, s * .05, s * .09, 0, 0, 7); g.fill(); } g.lineWidth = s * .05; g.strokeStyle = '#111'; g.beginPath(); g.arc(s * .5, s * .52, s * .25, .3, Math.PI - .3); g.stroke(); }),
+  skull: () => maskCanvas((g, s) => { g.fillStyle = '#efe9da'; g.beginPath(); g.ellipse(s * .5, s * .45, s * .4, s * .4, 0, 0, 7); g.fill(); g.fillRect(s * .3, s * .6, s * .4, s * .3); g.fillStyle = '#111'; for (const x of [.35, .65]) { g.beginPath(); g.ellipse(s * x, s * .45, s * .1, s * .11, 0, 0, 7); g.fill(); }
+    g.beginPath(); g.moveTo(s * .5, s * .58); g.lineTo(s * .45, s * .68); g.lineTo(s * .55, s * .68); g.fill(); for (let i = 0; i < 5; i++) g.fillRect(s * (.33 + i * .075), s * .76, s * .03, s * .12); })
+};
+const maskTex = id => MASK_TEX[id] || (MASK_TEX[id] = MASKS[id]());
+function applyMask(vis) {
+  if (vis.maskG) { if (vis.maskG.userData.id === vis.mk) return; vis.maskG.parent && vis.maskG.parent.remove(vis.maskG); vis.maskG = null; }
+  if (!vis.mk || !MASKS[vis.mk]) return;
+  const head = gearMount(vis, /Head$/); if (!head) return;
+  vis.obj.updateMatrixWorld(true);
+  if (vis.obj.parent) vis.obj.parent.getWorldScale(_php); else _php.set(1, 1, 1);
+  const g = new THREE.Group(); head.getWorldScale(_phs); g.scale.setScalar(_php.x / _phs.x); g.userData.gear = true; g.userData.id = vis.mk;
+  const geo = new THREE.SphereGeometry(0.135, 24, 16, Math.PI / 2 - 0.85, 1.7, 0.8, 1.4);
+  const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ map: maskTex(vis.mk), transparent: true, alphaTest: 0.4, side: THREE.DoubleSide }));
+  m.position.set(0, 0.1, 0.025); m.userData.gear = true; m.castShadow = false; g.add(m);
+  head.add(g); vis.maskG = g;
+}
 /* ---------- skins de perso : motif ou matière appliqués sur tout le modèle du personnage ---------- */
 const CHAR_SKINS = {
   camo: { map: () => camoTex, rep: 3 }, jungle: { map: () => jungleTex, rep: 3 }, urban: { map: () => urbanTex, rep: 3 }, tiger: { map: () => tigerTex, rep: 2 },
@@ -5504,7 +5542,7 @@ const KNIFE_STD = { steel: 0xc3cad1, mid: 0xf2f5f8, blk: 0x1b1d20, tan: 0x5e4029
 const MORGANE_SKIN = { steel: [0xeedcff, 0x24082e], mid: 0x3a1a4a, tan: 0x4a1e30, blk: 0x1a0a14, amb: [0xff7ad0, 0xff2aa0], dark: 0x2a1020, teal: 0x3a1a4a, trail: 0xff6ad0, anim: 'pulse', pulseRoles: ['amb'] };
 S.kskin = KSKINS[store.get('kskin', 'follow')] !== undefined ? store.get('kskin', 'follow') : 'follow';
 function vmSkin(i) {
-  if (i === 5 && S.knife === 'katana' && KSKINS[S.kskin]) return KSKINS[S.kskin];
+  if (i === 5 && KSKINS[S.kskin]) return KSKINS[S.kskin];
   if (i === 5 && S.knife === 'morgane') return MORGANE_SKIN;
   if (i === 5 && S.knife === 'trident') return TRIDENT_SKIN;
   if (i === 5 && (S.skin || 'std') === 'std') return KNIFE_STD;
@@ -6018,7 +6056,7 @@ function fpaBuild(ch) {
   vis.obj.rotation.y = (CHARS[ch] ? CHARS[ch].yaw || 0 : 0) + Math.PI;
   // teinte du perso, mais sans ses accessoires (cape, épaulières, brassards…) : collés aux os étirés ils mangeaient l'écran
   const orig = new Set(); vis.obj.traverse(o => orig.add(o));
-  vis.cs = S.cskin; try { tintChar(vis, ch, myColor()); } catch (e) {}
+  vis.cs = S.cskin; vis.mk = S.mask; try { tintChar(vis, ch, myColor()); } catch (e) {}
   const extra = []; vis.obj.traverse(o => { if (!orig.has(o) && !o.isBone) extra.push(o); });
   for (const o of extra) if (o.parent) o.parent.remove(o);
   vis.obj.traverse(o => { if (o.isMesh) for (const m of Array.isArray(o.material) ? o.material : [o.material]) { if (m.metalness !== undefined) { m.metalness = Math.min(m.metalness, 0.15); m.roughness = Math.max(m.roughness, 0.55); } } });
@@ -6344,7 +6382,7 @@ function peerSupported() { return typeof window.Peer === 'function' && typeof wi
 function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.zip || (ODM.a.length && air) ? 'zip' : (SPIRAL.t > 0 || (P.sgT > 0.1 && air)) ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, cs: S.cskin || undefined, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
+  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, cs: S.cskin || undefined, mk: S.mask || undefined, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
   if (X.spin && xUnlocked && !P.veh) { st.y = r2((performance.now() / 1000 * 22) % (Math.PI * 2)); st.pi = -1.35; }
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (SPEC.on) { st.dead = true; st.spec = 1; }
@@ -6353,7 +6391,7 @@ function myState() {
   if (P.mgT > 0) st.mg = 1;
   if (HOOK.p) st.gp = [r2(HOOK.p.x), r2(HOOK.p.y), r2(HOOK.p.z)];
   if (WS.cur === 6 && SP.held) st.sp = SP.held;
-  st.sk = S.skin; if (WS.cur === 5) { st.kt = S.knife; if (S.knife === 'katana') st.ks = S.kskin; }
+  st.sk = S.skin; if (WS.cur === 5) { st.kt = S.knife; st.ks = S.kskin; }
   if (WS.cur === 3 && WS.ads > 0.6) st.ads = 1;
   return st;
 }
@@ -6464,7 +6502,7 @@ function clientRecv(m) {
       if (st) {
         const wasDead = rp.st && rp.st.dead;
         rp.st = st; rp.lastT = performance.now();
-        if ((st.ch || 'soldier') !== rp.ch || (st.tc || 'auto') !== rp.tc || (st.cs || '') !== (rp.cs || '')) { rp.ch = st.ch || 'soldier'; rp.tc = st.tc || 'auto'; rp.cs = st.cs || ''; attachChar(rp); }
+        if ((st.ch || 'soldier') !== rp.ch || (st.tc || 'auto') !== rp.tc || (st.cs || '') !== (rp.cs || '') || (st.mk || '') !== (rp.mk || '')) { rp.ch = st.ch || 'soldier'; rp.tc = st.tc || 'auto'; rp.cs = st.cs || ''; rp.mk = st.mk || ''; attachChar(rp); }
         if (!rp.hasPos) { rp.pos.set(st.p[0], st.p[1], st.p[2]); rp.yaw = st.y; rp.hasPos = true; }
         if (wasDead && !st.dead) { rp.pos.set(st.p[0], st.p[1], st.p[2]); }
         if (st.dead || !rp.pending) { rp.pSh = st.sh; rp.pHp = st.hp; }
@@ -6600,7 +6638,7 @@ function attachChar(rp) {
   if (rp.vis) g_remove(rp.g, rp.vis.obj);
   rp.vis = cloneModel(model); rp.vis.ch = used; rp.vis.base = model.scale; rp.vis.obj.rotation.y = CHARS[used].yaw;
   rp.g.add(rp.vis.obj);
-  rp.vis.cs = rp.cs; tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
+  rp.vis.cs = rp.cs; rp.vis.mk = rp.mk; tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
   // arme dans la main droite
   // la vraie arme du joueur est placée à chaque image sur cet os (voir updateRemoteGun)
   let hand = null; rp.vis.obj.traverse(o => { if (!hand && o.isBone && CHARS[used].hand.test(o.name)) hand = o; });
@@ -7079,7 +7117,7 @@ function ensureSelfAvatar() {
   if (SELF.key !== key) {
     if (SELF.vis) { setOutfit(SELF.vis, SELF.g, false); SELF.g.remove(SELF.vis.obj); }
     SELF.vis = cloneModel(model); SELF.vis.ch = ch; SELF.vis.base = model.scale; SELF.vis.obj.rotation.y = CHARS[ch].yaw;
-    SELF.g.add(SELF.vis.obj); SELF.vis.cs = S.cskin; tintChar(SELF.vis, ch, myColor()); playAnim(SELF.vis, CHARS[ch].anim.idle, 0);
+    SELF.g.add(SELF.vis.obj); SELF.vis.cs = S.cskin; SELF.vis.mk = S.mask; tintChar(SELF.vis, ch, myColor()); playAnim(SELF.vis, CHARS[ch].anim.idle, 0);
     SELF.key = key;
   }
   return SELF.vis;
@@ -8902,7 +8940,7 @@ function updateRemoteGun(rp, dt) {
     const kind = clamp(st.w | 0, 0, 6), kt = kind === 6 ? (SPECIALS[st.sp] ? st.sp : 'burst') : KNIVES[st.kt] ? st.kt : 'combat';
     const vm = buildViewmodel(kind, kt); wScene.remove(vm.g);
     vm.g.scale.setScalar(0.92); vm.g.traverse(o => { if (o.isMesh && o !== vm.flash) o.castShadow = true; });
-    applySkinVM(vm, kind === 5 && kt === 'katana' && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : (st.sk === 'custom' ? SKINS['c:' + rp.id] : SKINS[st.sk]) || SKINS.std);
+    applySkinVM(vm, kind === 5 && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : (st.sk === 'custom' ? SKINS['c:' + rp.id] : SKINS[st.sk]) || SKINS.std);
     rp.g.add(vm.g); rp.gun = { vm, key, flashT: 0 };
   }
   const vm = rp.gun.vm, g = vm.g; g.visible = true;
@@ -10316,10 +10354,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.08b';
+const GAME_VERSION = '2026.11.08c';
 const CHANGES = {
-  fr: ['10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -11206,7 +11244,7 @@ function refreshPreview() {
   if (prevVis) { prevScene.remove(prevVis.obj); prevVis = null; }
   if (!model) return;
   prevVis = cloneModel(model); prevVis.ch = pch; prevVis.obj.rotation.y = CHARS[pch].yaw;
-  prevVis.cs = S.cskin; tintChar(prevVis, pch, TINTS[S.tint] || COLORS[0]);
+  prevVis.cs = S.cskin; prevVis.mk = S.mask; tintChar(prevVis, pch, TINTS[S.tint] || COLORS[0]);
   prevScene.add(prevVis.obj);
   playAnim(prevVis, CHARS[pch].anim.idle, 0);
 }
@@ -11610,6 +11648,97 @@ const LG2 = {
 for (const [k, v] of Object.entries(LG2)) {
   SKINS['lg_' + k] = Object.assign({ dark: 0xffffff, tan: 0xffffff, teal: 0xffffff, map: LTEX[k], mapRoles: ['dark', 'teal', 'tan'], kit: k, legend: 1 }, v, { emap: v.emap ? LTEX[k] : undefined });
 }
+/* ---------- skins de mêlée : pour TOUS les couteaux et lames ; les légendaires ajoutent des effets autour de la lame ---------- */
+const bladeZ = (gb, f) => gb.z0 - (gb.z0 - gb.z1) * (0.32 + 0.68 * f); // f = 0 garde … 1 pointe
+// halo lumineux qui enveloppe la lame (toutes les lames légendaires)
+function bladeAura(gb, add, col) {
+  const L = (gb.z0 - gb.z1) * 0.66; if (L < 0.12) return; // lames courbes ou courtes : pas de halo droit
+  const gt = canvasTex((g, s) => { const gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, 'rgba(255,255,255,0)'); gr.addColorStop(0.5, 'rgba(255,255,255,1)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = gr; g.fillRect(0, 0, s, s); }, 64);
+  const m = new THREE.MeshBasicMaterial({ color: col, map: gt, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+  for (const rz of [0, Math.PI / 2]) { const a = new THREE.Mesh(new THREE.PlaneGeometry(0.045, L), m); a.rotation.set(-Math.PI / 2, 0, 0); a.rotateY(rz); a.position.set(0, gb.yb + (gb.yt - gb.yb) * 0.15, bladeZ(gb, 0.52)); add(a, 'aura'); }
+}
+Object.assign(LEGEND_KITS, {
+  // flammes qui lèchent la lame
+  m_flame(gb, add) {
+    const fm = lgMat('mfl', { basic: true, color: 0xff6a1a, transparent: true, opacity: 0.8, depthWrite: false, blending: THREE.AdditiveBlending }), core = lgMat('mflc', { basic: true, color: 0xffe08a, transparent: true, opacity: 0.9, depthWrite: false, blending: THREE.AdditiveBlending });
+    for (let i = 0; i < 16; i++) { const f = new THREE.Mesh(new THREE.ConeGeometry(0.012 + (i % 3) * 0.003, 0.05 + (i % 4) * 0.012, 6), i % 3 ? fm : core); f.position.set((i % 2 - 0.5) * 0.008, gb.yt + 0.018, bladeZ(gb, i / 15)); add(f, 'flame'); }
+    bladeAura(gb, add, 0xff5a10);
+  },
+  // cristaux de glace et brume
+  m_frost(gb, add) {
+    const ic = lgMat('mfr', { color: 0xc8f0ff, emissive: 0x2a6a8a, shininess: 140, specular: 0xffffff, transparent: true, opacity: 0.85 }); const r = lgRnd(21);
+    bladeAura(gb, add, 0x6ad0ff);
+    for (let i = 0; i < 16; i++) { const c = new THREE.Mesh(new THREE.OctahedronGeometry(0.008 + r() * 0.01, 0), ic); c.scale.set(0.5, 1.6, 0.5); c.position.set((r() - 0.5) * gb.w * 3, gb.yb + (r() - 0.4) * (gb.yt - gb.yb) * 2.2, bladeZ(gb, r())); c.rotation.set(r() * 3, r() * 3, r() * 3); add(c, i % 3 ? null : 'pulse'); }
+  },
+  // arcs électriques qui crépitent le long de la lame
+  m_storm(gb, add) {
+    const lm = new THREE.LineBasicMaterial({ color: 0xbfe8ff, transparent: true, opacity: 0.95, blending: THREE.AdditiveBlending });
+    for (let k = 0; k < 5; k++) { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(14 * 3), 3)); const ln = new THREE.Line(geo, lm); ln.userData.gb = gb; ln.userData.k = k; add(ln, 'arc'); }
+    bladeAura(gb, add, 0x5aa8ff);
+    const glow = new THREE.Mesh(new THREE.SphereGeometry(0.012, 8, 6), lgMat('mst', { basic: true, color: 0xe0f4ff })); glow.position.set(0, gb.yb, gb.z1); add(glow, 'pulse');
+  },
+  // gouttes de sang qui perlent et tombent
+  m_blood(gb, add) {
+    const bm = lgMat('mbl', { color: 0x9a0610, emissive: 0x3a0004, shininess: 120, specular: 0xff8080 });
+    bladeAura(gb, add, 0xff1020);
+    for (let i = 0; i < 8; i++) { const d = new THREE.Mesh(new THREE.SphereGeometry(0.005, 7, 5), bm); d.scale.y = 1.7; d.position.set(0, gb.yb - (gb.yt - gb.yb) * 0.9, bladeZ(gb, 0.15 + i * 0.15)); add(d, 'drip'); }
+  },
+  // esprits lumineux en orbite autour de la lame
+  m_spirit(gb, add) {
+    const cols = [0x9affff, 0xd0a0ff, 0xffffff];
+    bladeAura(gb, add, 0x8af8ff);
+    for (let i = 0; i < 3; i++) { const pv = new THREE.Group(); pv.position.set(0, gb.yb, bladeZ(gb, 0.25 + i * 0.3)); const w = new THREE.Mesh(new THREE.SphereGeometry(0.009, 8, 6), lgMat('msp' + i, { basic: true, color: cols[i], transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false })); w.position.set(0, 0.03, 0); pv.add(w); pv.rotation.z = i * 2; add(pv, i % 2 ? 'spinB' : 'spin'); }
+  },
+  // pétales de sakura qui tourbillonnent
+  m_petal(gb, add) {
+    const pm = lgMat('mpt', { color: 0xffb7d0, emissive: 0x3a1020, side: THREE.DoubleSide });
+    bladeAura(gb, add, 0xff7aa8);
+    for (let i = 0; i < 14; i++) { const pv = new THREE.Group(); pv.position.set(0, gb.yb, bladeZ(gb, i / 13)); const p = new THREE.Mesh(new THREE.CircleGeometry(0.009, 5), pm); p.scale.set(0.6, 1, 1); p.position.set(0.025 + (i % 3) * 0.006, 0, 0); p.rotation.set(i, i * 2, 0); pv.add(p); pv.rotation.z = i * 0.8; add(pv, i % 2 ? 'spin' : 'spinB'); }
+  },
+  // runes dorées qui flottent au-dessus de la lame
+  m_rune(gb, add) {
+    const rt = canvasTex((g, s) => { g.clearRect(0, 0, s, s); g.strokeStyle = '#ffd86a'; g.lineWidth = s * 0.08; g.beginPath(); g.moveTo(s * .3, s * .1); g.lineTo(s * .3, s * .9); g.moveTo(s * .3, s * .3); g.lineTo(s * .7, s * .1); g.moveTo(s * .3, s * .55); g.lineTo(s * .7, s * .35); g.stroke(); }, 64);
+    const rm = lgMat('mrn', { basic: true, map: rt, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+    bladeAura(gb, add, 0xffc84a);
+    for (let i = 0; i < 5; i++) { const p = new THREE.Mesh(new THREE.PlaneGeometry(0.028, 0.028), rm); p.rotation.y = Math.PI / 2; p.position.set(0, gb.yt + 0.02, bladeZ(gb, 0.1 + i * 0.27)); add(p, 'bob'); }
+  },
+  // aura du vide : anneaux sombres et éclats violets
+  m_void(gb, add) {
+    const rm = lgMat('mvd', { basic: true, color: 0x9a6aff, transparent: true, opacity: 0.6, side: THREE.DoubleSide, depthWrite: false });
+    bladeAura(gb, add, 0x7a40ff);
+    for (let i = 0; i < 4; i++) { const r = new THREE.Mesh(new THREE.TorusGeometry(0.024 + i * 0.006, 0.0018, 5, 24), rm); r.position.set(0, gb.yb, bladeZ(gb, 0.3 + i * 0.3)); add(r, i % 2 ? 'spinB' : 'spin'); }
+  }
+});
+// arcs électriques : on redessine des zigzags à chaque image
+const _kitTick1 = kitTick;
+kitTick = function (vm, t) {
+  _kitTick1(vm, t);
+  const A = vm.g.userData.kitAnim; if (!A) return;
+  for (const [m, a] of A) if (a === 'aura') { m.material.opacity = 0.38 + 0.18 * Math.sin(t * 5); }
+  for (const [m, a] of A) if (a === 'arc') {
+    const gb = m.userData.gb, p = m.geometry.attributes.position, n = p.count, seed = Math.floor(t * 20) + m.userData.k * 97;
+    let s2 = seed * 9301 + 49297; const r = () => (s2 = (s2 * 9301 + 49297) % 233280) / 233280;
+    for (let i = 0; i < n; i++) { const f = i / (n - 1); p.setXYZ(i, (r() - 0.5) * 0.02, gb.yb + (r() - 0.5) * 0.026, bladeZ(gb, f)); }
+    p.needsUpdate = true; m.visible = r() > 0.15;
+  }
+};
+Object.assign(KSKINS, {
+  inferno: { steel: [0x2a0a04, 0x3a0a00], mid: [0xffa040, 0xff5000], blk: 0x120402, amb: [0xffb020, 0x6a2a00], map: LTEX.demon, emap: LTEX.demon, emapCol: 0xff6a20, mapRoles: ['steel'], trail: 0xff6a1a, anim: 'scroll', spd: [0, -0.3], kit: 'm_flame', lg: 1 },
+  glacier: { steel: [0xe6f8ff, 0x1a4a66], mid: [0xffffff, 0x6ad0ff], blk: 0x1a2a3a, amb: 0x9ad8ff, map: LTEX.ice, mapRoles: ['steel'], trail: 0xaee8ff, kit: 'm_frost', lg: 1 },
+  tempest: { steel: [0xd8ecff, 0x2050a0], mid: [0xffffff, 0x80c8ff], blk: 0x0a1020, amb: [0x80c8ff, 0x1040a0], trail: 0x9ad8ff, anim: 'flicker', kit: 'm_storm', lg: 1 },
+  bloodmoon: { steel: [0x5a0408, 0x2a0002], mid: [0xff2a3a, 0x8a0010], blk: 0x0a0204, amb: 0x8a1018, trail: 0xff1a2a, anim: 'pulse', pulseRoles: ['mid'], kit: 'm_blood', lg: 1 },
+  spirit: { steel: [0xe8fcff, 0x2a6a7a], mid: [0xffffff, 0x9affff], blk: 0x102028, amb: [0xd0a0ff, 0x5030a0], trail: 0xb8f8ff, anim: 'pulse', pulseRoles: ['steel'], kit: 'm_spirit', lg: 1 },
+  hanami: { steel: 0xffffff, mid: 0xffe0ea, blk: 0x3a1a24, amb: 0xff7aa0, map: kSakuraTex, mapRoles: ['steel'], trail: 0xffa8c8, kit: 'm_petal', lg: 1 },
+  runic: { steel: [0x3a3a44, 0x1a1408], mid: [0xffe08a, 0xa07a10], blk: 0x14100a, amb: [0xffd86a, 0x6a4a00], trail: 0xffd86a, anim: 'pulse', pulseRoles: ['mid', 'amb'], kit: 'm_rune', lg: 1 },
+  abyss: { steel: 0xffffff, mid: [0xe0c0ff, 0x6030c0], blk: 0x050208, amb: 0x8a5ad0, map: kVoidTex, emap: kVoidTex, emapCol: 0x4a2a8a, mapRoles: ['steel'], trail: 0xb080ff, anim: 'scroll', spd: [0.05, 0.02], kit: 'm_void', lg: 1 },
+  gold: { steel: [0xffd86a, 0x3a2400], mid: 0xfff2c0, blk: 0x2a1a08, amb: 0xffc84a, trail: 0xffe08a },
+  carbon: { steel: 0xffffff, mid: 0xdfe4e8, blk: 0x0a0a0c, amb: 0x5a5f66, map: carbonTex, mapRoles: ['steel', 'blk'], trail: 0xb8c0c8 },
+  neon: { steel: [0x1a1a22, 0x000000], mid: [0x3affd8, 0x10c8a8], blk: 0x050508, amb: [0xff3ab8, 0xa01070], trail: 0x3affd8, anim: 'pulse', pulseRoles: ['mid', 'amb'] },
+  toxic: { steel: [0x2a3a1a, 0x0a1a00], mid: [0x9aff4a, 0x3aa000], blk: 0x0a1206, amb: 0x7aff2a, map: LTEX.toxic, emap: LTEX.toxic, emapCol: 0x3a8a00, mapRoles: ['steel'], trail: 0x8aff3a, anim: 'scroll', spd: [0.02, 0.1] }
+});
+// liste du sélecteur de skins de mêlée (les nouveaux sont ajoutés à la fin, les légendaires marqués ✦)
+{ const ksel = $('kskinSel'); for (const id of Object.keys(KSKINS)) { if (!KSKINS[id] || ksel.querySelector(`option[value="${id}"]`)) continue; const o = document.createElement('option'); o.value = id; o.setAttribute('data-i18n', 'ks.' + id); o.textContent = t('ks.' + id); ksel.appendChild(o); } ksel.value = S.kskin; }
+S.kskin = KSKINS[store.get('kskin', 'follow')] !== undefined ? store.get('kskin', 'follow') : 'follow'; $('kskinSel').value = S.kskin;
 applySkin(S.skin);
 $('cskPick').addEventListener('click', () => $('cskFile').click());
 $('cskFile').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) cskFromFile(f); e.target.value = ''; });
@@ -11661,6 +11790,14 @@ tintSel.addEventListener('change', () => { S.tint = tintSel.value; store.set('ti
   const fill = () => { sel.replaceChildren(); for (const id of ['', ...Object.keys(CHAR_SKINS)]) { const o = document.createElement('option'); o.value = id; o.textContent = t('cs.' + (id || 'none')); sel.appendChild(o); } sel.value = S.cskin || ''; };
   fill(); addEventListener('velLang', fill);
   sel.addEventListener('change', () => { S.cskin = sel.value; store.set('cskin2', S.cskin); refreshPreview(); try { if (SELF.vis) { SELF.vis.cs = S.cskin; applyCharSkin(SELF.vis); } } catch (e) {} });
+  // masque
+  const lab2 = document.createElement('label'); lab2.className = 'field';
+  lab2.innerHTML = '<span class="lab" data-i18n="mk.lab">Masque</span><select id="maskSel"></select>';
+  lab.after(lab2);
+  const ms = lab2.querySelector('select');
+  const fill2 = () => { ms.replaceChildren(); for (const id of ['', ...Object.keys(MASKS)]) { const o = document.createElement('option'); o.value = id; o.textContent = t('mk.' + (id || 'none')); ms.appendChild(o); } ms.value = S.mask || ''; };
+  fill2(); addEventListener('velLang', fill2);
+  ms.addEventListener('change', () => { S.mask = ms.value; store.set('mask', S.mask); refreshPreview(); try { if (SELF.vis) { SELF.vis.mk = S.mask; applyMask(SELF.vis); } } catch (e) {} });
 }
 const knifeSel = $('knifeSel'); knifeSel.value = S.knife;
 knifeSel.addEventListener('change', () => {
@@ -11669,7 +11806,7 @@ knifeSel.addEventListener('change', () => {
   VM[5].g.visible = WS.cur === 5; renderSlots();
 });
 const kskinSel = $('kskinSel'); kskinSel.value = S.kskin;
-function syncKskin() { $('kskinField').hidden = S.knife !== 'katana'; }
+function syncKskin() { $('kskinField').hidden = false; }
 syncKskin();
 kskinSel.addEventListener('change', () => { S.kskin = kskinSel.value; store.set('kskin', S.kskin); applySkin(S.skin); });
 /* ================= Équipement : personnage + couteau, avant la partie et à tout moment (L) ================= */
