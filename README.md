@@ -202,7 +202,7 @@ Dans les réglages : forme (croix, croix en T, croix en X, cercle, point), coule
 ## Chat écrit et vocal de proximité
 
 - **Écrit :** **Entrée** (ou **Y**) ouvre la barre de chat. Par défaut le message n'arrive qu'aux joueurs à moins de 40 m ; **Tab** (ou le bouton à gauche de la barre) bascule entre « Proche » et « Tous ».
-- **Vocal :** réglages → Micro (une jauge à côté montre que le micro capte) : « Appuyer pour parler » (touche **N**) ou « Toujours ouvert ». On entend les joueurs à moins de 45 m, de plus en plus fort en s'approchant, à gauche ou à droite selon leur position. Une icône 🔊 s'affiche à côté du nom de celui qui parle. La voix passe directement entre les joueurs (WebRTC), le navigateur demande l'autorisation du micro.
+- **Vocal :** réglages → Micro : choisis ton micro dans la liste (les noms apparaissent après l'autorisation du navigateur) ; une jauge montre qu'il capte. Modes : « Appuyer pour parler » (touche **N**) ou « Toujours ouvert ». On entend les joueurs à moins de 45 m, de plus en plus fort en s'approchant, à gauche ou à droite selon leur position. Une icône 🔊 s'affiche à côté du nom de celui qui parle. La voix passe directement entre les joueurs (WebRTC), le navigateur demande l'autorisation du micro.
 - Sur mobile : boutons CHAT et MICRO.
 
 ## Multijoueur
@@ -244,6 +244,14 @@ Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d
 ## Android (APK)
 
 Télécharge **[Velocite.apk](https://github.com/Haze15/velocite/releases/download/apk/Velocite.apk)** sur ton téléphone, ouvre-le et autorise l'installation d'applications depuis cette source. Le jeu entier est dans l'appli (il marche sans le site), en plein écran paysage, avec les commandes tactiles ; le micro est demandé pour le chat vocal ; le bouton retour ouvre le menu. L'APK est reconstruit automatiquement par GitHub Actions (`android/`, `.github/workflows/apk.yml`) à chaque mise à jour du jeu.
+
+## Enchaînements de kills
+
+Deux éliminations à moins de 4,5 s d'écart = **Double kill**, puis Triple, Quadra, Penta, Carnage ; et des séries sans mourir (3, 5, 8, 12, 16, 20 : Ça chauffe, En série, Déchaîné, Inarrêtable, Divin, Légendaire). Chaque palier a son jingle, une grande bannière et une voix d'annonce (synthèse vocale du navigateur, désactivable dans les réglages). Quête « Carnage » : un quadra kill → skin Carnage.
+
+## Secret
+
+Il y a une carte cachée. Indice : un très vieux code de jeux vidéo, tapé n'importe où (ou 7 touchers rapides sur le titre du menu sur téléphone). On y cherche 5 plumes d'or.
 
 ## Décor, ciel et skins
 
