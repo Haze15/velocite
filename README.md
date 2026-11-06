@@ -241,6 +241,10 @@ Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie su
 
 Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d'une cible et légère traction quand tu bouges ou vises, de 0 à 100 %), **snap strafe facile** en l'air et inversion verticale. Au clavier, le **snap tap** est activé par défaut : si deux directions opposées sont enfoncées, la dernière appuyée gagne.
 
+## Graphismes Ultra
+
+Réglages → Graphismes → **Ultra** : post-traitement maison (halo lumineux autour des lampes, des tirs et des effets, étalonnage des couleurs, vignette), anticrénelage multi-échantillons 4×, ombres en 4096 adoucies, résolution jusqu'à 2× et 60 % d'herbe en plus. « Élevés » garde un bloom plus léger. Pour les PC modestes, « Auto » et « Rapides » n'ont pas ces effets.
+
 ## Optimisation
 
 Les collisions utilisent une grille spatiale (seuls les blocs proches sont testés), le décor est fusionné par morceaux de 96 m pour que la carte graphique et les tirs ignorent ce qui est hors champ, l'herbe disparaît au-delà de 130 m et la distance d'affichage suit le brouillard. Sur la carte Monde, la physique est environ 4 fois plus rapide et les tirs 2,5 fois. En qualité « auto », la résolution baisse toute seule si les images par seconde chutent, et sur les petites machines (4 Go de mémoire ou moins, ou 3 cœurs ou moins) le jeu passe directement en qualité basse (pas d'anticrénelage, pas d'ombres, moins d'herbe, résolution réduite). Les gros modèles (Nova, Squelette) ne se chargent que quand quelqu'un les utilise.
