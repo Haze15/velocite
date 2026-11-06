@@ -241,12 +241,16 @@ Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie su
 
 Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d'une cible et légère traction quand tu bouges ou vises, de 0 à 100 %), **snap strafe facile** en l'air et inversion verticale. Au clavier, le **snap tap** est activé par défaut : si deux directions opposées sont enfoncées, la dernière appuyée gagne.
 
+## Android (APK)
+
+Télécharge **[Velocite.apk](https://github.com/Haze15/velocite/releases/download/apk/Velocite.apk)** sur ton téléphone, ouvre-le et autorise l'installation d'applications depuis cette source. Le jeu entier est dans l'appli (il marche sans le site), en plein écran paysage, avec les commandes tactiles ; le micro est demandé pour le chat vocal ; le bouton retour ouvre le menu. L'APK est reconstruit automatiquement par GitHub Actions (`android/`, `.github/workflows/apk.yml`) à chaque mise à jour du jeu.
+
 ## Décor, ciel et skins
 
 - **Textures** : béton en panneaux, pierre de taille, tôle rivetée, roche, bois, tuiles, et un sol par carte (sable, herbe, pavés, neige, cendre…). Elles sont générées au lancement (rien à télécharger) et prennent la couleur de chaque carte.
 - **Ciel** : nuages procéduraux qui défilent (couverture différente par carte), soleil, étoiles sur les cartes de nuit.
 - **Skins de perso** (onglet Personnage → Skin du perso) : 12 motifs ou matières sur tout le modèle, vus par les autres joueurs.
-- **Skins d'arme légendaires** (✦ dans la liste des skins) : comme dans Apex, ils ajoutent des pièces au modèle de l'arme : Dragon, Cyber, Cristal, Royal, Ange, Os.
+- **Skins d'arme légendaires** (✦ dans la liste des skins) : comme dans Apex, ils ajoutent des pièces au modèle de l'arme : Dragon, Cyber, Cristal, Royal, Ange, Os, Démon, Mecha, Nature, Glace, Pirate, Steampunk, Cosmos, Samouraï, Toxique, Synthwave (16 en tout, certains avec des pièces animées : flammes, engrenages, planètes en orbite, gouttes…).
 
 ## Graphismes Ultra
 

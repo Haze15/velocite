@@ -1,0 +1,32 @@
+plugins { id 'com.android.application' }
+
+// version de l'appli = version du jeu (version.json), passée par le workflow
+def gameVersion = System.getenv('GAME_VERSION') ?: '2026.11.08'
+def code = (System.getenv('GITHUB_RUN_NUMBER') ?: '1') as int
+
+android {
+    namespace 'fr.velocite.app'
+    compileSdk 34
+    defaultConfig {
+        applicationId 'fr.velocite.app'
+        minSdk 24
+        targetSdk 34
+        versionCode code
+        versionName gameVersion
+    }
+    signingConfigs {
+        release {
+            storeFile file('../velocite.keystore')
+            storePassword 'velocite'
+            keyAlias 'velocite'
+            keyPassword 'velocite'
+        }
+    }
+    buildTypes {
+        release { minifyEnabled false; signingConfig signingConfigs.release }
+    }
+    compileOptions { sourceCompatibility JavaVersion.VERSION_17; targetCompatibility JavaVersion.VERSION_17 }
+    androidResources { noCompress += ['glb', 'mp3', 'ogg'] }
+}
+
+dependencies { implementation 'androidx.webkit:webkit:1.8.0' }
