@@ -1284,6 +1284,10 @@ Object.assign(I18N.en, {"tab.quests": "Quests", "q.title": "Quests", "q.hint": "
 "q.kill10": "First blood", "qd.kill10": "Eliminate {n} opponents (bots or players).", "q.head25": "Eagle eye", "qd.head25": "Hit {n} headshots.", "q.knife15": "Silent blade", "qd.knife15": "Get {n} knife eliminations.", "q.speed22": "Supersonic", "qd.speed22": "Reach {n} m/s.", "q.wj60": "Acrobat", "qd.wj60": "Do {n} wall-jumps.", "q.time30": "Veteran", "qd.time30": "Play for {n} minutes.", "q.pk10": "Hunter", "qd.pk10": "Eliminate {n} real players online.", "q.allw": "Weapon master", "qd.allw": "Get an elimination with each of the {n} base weapons (carbine, SMG, shotgun, sniper, pistol, knife).",
 "skin.ember": "Ember (animated)", "skin.obsidian": "Obsidian", "skin.voidsk": "Void (animated)", "skin.aurora": "Aurora (animated)", "skin.holo": "Hologram (animated)", "skin.dragon": "Dragon scales", "skin.champion": "Champion (animated)", "skin.prism": "Prism (animated)", "skin.custom": "My skin (image)",
 "csk.lab": "My weapon skin", "csk.pick": "Import an image", "csk.del": "Remove", "csk.hint": "Pick an image (PNG, JPG…): it is wrapped onto your weapons and other players see it too.", "csk.bad": "This file is not an image.", "csk.big": "Image too heavy to keep: it will be lost on reload."});
+Object.assign(I18N.fr, {"skin.lg_dragon": "Légendaire : Dragon (cornes, écailles)", "skin.lg_cyber": "Légendaire : Cyber (ailerons, anneaux holo)", "skin.lg_crystal": "Légendaire : Cristal (cristaux)", "skin.lg_royal": "Légendaire : Royal (or, couronne)", "skin.lg_angel": "Légendaire : Ange (ailes, auréole)", "skin.lg_bone": "Légendaire : Os (côtes, crâne)"});
+Object.assign(I18N.en, {"skin.lg_dragon": "Legendary: Dragon (horns, scales)", "skin.lg_cyber": "Legendary: Cyber (fins, holo rings)", "skin.lg_crystal": "Legendary: Crystal (crystals)", "skin.lg_royal": "Legendary: Royal (gold, crown)", "skin.lg_angel": "Legendary: Angel (wings, halo)", "skin.lg_bone": "Legendary: Bone (ribs, skull)"});
+Object.assign(I18N.fr, {"cs.lab": "Skin du perso", "cs.none": "Aucun (tenue d’origine)", "cs.camo": "Camouflage", "cs.jungle": "Jungle", "cs.urban": "Urbain", "cs.tiger": "Tigre", "cs.carbon": "Carbone", "cs.sakura": "Sakura", "cs.ocean": "Océan", "cs.galaxy": "Galaxie (lumineux)", "cs.neon": "Néon (lumineux)", "cs.lava": "Lave (lumineux)", "cs.gold": "Or", "cs.chrome": "Chrome"});
+Object.assign(I18N.en, {"cs.lab": "Character skin", "cs.none": "None (original outfit)", "cs.camo": "Camo", "cs.jungle": "Jungle", "cs.urban": "Urban", "cs.tiger": "Tiger", "cs.carbon": "Carbon", "cs.sakura": "Sakura", "cs.ocean": "Ocean", "cs.galaxy": "Galaxy (glowing)", "cs.neon": "Neon (glowing)", "cs.lava": "Lava (glowing)", "cs.gold": "Gold", "cs.chrome": "Chrome"});
 Object.assign(I18N.fr, {"q.ultra": "Ultra (effets de lumière)"});
 Object.assign(I18N.en, {"q.ultra": "Ultra (light effects)"});
 Object.assign(I18N.fr, {"fs.enter": "Plein écran (F11)", "fs.exit": "Quitter le plein écran", "fs.fail": "Le navigateur a refusé le plein écran."});
@@ -1349,6 +1353,7 @@ S.camFx = clamp(+store.get('camFx', 1), 0, 1.5);
 S.map = store.get('map', 'canyon');
 S.char = store.get('char', 'soldier'); if (S.char === 'robot') S.char = 'nova';
 S.tint = store.get('tint', 'auto');
+S.cskin = store.get('cskin2', '');
 
 /* ================= Constantes de mouvement (mètres, secondes) ================= */
 const STEP = 1 / 120;
@@ -1385,18 +1390,43 @@ const wScene = new THREE.Scene();
 const wCam = new THREE.PerspectiveCamera(56, 1, 0.01, 10);
 
 const sunDir = new V3(-0.62, 0.40, 0.34).normalize();
-const sky = new THREE.Mesh(new THREE.SphereGeometry(600, 32, 16), new THREE.ShaderMaterial({
+// ciel : dégradé + soleil + vrais nuages (bruit fractal sur deux couches qui défilent) + étoiles quand le ciel est sombre
+const sky = new THREE.Mesh(new THREE.SphereGeometry(600, 48, 24), new THREE.ShaderMaterial({
   side: THREE.BackSide, depthWrite: false, fog: false,
   uniforms: {
     top: { value: new THREE.Color(0x356a93) }, mid: { value: new THREE.Color(0xa9bfc8) },
-    hor: { value: new THREE.Color(0xf1c595) }, sunD: { value: sunDir }
+    hor: { value: new THREE.Color(0xf1c595) }, sunD: { value: sunDir }, sunC: { value: new THREE.Color(0xffe6c2) },
+    time: { value: 0 }, cov: { value: 0.5 }, cq: { value: 1 }, night: { value: 0 }
   },
   vertexShader: 'varying vec3 vP; void main(){ vP = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }',
-  fragmentShader: `uniform vec3 top; uniform vec3 mid; uniform vec3 hor; uniform vec3 sunD; varying vec3 vP;
-    void main(){ float h = vP.y; vec3 c = mix(hor, mid, smoothstep(0.0, 0.2, h)); c = mix(c, top, smoothstep(0.16, 0.75, h));
+  fragmentShader: `uniform vec3 top; uniform vec3 mid; uniform vec3 hor; uniform vec3 sunD; uniform vec3 sunC; uniform float time; uniform float cov; uniform float cq; uniform float night; varying vec3 vP;
+    float h2(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }
+    float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
+      return mix(mix(h2(i), h2(i + vec2(1.0, 0.0)), f.x), mix(h2(i + vec2(0.0, 1.0)), h2(i + vec2(1.0, 1.0)), f.x), f.y); }
+    float fbm(vec2 p){ float v = 0.0, a = 0.5; for (int i = 0; i < 6; i++) { if (float(i) >= cq * 6.0) break; v += a * n2(p); p = p * 2.03 + vec2(1.7, 9.2); a *= 0.5; } return v; }
+    void main(){
+      vec3 d = normalize(vP); float h = d.y;
+      vec3 c = mix(hor, mid, smoothstep(0.0, 0.2, h)); c = mix(c, top, smoothstep(0.16, 0.75, h));
       if (h < 0.0) c = mix(hor, hor * 0.86, smoothstep(0.0, -0.25, h));
-      float s = max(dot(vP, normalize(sunD)), 0.0);
-      c += vec3(1.0, 0.86, 0.6) * pow(s, 600.0) * 1.8 + vec3(1.0, 0.72, 0.42) * pow(s, 10.0) * 0.28;
+      vec3 sd = normalize(sunD); float s = max(dot(d, sd), 0.0);
+      // étoiles (cartes de nuit)
+      if (night > 0.01 && h > 0.0) { vec2 st = d.xz / (d.y + 0.35) * 160.0; float sh = h2(floor(st)); float tw = 0.6 + 0.4 * sin(time * 2.0 + sh * 40.0);
+        c += vec3(0.9, 0.93, 1.0) * step(0.9965, sh) * tw * night * smoothstep(0.0, 0.25, h); }
+      // nuages : projection sur une voûte, deux couches
+      if (h > -0.02 && cov > 0.01) {
+        vec2 uv = d.xz / (h + 0.12);
+        float t = time * 0.006;
+        float n = fbm(uv * 1.15 + vec2(t, t * 0.4)) * 0.65 + fbm(uv * 3.1 - vec2(t * 1.7, 0.0)) * 0.35;
+        float dens = smoothstep(1.0 - cov, 1.0 - cov + 0.32, n) * smoothstep(-0.02, 0.18, h);
+        float lit = clamp(0.55 + 0.45 * dot(normalize(vec3(sd.x, 0.0, sd.z) + 1e-4), normalize(vec3(d.x, 0.0, d.z) + 1e-4)), 0.0, 1.0);
+        vec3 cb = mix(hor * 0.62 + mid * 0.22, vec3(1.0), 0.35); // ventre du nuage
+        vec3 ct = mix(cb, sunC * 1.08 + 0.08, lit * 0.85);       // côté éclairé
+        vec3 cc = mix(ct, cb * 0.82, smoothstep(0.35, 1.0, dens) * 0.6);
+        cc += sunC * pow(s, 12.0) * 0.55 * (1.0 - dens);              // bords dorés vers le soleil
+        cc = mix(cc, cc * 0.35 + top * 0.15, night);
+        c = mix(c, cc, dens * 0.92);
+      }
+      c += sunC * pow(s, 900.0) * 2.2 + vec3(1.0, 0.86, 0.6) * pow(s, 650.0) * 0.8 + sunC * pow(s, 9.0) * 0.26 * (1.0 - night);
       gl_FragColor = vec4(c, 1.0); }`
 }));
 sky.renderOrder = -1;
@@ -1470,11 +1500,112 @@ const PAL = { concrete: 0xc8c1b2, teal: 0x4f8a8c, wall: 0x9a9081, ramp: 0xd4c8b3
   rock: 0x8d8f88, wood: 0x9a6a3f, bark: 0x5e4129, moss: 0x6b8a45,
   stone: 0xbdb7aa, keep: 0xa39d90, hay: 0xd9b75a, roofred: 0xa8382e,
   obsid: 0x2c2733, basalt: 0x4a4440, ash: 0x6b625c, lavaorange: 0xd8642a };
+/* ================= Textures des surfaces : béton, métal, roche, bois, pierre, sable, herbe, neige… =================
+   générées une fois au démarrage (rien à télécharger) ; presque blanches, la couleur de la carte s'applique par-dessus */
+const SURF_N = S.quality === 'low' ? 256 : 512;
+function surfTex(fn) {
+  const n = SURF_N, c = document.createElement('canvas'); c.width = c.height = n;
+  const g = c.getContext('2d'), img = g.createImageData(n, n), d = img.data;
+  let seed = 1337; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  // bruit de valeur périodique (la texture se répète sans couture)
+  const grid = (cells) => { const a = new Float32Array(cells * cells); for (let i = 0; i < a.length; i++) a[i] = rnd(); return (x, y) => {
+    const fx = x * cells, fy = y * cells, x0 = Math.floor(fx), y0 = Math.floor(fy), tx = fx - x0, ty = fy - y0, sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty);
+    const A = (i, j) => a[((j % cells + cells) % cells) * cells + ((i % cells + cells) % cells)];
+    return (A(x0, y0) * (1 - sx) + A(x0 + 1, y0) * sx) * (1 - sy) + (A(x0, y0 + 1) * (1 - sx) + A(x0 + 1, y0 + 1) * sx) * sy; }; };
+  const octs = [grid(4), grid(8), grid(16), grid(32), grid(64), grid(128)];
+  const fbm = (x, y, k = 6, o = 0) => { let v = 0, am = 0.5, t = 0; for (let i = o; i < Math.min(o + k, octs.length); i++) { v += octs[i](x, y) * am; t += am; am *= 0.5; } return v / t; };
+  for (let y = 0; y < n; y++) for (let x = 0; x < n; x++) {
+    const v = fn(x / n, y / n, fbm, rnd, x, y, n); const i = (y * n + x) * 4;
+    const r = Array.isArray(v) ? v : [v, v, v];
+    d[i] = Math.max(0, Math.min(255, r[0] * 255)); d[i + 1] = Math.max(0, Math.min(255, r[1] * 255)); d[i + 2] = Math.max(0, Math.min(255, r[2] * 255)); d[i + 3] = 255;
+  }
+  g.putImageData(img, 0, 0);
+  const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = MAX_ANISO; return t;
+}
+const seam = (u, step, w) => { const f = (u / step) % 1; return Math.min(f, 1 - f) * (1 / step) < w ? 1 : 0; };
+const SURF_DEF = {
+  // béton coulé en panneaux : nuances, taches d'humidité, petits trous, joints, quadrillage discret d'un mètre
+  concrete: () => surfTex((u, v, fbm, rnd) => {
+    let c = 0.9 + (fbm(u, v) - 0.5) * 0.16 + (fbm(u * 3, v * 3, 3, 3) - 0.5) * 0.08;
+    c -= Math.max(0, fbm(u + 0.3, v + 0.7, 4) - 0.62) * 0.16; // taches
+    if (rnd() < 0.0025) c -= 0.25;                            // piqûres
+    if (seam(u, 0.5, 0.004) || seam(v, 0.5, 0.004)) c -= 0.18; // joints de coffrage
+    else if (seam(u, 0.25, 0.0025) || seam(v, 0.25, 0.0025)) c -= 0.06;
+    return c;
+  }),
+  // pierre de taille (château, ruines) : blocs décalés, chanfreins sombres
+  stone: () => surfTex((u, v, fbm) => {
+    const row = Math.floor(v * 4), off = (row % 2) * 0.125, bu = ((u + off) * 4) % 1, bv = (v * 4) % 1;
+    const e = Math.min(bu, 1 - bu, bv * 2, (1 - bv) * 2);
+    let c = 0.84 + (fbm(u, v) - 0.5) * 0.26 + (fbm(Math.floor((u + off) * 4) * 0.37, row * 0.71, 2) - 0.5) * 0.18;
+    if (e < 0.03) c = 0.45 + e * 6; else if (e < 0.06) c -= 0.08;
+    return c;
+  }),
+  // tôle peinte : brossage horizontal, plaques, rivets, rayures
+  metal: () => surfTex((u, v, fbm, rnd, x, y, n) => {
+    let c = 0.86 + (fbm(u * 0.5, v * 16, 3, 2) - 0.5) * 0.12 + (fbm(u, v, 3) - 0.5) * 0.1;
+    if (seam(u, 0.5, 0.003) || seam(v, 0.5, 0.003)) c -= 0.28;
+    const ru = (u * 2) % 1, rv = (v * 2) % 1;
+    for (const [a, b] of [[0.04, 0.04], [0.96, 0.04], [0.04, 0.96], [0.96, 0.96]]) { const dd = Math.hypot(ru - a, rv - b); if (dd < 0.012) c = 0.7 + (0.012 - dd) * 20; }
+    if (rnd() < 0.0008) c -= 0.2;
+    return c;
+  }),
+  // roche : relief fractal contrasté et fissures
+  rock: () => surfTex((u, v, fbm) => {
+    const f = fbm(u * 2, v * 2); let c = 0.62 + f * 0.5 + (fbm(u * 6, v * 6, 3, 2) - 0.5) * 0.2;
+    const cr = Math.abs(fbm(u * 3 + 5, v * 3 + 1, 4) - 0.5); if (cr < 0.012) c -= 0.32 * (1 - cr / 0.012);
+    return c;
+  }),
+  // planches de bois : veinage, nœuds, joints
+  wood: () => surfTex((u, v, fbm) => {
+    const pl = Math.floor(u * 8), pu = (u * 8) % 1;
+    const gr = Math.sin((v * 22 + fbm(u * 2, v * 0.6, 4) * 7 + pl * 1.7) * Math.PI) * 0.5 + 0.5;
+    let c = 0.78 + gr * 0.12 + (fbm(pl * 0.31, v * 0.5, 2) - 0.5) * 0.2;
+    if (pu < 0.025 || pu > 0.975) c -= 0.3;
+    if (seam(v + pl * 0.37, 1, 0.003)) c -= 0.25;
+    return c;
+  }),
+  // tuiles de toit
+  tiles: () => surfTex((u, v, fbm) => {
+    const row = Math.floor(v * 8), bu = ((u + (row % 2) * 0.0625) * 8) % 1, bv = (v * 8) % 1;
+    let c = 0.82 + (fbm(u, v) - 0.5) * 0.2 - bv * 0.18; if (bu < 0.04 || bv > 0.94) c -= 0.25; return c;
+  }),
+  // sable : rides de vent et grains
+  sand: () => surfTex((u, v, fbm, rnd) => {
+    const w = Math.sin((v * 14 + fbm(u * 2, v * 2, 4) * 4) * Math.PI * 2) * 0.5 + 0.5;
+    return 0.86 + (fbm(u, v) - 0.5) * 0.14 + w * 0.06 + (rnd() - 0.5) * 0.08;
+  }),
+  // herbe rase et terre (le vert vient de la couleur de la carte)
+  grass: () => surfTex((u, v, fbm, rnd) => {
+    const b = fbm(u * 2, v * 2); let c = 0.72 + b * 0.34 + (rnd() - 0.5) * 0.16;
+    const dirt = Math.max(0, fbm(u + 0.5, v + 0.2, 4) - 0.62) * 2.2;
+    return [c * (1 + dirt * 0.25), c * (1 - dirt * 0.25), c * (1 - dirt * 0.45)];
+  }),
+  // neige : très douce, légers creux bleutés
+  snow: () => surfTex((u, v, fbm, rnd) => { const c = 0.94 + (fbm(u, v) - 0.5) * 0.08 + (rnd() - 0.5) * 0.03; return [c - 0.02, c, c + 0.02]; }),
+  // dalles de pavés (ville, port)
+  pavers: () => surfTex((u, v, fbm) => {
+    const bu = (u * 8) % 1, bv = ((v + (Math.floor(u * 8) % 2) * 0.0625) * 8) % 1;
+    let c = 0.86 + (fbm(u, v) - 0.5) * 0.14 + (fbm(Math.floor(u * 8) * 0.3, Math.floor(bv) * 0.4, 2) - 0.5) * 0.1;
+    if (bu < 0.04 || bv < 0.04) c = 0.55; return c;
+  }),
+  // cendre volcanique / terre sombre
+  ash: () => surfTex((u, v, fbm, rnd) => 0.7 + fbm(u * 2, v * 2) * 0.4 + (rnd() - 0.5) * 0.18)
+};
+const SURF_C = {};
+const surf = k => k && SURF_DEF[k] ? (SURF_C[k] || (SURF_C[k] = SURF_DEF[k]())) : gridTex;
+// matériau de la palette → texture
+const SURF_OF = { concrete: 'concrete', wall: 'concrete', ramp: 'concrete', cream: 'concrete', white: 'concrete', deck: 'metal',
+  stone: 'stone', keep: 'stone', teal: 'metal', navy: 'metal', steel: 'metal', tank: 'metal', blue: 'metal', red: 'metal', hazard: 'metal', rust: 'metal',
+  rock: 'rock', basalt: 'rock', obsid: 'rock', ash: 'ash', lavaorange: 'rock', wood: 'wood', bark: 'wood', hay: 'wood', moss: 'grass', roofred: 'tiles', ground: 'sand' };
+// sol de chaque carte
+const GROUND_OF = { canyon: 'sand', refinery: 'concrete', forest: 'grass', castle: 'grass', volcano: 'ash', mega: 'pavers', ghost: 'grass', ocean: 'sand', arctic: 'snow', world: 'grass', room: 'wood', mine: 'rock' };
+const CLOUDS_OF = { canyon: 0.32, refinery: 0.55, forest: 0.5, castle: 0.45, volcano: 0.72, mega: 0.42, ghost: 0.75, ocean: 0.35, arctic: 0.62, world: 0.45, room: 0, mine: 0 };
 const matCache = {};
 function M(key) {
   if (matCache[key]) return matCache[key];
   const cont = key.startsWith('c-'), win = key.startsWith('w-');
-  return (matCache[key] = new THREE.MeshLambertMaterial({ color: PAL[cont || win ? key.slice(2) : key], map: cont ? ribTex : win ? winTex : gridTex }));
+  return (matCache[key] = new THREE.MeshLambertMaterial({ color: PAL[cont || win ? key.slice(2) : key], map: cont ? ribTex : win ? winTex : S.surfTex === false ? gridTex : surf(SURF_OF[key]) }));
 }
 const edgeMat = new THREE.LineBasicMaterial({ color: 0x20262b, transparent: true, opacity: 0.32 });
 const BOXES = [], RAMPS = [], PADS = [], WORLD = [];
@@ -1599,7 +1730,7 @@ function terrainN(x, z) {
 }
 // maillage découpé en morceaux de 15×15 cases : les tirs ne testent que les morceaux traversés
 function buildTerrainMeshes(colorFn) {
-  const T = TERRAIN, CH = 15, n = T.n, mat = new THREE.MeshLambertMaterial({ vertexColors: true, map: gridTex });
+  const T = TERRAIN, CH = 15, n = T.n, mat = new THREE.MeshLambertMaterial({ vertexColors: true, map: groundMat.map });
   const col = new THREE.Color();
   for (let cj = 0; cj < n - 1; cj += CH) for (let ci = 0; ci < n - 1; ci += CH) {
     const w = Math.min(CH, n - 1 - ci) + 1, d = Math.min(CH, n - 1 - cj) + 1;
@@ -2508,7 +2639,7 @@ function worldGround() {
     uv.setXY(i, x / 2, z / 2);
   }
   geo.setAttribute('color', new THREE.BufferAttribute(cols, 3)); geo.computeVertexNormals();
-  const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, map: gridTex })); m.receiveShadow = true; mapRoot.add(m);
+  const m = new THREE.Mesh(geo, new THREE.MeshLambertMaterial({ vertexColors: true, map: groundMat.map })); m.receiveShadow = true; mapRoot.add(m);
 }
 function buildWorld() {
   WORLD_EDGE = new THREE.Color(0x8a9a5a);
@@ -3052,6 +3183,8 @@ let SPAWNS = MAPS.canyon.spawns;
 function applyTheme(th) {
   const u = sky.material.uniforms;
   u.top.value.setHex(th.top); u.mid.value.setHex(th.mid); u.hor.value.setHex(th.hor);
+  u.sunC.value.setHex(th.sun); u.cov.value = th.clouds ?? 0.45; u.cq.value = S.quality === 'low' ? 0.5 : 1;
+  { const tc = new THREE.Color(th.top); u.night.value = th.night ?? clamp((0.22 - (tc.r + tc.g + tc.b) / 3) * 6, 0, 1); }
   sunDir.set(th.sunDir[0], th.sunDir[1], th.sunDir[2]).normalize();
   scene.fog.color.setHex(th.fog); scene.fog.far = th.fogFar;
   hemi.color.setHex(th.hemiSky); hemi.groundColor.setHex(th.hemiGround); hemi.intensity = th.hemiI;
@@ -3075,6 +3208,8 @@ function buildMap(id) {
   groundMesh.visible = !MAPS[id].noGround; groundMesh.scale.setScalar(Math.max(1, MAP_LIM / 360));
   if (typeof resetVehicles === 'function') resetVehicles();
   applyTheme(MAPS[id].theme);
+  if (S.surfTex !== false) { const gt = surf(GROUND_OF[id] || 'sand'); if (groundMat.map !== gt) { groundMat.map = gt; groundMat.needsUpdate = true; } }
+  sky.material.uniforms.cov.value = MAPS[id].theme.clouds ?? CLOUDS_OF[id] ?? 0.45;
   SPAWNS = MAPS[id].spawns;
   if (typeof placeDummies === 'function') placeDummies(MAPS[id].dummies);
   if (typeof refreshMinimapBoxes === 'function') refreshMinimapBoxes();
@@ -4346,7 +4481,8 @@ function updateStrikes(dt) {
     if (s2.t < -2.4 || (!s2.mine && s2.t < -1.2)) { scene.remove(s2.beam); scene.remove(s2.flare); STRIKE.splice(i, 1); }
   }
 }
-function tintChar(vis, ch, col) {
+function tintChar(vis, ch, col) { tintCharBase(vis, ch, col); try { applyCharSkin(vis); } catch (e) {} }
+function tintCharBase(vis, ch, col) {
   const c = CHARS[ch] || CHARS.soldier, white = new THREE.Color(1, 1, 1);
   vis.obj.traverse(o => {
     if (!o.isMesh || o.userData.gear) return;
@@ -4716,7 +4852,7 @@ if (THREE.GLTFLoader) {
   let left = files.length; const done = () => { if (--left === 0 && typeof VM !== 'undefined') gunModelsReady(); };
   for (const f of files) gl.load('assets/models/guns/' + f + '.glb', g => {
     const bb = new THREE.Box3().setFromObject(g.scene);
-    GMESH[f] = { scene: g.scene, minX: bb.min.x, L: Math.max(0.01, bb.max.x - bb.min.x), cy: (bb.min.y + bb.max.y) / 2 };
+    GMESH[f] = { scene: g.scene, minX: bb.min.x, L: Math.max(0.01, bb.max.x - bb.min.x), cy: (bb.min.y + bb.max.y) / 2, W: bb.max.z - bb.min.z };
     done();
   }, undefined, done);
 }
@@ -5125,7 +5261,8 @@ function buildViewmodel(kind, knifeType) {
     else g.userData.lowAds = true; // armes de poing et pompes : arme baissée en visée, point de visée affiché au centre de l'écran
     hands = { r: r.slice(), l: gm.l ? P2(gm.l[0], gm.l[1]) : hands.l ? hands.l.slice() : undefined };
     g.userData.gunModel = m;
-  }
+    g.userData.gb = { z0: P2(0, gm.bore)[2], z1: P2(1, gm.bore)[2], yb: P2(0, gm.bore)[1], yt: P2(0, gm.bore + (gm.sight - gm.bore) * 0.55)[1], w: Math.max(0.012, (gs.W || L * 0.06) * sc / 2) };
+  } else if (kind !== 5 && hands && hands.r) g.userData.gb = { z0: hands.r[2] + 0.14, z1: muzzle.z, yb: muzzle.y, yt: muzzle.y + 0.035, w: 0.02 };
   return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind, hands };
 }
 S.knife = store.get('knife', 'combat');
@@ -5201,6 +5338,42 @@ const sunsetTex = canvasTex((g, s) => {
   g.fillStyle = gr; g.fillRect(0, 0, s, s);
   g.fillStyle = 'rgba(255,240,200,.35)'; g.beginPath(); g.arc(s * 0.3, s * 0.35, s * 0.18, 0, Math.PI * 2); g.fill();
 }, 128);
+/* ---------- skins de perso : motif ou matière appliqués sur tout le modèle du personnage ---------- */
+const CHAR_SKINS = {
+  camo: { map: () => camoTex, rep: 3 }, jungle: { map: () => jungleTex, rep: 3 }, urban: { map: () => urbanTex, rep: 3 }, tiger: { map: () => tigerTex, rep: 2 },
+  carbon: { map: () => carbonTex, rep: 6, color: 0xb8bec4 }, sakura: { map: () => sakuraTex, rep: 2 }, ocean: { map: () => oceanTex, rep: 2 },
+  galaxy: { map: () => galaxyTex, rep: 2, emi: 0x1a0c33, emiMap: true },
+  neon: { map: () => circuitTex, rep: 3, emi: 0x30e0ff, emiMap: true },
+  lava: { map: () => flameTex, rep: 2, emi: 0xff5a20, emiMap: true },
+  gold: { color: 0xffc94a, metal: 0.55, rough: 0.32, emi: 0x1a1000 },
+  chrome: { color: 0xe2e8ee, metal: 0.6, rough: 0.2, emi: 0x0c0e10 }
+};
+const _csTex = {};
+function csTexFor(id) { const d = CHAR_SKINS[id]; if (!d.map) return null; if (_csTex[id]) return _csTex[id]; const t = d.map().clone(); t.needsUpdate = true; t.repeat.set(d.rep, d.rep); t.wrapS = t.wrapT = THREE.RepeatWrapping; return (_csTex[id] = t); }
+// modèles sans coordonnées de texture : on en fabrique à partir de la position (projection sur les côtés)
+function csEnsureUv(geo) {
+  if (!geo || geo.attributes.uv || !geo.attributes.position) return;
+  const p = geo.attributes.position, uv = new Float32Array(p.count * 2);
+  for (let i = 0; i < p.count; i++) { uv[i * 2] = (p.getX(i) + p.getZ(i)) * 1.6; uv[i * 2 + 1] = p.getY(i) * 1.6; }
+  geo.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+}
+function applyCharSkin(vis) {
+  const id = vis.cs && CHAR_SKINS[vis.cs] ? vis.cs : null, d = id && CHAR_SKINS[id];
+  vis.obj.traverse(o => {
+    if (!o.isMesh || o.userData.gear) return;
+    for (const m of Array.isArray(o.material) ? o.material : [o.material]) {
+      if (!m || !m.color) continue;
+      const u = m.userData;
+      if (!u.cs0) u.cs0 = { map: m.map || null, color: m.color.getHex(), emi: m.emissive ? m.emissive.getHex() : 0, emap: m.emissiveMap || null, metal: m.metalness, rough: m.roughness };
+      if (!d) { if (u.csOn) { m.map = u.cs0.map; m.color.setHex(u.cs0.color); if (m.emissive) { m.emissive.setHex(u.cs0.emi); m.emissiveMap = u.cs0.emap; } if (m.metalness !== undefined) { m.metalness = u.cs0.metal; m.roughness = u.cs0.rough; } m.needsUpdate = true; u.csOn = false; } continue; }
+      const tx = csTexFor(id); if (tx) csEnsureUv(o.geometry);
+      m.map = tx || null; m.color.setHex(d.color ?? 0xffffff);
+      if (m.emissive) { m.emissive.setHex(d.emi || 0); m.emissiveMap = d.emiMap ? tx : null; }
+      if (m.metalness !== undefined) { m.metalness = d.metal ?? 0; m.roughness = d.rough ?? 0.7; }
+      m.needsUpdate = true; u.csOn = true;
+    }
+  });
+}
 const SKINS = {
   std:    { dark: 0x2b3035, mid: 0x48505a, blk: 0x1b1e22, amb: [0xffb020, 0x3a2200], tan: 0x7a5232, teal: 0x3f7f86, steel: 0xc9d0d6 },
   gold:   { dark: 0xb88a2a, mid: 0xd8a83a, blk: 0x5a4214, amb: [0xfff0b8, 0x4a3a10], tan: 0xc99630, teal: 0xd8a83a, steel: 0xffd56a, glow: 0x2a1c00 },
@@ -5345,6 +5518,7 @@ function applySkinVM(vm, sk) {
     m.userData.em = emap ? sk.emapCol || 0xffffff : em;
     if (m.map !== (textured ? sk.map : null) || m.emissiveMap !== emap) { m.map = textured ? sk.map : null; m.emissiveMap = emap; m.needsUpdate = true; }
   }
+  try { legendKit(vm, sk.kit); } catch (e) {} // skins légendaires : pièces en plus sur le modèle
 }
 function applySkin(id) {
   if (id && SKINS[id]) S.skin = id;
@@ -5353,6 +5527,7 @@ function applySkin(id) {
 applySkin(S.skin);
 const _hsl = new THREE.Color();
 function animSkin(vm, sk, t) {
+  try { kitTick(vm, t); } catch (e) {}
   if (vm.ultraFx) vm.ultraFx.visible = !!sk && sk.anim === 'ultra';
   if (!sk || !sk.anim) return;
   if (sk.anim === 'ultra') {
@@ -5748,7 +5923,7 @@ function updateCamera(dt, alpha) {
   if (Math.abs(camera.fov - curVfov) > 0.01) { camera.fov = curVfov; camera.updateProjectionMatrix(); }
   emoteCamera();
   if (SPEC.on) specCamera();
-  sky.position.copy(camera.position);
+  sky.position.copy(camera.position); sky.material.uniforms.time.value = performance.now() * 0.001;
   sun.target.position.set(Math.round(rPos.x / 2) * 2, 0, Math.round(rPos.z / 2) * 2);
   sun.position.copy(sun.target.position).addScaledVector(sunDir, 150);
 }
@@ -5841,7 +6016,7 @@ function fpaBuild(ch) {
   vis.obj.rotation.y = (CHARS[ch] ? CHARS[ch].yaw || 0 : 0) + Math.PI;
   // teinte du perso, mais sans ses accessoires (cape, épaulières, brassards…) : collés aux os étirés ils mangeaient l'écran
   const orig = new Set(); vis.obj.traverse(o => orig.add(o));
-  try { tintChar(vis, ch, myColor()); } catch (e) {}
+  vis.cs = S.cskin; try { tintChar(vis, ch, myColor()); } catch (e) {}
   const extra = []; vis.obj.traverse(o => { if (!orig.has(o) && !o.isBone) extra.push(o); });
   for (const o of extra) if (o.parent) o.parent.remove(o);
   vis.obj.traverse(o => { if (o.isMesh) for (const m of Array.isArray(o.material) ? o.material : [o.material]) { if (m.metalness !== undefined) { m.metalness = Math.min(m.metalness, 0.15); m.roughness = Math.max(m.roughness, 0.55); } } });
@@ -5929,7 +6104,7 @@ function fpaSide(S2, target, pose, wq, side, curl) {
 }
 // renvoie vrai si les bras du modèle sont affichés (les bras « en boîtes » sont alors cachés)
 function fpaUpdate(vm, relK) {
-  const ch = myChar(), key = ch + '|' + myColor();
+  const ch = myChar(), key = ch + '|' + myColor() + '|' + (S.cskin || '');
   if (S.fpArms === false || !MODELS.chars[ch] || FPA.fail.has(ch)) { FPA.g.visible = false; return false; }
   if (FPA.key !== key) {
     if (FPA.vis) { FPA.g.remove(FPA.vis.obj); FPA.vis = null; }
@@ -6167,7 +6342,7 @@ function peerSupported() { return typeof window.Peer === 'function' && typeof wi
 function myState() {
   const air = !P.grounded && !P.climbing;
   const a = P.dead ? 'dead' : P.zip || (ODM.a.length && air) ? 'zip' : (SPIRAL.t > 0 || (P.sgT > 0.1 && air)) ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground';
-  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
+  const st = { p: [r2(P.pos.x), r2(P.pos.y), r2(P.pos.z)], v: [r2(P.vel.x), r2(P.vel.y), r2(P.vel.z)], y: r2(EMOTE.on ? EMOTE.yaw : P.yaw), pi: r2(EMOTE.on ? EMOTE.pitch : P.pitch), a, w: WS.cur, hp: P.hp, sh: P.sh, dead: P.dead, ch: myChar(), tc: S.tint, cs: S.cskin || undefined, z: P.zombie ? 1 : 0, mic: VOICE.stream ? 1 : 0 };
   if (X.spin && xUnlocked && !P.veh) { st.y = r2((performance.now() / 1000 * 22) % (Math.PI * 2)); st.pi = -1.35; }
   if (EMOTE.on) { st.em = EMOTE.id + 1; st.ey = r2(EMOTE.yaw); }
   if (SPEC.on) { st.dead = true; st.spec = 1; }
@@ -6287,7 +6462,7 @@ function clientRecv(m) {
       if (st) {
         const wasDead = rp.st && rp.st.dead;
         rp.st = st; rp.lastT = performance.now();
-        if ((st.ch || 'soldier') !== rp.ch || (st.tc || 'auto') !== rp.tc) { rp.ch = st.ch || 'soldier'; rp.tc = st.tc || 'auto'; attachChar(rp); }
+        if ((st.ch || 'soldier') !== rp.ch || (st.tc || 'auto') !== rp.tc || (st.cs || '') !== (rp.cs || '')) { rp.ch = st.ch || 'soldier'; rp.tc = st.tc || 'auto'; rp.cs = st.cs || ''; attachChar(rp); }
         if (!rp.hasPos) { rp.pos.set(st.p[0], st.p[1], st.p[2]); rp.yaw = st.y; rp.hasPos = true; }
         if (wasDead && !st.dead) { rp.pos.set(st.p[0], st.p[1], st.p[2]); }
         if (st.dead || !rp.pending) { rp.pSh = st.sh; rp.pHp = st.hp; }
@@ -6423,7 +6598,7 @@ function attachChar(rp) {
   if (rp.vis) g_remove(rp.g, rp.vis.obj);
   rp.vis = cloneModel(model); rp.vis.ch = used; rp.vis.base = model.scale; rp.vis.obj.rotation.y = CHARS[used].yaw;
   rp.g.add(rp.vis.obj);
-  tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
+  rp.vis.cs = rp.cs; tintChar(rp.vis, used, TINTS[rp.tc] || rp.color);
   // arme dans la main droite
   // la vraie arme du joueur est placée à chaque image sur cet os (voir updateRemoteGun)
   let hand = null; rp.vis.obj.traverse(o => { if (!hand && o.isBone && CHARS[used].hand.test(o.name)) hand = o; });
@@ -6902,7 +7077,7 @@ function ensureSelfAvatar() {
   if (SELF.key !== key) {
     if (SELF.vis) { setOutfit(SELF.vis, SELF.g, false); SELF.g.remove(SELF.vis.obj); }
     SELF.vis = cloneModel(model); SELF.vis.ch = ch; SELF.vis.base = model.scale; SELF.vis.obj.rotation.y = CHARS[ch].yaw;
-    SELF.g.add(SELF.vis.obj); tintChar(SELF.vis, ch, myColor()); playAnim(SELF.vis, CHARS[ch].anim.idle, 0);
+    SELF.g.add(SELF.vis.obj); SELF.vis.cs = S.cskin; tintChar(SELF.vis, ch, myColor()); playAnim(SELF.vis, CHARS[ch].anim.idle, 0);
     SELF.key = key;
   }
   return SELF.vis;
@@ -10139,10 +10314,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.07g';
+const GAME_VERSION = '2026.11.08';
 const CHANGES = {
-  fr: ['Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -11029,7 +11204,7 @@ function refreshPreview() {
   if (prevVis) { prevScene.remove(prevVis.obj); prevVis = null; }
   if (!model) return;
   prevVis = cloneModel(model); prevVis.ch = pch; prevVis.obj.rotation.y = CHARS[pch].yaw;
-  tintChar(prevVis, pch, TINTS[S.tint] || COLORS[0]);
+  prevVis.cs = S.cskin; tintChar(prevVis, pch, TINTS[S.tint] || COLORS[0]);
   prevScene.add(prevVis.obj);
   playAnim(prevVis, CHARS[pch].anim.idle, 0);
 }
@@ -11133,6 +11308,10 @@ function renderSkinOptions() {
     if (!o) { o = document.createElement('option'); o.value = q.sk; sel.appendChild(o); }
     const lock = skinLocked(q.sk); o.disabled = lock; o.textContent = (lock ? '🔒 ' : '★ ') + t('skin.' + q.sk);
   }
+  for (const id of Object.keys(SKINS).filter(k => SKINS[k].legend)) {
+    let o = sel.querySelector(`option[value="${id}"]`); if (!o) { o = document.createElement('option'); o.value = id; sel.appendChild(o); }
+    o.textContent = '✦ ' + t('skin.' + id);
+  }
   let c = sel.querySelector('option[value="custom"]');
   if (SKINS.custom && !c) { c = document.createElement('option'); c.value = 'custom'; sel.appendChild(c); }
   if (c) { c.hidden = !SKINS.custom; c.textContent = t('skin.custom'); }
@@ -11197,6 +11376,102 @@ function cskRecv(m) {
   cskTex(m.d, tx => { if (!tx) return; SKINS['c:' + m.from] = cskSkin(tx); const rp = remotes.get(m.from); if (rp && rp.gun) rp.gun.key = ''; });
 }
 { const d = store.get('cskin', null); if (typeof d === 'string' && d.startsWith('data:image/')) cskSet(d, false); }
+/* ---------- skins légendaires (façon Apex) : en plus des couleurs, ils ajoutent des pièces au modèle de l'arme ----------
+   chaque kit est construit dans le repère de l'arme : canon vers -Z, haut vers +Y ; gb = boîte de l'arme (z0 arrière, z1 bouche, yt dessus, yb canon, yd dessous) */
+const LG_MAT = {};
+const lgMat = (k, o) => LG_MAT[k] || (LG_MAT[k] = new (o.basic ? THREE.MeshBasicMaterial : THREE.MeshPhongMaterial)(Object.assign({}, o, { basic: undefined })));
+const LEGEND_KITS = {
+  // Dragon : cornes recourbées le long du dessus, plaques d'écailles, yeux de braise à la bouche
+  dragon(gb, add) {
+    const horn = lgMat('dhorn', { color: 0x2a0a06, shininess: 40, specular: 0x553322 }), glow = lgMat('dglow', { basic: true, color: 0xffa030 });
+    const plate = lgMat('dplate', { color: 0x7a1410, shininess: 60, specular: 0x884422 });
+    const L = gb.z0 - gb.z1, n = Math.max(3, Math.round(L / 0.09));
+    for (let i = 0; i < n; i++) {
+      const z = gb.z0 - L * (0.15 + 0.7 * i / (n - 1)), hgt = 0.05 + 0.035 * Math.sin(Math.PI * i / (n - 1));
+      const c = new THREE.Mesh(new THREE.ConeGeometry(0.011, hgt, 5), horn); c.position.set(0, gb.yt + hgt * 0.42, z); c.rotation.x = 0.75; add(c);
+      for (const sx of [-1, 1]) { const p = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.022, 0.03), plate); p.position.set(sx * (gb.w + 0.002), gb.yb - 0.004, z); p.rotation.x = 0.35; add(p); }
+    }
+    for (const sx of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(0.0065, 8, 6), glow); e.position.set(sx * 0.016, gb.yb + 0.012, gb.z1 + 0.03); add(e, 'pulse'); }
+    const jaw = new THREE.Mesh(new THREE.ConeGeometry(0.02, 0.05, 6, 1, true), horn); jaw.rotation.x = -Math.PI / 2; jaw.position.set(0, gb.yb - 0.012, gb.z1 + 0.012); add(jaw);
+  },
+  // Cyber : ailerons, bandes lumineuses, anneaux holographiques qui tournent autour du canon
+  cyber(gb, add) {
+    const fin = lgMat('cfin', { color: 0x10161c, shininess: 90, specular: 0x6699aa }), strip = lgMat('cstrip', { basic: true, color: 0x30f0ff });
+    const ring = lgMat('cring', { basic: true, color: 0x40e8ff, transparent: true, opacity: 0.75, side: THREE.DoubleSide, depthWrite: false });
+    const L = gb.z0 - gb.z1;
+    for (const sx of [-1, 1]) {
+      const f = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.045, L * 0.32), fin); f.position.set(sx * (gb.w + 0.012), gb.yt - 0.005, gb.z0 - L * 0.45); f.rotation.z = sx * 0.5; add(f);
+      const s1 = new THREE.Mesh(new THREE.BoxGeometry(0.003, 0.004, L * 0.62), strip); s1.position.set(sx * (gb.w + 0.002), gb.yb, gb.z0 - L * 0.48); add(s1, 'pulse');
+    }
+    for (let i = 0; i < 3; i++) { const r = new THREE.Mesh(new THREE.TorusGeometry(0.028 + i * 0.004, 0.0016, 6, 28), ring); r.position.set(0, gb.yb, gb.z1 + 0.03 + i * 0.05); add(r, i % 2 ? 'spinB' : 'spin'); }
+  },
+  // Cristal : grappes de cristaux violets qui poussent sur l'arme
+  crystal(gb, add) {
+    const cm = lgMat('xcr', { color: 0xb070ff, emissive: 0x5a20b0, shininess: 120, specular: 0xffffff, transparent: true, opacity: 0.88 });
+    let seed = 7; const r = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const L = gb.z0 - gb.z1;
+    for (let i = 0; i < 14; i++) {
+      const sz = 0.012 + r() * 0.022, c = new THREE.Mesh(new THREE.OctahedronGeometry(sz, 0), cm);
+      const side = r() < 0.55 ? 0 : r() < 0.5 ? -1 : 1, z = gb.z0 - L * (0.12 + r() * 0.72);
+      c.scale.set(0.55, 1.6, 0.55);
+      c.position.set(side * (gb.w + sz * 0.4), side ? gb.yb + (r() - 0.5) * 0.03 : gb.yt + sz * 0.6, z);
+      c.rotation.set((r() - 0.5) * 0.9, r() * 3, side ? side * -1.1 : (r() - 0.5) * 0.8); add(c, i % 3 === 0 ? 'pulse' : null);
+    }
+  },
+  // Royal : bagues d'or, couronne à l'arrière, gemmes
+  royal(gb, add) {
+    const gold = lgMat('rgold', { color: 0xffc84a, emissive: 0x3a2400, shininess: 110, specular: 0xfff0b0 }), gem = lgMat('rgem', { basic: true, color: 0xff2a5a });
+    const L = gb.z0 - gb.z1;
+    for (let i = 0; i < 4; i++) { const b = new THREE.Mesh(new THREE.TorusGeometry(gb.w + 0.008, 0.004, 6, 18), gold); b.position.set(0, gb.yb, gb.z0 - L * (0.2 + i * 0.2)); add(b); }
+    for (let i = 0; i < 5; i++) { const sp = new THREE.Mesh(new THREE.ConeGeometry(0.006, 0.03, 4), gold); const a = (i - 2) * 0.32; sp.position.set(Math.sin(a) * 0.025, gb.yt + 0.018 + Math.cos(a) * 0.004, gb.z0 - L * 0.08); sp.rotation.z = -a; add(sp); }
+    for (const sx of [-1, 1]) { const g2 = new THREE.Mesh(new THREE.OctahedronGeometry(0.007, 0), gem); g2.position.set(sx * (gb.w + 0.004), gb.yb, gb.z0 - L * 0.4); add(g2, 'pulse'); }
+  },
+  // Ange : deux ailes de plumes et une auréole
+  angel(gb, add) {
+    const fe = lgMat('afe', { color: 0xf4f6ff, emissive: 0x222838, shininess: 30 }), halo = lgMat('ahalo', { basic: true, color: 0xfff1a8 });
+    const L = gb.z0 - gb.z1;
+    for (const sx of [-1, 1]) for (let i = 0; i < 5; i++) {
+      const f = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 6), fe); f.scale.set(0.003, 0.012, 0.05 - i * 0.006);
+      f.position.set(sx * (gb.w + 0.012 + i * 0.004), gb.yt + 0.01 + i * 0.012, gb.z0 - L * 0.35 + i * 0.012); f.rotation.set(-0.5 - i * 0.12, 0, sx * (0.4 + i * 0.1)); add(f);
+    }
+    const h = new THREE.Mesh(new THREE.TorusGeometry(0.03, 0.0025, 6, 32), halo); h.rotation.x = Math.PI / 2; h.position.set(0, gb.yt + 0.06, gb.z0 - L * 0.35); add(h, 'bob');
+  },
+  // Os : côtes le long du corps et crâne à l'arrière
+  bone(gb, add) {
+    const bn = lgMat('bbone', { color: 0xe8e0cc, shininess: 20 }), eye = lgMat('beye', { basic: true, color: 0x7aff5a });
+    const L = gb.z0 - gb.z1;
+    for (let i = 0; i < 6; i++) { const r = new THREE.Mesh(new THREE.TorusGeometry(gb.w + 0.01, 0.004, 5, 14, Math.PI), bn); r.position.set(0, gb.yb, gb.z0 - L * (0.25 + i * 0.09)); r.rotation.z = Math.PI; add(r); }
+    const sk = new THREE.Mesh(new THREE.SphereGeometry(0.026, 10, 8), bn); sk.scale.set(0.85, 1, 1.1); sk.position.set(0, gb.yt + 0.01, gb.z0 - L * 0.06); add(sk);
+    for (const sx of [-1, 1]) { const e = new THREE.Mesh(new THREE.SphereGeometry(0.006, 6, 5), eye); e.position.set(sx * 0.01, gb.yt + 0.014, gb.z0 - L * 0.06 - 0.024); add(e, 'pulse'); }
+  }
+};
+function legendKit(vm, kit) {
+  const ud = vm.g.userData;
+  if (ud.kitName === kit) return;
+  if (ud.kit) { vm.g.remove(ud.kit); ud.kit.traverse(o => { if (o.geometry) o.geometry.dispose(); }); ud.kit = null; ud.kitAnim = null; }
+  ud.kitName = kit;
+  if (!kit || !LEGEND_KITS[kit] || !ud.gb) return;
+  const grp = new THREE.Group(), anim = [];
+  LEGEND_KITS[kit](ud.gb, (m, a) => { m.castShadow = false; grp.add(m); if (a) anim.push([m, a, m.position.y, m.material]); });
+  vm.g.add(grp); ud.kit = grp; ud.kitAnim = anim;
+}
+function kitTick(vm, t) {
+  const A = vm.g.userData.kitAnim; if (!A) return;
+  for (const [m, a, y0] of A) {
+    if (a === 'spin') m.rotation.z = t * 2.4; else if (a === 'spinB') m.rotation.z = -t * 3.1;
+    else if (a === 'bob') m.position.y = y0 + Math.sin(t * 2.2) * 0.004;
+    else if (a === 'pulse') m.scale.setScalar(0.85 + 0.25 * (0.5 + 0.5 * Math.sin(t * 4)));
+  }
+}
+Object.assign(SKINS, {
+  lg_dragon: { dark: 0xffffff, mid: 0x3a0a08, blk: 0x140302, amb: [0xffa030, 0xff5000], tan: 0xffffff, teal: 0xffffff, steel: [0xffc080, 0x4a1400], map: QTEX.dragon, mapRoles: ['dark', 'teal', 'tan'], kit: 'dragon', legend: 1 },
+  lg_cyber: { dark: 0x161c22, mid: 0x0b1014, blk: 0x050709, amb: [0x40f0ff, 0x1090b0], tan: 0x1a2a30, teal: 0x20323a, steel: [0x9af6ff, 0x105a6a], glow: 0x02161c, kit: 'cyber', legend: 1 },
+  lg_crystal: { dark: 0x2a1a40, mid: 0x1a1028, blk: 0x0c0614, amb: [0xd8a8ff, 0x7030d0], tan: 0x3a2458, teal: 0x3a2458, steel: [0xe8d0ff, 0x401a80], kit: 'crystal', legend: 1 },
+  lg_royal: { dark: 0xf2eee4, mid: 0xd9d2c0, blk: 0x2a2418, amb: [0xffd060, 0x8a5a00], tan: 0xffc84a, teal: 0xf2eee4, steel: [0xffe7a0, 0x5a3a00], kit: 'royal', legend: 1 },
+  lg_angel: { dark: 0xf6f8ff, mid: 0xdfe4f0, blk: 0x9aa4b8, amb: [0xfff1a8, 0xa08a30], tan: 0xe6ebf6, teal: 0xf6f8ff, steel: [0xffffff, 0x5a6070], kit: 'angel', legend: 1 },
+  lg_bone: { dark: 0x2a2620, mid: 0x1a1814, blk: 0x0a0908, amb: [0x7aff5a, 0x20a010], tan: 0xd8ceb6, teal: 0x3a342a, steel: [0xe8e0cc, 0x1a3a10], kit: 'bone', legend: 1 }
+});
+applySkin(S.skin);
 $('cskPick').addEventListener('click', () => $('cskFile').click());
 $('cskFile').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) cskFromFile(f); e.target.value = ''; });
 $('cskDel').addEventListener('click', cskClear);
@@ -11239,6 +11514,15 @@ $('cskDel').addEventListener('click', cskClear);
 })();
 renderClassInfo();
 tintSel.addEventListener('change', () => { S.tint = tintSel.value; store.set('tint', S.tint); refreshPreview(); });
+{ // sélecteur « Skin du perso », juste sous la couleur
+  const lab = document.createElement('label'); lab.className = 'field';
+  lab.innerHTML = '<span class="lab" data-i18n="cs.lab">Skin du perso</span><select id="charSkinSel"></select>';
+  tintSel.closest('label').after(lab);
+  const sel = lab.querySelector('select');
+  const fill = () => { sel.replaceChildren(); for (const id of ['', ...Object.keys(CHAR_SKINS)]) { const o = document.createElement('option'); o.value = id; o.textContent = t('cs.' + (id || 'none')); sel.appendChild(o); } sel.value = S.cskin || ''; };
+  fill(); addEventListener('velLang', fill);
+  sel.addEventListener('change', () => { S.cskin = sel.value; store.set('cskin2', S.cskin); refreshPreview(); try { if (SELF.vis) { SELF.vis.cs = S.cskin; applyCharSkin(SELF.vis); } } catch (e) {} });
+}
 const knifeSel = $('knifeSel'); knifeSel.value = S.knife;
 knifeSel.addEventListener('change', () => {
   S.knife = knifeSel.value; store.set('knife', S.knife); applyKnifeStats();
@@ -11510,6 +11794,7 @@ function applyI18n() {
   try { dcRender(); } catch (e) {}
   try { renderClassInfo(); } catch (e) {}
   try { renderSkinOptions(); renderQuests(); } catch (e) {}
+  dispatchEvent(new Event('velLang'));
   try { window.__csFill && window.__csFill(); } catch (e) {}
   document.querySelectorAll('[data-i18n-html]').forEach(el => {
     // {action} ou {action:slot} devient une touche affichée selon les réglages

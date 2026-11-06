@@ -241,6 +241,13 @@ Une manette Xbox, PlayStation ou compatible se branche à tout moment (appuie su
 
 Réglages dédiés : sensibilité, **aide à la visée** (ralentissement près d'une cible et légère traction quand tu bouges ou vises, de 0 à 100 %), **snap strafe facile** en l'air et inversion verticale. Au clavier, le **snap tap** est activé par défaut : si deux directions opposées sont enfoncées, la dernière appuyée gagne.
 
+## Décor, ciel et skins
+
+- **Textures** : béton en panneaux, pierre de taille, tôle rivetée, roche, bois, tuiles, et un sol par carte (sable, herbe, pavés, neige, cendre…). Elles sont générées au lancement (rien à télécharger) et prennent la couleur de chaque carte.
+- **Ciel** : nuages procéduraux qui défilent (couverture différente par carte), soleil, étoiles sur les cartes de nuit.
+- **Skins de perso** (onglet Personnage → Skin du perso) : 12 motifs ou matières sur tout le modèle, vus par les autres joueurs.
+- **Skins d'arme légendaires** (✦ dans la liste des skins) : comme dans Apex, ils ajoutent des pièces au modèle de l'arme : Dragon, Cyber, Cristal, Royal, Ange, Os.
+
 ## Graphismes Ultra
 
 Réglages → Graphismes → **Ultra** : post-traitement maison (halo lumineux autour des lampes, des tirs et des effets, étalonnage des couleurs, vignette), anticrénelage multi-échantillons 4×, ombres en 4096 adoucies, résolution jusqu'à 2× et 60 % d'herbe en plus. « Élevés » garde un bloom plus léger. Pour les PC modestes, « Auto » et « Rapides » n'ont pas ces effets.
