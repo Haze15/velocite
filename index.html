@@ -503,6 +503,17 @@ html{scroll-behavior:smooth}
 .lo-ask{display:flex;gap:7px;align-items:center;font:500 13px var(--f-body);color:var(--ink-dim);cursor:pointer}
 .lo-key{font:500 12px var(--f-body);color:var(--ink-faint)}
 #loMenuBtn{margin-left:12px}
+.questlist{display:grid;gap:8px}
+.quest{display:grid;grid-template-columns:46px 1fr minmax(110px,180px) auto;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;border:1px solid rgba(244,239,230,.12);background:rgba(244,239,230,.04)}
+.quest.done{border-color:rgba(155,227,106,.5);background:rgba(155,227,106,.07)}
+.qsw{width:46px;height:46px;border-radius:10px;background:#222 center/cover;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+.quest:not(.done) .qsw{filter:grayscale(.8) brightness(.6)}
+.qtxt{display:grid;gap:2px;min-width:0}.qtxt b{font:700 15px/1.1 var(--f-display);letter-spacing:.04em;text-transform:uppercase}.qtxt span{font:400 13px/1.3 var(--f-body);color:var(--ink-dim)}.qtxt em{font:600 12px var(--f-body);font-style:normal;color:var(--amber)}
+.qbar{position:relative;height:10px;border-radius:6px;background:rgba(244,239,230,.1);overflow:hidden}.qbar i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,#ffb020,#ffd36a);border-radius:6px}.quest.done .qbar i{background:#9be36a}
+.qbar small{position:absolute;right:0;top:12px;font:500 11px var(--f-body);color:var(--ink-faint)}
+.cskrow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}.cskprev{width:40px;height:40px;border-radius:9px;background:rgba(244,239,230,.08) center/cover;box-shadow:inset 0 0 0 1px rgba(255,255,255,.15)}
+@media (max-width:600px){.quest{grid-template-columns:40px 1fr auto}.qbar{grid-column:1/-1}}
+.miclvl{display:inline-block;vertical-align:middle;width:64px;height:8px;margin-left:8px;border-radius:4px;background:rgba(244,239,230,.12);overflow:hidden}.miclvl i{display:block;height:100%;width:0;background:#6a7;transition:width .1s}.miclvl.on i{background:#9be36a}
 body.touch #fsBtn{display:none}
 #touchUI #tLoad{width:42px;height:42px;left:calc(12px + env(safe-area-inset-left,0px));top:calc(60px + env(safe-area-inset-top,0px));font-size:18px;border-radius:12px}
 body:not(.touch) .lo-key{display:inline}
@@ -716,7 +727,7 @@ body.touch .lo-key{display:none}
           </div>
         </div>
         <h3 class="subh" data-i18n="voice.title">Chat vocal de proximité</h3>
-        <label class="field"><span class="lab" data-i18n="voice.mode">Micro</span><select id="voiceMode"><option value="off" data-i18n="voice.off">Coupé</option><option value="ptt" data-i18n="voice.ptt">Appuyer pour parler (N)</option><option value="open" data-i18n="voice.open">Toujours ouvert</option></select></label>
+        <label class="field"><span class="lab" data-i18n="voice.mode">Micro</span><select id="voiceMode"><option value="off" data-i18n="voice.off">Coupé</option><option value="ptt" data-i18n="voice.ptt">Appuyer pour parler (N)</option><option value="open" data-i18n="voice.open">Toujours ouvert</option></select><span id="micLvl" class="miclvl" title="Niveau du micro"><i></i></span></label>
         <label class="field"><span class="lab" data-i18n="voice.vol">Volume des voix</span><input type="range" id="voiceVol" min="0" max="2" step="0.05"></label>
         <p class="hint" data-i18n="voice.hint">On entend les joueurs à moins de 45 m, plus fort quand ils sont près. Le chat écrit (Entrée) est aussi de proximité par défaut (Tab dans la barre pour écrire à tous).</p>
         <label class="field"><span class="lab"><span data-i18n="set.fov">Champ de vision</span> <output id="oFov"></output></span><input type="range" id="fov" min="80" max="120" step="1"></label>
@@ -1264,6 +1275,14 @@ const I18N_ADD12 = {"fr": {"set.loot": "Départ au pistolet, armes dans les coff
 for (const l in I18N_ADD12) Object.assign(I18N[l], I18N_ADD12[l]);
 Object.assign(I18N.fr, {"adm.tabPlayers": "Joueurs", "adm.tabGame": "Partie", "adm.tabCheats": "Triche", "adm.tabAccess": "Accès admin", "adm.foot": "Inser, Échap ou clic hors du panneau : fermer et reprendre la partie", "adm.owner": "Propriétaire : tout est permis", "adm.adminOf": "Admin de la partie (accès donné par l’hôte)", "adm.me": "moi", "adm.itemToGive": "Arme à donner :", "adm.healAll": "Soigner tout le monde", "adm.respawnAll": "Faire réapparaître tout le monde", "adm.heal": "Soigner", "adm.give": "Donner", "adm.giveAll": "Toutes les armes", "adm.bring": "Amener à moi", "adm.goto": "Aller vers lui", "adm.freeze": "Geler 5 s", "adm.kill": "Éliminer", "adm.kick": "Expulser", "adm.admin": "Admin", "adm.soloNote": "Hors ligne : les actions s’appliquent à toi. Héberge une partie pour gérer les autres joueurs.", "adm.apply": "Changer", "adm.gravity": "Gravité", "adm.speed": "Vitesse de tous", "adm.bots": "Robots d’entraînement", "adm.vehicle": "Véhicule :", "adm.spawn": "Faire apparaître devant moi", "adm.vreset": "Réinitialiser les véhicules", "adm.chestsOpen": "Ouvrir tous les coffres", "adm.chestsFill": "Remplir tous les coffres", "adm.killBots": "Éliminer les robots", "adm.resetScores": "Scores à zéro", "adm.msg": "Message à tous", "adm.send": "Envoyer", "adm.accessNote": "Liste des joueurs qui ont l’accès admin (Inser), même s’ils ne sont pas connectés. Elle s’applique quand c’est toi qui héberges : un nom marqué « oui » reçoit l’accès dès qu’il rejoint.", "adm.name": "Pseudo", "adm.addYes": "Ajouter (oui)", "adm.online": "connecté", "adm.offline": "hors ligne", "adm.yes": "Oui", "adm.no": "Non", "adm.healed": "Un admin t’a soigné.", "adm.frozen": "Un admin t’a gelé.", "adm.granted": "Accès admin accordé : touche Inser.", "adm.revoked": "Accès admin retiré.", "adm.denied": "Accès admin refusé.", "adm.x.god": "Invincible", "adm.x.oneshot": "Un coup = une mort", "adm.x.norecoil": "Sans recul", "adm.x.ammo": "Munitions infinies", "adm.x.nocd": "Capacités sans recharge", "adm.x.rapid": "Cadence ×3", "adm.x.speed": "Vitesse ×2", "adm.x.jumps": "Sauts infinis", "adm.x.superjump": "Super saut", "adm.x.fly": "Vol", "adm.x.tp": "Téléportation (B)", "adm.x.wall": "Voir à travers les murs", "adm.x.esp": "ESP", "adm.x.aimbot": "Aimbot", "adm.x.trigger": "Triggerbot"});
 Object.assign(I18N.en, {"adm.tabPlayers": "Players", "adm.tabGame": "Match", "adm.tabCheats": "Cheats", "adm.tabAccess": "Admin access", "adm.foot": "Insert, Esc or click outside the panel: close and back to the game", "adm.owner": "Owner: everything allowed", "adm.adminOf": "Match admin (granted by the host)", "adm.me": "me", "adm.itemToGive": "Weapon to give:", "adm.healAll": "Heal everyone", "adm.respawnAll": "Respawn everyone", "adm.heal": "Heal", "adm.give": "Give", "adm.giveAll": "All weapons", "adm.bring": "Bring to me", "adm.goto": "Go to them", "adm.freeze": "Freeze 5 s", "adm.kill": "Kill", "adm.kick": "Kick", "adm.admin": "Admin", "adm.soloNote": "Offline: actions apply to you. Host a match to manage other players.", "adm.apply": "Change", "adm.gravity": "Gravity", "adm.speed": "Everyone’s speed", "adm.bots": "Training robots", "adm.vehicle": "Vehicle:", "adm.spawn": "Spawn in front of me", "adm.vreset": "Reset vehicles", "adm.chestsOpen": "Open all chests", "adm.chestsFill": "Refill all chests", "adm.killBots": "Kill the robots", "adm.resetScores": "Reset scores", "adm.msg": "Message to everyone", "adm.send": "Send", "adm.accessNote": "Players who get admin access (Insert), even when offline. It applies when you host: a name set to “yes” gets access as soon as they join.", "adm.name": "Name", "adm.addYes": "Add (yes)", "adm.online": "online", "adm.offline": "offline", "adm.yes": "Yes", "adm.no": "No", "adm.healed": "An admin healed you.", "adm.frozen": "An admin froze you.", "adm.granted": "Admin access granted: press Insert.", "adm.revoked": "Admin access removed.", "adm.denied": "Admin access denied.", "adm.x.god": "God mode", "adm.x.oneshot": "One-shot kills", "adm.x.norecoil": "No recoil", "adm.x.ammo": "Infinite ammo", "adm.x.nocd": "No ability cooldown", "adm.x.rapid": "Fire rate ×3", "adm.x.speed": "Speed ×2", "adm.x.jumps": "Infinite jumps", "adm.x.superjump": "Super jump", "adm.x.fly": "Fly", "adm.x.tp": "Teleport (B)", "adm.x.wall": "See through walls", "adm.x.esp": "ESP", "adm.x.aimbot": "Aimbot", "adm.x.trigger": "Triggerbot"});
+Object.assign(I18N.fr, {"tab.quests": "Quêtes", "q.title": "Quêtes", "q.hint": "Relève ces défis pour débloquer des skins d’arme spéciaux. Ta progression est gardée sur cet appareil.", "q.reward": "Récompense : skin {sk}", "q.done": "Quête terminée : {q} ! Skin {sk} débloqué", "q.equip": "Équiper", "q.equipped": "Équipé", "q.locked": "Skin verrouillé : finis sa quête dans l’onglet Quêtes.",
+"q.kill10": "Premier sang", "qd.kill10": "Élimine {n} adversaires (robots ou joueurs).", "q.head25": "Œil de lynx", "qd.head25": "Touche {n} fois une tête.", "q.knife15": "Lame silencieuse", "qd.knife15": "Élimine {n} adversaires au couteau.", "q.speed22": "Supersonique", "qd.speed22": "Atteins {n} m/s.", "q.wj60": "Acrobate", "qd.wj60": "Fais {n} wall-jumps.", "q.time30": "Vétéran", "qd.time30": "Joue {n} minutes.", "q.pk10": "Chasseur", "qd.pk10": "Élimine {n} vrais joueurs en ligne.", "q.allw": "Maître d’armes", "qd.allw": "Fais une élimination avec chacune des {n} armes de base (carabine, mitraillette, pompe, sniper, pistolet, couteau).",
+"skin.ember": "Braise (animé)", "skin.obsidian": "Obsidienne", "skin.voidsk": "Néant (animé)", "skin.aurora": "Aurore (animé)", "skin.holo": "Hologramme (animé)", "skin.dragon": "Écailles de dragon", "skin.champion": "Champion (animé)", "skin.prism": "Prisme (animé)", "skin.custom": "Mon skin (image)",
+"csk.lab": "Mon skin d’arme", "csk.pick": "Importer une image", "csk.del": "Retirer", "csk.hint": "Choisis une image (PNG, JPG…) : elle est plaquée sur tes armes et les autres joueurs la voient aussi.", "csk.bad": "Ce fichier n’est pas une image.", "csk.big": "Image trop lourde pour être gardée : elle sera perdue au rechargement."});
+Object.assign(I18N.en, {"tab.quests": "Quests", "q.title": "Quests", "q.hint": "Complete these challenges to unlock special weapon skins. Progress is saved on this device.", "q.reward": "Reward: {sk} skin", "q.done": "Quest complete: {q}! {sk} skin unlocked", "q.equip": "Equip", "q.equipped": "Equipped", "q.locked": "Locked skin: finish its quest in the Quests tab.",
+"q.kill10": "First blood", "qd.kill10": "Eliminate {n} opponents (bots or players).", "q.head25": "Eagle eye", "qd.head25": "Hit {n} headshots.", "q.knife15": "Silent blade", "qd.knife15": "Get {n} knife eliminations.", "q.speed22": "Supersonic", "qd.speed22": "Reach {n} m/s.", "q.wj60": "Acrobat", "qd.wj60": "Do {n} wall-jumps.", "q.time30": "Veteran", "qd.time30": "Play for {n} minutes.", "q.pk10": "Hunter", "qd.pk10": "Eliminate {n} real players online.", "q.allw": "Weapon master", "qd.allw": "Get an elimination with each of the {n} base weapons (carbine, SMG, shotgun, sniper, pistol, knife).",
+"skin.ember": "Ember (animated)", "skin.obsidian": "Obsidian", "skin.voidsk": "Void (animated)", "skin.aurora": "Aurora (animated)", "skin.holo": "Hologram (animated)", "skin.dragon": "Dragon scales", "skin.champion": "Champion (animated)", "skin.prism": "Prism (animated)", "skin.custom": "My skin (image)",
+"csk.lab": "My weapon skin", "csk.pick": "Import an image", "csk.del": "Remove", "csk.hint": "Pick an image (PNG, JPG…): it is wrapped onto your weapons and other players see it too.", "csk.bad": "This file is not an image.", "csk.big": "Image too heavy to keep: it will be lost on reload."});
 Object.assign(I18N.fr, {"fs.enter": "Plein écran (F11)", "fs.exit": "Quitter le plein écran", "fs.fail": "Le navigateur a refusé le plein écran."});
 Object.assign(I18N.en, {"fs.enter": "Fullscreen (F11)", "fs.exit": "Exit fullscreen", "fs.fail": "The browser refused fullscreen."});
 Object.assign(I18N.fr, {"net.reconnecting": "Connexion avec l’hôte perdue, reconnexion… ({n}/4)", "net.reconnected": "Reconnecté !", "net.lost": "Connexion avec l’hôte perdue. Rejoins à nouveau avec le code."});
@@ -3321,6 +3340,7 @@ function rampKick(n, wx, wz, hasWish) {
 }
 // Garde la vitesse le long du mur, remplace la composante vers le mur par une poussée
 function wallKick(n, wx, wz, hasWish) {
+  questEv('wj');
   const v = P.vel, vn = v.x * n.x + v.z * n.z;
   let tx = (v.x - n.x * vn) * 1.05, tz = (v.z - n.z * vn) * 1.05;
   if (hasWish) { const al = wx * n.x + wz * n.z; tx += (wx - n.x * al) * WJ_SIDE; tz += (wz - n.z * al) * WJ_SIDE; }
@@ -4646,7 +4666,7 @@ const OWN = [false, false, false, false, true, false];
 const WS = { cur: 0, ammo: WEAPONS.map(w => w.mag), swingT: 0, swingDur: 0.32, swingKind: 0, combo: 0, flourT: 0, inspT: 0, cool: 0, reloading: false, reloadT: 0, reloadDur: 1, swapT: 0, ads: 0, kick: 0, kickRot: 0, flashT: 0, trigger: false, swayX: 0, swayY: 0, bloom: 0, sprintK: 0, slideK: 0 };
 
 // modèles des couteaux : fichier, longueur totale (m), décalage de la main
-const KMODELS = { karambit: { file: 'karambit.glb', len: .3, basis: [[0, -.7071, .7071], [0, .7071, .7071], [-1, 0, 0]], grip: [.08, 1.7, 0], z: .02 } };
+const KMODELS = { karambit: { file: 'karambit.glb', roles: { Ring: 'steel', White_Blade_Tip: 'steel', Grip: 'tan', Finger_Rest_Blue: 'blk' }, len: .3, basis: [[0, -.7071, .7071], [0, .7071, .7071], [-1, 0, 0]], grip: [.08, 1.7, 0], z: .02 } };
 const KMESH = {};
 if (THREE.GLTFLoader) {
   const kl = new THREE.GLTFLoader();
@@ -4657,6 +4677,45 @@ if (THREE.GLTFLoader) {
     if (S.knife === k) { wScene.remove(VM[5].g); VM[5] = buildViewmodel(5, S.knife); VM[5].g.visible = WS.cur === 5; applySkin(S.skin); }
     for (const rp of remotes.values()) if (rp.gun && rp.gun.vm.kind === 5) rp.gun.key = '';
   }, undefined, () => {});
+}
+/* ---------- vrais modèles 3D d'armes (Quaternius, « Ultimate Gun Pack », CC0) ----------
+   coordonnées en fraction de la longueur du modèle : g = poignée, l = garde-main, bore = axe du canon, sight = haut des organes de visée */
+const GUNM = {
+  0: { f: 'AssaultRifle2_1', g: [.29, -.046], l: [.65, .064], bore: .092, sight: .15 },
+  1: { f: 'SubmachineGun_2', g: [.43, -.046], l: [.83, .083], bore: .128, sight: .245 },
+  2: { f: 'Shotgun_1', g: [.345, -.01], l: [.70, .018], bore: .07, sight: .085 },
+  3: { f: 'SniperRifle_2', g: [.244, -.01], l: [.574, .018], bore: .04, sight: .079 },
+  4: { f: 'Pistol_1', g: [.19, -.09], bore: .2, sight: .27 },
+  revolver: { f: 'Revolver_2', g: [.115, -.09], bore: .18, sight: .23 },
+  burst: { f: 'Bullpup_1', g: [.48, -.073], l: [.868, 0], bore: .092, sight: .19 },
+  autoshotgun: { f: 'Shotgun_ShortStock', g: [.26, -.02], l: [.8, .033], bore: .077, sight: .125 },
+  hsniper: { f: 'SniperRifle_4', g: [.28, -.01], l: [.556, .018], bore: .04, sight: .083 },
+  lmg: { f: 'AssaultRifle2_3', g: [.07, -.083], l: [.5, .055], bore: .079, sight: .2 }
+};
+const GMESH = {};
+// matériau du modèle → rôle de skin du jeu (les skins recolorent donc aussi les nouveaux modèles)
+function gunRole(name, mats, glass) {
+  const n = String(name || '');
+  if (/glass/i.test(n)) return glass;
+  if (/wood/i.test(n)) return mats.tan;
+  if (/^mainlight$|^grey$|^gray$|^metal$|lightmetal/i.test(n)) return mats.mid;
+  if (/maindark|black/i.test(n)) return mats.blk;
+  return mats.dark;
+}
+function gunModelsReady() {
+  for (let i = 0; i <= 4; i++) { wScene.remove(VM[i].g); VM[i] = buildViewmodel(i, S.knife); VM[i].g.visible = WS.cur === i; }
+  if (SP && SP.held) { wScene.remove(VM[6].g); VM[6] = buildViewmodel(6, SP.held); VM[6].g.visible = WS.cur === 6; }
+  applySkin(S.skin);
+  for (const rp of remotes.values()) if (rp.gun && rp.gun.vm.kind !== 5) rp.gun.key = '';
+}
+if (THREE.GLTFLoader) {
+  const gl = new THREE.GLTFLoader(), files = [...new Set(Object.values(GUNM).map(v => v.f))];
+  let left = files.length; const done = () => { if (--left === 0 && typeof VM !== 'undefined') gunModelsReady(); };
+  for (const f of files) gl.load('assets/models/guns/' + f + '.glb', g => {
+    const bb = new THREE.Box3().setFromObject(g.scene);
+    GMESH[f] = { scene: g.scene, minX: bb.min.x, L: Math.max(0.01, bb.max.x - bb.min.x), cy: (bb.min.y + bb.max.y) / 2 };
+    done();
+  }, undefined, done);
 }
 function buildViewmodel(kind, knifeType) {
   const g = new THREE.Group();
@@ -4808,7 +4867,7 @@ function buildViewmodel(kind, knifeType) {
     const KM = KMODELS[kt], KMs = KMESH[kt];
     if (KM && KMs) {
       const o = KMs.scene.clone(true), s = KM.len / KMs.h;
-      o.traverse(m => { if (m.isMesh) { m.material = m.material.clone(); m.castShadow = true; if (m.material.metalness !== undefined) { m.material.metalness = Math.min(m.material.metalness, .3); m.material.roughness = Math.max(m.material.roughness, .45); } } });
+      o.traverse(m => { if (m.isMesh && KM.roles && KM.roles[m.material.name] && mats[KM.roles[m.material.name]]) { m.material = mats[KM.roles[m.material.name]]; m.castShadow = true; return; } if (m.isMesh) { m.material = m.material.clone(); m.castShadow = true; if (m.material.metalness !== undefined) { m.material.metalness = Math.min(m.material.metalness, .3); m.material.roughness = Math.max(m.material.roughness, .45); } } });
       if (KM.basis) { const b = KM.basis; o.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new V3(...b[0]), new V3(...b[1]), new V3(...b[2]))); }
       else o.rotation.set(-Math.PI / 2, KM.roll || 0, 0);
       o.scale.setScalar(s); o.updateMatrix();
@@ -5032,7 +5091,23 @@ function buildViewmodel(kind, knifeType) {
   const HANDS = { 0: { r: [0, -.095, .09], l: [0, -.035, -.3] }, 1: { r: [0, -.1, .105], l: [0, -.17, -.07] }, 2: { r: [0, -.09, .12], l: [0, -.06, -.38] }, 3: { r: [0, -.09, .16], l: [0, -.07, -.3] }, 4: { r: [0, -.075, .045], l: [-.025, -.1, .06] } };
   const KHANDS = { combat: { r: [0, -.002, .04] }, karambit: { r: [0, -.008, .05] }, machete: { r: [0, 0, .05] }, dagger: { r: [0, 0, .035] }, butterfly: { r: [0, 0, .06] }, katana: { r: [0, 0, .05], l: [0, 0, .17] }, trident: { r: [0, 0, .08], l: [0, 0, -.18] }, morgane: { r: [0, 0, .1], l: [0, 0, -.12] }, hatchet: { r: [0, 0, .1] }, longsword: { r: [0, 0, .05], l: [0, 0, .15] }, greatsword: { r: [0, 0, .06], l: [0, 0, .22] } };
   const SPHANDS = { crossbow: { r: [0, -.09, .14], l: [0, -.03, -.12] }, flamer: { r: [0, -.1, .15], l: [0, -.08, -.22] }, laser: { r: [0, -.09, .12], l: [0, -.03, -.28] }, autoshotgun: { r: [0, -.09, .12], l: [0, -.08, -.2] }, hsniper: { r: [0, -.1, .15], l: [0, -.03, -.36] }, lmg: { r: [0, -.1, .15], l: [0, -.04, -.32] }, gunblade: { r: [0, -.09, .14] }, minigun: { r: [0, -.1, .15], l: [0, .11, 0] }, rocket: { r: [0, -.09, .02], l: [0, -.08, -.26] }, railgun: { r: [0, -.09, .12], l: [0, -.04, -.3] }, revolver: { r: [0, -.075, .075] }, gl: { r: [0, -.09, .15], l: [0, -.1, -.18] }, burst: { r: [0, -.095, .1], l: [0, -.03, -.28] } };
-  const hands = kind === 5 ? KHANDS[knifeType] || KHANDS.combat : kind === 6 ? SPHANDS[knifeType] || SPHANDS.burst : HANDS[kind] || HANDS[4];
+  let hands = kind === 5 ? KHANDS[knifeType] || KHANDS.combat : kind === 6 ? SPHANDS[knifeType] || SPHANDS.burst : HANDS[kind] || HANDS[4];
+  // vrai modèle 3D s'il est chargé : posé pour que sa poignée tombe dans la main droite et son canon au même endroit que l'ancien
+  const gm = kind <= 4 ? GUNM[kind] : kind === 6 ? GUNM[knifeType] : null, gs = gm && GMESH[gm.f];
+  if (gs && S.gunModels !== false && hands && hands.r) {
+    const r = hands.r, L = gs.L, sc = Math.abs(muzzle.z - r[2]) / ((1 - gm.g[0]) * L);
+    for (const c of g.children) if (c !== fl) c.visible = false;
+    const m = gs.scene.clone(true);
+    m.traverse(o => { if (o.isMesh) { o.material = gunRole(o.material && o.material.name, mats, glass); o.castShadow = false; } });
+    m.rotation.y = Math.PI / 2; m.scale.setScalar(sc);
+    const gx = gs.minX + gm.g[0] * L, gy = gs.cy + gm.g[1] * L;
+    m.position.set(r[0], r[1] - sc * gy, r[2] + sc * gx); g.add(m);
+    const P2 = (u, v) => [0, r[1] + (v - gm.g[1]) * L * sc, r[2] - (u - gm.g[0]) * L * sc];
+    const mz = P2(1, gm.bore); fl.position.set(0, mz[1], mz[2] - 0.02);
+    sightY = P2(0, gm.sight)[1];
+    hands = { r: r.slice(), l: gm.l ? P2(gm.l[0], gm.l[1]) : hands.l ? hands.l.slice() : undefined };
+    g.userData.gunModel = m;
+  }
   return { g, flash: fl, sightY: sightY * VS, adsZ, hip, mats, kind, hands };
 }
 S.knife = store.get('knife', 'combat');
@@ -5109,7 +5184,7 @@ const sunsetTex = canvasTex((g, s) => {
   g.fillStyle = 'rgba(255,240,200,.35)'; g.beginPath(); g.arc(s * 0.3, s * 0.35, s * 0.18, 0, Math.PI * 2); g.fill();
 }, 128);
 const SKINS = {
-  std:    { dark: 0x2b3035, mid: 0x48505a, blk: 0x1b1e22, amb: [0xffb020, 0x3a2200], tan: 0xb8701c, teal: 0x3f7f86, steel: 0xc9d0d6 },
+  std:    { dark: 0x2b3035, mid: 0x48505a, blk: 0x1b1e22, amb: [0xffb020, 0x3a2200], tan: 0x7a5232, teal: 0x3f7f86, steel: 0xc9d0d6 },
   gold:   { dark: 0xb88a2a, mid: 0xd8a83a, blk: 0x5a4214, amb: [0xfff0b8, 0x4a3a10], tan: 0xc99630, teal: 0xd8a83a, steel: 0xffd56a, glow: 0x2a1c00 },
   desert: { dark: 0xffffff, mid: 0xffffff, blk: 0x4a3d2a, amb: [0xd9c29b, 0x000000], tan: 0x6f5a3a, teal: 0xffffff, steel: 0xb8a888, map: camoTex, mapRoles: ['dark', 'mid', 'teal'] },
   neon:   { dark: 0x15161c, mid: 0x262836, blk: 0x0c0d11, amb: [0x00f0ff, 0x00b8c8], tan: [0xff2bd6, 0x8a0f72], teal: 0x5a1fd0, steel: 0x9ff8ff },
@@ -5343,6 +5418,7 @@ function showStack(t, dealt, kind) {
   t.el.firstChild.animate([{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'ease-out' });
 }
 function damageDummy(d, amount, part) {
+  if (part === 'head' && d.alive) questEv('head');
   const shBefore = d.sh;
   const toSh = Math.min(d.sh, amount); d.sh -= toSh;
   const toHp = Math.min(d.hp, amount - toSh); d.hp -= toHp;
@@ -5352,7 +5428,7 @@ function damageDummy(d, amount, part) {
   if (shBefore > 0 && d.sh <= 0) sfx.shieldBreak();
   lastTarget = d; targetT = 2.6;
   if (d.hp <= 0) {
-    d.alive = false; d.dieT = 0; d.respawn = 3.5; stats.kills++;
+    d.alive = false; d.dieT = 0; d.respawn = 3.5; stats.kills++; questKill(WS.cur, false);
     playAnim(d.vis, 'Death', 0.1, true);
     feed(t('feed.kill'), d.name, 'kill'); sfx.kill();
     return 'kill';
@@ -5363,6 +5439,7 @@ function damageRemote(rp, amount, part) {
   // prédiction locale : le joueur visé applique les vrais dégâts de son côté
   const st = rp.st; if (!st) return 'hit';
   if (sameSide(rp)) return 'hit';
+  if (part === 'head' && !st.dead) questEv('head');
   if (P.zombie && WS.cur === 5) amount *= 2;
   const toSh = Math.min(rp.pSh, amount); rp.pSh -= toSh;
   const toHp = Math.min(rp.pHp, amount - toSh); rp.pHp -= toHp;
@@ -5723,12 +5800,147 @@ function applyArmStyle() {
   armR = st.r || 1;
   for (const s of ['r', 'l']) ARMS[s].hand.scale.setScalar(st.hand || 1);
 }
+/* ---------- bras du modèle à la première personne : on clone le perso choisi, on cache la tête, et on place ses bras par IK sur l'arme ---------- */
+const FPA = { key: '', vis: null, g: new THREE.Group(), ok: false, sides: null, scale: 1, fail: new Set() };
+FPA.g.visible = false; wScene.add(FPA.g);
+// orientation de la main dans le repère de l'arme : F = poignet → jointures, N = normale de la paume, c = fermeture des doigts
+const FPA_POSE = {
+  gunR: { F: [-0.12, -0.2, -1], N: [-1, 0.15, -0.05], c: 1.25, th: 0.55, back: 0.075, out: 0.026 },
+  gunL: { F: [0.55, 0.12, -0.83], N: [0.35, 1, 0.1], c: 0.95, th: 0.35, back: 0.07, out: 0.03 },
+  pistolL: { F: [0.25, 0.25, -0.95], N: [0.95, 0.2, 0.1], c: 1.1, th: 0.4, back: 0.06, out: 0.03 },
+  knifeR: { F: [-0.15, 0.72, -0.68], N: [-1, 0.05, 0.05], c: 1.45, th: 0.7, back: 0.07, out: 0.022 },
+  knifeL: { F: [0.15, 0.72, -0.68], N: [1, 0.05, 0.05], c: 1.45, th: 0.7, back: 0.07, out: 0.022 }
+};
+const _fq = new THREE.Quaternion(), _fq2 = new THREE.Quaternion(), _fv = new V3(), _fv2 = new V3(), _fv3 = new V3(), _fm = new THREE.Matrix4(), _fm2 = new THREE.Matrix4();
+const _fpA = new V3(), _fpB = new V3(), _fpC = new V3(), _fpT = new V3(), _fpE = new V3(), _fpP = new V3();
+function fpaBones(obj) {
+  const by = {}; obj.traverse(o => { if (o.isBone) { const m = o.name.match(/(Left|Right)(Arm|ForeArm|Hand|HandThumb\d|HandIndex\d|HandMiddle\d|HandRing\d|HandPinky\d|Shoulder)$/); if (m && !by[m[1] + m[2]]) by[m[1] + m[2]] = o; if (/(Head|Neck)$/.test(o.name)) (by.hide = by.hide || []).push(o); } });
+  return by;
+}
+function fpaBuild(ch) {
+  const model = MODELS.chars[ch]; if (!model) return false;
+  const vis = cloneModel(model); vis.ch = ch;
+  vis.obj.rotation.y = (CHARS[ch] ? CHARS[ch].yaw || 0 : 0) + Math.PI;
+  try { tintChar(vis, ch, myColor()); } catch (e) {}
+  const by = fpaBones(vis.obj);
+  const need = s => by[s + 'Arm'] && by[s + 'ForeArm'] && by[s + 'Hand'] && by[s + 'HandIndex1'] && by[s + 'HandPinky1'];
+  if (!need('Right') || !need('Left')) return false;
+  vis.obj.traverse(o => { if (o.isMesh) { o.castShadow = false; o.frustumCulled = false; o.renderOrder = 1; } });
+  FPA.g.add(vis.obj); FPA.g.position.set(0, 0, 0); FPA.g.scale.setScalar(1); FPA.g.updateMatrixWorld(true);
+  const sides = {};
+  for (const [k, s] of [['r', 'Right'], ['l', 'Left']]) {
+    const A = by[s + 'Arm'], B = by[s + 'ForeArm'], C = by[s + 'Hand'];
+    const wp = o => o.getWorldPosition(new V3());
+    const l1 = wp(A).distanceTo(wp(B)), l2 = wp(B).distanceTo(wp(C));
+    // repère de la main (au repos) : direction des doigts et normale de la paume, exprimées dans l'espace local de la main
+    const inv = C.matrixWorld.clone().invert();
+    const loc = o => wp(o).applyMatrix4(inv);
+    const mid = by[s + 'HandMiddle1'] || by[s + 'HandIndex1'], idx = by[s + 'HandIndex1'], pk = by[s + 'HandPinky1'];
+    const fL = loc(mid).normalize(), across = loc(idx).sub(loc(pk)).normalize();
+    const nL = k === 'r' ? fL.clone().cross(across) : across.clone().cross(fL); nL.sub(fL.clone().multiplyScalar(nL.dot(fL))).normalize();
+    const axL = fL.clone().cross(nL).normalize(); // rotation qui referme les doigts vers la paume
+    const hq = C.getWorldQuaternion(new THREE.Quaternion());
+    const fingers = [];
+    for (const f of ['Index', 'Middle', 'Ring', 'Pinky', 'Thumb']) for (let i = 1; i <= 3; i++) {
+      const b = by[s + 'Hand' + f + i]; if (!b) continue;
+      const rel = hq.clone().invert().multiply(b.getWorldQuaternion(new THREE.Quaternion()));
+      const parRel = hq.clone().invert().multiply(b.parent.getWorldQuaternion(new THREE.Quaternion()));
+      fingers.push({ b, thumb: f === 'Thumb', i, ax: axL.clone().applyQuaternion(parRel.invert()).normalize(), rest: b.quaternion.clone() });
+      void rel;
+    }
+    sides[k] = { A, B, C, l1, l2, fL, nL, fingers, restA: A.quaternion.clone(), restB: B.quaternion.clone(), restC: C.quaternion.clone(), sh: by[s + 'Shoulder'] };
+  }
+  // bras un peu plus longs qu'en vrai, comme dans tous les FPS, pour atteindre le garde-main
+  // perso un peu agrandi, et bras étirés (os du coude et du poignet éloignés) pour atteindre le garde-main sans grossir les mains
+  const reach = (sides.r.l1 + sides.r.l2 + sides.l.l1 + sides.l.l2) / 2;
+  FPA.scale = clamp(0.47 / Math.max(0.2, reach), 0.85, 1.2);
+  const k = clamp(0.92 / (reach * FPA.scale), 1, 1.8);
+  for (const sd of [sides.r, sides.l]) { sd.B.position.multiplyScalar(k); sd.C.position.multiplyScalar(k); sd.l1 *= k; sd.l2 *= k; }
+  FPA.g.scale.setScalar(FPA.scale); FPA.g.updateMatrixWorld(true);
+  const mid = sides.r.A.getWorldPosition(new V3()).add(sides.l.A.getWorldPosition(new V3())).multiplyScalar(0.5);
+  FPA.g.position.set(-mid.x, -0.6 - mid.y, 0.12 - mid.z); FPA.g.updateMatrixWorld(true);
+  for (const h of by.hide || []) h.scale.setScalar(0.001);
+  FPA.vis = vis; FPA.sides = sides; return true;
+}
+// pivote un os pour que le point `from` (monde) passe par `to`
+function fpaAim(bone, from, to) {
+  bone.getWorldPosition(_fv);
+  _fv2.copy(from).sub(_fv).normalize(); _fv3.copy(to).sub(_fv).normalize();
+  if (_fv2.lengthSq() < 1e-8 || _fv3.lengthSq() < 1e-8) return;
+  _fq.setFromUnitVectors(_fv2, _fv3);
+  bone.getWorldQuaternion(_fq2); _fq2.premultiply(_fq);
+  bone.parent.getWorldQuaternion(_fq).invert();
+  bone.quaternion.copy(_fq.multiply(_fq2)); bone.updateMatrixWorld(true);
+}
+function fpaSetWorldQ(bone, q) { bone.parent.getWorldQuaternion(_fq).invert(); bone.quaternion.copy(_fq.multiply(q)); bone.updateMatrixWorld(true); }
+// orientation monde d'un repère (f, n) → quaternion qui amène (fL, nL) de la main sur (f, n)
+function fpaBasisQ(f, n, fL, nL, out) {
+  const b = new V3().crossVectors(f, n), bL = new V3().crossVectors(fL, nL);
+  _fm.makeBasis(f, n, b); _fm2.makeBasis(fL, nL, bL).transpose();
+  return out.setFromRotationMatrix(_fm.multiply(_fm2));
+}
+function fpaSide(S2, target, pose, wq, side, curl) {
+  const { A, B, C } = S2;
+  A.quaternion.copy(S2.restA); B.quaternion.copy(S2.restB); C.quaternion.copy(S2.restC); A.updateMatrixWorld(true);
+  const F = _fpP.set(pose.F[0], pose.F[1], pose.F[2]).normalize().applyQuaternion(wq);
+  const N = new V3(pose.N[0], pose.N[1], pose.N[2]); N.sub(_fv.copy(F).multiplyScalar(N.dot(F)));
+  if (N.lengthSq() < 1e-6) N.set(0, 1, 0); N.normalize(); N.applyQuaternion(wq); N.sub(_fv.copy(F).multiplyScalar(N.dot(F))).normalize();
+  // poignet = point de prise reculé le long des doigts et décollé de la paume
+  _fpT.copy(target).addScaledVector(F, -pose.back).addScaledVector(N, -pose.out);
+  A.getWorldPosition(_fpA);
+  const l1 = S2.l1 * FPA.scale, l2 = S2.l2 * FPA.scale;
+  const d = _fpT.clone().sub(_fpA); const dist = clamp(d.length(), 0.05, (l1 + l2) * 0.999); d.normalize();
+  _fpT.copy(_fpA).addScaledVector(d, dist);
+  const cosA = clamp((l1 * l1 + dist * dist - l2 * l2) / (2 * l1 * dist), -1, 1), sinA = Math.sqrt(1 - cosA * cosA);
+  // le coude part vers le bas et vers l'extérieur
+  const pole = new V3(side === 'r' ? 0.55 : -0.55, -1, 0.15); pole.sub(_fv.copy(d).multiplyScalar(pole.dot(d))).normalize();
+  _fpE.copy(_fpA).addScaledVector(d, l1 * cosA).addScaledVector(pole, l1 * sinA);
+  B.getWorldPosition(_fpB); fpaAim(A, _fpB, _fpE);
+  C.getWorldPosition(_fpC); fpaAim(B, _fpC, _fpT);
+  fpaSetWorldQ(C, fpaBasisQ(F, N, S2.fL, S2.nL, new THREE.Quaternion()));
+  for (const f of S2.fingers) {
+    const a = f.thumb ? pose.th * (f.i === 1 ? 0.3 : 0.6) : (f.i === 1 ? 0.9 : f.i === 2 ? 1 : 0.75) * (curl);
+    f.b.quaternion.copy(f.rest).multiply(_fq.setFromAxisAngle(f.ax, a));
+  }
+  C.updateMatrixWorld(true);
+}
+// renvoie vrai si les bras du modèle sont affichés (les bras « en boîtes » sont alors cachés)
+function fpaUpdate(vm, relK) {
+  const ch = myChar(), key = ch + '|' + myColor();
+  if (S.fpArms === false || !MODELS.chars[ch] || FPA.fail.has(ch)) { FPA.g.visible = false; return false; }
+  if (FPA.key !== key) {
+    if (FPA.vis) { FPA.g.remove(FPA.vis.obj); FPA.vis = null; }
+    FPA.key = key; FPA.ok = fpaBuild(ch); if (!FPA.ok) { FPA.fail.add(ch); FPA.g.visible = false; return false; }
+  }
+  if (!FPA.ok) return false;
+  const show = vm.g.visible && !!vm.hands;
+  FPA.g.visible = show; if (!show) return true;
+  vm.g.updateMatrixWorld(true);
+  const wq = vm.g.getWorldQuaternion(new THREE.Quaternion());
+  const knife = vm.kind === 5, pistol = vm.kind === 4;
+  for (const side of ['r', 'l']) {
+    const h = vm.hands[side], S2 = FPA.sides[side];
+    let target, pose;
+    if (h) {
+      target = new V3(h[0], h[1], h[2]).applyMatrix4(vm.g.matrixWorld);
+      if (side === 'l' && relK > 0) { target.y -= 0.16 * relK; target.x += 0.04 * relK; target.z += 0.06 * relK; }
+      pose = FPA_POSE[knife ? (side === 'r' ? 'knifeR' : 'knifeL') : side === 'r' ? 'gunR' : pistol ? 'pistolL' : 'gunL'];
+    } else {
+      // main libre (couteau à une main) : posée en bas à gauche, hors du champ
+      target = new V3(-0.34, -0.62, -0.18); pose = FPA_POSE.knifeL;
+    }
+    const curl = pose.c + (side === 'r' && WS.flashT > 0 ? 0.12 : 0) - (side === 'l' ? 0.4 * relK : 0);
+    fpaSide(S2, target, pose, h ? wq : new THREE.Quaternion(), side, curl);
+  }
+  return true;
+}
 // tir : les doigts se resserrent ; rechargement : la main gauche va chercher le chargeur
 function updateArms(vm, dt) {
   if ((armTintT -= dt) <= 0) { armTintT = 0.5; applyArmStyle(); }
   const show = vm.g.visible && !!vm.hands;
   if (show) vm.g.updateMatrixWorld(true);
   const relK = WS.reloading && vm.kind !== 5 ? Math.sin(Math.PI * clamp(1 - WS.reloadT / WS.reloadDur, 0, 1)) : 0;
+  if (fpaUpdate(vm, relK)) { for (const sd of ['r', 'l']) { const A = ARMS[sd]; A.hand.visible = A.fore.visible = A.cuff.visible = A.upper.visible = A.elbow.visible = false; } return; }
   for (const side of ['r', 'l']) {
     const A = ARMS[side], h = show && vm.hands[side];
     A.hand.visible = A.fore.visible = A.cuff.visible = A.upper.visible = A.elbow.visible = !!h;
@@ -5768,6 +5980,7 @@ function updateViewmodel(dt) {
   WS.kick *= Math.exp(-16 * dt); WS.kickRot *= Math.exp(-14 * dt);
   const hipK = 1 - a;
   let x = lerp(vm.hip[0], 0, a), y = lerp(vm.hip[1], -vm.sightY, a), z = lerp(vm.hip[2], -vm.adsZ, a);
+  if (vm.kind === 5 && FPA.ok && FPA.g.visible) { x += 0.06; y -= 0.05; z -= 0.08; } // bras du modèle : couteau un peu plus loin, la main ne mange pas l'écran
   let rx = 0, ry = lerp(0.04, 0, a), rz = 0;
   const bobAmt = P.grounded && !P.sliding ? Math.min(1, hs / SPRINT) : 0;
   // arme plus posée : balancement, inertie et inclinaisons réduits
@@ -5931,7 +6144,7 @@ function helloAccept(from, m, r) {
     broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
     if (isListedAdmin(m.name) && r.auth) { NET.players.get(from).admin = true; sendTo(from, { k: 'admx', act: 'admin', arg: true }); }
     lobbyShow();
-    setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); cmShare(from); for (const [o, c] of CM.host) if (o !== from) cmSendCached(from, o, c); if (RULES.mode === 'zombie' && MODE.active) sendTo(from, { k: 'zsync', t: MODE.zT }); } }, 400);
+    setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); cmShare(from); cskWelcome(from); for (const [o, c] of CM.host) if (o !== from) cmSendCached(from, o, c); if (RULES.mode === 'zombie' && MODE.active) sendTo(from, { k: 'zsync', t: MODE.zT }); } }, 400);
 }
 function hostRecv(from, m) {
   const pl = NET.players.get(from);
@@ -5955,6 +6168,7 @@ function hostRecv(from, m) {
   }
   if (m.k === 'snd') { csHostRecv(from, m); return; }
   if (m.k === 'mdl') { cmHostRecv(from, m); return; }
+  if (m.k === 'cskin') { cskHostRecv(from, m); return; }
   if (m.k === 'chat') { chatHostRecv(from, m); return; }
   if (m.k === 'report') { hostReport(from, m.r || {}); return; }
   if (m.k === 'st') pl.st = m.s;
@@ -5988,13 +6202,14 @@ function snapshot() {
   return { k: 'snap', pl, map: S.map, rules: RULES };
 }
 function clientRecv(m) {
-  if (m.k === 'welcome') { NET.selfId = m.id; if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); else if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
+  if (m.k === 'welcome') { NET.selfId = m.id; setTimeout(cskShare, 700); if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); else if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
   if (m.k === 'snd') { csClientRecv(m); return; }
   if (m.k === 'mdl') { cmClientRecv(m); return; }
   if (m.k === 'chat') { chatRecv(m); return; }
   if (m.k === 'zround' || m.k === 'zend' || m.k === 'zsync') { clientRecvMode(m); return; }
   if (m.k === 'reportx') { if (m.r && typeof m.r === 'object') { ACC.remoteReports.push({ at: +m.r.at || Date.now(), from: String(m.r.from || '?').slice(0, 14), target: String(m.r.target || '?').slice(0, 14), reason: REPORT_REASONS.includes(m.r.reason) ? m.r.reason : 'other', text: String(m.r.text || '').slice(0, 200) }); toast(t('rep.new', { name: String(m.r.target || '?').slice(0, 14) }), 4); if (ADM.open && ADM.tab === 'reports') admRender(); } return; }
   if (m.k === 'mapdef') { recvMapdef(m); return; }
+  if (m.k === 'cskin') { cskRecv(m); return; }
   if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
   if (m.k === 'end') { NET.ended = true; return; }
   if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
@@ -6054,7 +6269,7 @@ function clientRecv(m) {
     const nameOf = id => id === NET.selfId ? S.name : (remotes.get(id) ? remotes.get(id).name : '?');
     killfeed(nameOf(m.by), wLabel(m.w | 0), nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
     if (m.by === NET.selfId && m.victim !== NET.selfId) {
-      stats.kills++; feed(t('feed.kill'), nameOf(m.victim), 'kill'); sfx.kill();
+      stats.kills++; feed(t('feed.kill'), nameOf(m.victim), 'kill'); sfx.kill(); questKill(m.w | 0, true);
       if (m.mg) { feed('MORGANE', t('mg.feed'), 'gold'); sfx.outfit(); }
       hmEl.className = 'kill'; hmT = 0.4;
     }
@@ -8449,7 +8664,7 @@ function updateRemoteGun(rp, dt) {
     const kind = clamp(st.w | 0, 0, 6), kt = kind === 6 ? (SPECIALS[st.sp] ? st.sp : 'burst') : KNIVES[st.kt] ? st.kt : 'combat';
     const vm = buildViewmodel(kind, kt); wScene.remove(vm.g);
     vm.g.scale.setScalar(0.92); vm.g.traverse(o => { if (o.isMesh && o !== vm.flash) o.castShadow = true; });
-    applySkinVM(vm, kind === 5 && kt === 'katana' && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : SKINS[st.sk] || SKINS.std);
+    applySkinVM(vm, kind === 5 && kt === 'katana' && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : (st.sk === 'custom' ? SKINS['c:' + rp.id] : SKINS[st.sk]) || SKINS.std);
     rp.g.add(vm.g); rp.gun = { vm, key, flashT: 0 };
   }
   const vm = rp.gun.vm, g = vm.g; g.visible = true;
@@ -8570,7 +8785,7 @@ function leaveNet() {
   setPlayLbl(playing || everPlayed ? 'play.resume' : 'play.solo');
 }
 function onlineReady(code) {
-  NET.code = code; DC.start = Date.now();
+  NET.code = code; DC.start = Date.now(); CSK.host.clear(); if (NET.mode === 'host') setTimeout(cskShare, 300);
   $('netBadge').hidden = false; $('netBadge').textContent = t('net.badge', { code });
   $('me').hidden = false;
   setPlayLbl('play.enter');
@@ -8919,7 +9134,7 @@ function renderBoard() {
 }
 function updateHUD(dt) {
   const hs = Math.hypot(P.vel.x, P.vel.z);
-  stats.vmax = Math.max(stats.vmax, hs);
+  stats.vmax = Math.max(stats.vmax, hs); if (hs > 15) questEv('speed', hs);
   setTxt(hudEls.spd, hs.toFixed(1)); setTxt(hudEls.kmh, Math.round(hs * 3.6) + ' km/h');
   const st = t(P.dead ? 'state.dead' : P.mantle ? 'state.mantle' : P.climbing ? 'state.climb' : P.sliding ? 'state.slide' : !P.grounded ? 'state.air' : P.sprinting ? 'state.sprint' : P.crouch ? 'state.crouch' : 'state.ground');
   setTxt(hudEls.state, st); hudEls.state.classList.toggle('fast', hs > SLIDE_BOOST_CAP - 0.3);
@@ -9863,10 +10078,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.06c';
+const GAME_VERSION = '2026.11.07';
 const CHANGES = {
-  fr: ['Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -10590,37 +10805,51 @@ async function voiceStart() {
     voiceTx(VOICE.mode === 'open'); voiceResetCalls(); return true;
   } catch (e) { VOICE.err = true; toast(t('voice.denied'), 4); VOICE.mode = 'off'; store.set('voiceMode', 'off'); $('voiceMode').value = 'off'; return false; }
 }
+// niveau du micro, affiché à côté du réglage : prouve que le micro capte bien
+function micMeter() {
+  const el = $('micLvl'); if (!el) return;
+  if (!VOICE.stream || !AC) { el.firstChild.style.width = '0%'; el.classList.toggle('on', false); return; }
+  if (!VOICE.meter || VOICE.meter.stream !== VOICE.stream) { try { const src = AC.createMediaStreamSource(VOICE.stream), an = AC.createAnalyser(); an.fftSize = 256; src.connect(an); VOICE.meter = { stream: VOICE.stream, an, buf: new Uint8Array(256) }; } catch (e) { return; } }
+  const m = VOICE.meter; m.an.getByteTimeDomainData(m.buf); let pk = 0; for (let i = 0; i < m.buf.length; i += 4) pk = Math.max(pk, Math.abs(m.buf[i] - 128));
+  el.firstChild.style.width = Math.min(100, pk * 1.6) + '%'; el.classList.toggle('on', VOICE.talking);
+}
+setInterval(micMeter, 120);
 function voiceStop() { if (VOICE.stream) { for (const tr of VOICE.stream.getTracks()) tr.stop(); VOICE.stream = null; } voiceResetCalls(); }
 function voiceTx(on) { VOICE.talking = on; if (VOICE.stream) for (const tr of VOICE.stream.getAudioTracks()) tr.enabled = on; $('talkIcon').hidden = !on || !playing; }
 function voiceResetCalls() { for (const c of VOICE.calls.values()) { try { c.close(); } catch (e) {} } VOICE.calls.clear(); for (const id of [...VOICE.nodes.keys()]) voiceDrop(id); }
 function voiceDrop(id) { const n = VOICE.nodes.get(id); if (!n) return; try { n.src.disconnect(); n.el.srcObject = null; } catch (e) {} VOICE.nodes.delete(id); }
 function voiceAttach(id, call) {
-  VOICE.calls.set(id, call);
+  VOICE.calls.set(id, call); call._t = performance.now();
   call.on('stream', rs => {
     audioInit(); if (!AC) return; voiceDrop(id);
-    const el = new Audio(); el.srcObject = rs; el.muted = true; el.play().catch(() => {});
+    const el = new Audio(); el.srcObject = rs; el.volume = 0; el.autoplay = true; el.play().catch(() => {});
+    if (!VOICE.out) { VOICE.out = AC.createGain(); VOICE.out.connect(AC.destination); }
+    if (AC.state === 'suspended') AC.resume();
     const src = AC.createMediaStreamSource(rs), gain = AC.createGain(), pan = AC.createStereoPanner ? AC.createStereoPanner() : null, an = AC.createAnalyser();
     an.fftSize = 256; gain.gain.value = 0;
-    src.connect(an); src.connect(gain); if (pan) { gain.connect(pan); pan.connect(master); } else gain.connect(master);
+    src.connect(an); src.connect(gain); if (pan) { gain.connect(pan); pan.connect(VOICE.out); } else gain.connect(VOICE.out);
     VOICE.nodes.set(id, { el, src, gain, pan, an, buf: new Uint8Array(an.fftSize) });
   });
   call.on('close', () => { if (VOICE.calls.get(id) === call) VOICE.calls.delete(id); voiceDrop(id); });
   call.on('error', () => { if (VOICE.calls.get(id) === call) VOICE.calls.delete(id); voiceDrop(id); });
 }
+// l'hôte s'appelle « host-CODE » dans la partie, mais son identifiant WebRTC est PREFIX + CODE : sans cette traduction, personne ne pouvait parler avec l'hôte
+const voicePeer = id => /^host-/.test(id) ? PREFIX + id.slice(5) : id;
+const voiceRid = pid => NET.code && pid === PREFIX + NET.code ? 'host-' + NET.code : pid;
 // qui appelle qui : celui qui a un micro appelle ; si les deux en ont un, le plus petit identifiant appelle
 function voiceSync() {
   if (NET.mode === 'off' || !NET.peer || typeof NET.peer.call !== 'function') { if (VOICE.calls.size) voiceResetCalls(); return; }
-  for (const [id, c] of VOICE.calls) if (!remotes.has(id)) { try { c.close(); } catch (e) {} VOICE.calls.delete(id); voiceDrop(id); }
+  for (const [id, c] of VOICE.calls) if (!remotes.has(id) || (!VOICE.nodes.has(id) && performance.now() - (c._t || 0) > 12000 && remotes.get(id).st && remotes.get(id).st.mic)) { try { c.close(); } catch (e) {} VOICE.calls.delete(id); voiceDrop(id); }
   if (!VOICE.stream) return;
   for (const [id, rp] of remotes) {
     if (VOICE.calls.has(id) || !rp.st) continue;
     const theyMic = !!rp.st.mic;
     if (theyMic && NET.selfId > id) continue;
-    try { const call = NET.peer.call(id, VOICE.stream, { metadata: { v: 1 } }); if (call) voiceAttach(id, call); } catch (e) {}
+    try { const call = NET.peer.call(voicePeer(id), VOICE.stream, { metadata: { v: 1 } }); if (call) voiceAttach(id, call); } catch (e) {}
   }
 }
 function voiceOnCall(call) {
-  const id = call.peer; if (!remotes.has(id)) { try { call.close(); } catch (e) {} return; }
+  const id = voiceRid(call.peer); if (!remotes.has(id)) { try { call.close(); } catch (e) {} return; }
   const old = VOICE.calls.get(id); if (old && old !== call) { try { old.close(); } catch (e) {} }
   try { call.answer(VOICE.stream || undefined); } catch (e) { return; }
   voiceAttach(id, call);
@@ -10762,6 +10991,154 @@ function renderClassInfo() {
     $('stAbil').innerHTML = chip(c.tac, 'tactical') + chip(c.ult, 'ultimate');
   }
 }
+/* ---------- blocs du menu : quêtes et skin d'arme perso ---------- */
+{
+  const inner = menu.querySelector('.menu-inner');
+  const qb = document.createElement('div'); qb.className = 'block'; qb.id = 'questBlock';
+  qb.innerHTML = '<h2 data-i18n="q.title">Quêtes</h2><p class="hint" data-i18n="q.hint"></p><div id="questList" class="questlist"></div>';
+  inner.appendChild(qb);
+  const cf = document.createElement('div'); cf.className = 'field'; cf.id = 'cskField';
+  cf.innerHTML = '<span class="lab" data-i18n="csk.lab">Mon skin d’arme</span><div class="cskrow"><span id="cskPrev" class="cskprev"></span><button type="button" class="btn3" id="cskPick" data-i18n="csk.pick">Importer une image</button><button type="button" class="btn3" id="cskDel" data-i18n="csk.del">Retirer</button><input type="file" id="cskFile" accept="image/*" hidden></div><p class="hint" data-i18n="csk.hint"></p>';
+  inner.appendChild(cf);
+}
+/* ================= Quêtes : des défis qui débloquent des skins d'arme spéciaux ================= */
+const qTex = (draw, rep = 1) => { const tx = canvasTex(draw, 256); tx.repeat.set(rep, rep); return tx; };
+const qRnd = seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+const QTEX = {
+  ember: qTex((g, s) => { g.fillStyle = '#1a0805'; g.fillRect(0, 0, s, s); const r = qRnd(7);
+    for (let i = 0; i < 260; i++) { const x = r() * s, y = r() * s, rr = 1 + r() * 4, gr = g.createRadialGradient(x, y, 0, x, y, rr * 3); gr.addColorStop(0, `rgba(255,${120 + (r() * 120) | 0},40,.95)`); gr.addColorStop(1, 'rgba(255,60,0,0)'); g.fillStyle = gr; g.fillRect(x - rr * 3, y - rr * 3, rr * 6, rr * 6); }
+    g.strokeStyle = 'rgba(255,110,20,.55)'; g.lineWidth = 2; for (let i = 0; i < 14; i++) { g.beginPath(); let x = r() * s, y = r() * s; g.moveTo(x, y); for (let k = 0; k < 6; k++) { x += (r() - .5) * 50; y += (r() - .5) * 50; g.lineTo(x, y); } g.stroke(); } }),
+  obsidian: qTex((g, s) => { g.fillStyle = '#07060a'; g.fillRect(0, 0, s, s); const r = qRnd(11);
+    for (let i = 0; i < 9; i++) { g.strokeStyle = `rgba(${150 + (r() * 80) | 0},70,255,${.35 + r() * .4})`; g.lineWidth = 1 + r() * 2.5; g.beginPath(); let x = r() * s, y = 0; g.moveTo(x, y); while (y < s) { x += (r() - .5) * 40; y += 10 + r() * 24; g.lineTo(x, y); } g.stroke(); } }),
+  voidsk: qTex((g, s) => { const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#05030c'); gr.addColorStop(.5, '#170a2e'); gr.addColorStop(1, '#05030c'); g.fillStyle = gr; g.fillRect(0, 0, s, s); const r = qRnd(23);
+    for (let i = 0; i < 220; i++) { const b = r(); g.fillStyle = `rgba(${200 + b * 55 | 0},${190 + b * 60 | 0},255,${.3 + b * .7})`; const z = b > .93 ? 2.2 : 1; g.fillRect(r() * s, r() * s, z, z); } }, 2),
+  aurora: qTex((g, s) => { g.fillStyle = '#04121a'; g.fillRect(0, 0, s, s);
+    for (let i = 0; i < 5; i++) { const gr = g.createLinearGradient(0, 0, 0, s); const c = ['60,255,170', '80,200,255', '170,110,255', '60,255,200', '120,255,120'][i]; gr.addColorStop(0, `rgba(${c},0)`); gr.addColorStop(.5, `rgba(${c},.55)`); gr.addColorStop(1, `rgba(${c},0)`); g.fillStyle = gr; g.beginPath(); g.moveTo(i * s / 5 - 30, 0); g.bezierCurveTo(i * s / 5 + 60, s * .3, i * s / 5 - 40, s * .7, i * s / 5 + 30, s); g.lineTo(i * s / 5 + 70, s); g.bezierCurveTo(i * s / 5 + 20, s * .7, i * s / 5 + 100, s * .3, i * s / 5 + 20, 0); g.fill(); } }),
+  holo: qTex((g, s) => { g.fillStyle = '#021418'; g.fillRect(0, 0, s, s); g.strokeStyle = 'rgba(80,240,255,.8)'; g.lineWidth = 1.5;
+    for (let i = 0; i <= s; i += 16) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i, s); g.stroke(); g.beginPath(); g.moveTo(0, i); g.lineTo(s, i); g.stroke(); }
+    g.fillStyle = 'rgba(160,255,255,.35)'; for (let y = 0; y < s; y += 4) g.fillRect(0, y, s, 1); }, 2),
+  dragon: qTex((g, s) => { g.fillStyle = '#3a0707'; g.fillRect(0, 0, s, s);
+    for (let row = 0; row < 12; row++) for (let col = 0; col < 12; col++) { const x = col * 22 + (row % 2) * 11, y = row * 22; const gr = g.createRadialGradient(x, y - 4, 2, x, y, 14); gr.addColorStop(0, '#e2462a'); gr.addColorStop(.7, '#8a1410'); gr.addColorStop(1, '#2a0404'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, 12, 0, Math.PI); g.fill(); g.strokeStyle = 'rgba(255,190,90,.5)'; g.lineWidth = 1; g.stroke(); } }, 2),
+  champion: qTex((g, s) => { const gr = g.createLinearGradient(0, 0, s, s); gr.addColorStop(0, '#6a4a08'); gr.addColorStop(.5, '#ffd34a'); gr.addColorStop(1, '#8a5a0a'); g.fillStyle = gr; g.fillRect(0, 0, s, s);
+    g.strokeStyle = 'rgba(255,255,255,.35)'; g.lineWidth = 3; for (let i = -s; i < s * 2; i += 28) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + s, s); g.stroke(); } }),
+  prism: qTex((g, s) => { for (let x = 0; x < s; x++) { g.fillStyle = `hsl(${x / s * 360},90%,58%)`; g.fillRect(x, 0, 1, s); } g.fillStyle = 'rgba(255,255,255,.18)'; for (let i = 0; i < s; i += 32) g.fillRect(0, i, s, 10); })
+};
+Object.assign(SKINS, {
+  ember: { dark: 0xffffff, mid: 0x1e0c08, blk: 0x0a0403, amb: [0xffa040, 0xff5000], tan: 0xffffff, teal: 0xffffff, steel: [0xffc890, 0x5a1800], map: QTEX.ember, emap: QTEX.ember, emapCol: 0xff8a40, mapRoles: ['dark', 'teal', 'tan'], anim: 'scroll', spd: [0.02, -0.12], quest: 1 },
+  obsidian: { dark: 0xffffff, mid: 0x0b0a10, blk: 0x050407, amb: [0xb070ff, 0x5a20c0], tan: 0xffffff, teal: 0xffffff, steel: [0xd8c8ff, 0x200a40], map: QTEX.obsidian, emap: QTEX.obsidian, emapCol: 0x7a40ff, mapRoles: ['dark', 'teal', 'tan'], quest: 1 },
+  voidsk: { dark: 0xffffff, mid: 0x0a0616, blk: 0x020106, amb: [0xe0d0ff, 0x6040c0], tan: 0xffffff, teal: 0xffffff, steel: [0xf0e8ff, 0x302060], map: QTEX.voidsk, emap: QTEX.voidsk, emapCol: 0x8a7aff, mapRoles: ['dark', 'mid', 'teal', 'tan'], anim: 'scroll', spd: [0.015, 0.03], quest: 1 },
+  aurora: { dark: 0xffffff, mid: 0x06202a, blk: 0x020a0e, amb: [0x7affd0, 0x20c090], tan: 0xffffff, teal: 0xffffff, steel: [0xc8fff0, 0x0a4a3a], map: QTEX.aurora, emap: QTEX.aurora, emapCol: 0x9affe0, mapRoles: ['dark', 'teal', 'tan'], anim: 'scroll', spd: [0.06, 0], quest: 1 },
+  holo: { dark: 0xffffff, mid: 0x04222a, blk: 0x01090c, amb: [0x80f8ff, 0x20c8e0], tan: 0xffffff, teal: 0xffffff, steel: [0xc0ffff, 0x105060], map: QTEX.holo, emap: QTEX.holo, emapCol: 0x60f0ff, mapRoles: ['dark', 'mid', 'teal', 'tan'], anim: 'scroll', spd: [0, 0.25], quest: 1 },
+  dragon: { dark: 0xffffff, mid: 0x2a0606, blk: 0x120202, amb: [0xffc040, 0x8a3a00], tan: 0xffffff, teal: 0xffffff, steel: [0xffd090, 0x4a1000], map: QTEX.dragon, mapRoles: ['dark', 'teal', 'tan'], quest: 1 },
+  champion: { dark: 0xffffff, mid: 0xc8a030, blk: 0x3a2a08, amb: [0xffffff, 0x8a6a10], tan: 0xffffff, teal: 0xffffff, steel: [0xfff4c0, 0x5a4000], map: QTEX.champion, mapRoles: ['dark', 'teal', 'tan'], anim: 'pulse', pulseRoles: ['amb', 'steel'], glow: 0x2a1c00, quest: 1 },
+  prism: { dark: 0xffffff, mid: 0x202028, blk: 0x0a0a0e, amb: [0xffffff, 0x404040], tan: 0xffffff, teal: 0xffffff, steel: 0xffffff, map: QTEX.prism, emap: QTEX.prism, emapCol: 0x555555, mapRoles: ['dark', 'mid', 'teal', 'tan'], anim: 'scroll', spd: [0.12, 0], quest: 1 }
+});
+// ev : type d'événement ; n : objectif ; max : on garde le record ; set : nombre de valeurs différentes
+const QUESTS = [
+  { id: 'kill10', ev: 'kill', n: 10, sk: 'ember' },
+  { id: 'head25', ev: 'head', n: 25, sk: 'obsidian' },
+  { id: 'knife15', ev: 'kkill', n: 15, sk: 'voidsk' },
+  { id: 'speed22', ev: 'speed', n: 22, max: true, sk: 'aurora' },
+  { id: 'wj60', ev: 'wj', n: 60, sk: 'holo' },
+  { id: 'time30', ev: 'min', n: 30, sk: 'dragon' },
+  { id: 'pk10', ev: 'pkill', n: 10, sk: 'champion' },
+  { id: 'allw', ev: 'wkill', n: 6, set: true, sk: 'prism' }
+];
+const QST = Object.assign({}, store.get('quests', {}) || {});
+let qSaveT = 0;
+const qProg = q => { const v = QST[q.id]; return q.set ? (Array.isArray(v) ? v.length : 0) : +v || 0; };
+const qDone = q => qProg(q) >= q.n;
+const skinLocked = id => { const q = QUESTS.find(x => x.sk === id); return !!q && !qDone(q) && !xUnlocked; };
+function questEv(ev, v = 1) {
+  for (const q of QUESTS) {
+    if (q.ev !== ev || qDone(q)) continue;
+    const before = qProg(q);
+    if (q.max) QST[q.id] = Math.max(+QST[q.id] || 0, Math.floor(v));
+    else if (q.set) { const a = Array.isArray(QST[q.id]) ? QST[q.id] : (QST[q.id] = []); if (!a.includes(v)) a.push(v); }
+    else QST[q.id] = (+QST[q.id] || 0) + v;
+    if (qProg(q) === before) continue;
+    clearTimeout(qSaveT); qSaveT = setTimeout(() => store.set('quests', QST), 800);
+    if (qDone(q)) { toast(t('q.done', { q: t('q.' + q.id), sk: t('skin.' + q.sk) }), 5); try { sfx.outfit(); } catch (e) {} renderSkinOptions(); renderQuests(); }
+    else if (document.getElementById('questList') && !menu.hidden) renderQuests();
+  }
+}
+function questKill(w, pl) { questEv('kill'); if (w === 5) questEv('kkill'); if (w >= 0 && w <= 5) questEv('wkill', w); if (pl) questEv('pkill'); }
+setInterval(() => { if (playing && !P.dead) questEv('min'); }, 60000);
+// liste du sélecteur de skins : skins de quête verrouillés tant que la quête n'est pas finie, skin perso en fin de liste
+function renderSkinOptions() {
+  const sel = $('skin'); if (!sel) return;
+  for (const q of QUESTS) {
+    let o = sel.querySelector(`option[value="${q.sk}"]`);
+    if (!o) { o = document.createElement('option'); o.value = q.sk; sel.appendChild(o); }
+    const lock = skinLocked(q.sk); o.disabled = lock; o.textContent = (lock ? '🔒 ' : '★ ') + t('skin.' + q.sk);
+  }
+  let c = sel.querySelector('option[value="custom"]');
+  if (SKINS.custom && !c) { c = document.createElement('option'); c.value = 'custom'; sel.appendChild(c); }
+  if (c) { c.hidden = !SKINS.custom; c.textContent = t('skin.custom'); }
+  if (skinLocked(S.skin) || (S.skin === 'custom' && !SKINS.custom)) { S.skin = 'std'; applySkin('std'); }
+  sel.value = S.skin;
+}
+function renderQuests() {
+  const el = $('questList'); if (!el) return;
+  el.replaceChildren();
+  for (const q of QUESTS) {
+    const p = Math.min(q.n, qProg(q)), done = p >= q.n, row = document.createElement('div'); row.className = 'quest' + (done ? ' done' : '');
+    const sw = document.createElement('span'); sw.className = 'qsw'; const tx = SKINS[q.sk].map; if (tx && tx.image && tx.image.toDataURL) sw.style.backgroundImage = `url(${tx.image.toDataURL()})`;
+    const txt = document.createElement('div'); txt.className = 'qtxt';
+    txt.innerHTML = '<b></b><span></span><em></em>';
+    txt.children[0].textContent = t('q.' + q.id); txt.children[1].textContent = t('qd.' + q.id, { n: q.n });
+    txt.children[2].textContent = (done ? '✔ ' : '') + t('q.reward', { sk: t('skin.' + q.sk) });
+    const bar = document.createElement('div'); bar.className = 'qbar'; bar.innerHTML = '<i></i><small></small>'; bar.firstChild.style.width = (p / q.n * 100) + '%'; bar.lastChild.textContent = q.max ? p + ' / ' + q.n + ' m/s' : p + ' / ' + q.n;
+    const act = document.createElement('button'); act.type = 'button'; act.className = 'btn3'; act.textContent = done ? t(S.skin === q.sk ? 'q.equipped' : 'q.equip') : '🔒'; act.disabled = !done;
+    act.addEventListener('click', () => { S.skin = q.sk; store.set('skin', S.skin); applySkin(S.skin); renderSkinOptions(); renderQuests(); });
+    row.append(sw, txt, bar, act); el.appendChild(row);
+  }
+}
+/* ---------- skin d'arme perso : une image importée, plaquée sur l'arme ; partagée avec les autres joueurs ---------- */
+const CSK = { MAX: 60000, host: new Map(), got: new Map() };
+function cskSkin(tex) { return { dark: 0xffffff, mid: 0xffffff, blk: 0x9a9a9a, amb: [0xe6e8ea, 0x000000], tan: 0xffffff, teal: 0xffffff, steel: 0xd0d4d8, map: tex, mapRoles: ['dark', 'mid', 'teal', 'tan', 'blk'] }; }
+function cskTex(dataUrl, cb) {
+  const img = new Image();
+  img.onload = () => { const tx = new THREE.Texture(img); tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.encoding = THREE.sRGBEncoding; tx.anisotropy = MAX_ANISO; tx.needsUpdate = true; cb(tx); };
+  img.onerror = () => cb(null); img.src = dataUrl;
+}
+// recadre en carré 256 px et compresse en JPEG : assez léger pour passer par le réseau
+function cskFromFile(file) {
+  if (!file || !/^image\//.test(file.type)) { toast(t('csk.bad'), 3); return; }
+  const url = URL.createObjectURL(file), img = new Image();
+  img.onload = () => {
+    const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d');
+    const k = Math.max(256 / img.width, 256 / img.height), w = img.width * k, h = img.height * k; g.drawImage(img, (256 - w) / 2, (256 - h) / 2, w, h);
+    let q = 0.85, d = c.toDataURL('image/jpeg', q); while (d.length > CSK.MAX && q > 0.3) { q -= 0.1; d = c.toDataURL('image/jpeg', q); }
+    URL.revokeObjectURL(url); cskSet(d, true);
+  };
+  img.onerror = () => { URL.revokeObjectURL(url); toast(t('csk.bad'), 3); }; img.src = url;
+}
+function cskSet(d, equip) {
+  cskTex(d, tx => {
+    if (!tx) return;
+    SKINS.custom = cskSkin(tx); try { store.set('cskin', d); } catch (e) { toast(t('csk.big'), 3); }
+    CSK.mine = d; if (equip) { S.skin = 'custom'; store.set('skin', 'custom'); }
+    applySkin(S.skin); renderSkinOptions(); cskShare(); const pv = $('cskPrev'); if (pv) pv.style.backgroundImage = `url(${d})`;
+  });
+}
+function cskClear() { delete SKINS.custom; CSK.mine = null; store.set('cskin', null); if (S.skin === 'custom') { S.skin = 'std'; store.set('skin', 'std'); applySkin('std'); } renderSkinOptions(); const pv = $('cskPrev'); if (pv) pv.style.backgroundImage = ''; }
+function cskShare() { if (!CSK.mine) return; const m = { k: 'cskin', d: CSK.mine }; if (NET.mode === 'client') netSend(m); else if (NET.mode === 'host') { CSK.host.set(NET.selfId, CSK.mine); broadcast({ k: 'cskin', from: NET.selfId, d: CSK.mine }, NET.selfId); } }
+// hôte : garde le skin de chacun et le renvoie aux nouveaux venus
+function cskHostRecv(from, m) {
+  if (typeof m.d !== 'string' || m.d.length > CSK.MAX + 200 || !/^data:image\/(jpeg|png|webp);base64,/.test(m.d)) return;
+  CSK.host.set(from, m.d); broadcast({ k: 'cskin', from, d: m.d }, from);
+}
+function cskWelcome(to) { for (const [o, d] of CSK.host) if (o !== to) sendTo(to, { k: 'cskin', from: o, d }); }
+function cskRecv(m) {
+  if (typeof m.d !== 'string' || !m.from || m.from === NET.selfId || !/^data:image\/(jpeg|png|webp);base64,/.test(m.d)) return;
+  if (CSK.got.get(m.from) === m.d) return; CSK.got.set(m.from, m.d);
+  cskTex(m.d, tx => { if (!tx) return; SKINS['c:' + m.from] = cskSkin(tx); const rp = remotes.get(m.from); if (rp && rp.gun) rp.gun.key = ''; });
+}
+{ const d = store.get('cskin', null); if (typeof d === 'string' && d.startsWith('data:image/')) cskSet(d, false); }
+$('cskPick').addEventListener('click', () => $('cskFile').click());
+$('cskFile').addEventListener('change', e => { const f = e.target.files && e.target.files[0]; if (f) cskFromFile(f); e.target.value = ''; });
+$('cskDel').addEventListener('click', cskClear);
 /* ---------- mise en page du menu : onglets + personnage en grand ---------- */
 (function buildMenuLayout() {
   const inner = menu.querySelector('.menu-inner'); if (!inner || inner.classList.contains('shell')) return;
@@ -10772,11 +11149,11 @@ function renderClassInfo() {
   arms.innerHTML = '<h2 data-i18n="arms.title">Armes et skins</h2><div class="armsgrid"></div>';
   const ag = arms.querySelector('.armsgrid');
   for (const id of ['skin', 'knifeSel']) { const f = $(id).closest('.field'); if (f) ag.appendChild(f); }
-  ag.appendChild($('kskinField'));
+  ag.appendChild($('kskinField')); ag.appendChild($('cskField'));
   const stage = document.createElement('aside'); stage.className = 'stage';
   stage.innerHTML = '<div class="stagebox"></div><div class="sname" id="stName"></div><div class="sclass" id="stClass"></div><div class="sabil" id="stAbil"></div>';
   stage.firstChild.appendChild($('charPrev'));
-  const tabs = [['play', 'tab.play', [netBlock]], ['char', 'tab.char', [charBlock]], ['arms', 'tab.arms', [arms]], ['settings', 'tab.settings', [settings]], ['controls', 'tab.controls', [cols]], ['admin', 'tab.admin', [$('adminBlock'), $('xlockBlock')]]];
+  const tabs = [['play', 'tab.play', [netBlock]], ['char', 'tab.char', [charBlock]], ['arms', 'tab.arms', [arms]], ['quests', 'tab.quests', [$('questBlock')]], ['settings', 'tab.settings', [settings]], ['controls', 'tab.controls', [cols]], ['admin', 'tab.admin', [$('adminBlock'), $('xlockBlock')]]];
   const nav = document.createElement('nav'); nav.className = 'tabs'; nav.setAttribute('role', 'tablist');
   const main = document.createElement('div'); main.className = 'menu-main';
   main.append(header, nav);
@@ -10848,8 +11225,12 @@ $('loClose').addEventListener('click', () => loShow(false));
 $('loAsk').addEventListener('change', e => { S.loAsk = e.target.checked; store.set('loAsk', S.loAsk); });
 $('loadout').addEventListener('mousedown', e => { e.stopPropagation(); if (e.target.id === 'loadout') loShow(false); });
 /* ---------- plein écran (F11, bouton du menu) : passe par le jeu pour marcher aussi dans l'appli Windows ---------- */
-const fsEl = () => document.fullscreenElement || document.webkitFullscreenElement;
+// dans l'appli Windows, la fenêtre elle-même passe en plein écran (sinon seule la page remplit la fenêtre)
+const appFS = () => typeof window.veloFullscreen === 'function';
+let appFsOn = false;
+const fsEl = () => appFS() ? appFsOn : document.fullscreenElement || document.webkitFullscreenElement;
 function toggleFullscreen() {
+  if (appFS()) { appFsOn = !appFsOn; store.set('appFs', appFsOn); try { window.veloFullscreen(appFsOn).catch(() => {}); } catch (e) {} document.dispatchEvent(new Event('fullscreenchange')); return; }
   try {
     if (fsEl()) { (document.exitFullscreen || document.webkitExitFullscreen).call(document); return; }
     const el = document.documentElement, r = (el.requestFullscreen || el.webkitRequestFullscreen).call(el, { navigationUI: 'hide' });
@@ -10857,6 +11238,7 @@ function toggleFullscreen() {
   } catch (e) { toast(t('fs.fail'), 3); }
 }
 addEventListener('keydown', e => { if (e.code === 'F11' && !e.repeat) { e.preventDefault(); e.stopPropagation(); toggleFullscreen(); } }, true);
+if (appFS() && store.get('appFs', false)) toggleFullscreen(); // l'appli se rouvre comme on l'a laissée
 { const pb = $('play'); if (pb && pb.parentNode) { const b = document.createElement('button'); b.type = 'button'; b.className = 'btn2'; b.id = 'fsBtn'; b.innerHTML = '<span></span>'; const upd = () => { const k = fsEl() ? 'fs.exit' : 'fs.enter'; b.firstChild.setAttribute('data-i18n', k); b.firstChild.textContent = t(k); }; upd(); b.addEventListener('click', toggleFullscreen); document.addEventListener('fullscreenchange', upd); document.addEventListener('webkitfullscreenchange', upd); pb.parentNode.appendChild(b); } }
 $('loadout').addEventListener('keydown', e => { e.stopPropagation(); if (e.code === 'Escape') loShow(false); });
 // bouton dans le menu
@@ -10866,7 +11248,8 @@ $('loadout').addEventListener('keydown', e => { e.stopPropagation(); if (e.code 
 }
 
 const skinSel = $('skin'); skinSel.value = S.skin;
-skinSel.addEventListener('change', () => { S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
+renderSkinOptions(); renderQuests();
+skinSel.addEventListener('change', () => { if (skinLocked(skinSel.value)) { skinSel.value = S.skin; toast(t('q.locked'), 3); return; } S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
 /* ---------- aperçu 3D des armes dans le menu (onglet Armes) ---------- */
 const WP = { r: null, scene: null, cam: null, piv: null, sel: 0, vm: null, drag: null, rotY: 0.6 };
 const wpList = () => [0, 1, 2, 3, 4, 5].map(i => ({ kind: i })).concat(SPECIAL_IDS.map(id => ({ kind: 6, sp: id })));
@@ -11065,6 +11448,7 @@ function applyI18n() {
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   try { dcRender(); } catch (e) {}
   try { renderClassInfo(); } catch (e) {}
+  try { renderSkinOptions(); renderQuests(); } catch (e) {}
   try { window.__csFill && window.__csFill(); } catch (e) {}
   document.querySelectorAll('[data-i18n-html]').forEach(el => {
     // {action} ou {action:slot} devient une touche affichée selon les réglages

@@ -183,6 +183,18 @@ Le jeu se joue aussi sur téléphone, en mode paysage. Les commandes tactiles s'
 
 La souris peut aussi être inversée (haut / bas et gauche / droite) dans les réglages.
 
+## Quêtes
+
+Onglet **Quêtes** du menu : 8 défis, chacun débloque un skin d'arme spécial (★ dans la liste des skins, 🔒 tant que la quête n'est pas finie). Premier sang (10 éliminations) → Braise ; Œil de lynx (25 tirs dans la tête) → Obsidienne ; Lame silencieuse (15 éliminations au couteau) → Néant ; Supersonique (22 m/s) → Aurore ; Acrobate (60 wall-jumps) → Hologramme ; Vétéran (30 minutes de jeu) → Écailles de dragon ; Chasseur (10 vrais joueurs éliminés en ligne) → Champion ; Maître d'armes (une élimination avec chacune des 6 armes de base) → Prisme. La progression est gardée sur l'appareil.
+
+## Mon skin d'arme
+
+Onglet Armes → « Mon skin d'arme » → **Importer une image** : l'image (recadrée en carré, compressée) est plaquée sur toutes tes armes. Elle est envoyée aux autres joueurs de la partie, qui voient ton skin. « Retirer » revient au skin standard.
+
+## Mains et armes à la première personne
+
+Les bras et les mains visibles en vue subjective sont ceux du modèle de ton perso (avec sa tenue et sa couleur), posés sur la poignée et le garde-main par cinématique inverse ; les doigts se referment sur l'arme. Les armes sont de vrais modèles 3D (voir Crédits), recolorés par les skins.
+
 ## Viseur
 
 Dans les réglages : forme (croix, croix en T, croix en X, cercle, point), couleur, longueur, épaisseur, écart, opacité, point au centre, contour noir, et s'il s'écarte avec la dispersion de l'arme. L'aperçu se met à jour en direct.
@@ -190,7 +202,7 @@ Dans les réglages : forme (croix, croix en T, croix en X, cercle, point), coule
 ## Chat écrit et vocal de proximité
 
 - **Écrit :** **Entrée** (ou **Y**) ouvre la barre de chat. Par défaut le message n'arrive qu'aux joueurs à moins de 40 m ; **Tab** (ou le bouton à gauche de la barre) bascule entre « Proche » et « Tous ».
-- **Vocal :** réglages → Micro : « Appuyer pour parler » (touche **N**) ou « Toujours ouvert ». On entend les joueurs à moins de 45 m, de plus en plus fort en s'approchant, à gauche ou à droite selon leur position. Une icône 🔊 s'affiche à côté du nom de celui qui parle. La voix passe directement entre les joueurs (WebRTC), le navigateur demande l'autorisation du micro.
+- **Vocal :** réglages → Micro (une jauge à côté montre que le micro capte) : « Appuyer pour parler » (touche **N**) ou « Toujours ouvert ». On entend les joueurs à moins de 45 m, de plus en plus fort en s'approchant, à gauche ou à droite selon leur position. Une icône 🔊 s'affiche à côté du nom de celui qui parle. La voix passe directement entre les joueurs (WebRTC), le navigateur demande l'autorisation du micro.
 - Sur mobile : boutons CHAT et MICRO.
 
 ## Multijoueur
@@ -341,6 +353,7 @@ python3 -m http.server 8000
 
 ## Crédits
 
+- **Armes** (`assets/models/guns/`) : « Ultimate Gun Pack » de **[Quaternius](https://quaternius.com/)**, licence [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) (domaine public) ; convertis d'OBJ en GLB avec des coordonnées de texture ajoutées pour les skins.
 - **Gasmask girl** (`assets/models/GasmaskGirl.glb`) : créée par **Xinus22**, publiée sur Sketchfab par photon (that one larry), licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) — [sketchfab.com/3d-models/gasmask-girl-d5b54d5358fb42368faf47b1cfbab18f](https://sketchfab.com/3d-models/gasmask-girl-d5b54d5358fb42368faf47b1cfbab18f). Squelette renommé pour les animations du jeu, une seule expression du visage gardée.
 - **Karambit** (`assets/models/knives/karambit.glb`) : modèle « Karambit » par **Astral** sur Sketchfab, licence [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) ; simplifié (moins de triangles) pour le jeu.
 

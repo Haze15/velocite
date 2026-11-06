@@ -127,9 +127,67 @@ func runWindow(url string) bool {
 		user32 := syscall.NewLazyDLL("user32.dll")
 		_, _, _ = user32.NewProc("ShowWindow").Call(uintptr(hwnd), 3) // SW_MAXIMIZE
 	}
+	// plein écran demandé par la page (F11 ou bouton du menu) : fenêtre sans bordure qui couvre tout l'écran
+	if hwnd := w.Window(); hwnd != nil {
+		h := uintptr(hwnd)
+		_ = w.Bind("veloFullscreen", func(on bool) bool {
+			w.Dispatch(func() { setFullscreen(h, on) })
+			return on
+		})
+	}
 	w.Navigate(url)
 	w.Run()
 	return true
+}
+
+type winRect struct{ Left, Top, Right, Bottom int32 }
+type monitorInfo struct {
+	CbSize    uint32
+	RcMonitor winRect
+	RcWork    winRect
+	DwFlags   uint32
+}
+type windowPlacement struct {
+	Length, Flags, ShowCmd uint32
+	MinPos, MaxPos         struct{ X, Y int32 }
+	NormalPos              winRect
+}
+
+var fsSaved struct {
+	on    bool
+	style uintptr
+	place windowPlacement
+}
+
+func setFullscreen(hwnd uintptr, on bool) {
+	if on == fsSaved.on {
+		return
+	}
+	user32 := syscall.NewLazyDLL("user32.dll")
+	getLong, setLong := user32.NewProc("GetWindowLongPtrW"), user32.NewProc("SetWindowLongPtrW")
+	setPos, getPl, setPl := user32.NewProc("SetWindowPos"), user32.NewProc("GetWindowPlacement"), user32.NewProc("SetWindowPlacement")
+	monFrom, monInfo := user32.NewProc("MonitorFromWindow"), user32.NewProc("GetMonitorInfoW")
+	gwlStyle := ^uintptr(15) // GWL_STYLE = -16
+	const wsOverlapped = 0x00CF0000
+	if on {
+		st, _, _ := getLong.Call(hwnd, gwlStyle)
+		fsSaved.style = st
+		fsSaved.place.Length = uint32(unsafe.Sizeof(fsSaved.place))
+		_, _, _ = getPl.Call(hwnd, uintptr(unsafe.Pointer(&fsSaved.place)))
+		mon, _, _ := monFrom.Call(hwnd, 2) // MONITOR_DEFAULTTONEAREST
+		mi := monitorInfo{CbSize: uint32(unsafe.Sizeof(monitorInfo{}))}
+		if r, _, _ := monInfo.Call(mon, uintptr(unsafe.Pointer(&mi))); r == 0 {
+			return
+		}
+		_, _, _ = setLong.Call(hwnd, gwlStyle, st&^wsOverlapped)
+		m := mi.RcMonitor
+		_, _, _ = setPos.Call(hwnd, 0, uintptr(m.Left), uintptr(m.Top), uintptr(m.Right-m.Left), uintptr(m.Bottom-m.Top), 0x0200|0x0020|0x0040)
+	} else {
+		_, _, _ = setLong.Call(hwnd, gwlStyle, fsSaved.style)
+		_, _, _ = setPl.Call(hwnd, uintptr(unsafe.Pointer(&fsSaved.place)))
+		_, _, _ = setPos.Call(hwnd, 0, 0, 0, 0, 0, 0x0001|0x0002|0x0004|0x0200|0x0020)
+	}
+	fsSaved.on = on
 }
 
 // Numéro de la ressource icône ajoutée par rsrc (le groupe vient après les images).
