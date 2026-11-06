@@ -5,4 +5,3 @@ dist/*
 android/app/build/
 android/.gradle/
 android/app/src/main/assets/
-!dist/Velocite.apk
