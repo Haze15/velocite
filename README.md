@@ -55,6 +55,7 @@ Les avatars ont une pose de saut (jambes repliées) et une pose de superglide (j
 - **Mine** : grande caverne sous un plafond rocheux de 40 m (idéal pour le double grappin) : pilier central entouré d'un échafaudage avec deux rampes, passerelles en bois le long des parois, tyroliennes, rails et wagonnets, cristaux de minerai qui brillent, stalactites ; tout autour, quatre galeries basses étayées de poutres, reliées à la caverne par des portes.
 - **Ville fantôme** : grande ville abandonnée de 320 m de côté au crépuscule, dans un brouillard verdâtre plein de poussière. Rues en damier, immeubles à fenêtres cassées ou condamnées (jusqu'à une tour de 52 m avec un pad sur le toit), immeuble en chantier à six étages avec escaliers, autoroute surélevée avec bretelles, voitures abandonnées, place centrale, parc d'herbes hautes, tyroliennes entre les toits et aérodrome à l'est avec piste, hangar, tour de contrôle et héliport.
 
+- **Nécropolis** : une seule immense ville morte de 600 m de côté, sans aucun chargement entre ses quartiers (voir plus bas).
 L'herbe haute de la Forêt, du Château, du Canyon et de la Ville fantôme ondule au vent.
 
 Chaque carte a son décor : tonneaux, caisses, pneus, cactus et rochers sur le Canyon ; palettes, cônes, glissières en béton, tuyaux et lampadaires à la Raffinerie ; troncs couchés, souches, champignons, buissons et fleurs en Forêt ; bottes de foin, charrettes, torches, bannières et fleurs au Château ; rochers de basalte, cristaux brûlants et arbres calcinés sur le Volcan ; lampadaires, feux tricolores, bouches d'incendie, poubelles, bennes, gravats et barricades dans la Ville fantôme. Les gros objets bloquent le passage et arrêtent les balles : ils servent de couverture.
@@ -284,6 +285,22 @@ Réglages → Graphismes → **Ultra** : post-traitement maison (halo lumineux a
 
 Les collisions utilisent une grille spatiale (seuls les blocs proches sont testés), le décor est fusionné par morceaux de 96 m pour que la carte graphique et les tirs ignorent ce qui est hors champ, l'herbe disparaît au-delà de 130 m et la distance d'affichage suit le brouillard. Sur la carte Monde, la physique est environ 4 fois plus rapide et les tirs 2,5 fois. En qualité « auto », la résolution baisse toute seule si les images par seconde chutent, et sur les petites machines (4 Go de mémoire ou moins, ou 3 cœurs ou moins) le jeu passe directement en qualité basse (pas d'anticrénelage, pas d'ombres, moins d'herbe, résolution réduite). Les gros modèles (Nova, Squelette) ne se chargent que quand quelqu'un les utilise.
 
+## Nécropolis (ville ouverte)
+
+Une métropole abandonnée après une catastrophe, d'un seul tenant, sous un ciel sombre et changeant. On y va par le menu des cartes (« 🏙️ Nécropolis ») ; un écran de chargement avec le logo s'affiche pendant que les modèles arrivent (environ 9 Mo), puis une courte intro survole la ville (n'importe quelle touche la passe).
+
+- **Les quartiers** : centre-ville de gratte-ciel et de tours de bureaux, quartier industriel à l'est (usines, cheminées, entrepôt à rayonnages, parc à conteneurs, château d'eau), quartier résidentiel à l'ouest (pavillons, jardins envahis, cité en briques), quartiers commerçants au nord et au sud (galerie marchande, parking à étages, hôtel, station-service, diner, pharmacie, épicerie, laverie, square). Les rues sont pleines d'épaves, de barricades, de débris, de câbles arrachés et de lampadaires tombés.
+- **Où entrer** : Tour Orion (11 étages, escalier jusqu'au toit et son héliport) et Tour Vega (sommet effondré), reliées par une passerelle vitrée au 5e étage ; Hôtel Royal ; Cité des Lilas (appartements) ; Galerie Lumière sur deux niveaux avec escalators, et son parking souterrain ; parking à étages (on y monte à pied ou en voiture) ; Usine Delta et ses passerelles ; la tour effondrée, couchée sur l'avenue, qu'on escalade.
+- **Sous terre** : deux lignes de métro en croix sous les avenues, cinq stations (Concorde au centre), des tunnels qu'on parcourt à pied, des rames à l'arrêt ou déraillées, le parking souterrain de la Tour Orion relié à la station, et un abri secret derrière des planches…
+- **Destruction** : les vitres se brisent sous les balles et les explosions (c'est comme ça qu'on entre dans les boutiques), les barils rouges explosent (et font exploser leurs voisins), cônes, poubelles, cartons et chaises se renversent quand on passe ou qu'on tire dessus, les planches se cassent, les enseignes au néon tombent. En ligne, tout le monde voit les mêmes vitres cassées et les mêmes explosions.
+- **Atmosphère** : météo qui tourne toute seule (couvert, brouillard, pluie, orage avec éclairs et tonnerre, bruine, le même ciel pour tous les joueurs), vent qui pousse la pluie et les fumées, colonnes de fumée, incendies, cendres en suspension, nappes de brouillard au ras du sol, flaques qui reflètent la ville, néons qui grésillent, lampes qui vacillent, sons d'ambiance (pluie, vent, sirènes lointaines, métal qui grince).
+- **Missions** (O pour afficher ou cacher) : découvrir les 30 lieux de la ville, rallumer les 3 groupes électrogènes (usine, station Concorde, parking de la galerie) pour rendre le courant — les lampadaires, les néons et le métro se rallument —, envoyer le signal radio depuis le toit de la Tour Orion (un hélicoptère répond), trouver les 18 caisses de ravitaillement (munitions, bouclier, soins). La progression est gardée.
+- **Événements** : explosions de gaz, débris qui tombent des façades, alarmes de voiture, hélicoptère qui survole la ville.
+- **Caméra** : K passe en vue à la 3e personne par-dessus l'épaule (amortie, elle ne traverse pas les murs), avec les animations du perso.
+- **Déplacements** : ballons de redéploiement, canons gravitationnels vers les toits, tyroliennes depuis les toits de la Tour Orion et de l'Hôtel Royal, buggys, tank et hélico (sur le toit d'Orion).
+
+Les bâtiments en modèles 3D ont leurs vraies dimensions de collision ; ceux où l'on entre sont construits étage par étage. Les modèles sont regroupés par quartier, les objets loin de la caméra ne sont plus dessinés et les petits PC ont moins de décor (la ville et ses collisions restent les mêmes pour tous les joueurs).
+
 ## Commandes
 
 Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souris ou molette, deux touches par action. Touches par défaut :
@@ -311,6 +328,8 @@ Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souri
 | Tab | Tableau des scores en ligne |
 | T | Réapparaître |
 | P | Couper le son |
+| K | Vue 3e personne (Nécropolis) |
+| O | Missions (Nécropolis) |
 
 ## Armes
 
@@ -388,8 +407,11 @@ python3 -m http.server 8000
 
 - `index.html` : tout le jeu (rendu three.js r128, physique de mouvement à 120 Hz, armes, HUD, réseau).
 - `assets/models/` : modèles de personnages animés.
+- `assets/models/city/city.glb` : modèles de Nécropolis, regroupés par `tools/citypack.py` d'après la liste `tools/city-models.txt`.
 
 ## Crédits
+
+- **Nécropolis** (`assets/models/city/`) : modèles des packs **[Kenney](https://kenney.nl/)** City Kit Commercial, City Kit Industrial, City Kit Suburban, City Kit Roads, Car Kit, Retro Urban Kit, Survival Kit, Furniture Kit et Nature Kit, et des packs **[Quaternius](https://quaternius.com/)** Zombie Apocalypse Kit et Stylized Nature, tous en licence [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) (domaine public) ; récupérés depuis le dépôt [series-ai/jam-ready-assets](https://github.com/series-ai/jam-ready-assets) (copies vérifiées par empreinte SHA-256), réunis en un seul GLB avec sommets quantifiés et textures de palette regroupées. Les textures procédurales (asphalte, briques, carrelage) et le logo sont faits par le jeu.
 
 - **Sons des armes** (`assets/sfx/`) : coups de feu synthétisés pour Vélocité (onde de bouche de Friedlander, corps, mécanique, réverbération extérieure et échos) par `tools/gunsfx.py`, d'après les modèles physiques de *PyGunShot* (H. Hacıhabiboğlu, licence MIT).
 - **Armes** (`assets/models/guns/`) : « Ultimate Gun Pack » de **[Quaternius](https://quaternius.com/)**, licence [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/) (domaine public) ; convertis d'OBJ en GLB avec des coordonnées de texture ajoutées pour les skins.

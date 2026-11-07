@@ -1,0 +1,12 @@
+Nécropolis — modèles 3D (assets/models/city/city.glb)
+
+Tous les modèles sont en licence Creative Commons Zero 1.0 (domaine public) :
+https://creativecommons.org/publicdomain/zero/1.0/
+
+Kenney (https://kenney.nl) : City Kit (Commercial), City Kit (Industrial), City Kit (Suburban),
+City Kit (Roads), Car Kit, Retro Urban Kit, Survival Kit, Furniture Kit, Nature Kit.
+Quaternius (https://quaternius.com) : Zombie Apocalypse Kit, Stylized Nature MegaKit.
+
+Source des fichiers : https://github.com/series-ai/jam-ready-assets (copies des packs originaux),
+liste exacte des modèles dans tools/city-models.txt, regroupés par tools/citypack.py
+(sommets quantifiés KHR_mesh_quantization, textures dédoublonnées, animations retirées).
