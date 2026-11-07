@@ -308,6 +308,18 @@ Une métropole abandonnée après une catastrophe, d'un seul tenant, sous un cie
 
 Les bâtiments en modèles 3D ont leurs vraies dimensions de collision ; ceux où l'on entre sont construits étage par étage. Les modèles sont regroupés par quartier, les objets loin de la caméra ne sont plus dessinés et les petits PC ont moins de décor (la ville et ses collisions restent les mêmes pour tous les joueurs).
 
+
+## Progression
+
+- **Niveaux et XP** : éliminations, tirs à la tête, bhops, superglides, temps de jeu, monstres abattus, courses de karts, nouvelles cartes et succès rapportent de l'XP. 100 niveaux et 10 titres, de Recrue à Vélocité incarnée.
+- **Profil** (onglet du menu ou pastille « NIV. » en haut) : badge de niveau, barre d'XP, statistiques et vitrine des trophées.
+- **Succès** : 31 trophées en bronze, argent et or ; 14 sont secrets et restent cachés tant qu'on ne les a pas trouvés.
+- **Musique** : chaque carte a sa propre musique, composée en direct dans son style (réglage « Musique propre à chaque carte »). Le menu garde son morceau, et une musique importée reste prioritaire partout.
+
+## Néo-Dune
+
+Ville futuriste au milieu du désert, au coucher du soleil : la grande Flèche au centre (spirale de plateformes à tremplin jusqu'au sommet, tyrolienne pour redescendre), l'Arcologie en gradins et ses passerelles, les Dômes et la ferme solaire, le Port des glisseurs et ses conteneurs, le Marché couvert, un monorail en anneau sur lequel on peut courir, une oasis et une tempête de sable.
+
 ## Commandes
 
 Toutes les touches se changent dans le menu (Échap) : clavier, boutons de souris ou molette, deux touches par action. Touches par défaut :

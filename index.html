@@ -4007,7 +4007,7 @@ function superglide(wx, wz, hasWish) {
   const sp = Math.min(23, Math.max(SG_SPEED, m.inSpeed + 4.5));
   P.vel.set(d.x * sp, 4.6, d.z * sp);
   P.grounded = false; P.crouch = true; P.climbAvail = false;
-  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); sfx.superglide(); P.sgT = 0.75; camKick(9);
+  feed('SUPERGLIDE', sp.toFixed(1) + ' m/s', 'gold'); questEv('sglide'); sfx.superglide(); P.sgT = 0.75; camKick(9);
 }
 function mantleJump(wx, wz, hasWish) {
   const m = P.mantle; P.mantle = null;
@@ -4090,7 +4090,7 @@ function doJump(hs) {
     const h = Math.hypot(v.x, v.z);
     const dx = h > 0.1 ? v.x / h : P.landDir.x, dz = h > 0.1 ? v.z / h : P.landDir.z;
     v.x = dx * ns; v.z = dz * ns; hs = ns;
-    P.bhop++; feed('BHOP', '×' + P.bhop + ' · ' + hs.toFixed(1) + ' m/s', '', 'bhop');
+    P.bhop++; questEv('bhop', P.bhop); feed('BHOP', '×' + P.bhop + ' · ' + hs.toFixed(1) + ' m/s', '', 'bhop');
   } else {
     P.bhop = 0;
     if (P.sliding && hs > 7.6 * K) feed('SLIDE-JUMP', hs.toFixed(1) + ' m/s');
@@ -7111,7 +7111,7 @@ function applyHit(m) {
   if (rp) { hurtAngle = Math.atan2(rp.pos.x - P.pos.x, rp.pos.z - P.pos.z); hurtDirT = 1.2; }
   sfx.hurt(); if (shBefore > 0 && P.sh <= 0) sfx.shieldBreak();
   if (P.hp <= 0) {
-    P.dead = true; P.respawnT = 3.5; try { ksDeath(); } catch (e) {}
+    P.dead = true; P.respawnT = 3.5; try { ksDeath(); } catch (e) {} try { questEv('death'); } catch (e) {}
     $('deathBy').textContent = t('hud.by', { name: rp ? rp.name : '?', w: wLabel(m.w | 0, m.kt).toLowerCase() });
     $('death').hidden = false;
     netSend({ k: 'dead', by: m.from, w: m.w | 0, kt: m.kt });
@@ -7132,7 +7132,7 @@ function hurtSelf(dmg, w) {
   P.hp = Math.max(0, P.hp - (dmg - toSh)); P.hurtT = 0; P.lastHit = performance.now();
   if (shBefore > 0 && P.sh <= 0) sfx.shieldBreak();
   if (P.hp <= 0) {
-    P.dead = true; P.respawnT = 3.5; P.mgT = 0; try { ksDeath(); } catch (e) {}
+    P.dead = true; P.respawnT = 3.5; P.mgT = 0; try { ksDeath(); } catch (e) {} try { questEv('death'); } catch (e) {}
     $('deathBy').textContent = wLabel(w).toLowerCase(); $('death').hidden = false;
     if (NET.mode !== 'off') netSend({ k: 'dead', by: NET.selfId, w });
   }
@@ -10381,12 +10381,13 @@ function musicStart() {
 }
 // un peu plus basse en jeu que dans le menu, coupée avec la touche muet
 function musicTick(dt) {
-  const target = muted || document.hidden || horDuck() ? 0 : S.music * (playing ? 0.55 : 1);
+  const target = muted || document.hidden || horDuck() || musGenOn() ? 0 : S.music * (playing ? 0.55 : 1);
   MUSIC.vol += (target - MUSIC.vol) * (1 - Math.exp(-3 * dt));
   try { MUSIC.el.volume = clamp(MUSIC.vol, 0, 1); } catch (e) {}
   if (S.music <= 0 && !MUSIC.el.paused && MUSIC.vol < 0.01) MUSIC.el.pause();
   else if (S.music > 0 && MUSIC.started && MUSIC.el.paused && !document.hidden && !horDuck()) MUSIC.el.play().catch(() => {});
   horTick(dt);
+  try { musGenTick(dt); } catch (e) {}
 }
 // musique importée : gardée dans le navigateur (IndexedDB), jamais envoyée en ligne
 function musicDb(fn) {
@@ -10914,10 +10915,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.22';
+const GAME_VERSION = '2026.11.23';
 const CHANGES = {
-  fr: ['Nécropolis passe à la nuit : ciel noir étoilé, brouillard sombre, lune pâle, la lampe torche reste allumée', 'Objectif fisheye dans Nécropolis (bords courbés, franges de couleur qui s’accentuent quand un monstre approche) ; se coupe dans les réglages', 'Vision nocturne (touche N ou bouton) : image verte amplifiée, grain, lignes de balayage, champ rond de jumelles', 'Nouvelle carte secrète : la Piste Prisme, une course de karts sur un ruban arc-en-ciel suspendu dans l’espace — 3 tours contre 5 pilotes, deux sauts au-dessus du vide, plaques d’accélération, dérapages avec turbo, cubes à bonus (turbos, onde de choc), record personnel', 'Bouton Course sur téléphone (à maintenir, déplaçable comme les autres) ; en monstre, la course marche aussi avec le sprint automatique et la manette', 'Incarne un monstre dans Nécropolis (touche H ou bouton) : le Rôdeur (charge, escalade, Rugissement, Bond, Traque) ou l’Asséché (Clignement, Hurlement, Ruée, il sent les joueurs à travers les murs) ; en solo ou en tant qu’hôte en ligne', 'L’Asséché bouge enfin correctement : il marche (jambes et bras qui balancent), suit des trajets lissés dans les galeries, ne reste plus bloqué contre les rames et avance sans à-coups brutaux', 'Statut Discord prêt à l’emploi dans l’appli Windows : plus besoin de créer d’application ni de coller un ID, le logo du jeu s’affiche', 'Nécropolis : l’Asséché, un nouveau monstre qui vit sous terre — il sait toujours où tu es dans le métro et les galeries, s’approche par à-coups et par détours, peut surgir d’un autre couloir quand tu ne le regardes pas, et ne remonte jamais à la surface (modèle « Devitalizer - 3D Horror » de ShaxerTakkuY, CC BY-ND 4.0)', 'Les Galeries : quatre immenses labyrinthes creusés sous les quartiers, reliés aux tunnels du métro — couloirs étroits, impasses, salles, lampes mortes, sang et gravats', 'Sous terre il fait presque noir : brouillard court et lampe torche', 'Le Rôdeur sait maintenant toujours où tu es en surface et s’approche par détours au hasard', 'Nécropolis : une musique à part dans le métro et les souterrains', 'Musique d’ambiance de Nécropolis et de la Ville fantôme bien plus forte', 'Horreur dans Nécropolis : le Rôdeur ne te repère plus instantanément — il s’arrête, te fixe, rugit, puis charge ; ses coups se voient venir et il ne te traque plus à travers les murs', 'Gore : giclées de sang quand on touche le Rôdeur ou un joueur, flaques au sol, sang sur l’écran quand on est blessé et bords rouges quand la vie est basse', 'Jump scare : quand le Rôdeur t’attrape, son visage surgit en plein écran avec un hurlement créé pour le jeu', 'Musiques : ambiance dans Nécropolis et la Ville fantôme, musique de poursuite quand le Rôdeur te chasse', 'Plus il approche, plus l’image et le son grésillent, et les lampes autour de lui s’éteignent', 'Brouillard plus épais et cônes de lumière sous les lampadaires', 'Le Rôdeur a son vrai modèle 3D animé (marche, course, attaque, escalade) : « Country Road Creature Rig » de NO DONT EAT ME CASEOH, licence CC BY 4.0', 'Nécropolis : le Rôdeur, une créature immense qui rôde dans la ville, entend les coups de feu, sprinte à 27 m/s, grimpe aux façades jusqu’aux toits et frappe fort ; il fuit quand il est blessé, puis revient (en ligne, l’hôte le dirige)', 'Nouvelle carte : Nécropolis, une immense ville morte d’un seul tenant (600 m de côté) — centre-ville de gratte-ciel, quartier industriel, quartier résidentiel, deux quartiers commerçants et un métro sous les avenues qui relie tout, sans aucun chargement entre les quartiers', 'Vrais modèles 3D libres de droits (CC0) : immeubles, maisons, usines, voitures, camions, conteneurs, lampadaires, feux, barrières, mobilier, arbres morts (packs Kenney et Quaternius), salis et brûlés par le jeu', 'Bâtiments où l’on entre : tours Orion (11 étages, héliport) et Vega (sommet effondré) reliées par une passerelle au 5e étage, Hôtel Royal, Cité des Lilas, galerie marchande sur deux niveaux avec escalators, parking à étages, usine avec passerelles, entrepôt, station-service, diner, pharmacie, épicerie, laverie', 'Sous terre : 5 stations de métro, des tunnels à parcourir à pied, des rames à l’arrêt ou déraillées, deux parkings souterrains et un abri secret derrière des planches', 'Destruction : les vitres se brisent (on entre dans les boutiques en tirant dans la vitrine), barils rouges explosifs en chaîne, cônes, poubelles et cartons qu’on renverse, planches à casser, enseignes qui tombent ; tout est partagé en ligne', 'Météo qui change toute seule (couvert, brouillard, pluie, orage avec éclairs et tonnerre, bruine), vent, fumées d’incendie, braises, cendres qui tombent, flaques qui reflètent la ville, néons qui grésillent, lampes qui vacillent', 'Missions : découvrir 30 lieux, rallumer 3 groupes électrogènes pour rendre le courant à toute la ville, envoyer le signal radio du toit de la Tour Orion (un hélicoptère répond), trouver 18 caisses de ravitaillement', 'Événements : explosions de gaz, chutes de débris, alarmes de voiture, hélicoptère qui survole la ville', 'Vue à la 3e personne façon jeu d’action (K) sur Nécropolis, missions (O), logo, écran de chargement et intro cinématique', 'Appli Windows : les sons d’armes et les masques manquaient, ils sont maintenant inclus', 'Ballons de redéploiement façon Apex sur toutes les cartes : E (ou saut dans l’anneau bleu) = propulsé à 50 m, puis chute libre planée (regarde vers le bas pour piquer, vers le haut pour freiner)', 'Canons gravitationnels sur toutes les cartes : entre dans l’anneau violet, tu es projeté en cloche jusqu’au toit visé (la trajectoire est dessinée en pointillés)', 'Lurch : juste après un saut, change de direction pour rediriger ton élan', 'Marquage (ping) : clic molette ou B — repère un ennemi (rouge) ou un endroit (ambre), visible par tous les joueurs avec la distance', 'Toutes les cartes retouchées : particules d’ambiance (poussière, braises, neige, feuilles, lucioles, embruns, paillettes, poussière lunaire), lampadaires sur les cartes de nuit et décor en plus selon la carte (champignons, rondins, bonshommes de neige, caisses, bouées, mares de lave…)', 'Nouvelle carte : la Lune ! Gravité réduite (sauts presque 3 fois plus hauts, grenades en cloche), cratères, base lunaire, atterrisseur, la Terre dans le ciel étoilé', 'Nouvelle carte secrète sous l’eau : à toi de trouver comment y descendre… On y nage (saut maintenu : remonter, accroupi : plonger) entre épave, ruines, algues, coraux et bulles', 'Labo de test réservé au propriétaire : couloir de tir gradué tous les 10 m avec robots, murs d’escalade de 2 à 8 m, couloir de wall-jump, rampes de 15 à 45°, sauts en longueur de 3 à 9 m, tremplins et tyrolienne', 'Choix du micro pour le vocal de proximité (Réglages → Micro), changement à chaud, retour au micro par défaut s’il est débranché', 'Enchaînements de kills : Double, Triple, Quadra, Penta kill, Carnage, et séries (En série, Déchaîné, Inarrêtable, Divin, Légendaire) avec jingle, grande bannière et voix d’annonce (désactivable) ; nouvelle quête « Carnage »', 'Easter egg : une carte secrète à découvrir… (indice : un vieux code de jeux vidéo, ou 7 touchers sur le titre)', 'Optimisation : fuite de mémoire graphique corrigée (elle grossissait à chaque changement de carte), personnages hors champ plus dessinés, ombres des robots lointains et des petits objets coupées : jusqu’à 50 % d’appels de dessin en moins', 'Nouveaux sons d’armes : de vrais coups de feu (claquement, souffle, mécanique, écho dans le décor) pour la carabine, la mitraillette, le pompe, le sniper, le pistolet, le revolver, la mitrailleuse et la minigun, 3 variantes chacun pour ne jamais sonner pareil', 'Réglage « Sons personnalisés » retiré', 'Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['Necropolis turns to night: black starry sky, dark fog, pale moon, the flashlight stays on', 'Fisheye lens in Necropolis (curved edges, colour fringes that grow when a monster gets close); can be turned off in settings', 'Night vision (N key or button): amplified green image, grain, scan lines, round goggle view', 'New secret map: the Prism Track, a kart race on a rainbow ribbon floating in space — 3 laps against 5 drivers, two jumps over the void, boost pads, drifts with turbo, item cubes (turbos, shockwave), personal record', 'Sprint button on phones (hold it, movable like the others); as a monster, running also works with auto sprint and the gamepad', 'Play as a monster in Necropolis (H key or button): the Stalker (charge, climbing, Roar, Leap, Hunt) or the Withered (Blink, Scream, Lunge, senses players through walls); solo or as the online host', 'The Withered finally moves properly: it walks (swinging legs and arms), follows smoothed paths through the galleries, no longer gets stuck on trains and moves without harsh jerks', 'Discord status works out of the box in the Windows app: no need to create an application or paste an ID, the game logo shows up', 'Necropolis: the Withered, a new monster living underground — it always knows where you are in the metro and the galleries, closes in with jerky moves and detours, can appear from another corridor when you are not looking, and never comes up to the surface (“Devitalizer - 3D Horror” model by ShaxerTakkuY, CC BY-ND 4.0)', 'The Galleries: four huge mazes dug under the districts, connected to the metro tunnels — narrow corridors, dead ends, rooms, dead lamps, blood and rubble', 'Underground it is almost pitch black: short fog and a flashlight', 'The Stalker now always knows where you are on the surface and closes in through random detours', 'Necropolis: its own music in the metro and underground', 'Much louder ambient music in Necropolis and the Ghost Town', 'Horror in Necropolis: the Stalker no longer spots you instantly — it stops, stares, roars, then charges; its strikes are telegraphed and it no longer tracks you through walls', 'Gore: blood sprays when you hit the Stalker or a player, pools on the ground, blood on the screen when you are hurt and red edges at low health', 'Jump scare: when the Stalker catches you, its face fills the screen with a scream made for the game', 'Music: ambience in Necropolis and the Ghost Town, chase music when the Stalker hunts you', 'The closer it gets, the more the picture and sound crackle, and lamps around it go out', 'Thicker fog and light cones under the street lamps', 'The Stalker now has its real animated 3D model (walk, run, attack, climb): “Country Road Creature Rig” by NO DONT EAT ME CASEOH, CC BY 4.0', 'Necropolis: the Stalker, a huge creature roaming the city; it hears gunshots, sprints at 27 m/s, climbs facades up to the roofs and hits hard; it flees when hurt, then comes back (the host drives it online)', 'New map: Necropolis, a huge seamless dead city (600 m across) — downtown skyscrapers, industrial zone, residential district, two shopping districts and a metro under the avenues linking everything, with no loading between districts', 'Real free (CC0) 3D models: buildings, houses, factories, cars, trucks, containers, street lights, traffic lights, barriers, furniture, dead trees (Kenney and Quaternius packs), dirtied and burnt by the game', 'Buildings you can enter: Orion (11 floors, helipad) and Vega (collapsed top) towers linked by a sky bridge, Hôtel Royal, an apartment block, a two-level mall with escalators, a parking garage, a factory with catwalks, a warehouse, a gas station, a diner and shops', 'Underground: 5 metro stations, tunnels to walk, stopped or derailed trains, two underground car parks and a secret shelter behind planks', 'Destruction: glass shatters (shoot a shop window to get in), chain-reacting red barrels, cones, bins and boxes you knock over, planks to break, falling signs; all shared online', 'Changing weather (overcast, fog, rain, thunderstorm with lightning, drizzle), wind, fire smoke, embers, falling ash, puddles reflecting the city, buzzing neon, flickering lamps', 'Missions: discover 30 places, restart 3 generators to bring power back, send the radio signal from the Orion Tower roof (a helicopter answers), find 18 supply crates', 'Events: gas explosions, falling debris, car alarms, helicopter flyovers', 'Action-game third-person view (K) on Necropolis, missions (O), logo, loading screen and cinematic intro', 'Windows app: weapon sounds and masks were missing, now included', 'Apex-style redeploy balloons on every map: E (or jump in the blue ring) = launched 50 m up, then a gliding skydive', 'Gravity cannons on every map: step in the purple ring to be thrown onto a rooftop (dotted arc shows the path)', 'Lurch: right after a jump, change direction to redirect your momentum', 'Ping: middle click or B marks an enemy (red) or a spot (amber) for everyone, with distance', 'Every map reworked: ambient particles, night lamps and extra themed props', 'New map: the Moon! Low gravity, craters, moon base, lander, Earth in the starry sky', 'New secret underwater map: find how to get down there… You swim (hold jump: up, crouch: dive)', 'Owner-only test lab: shooting lane marked every 10 m, climb walls 2–8 m, wall-jump corridor, 15–45° ramps, 3–9 m long jumps', 'Microphone picker for proximity voice chat (Settings → Microphone)', 'Kill streaks: Double, Triple, Quadra, Penta kill, Carnage and sprees with jingle, banner and announcer voice (can be turned off); new « Carnage » quest', 'Easter egg: a secret map to discover… (hint: an old video game code, or 7 taps on the title)', 'Optimization: graphics memory leak fixed, off-screen characters culled, fewer shadows for far robots and small props: up to 50% fewer draw calls', 'New weapon sounds: real-sounding gunshots (crack, blast, action, echo) for every gun, 3 variants each', 'Custom sounds setting removed', 'Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Niveaux et XP : chaque élimination, tir à la tête, bhop, superglide, minute de jeu, monstre abattu ou course gagnée rapporte de l’XP ; 100 niveaux, 10 titres (Recrue → Vélocité incarnée), montée de niveau animée', 'Nouvel onglet Profil : badge de niveau, barre d’XP, statistiques et vitrine des trophées', '31 succès en bronze, argent et or, dont 14 secrets qui restent cachés (« ??? ») tant qu’on ne les a pas débloqués', 'Musique propre à chaque carte, composée en direct dans le style de la carte (désactivable dans les réglages)', 'Menu principal animé : traînées de vitesse, braises, logo qui brille, entrées en cascade, bouton Jouer qui pulse', 'Nouvelle carte Néo-Dune : ville futuriste au milieu du désert au coucher du soleil — grande Flèche à escalader, Arcologie, Dômes, Port des glisseurs, Marché, monorail, oasis et tempête de sable', 'Nécropolis passe à la nuit : ciel noir étoilé, brouillard sombre, lune pâle, la lampe torche reste allumée', 'Objectif fisheye dans Nécropolis (bords courbés, franges de couleur qui s’accentuent quand un monstre approche) ; se coupe dans les réglages', 'Vision nocturne (touche N ou bouton) : image verte amplifiée, grain, lignes de balayage, champ rond de jumelles', 'Nouvelle carte secrète : la Piste Prisme, une course de karts sur un ruban arc-en-ciel suspendu dans l’espace — 3 tours contre 5 pilotes, deux sauts au-dessus du vide, plaques d’accélération, dérapages avec turbo, cubes à bonus (turbos, onde de choc), record personnel', 'Bouton Course sur téléphone (à maintenir, déplaçable comme les autres) ; en monstre, la course marche aussi avec le sprint automatique et la manette', 'Incarne un monstre dans Nécropolis (touche H ou bouton) : le Rôdeur (charge, escalade, Rugissement, Bond, Traque) ou l’Asséché (Clignement, Hurlement, Ruée, il sent les joueurs à travers les murs) ; en solo ou en tant qu’hôte en ligne', 'L’Asséché bouge enfin correctement : il marche (jambes et bras qui balancent), suit des trajets lissés dans les galeries, ne reste plus bloqué contre les rames et avance sans à-coups brutaux', 'Statut Discord prêt à l’emploi dans l’appli Windows : plus besoin de créer d’application ni de coller un ID, le logo du jeu s’affiche', 'Nécropolis : l’Asséché, un nouveau monstre qui vit sous terre — il sait toujours où tu es dans le métro et les galeries, s’approche par à-coups et par détours, peut surgir d’un autre couloir quand tu ne le regardes pas, et ne remonte jamais à la surface (modèle « Devitalizer - 3D Horror » de ShaxerTakkuY, CC BY-ND 4.0)', 'Les Galeries : quatre immenses labyrinthes creusés sous les quartiers, reliés aux tunnels du métro — couloirs étroits, impasses, salles, lampes mortes, sang et gravats', 'Sous terre il fait presque noir : brouillard court et lampe torche', 'Le Rôdeur sait maintenant toujours où tu es en surface et s’approche par détours au hasard', 'Nécropolis : une musique à part dans le métro et les souterrains', 'Musique d’ambiance de Nécropolis et de la Ville fantôme bien plus forte', 'Horreur dans Nécropolis : le Rôdeur ne te repère plus instantanément — il s’arrête, te fixe, rugit, puis charge ; ses coups se voient venir et il ne te traque plus à travers les murs', 'Gore : giclées de sang quand on touche le Rôdeur ou un joueur, flaques au sol, sang sur l’écran quand on est blessé et bords rouges quand la vie est basse', 'Jump scare : quand le Rôdeur t’attrape, son visage surgit en plein écran avec un hurlement créé pour le jeu', 'Musiques : ambiance dans Nécropolis et la Ville fantôme, musique de poursuite quand le Rôdeur te chasse', 'Plus il approche, plus l’image et le son grésillent, et les lampes autour de lui s’éteignent', 'Brouillard plus épais et cônes de lumière sous les lampadaires', 'Le Rôdeur a son vrai modèle 3D animé (marche, course, attaque, escalade) : « Country Road Creature Rig » de NO DONT EAT ME CASEOH, licence CC BY 4.0', 'Nécropolis : le Rôdeur, une créature immense qui rôde dans la ville, entend les coups de feu, sprinte à 27 m/s, grimpe aux façades jusqu’aux toits et frappe fort ; il fuit quand il est blessé, puis revient (en ligne, l’hôte le dirige)', 'Nouvelle carte : Nécropolis, une immense ville morte d’un seul tenant (600 m de côté) — centre-ville de gratte-ciel, quartier industriel, quartier résidentiel, deux quartiers commerçants et un métro sous les avenues qui relie tout, sans aucun chargement entre les quartiers', 'Vrais modèles 3D libres de droits (CC0) : immeubles, maisons, usines, voitures, camions, conteneurs, lampadaires, feux, barrières, mobilier, arbres morts (packs Kenney et Quaternius), salis et brûlés par le jeu', 'Bâtiments où l’on entre : tours Orion (11 étages, héliport) et Vega (sommet effondré) reliées par une passerelle au 5e étage, Hôtel Royal, Cité des Lilas, galerie marchande sur deux niveaux avec escalators, parking à étages, usine avec passerelles, entrepôt, station-service, diner, pharmacie, épicerie, laverie', 'Sous terre : 5 stations de métro, des tunnels à parcourir à pied, des rames à l’arrêt ou déraillées, deux parkings souterrains et un abri secret derrière des planches', 'Destruction : les vitres se brisent (on entre dans les boutiques en tirant dans la vitrine), barils rouges explosifs en chaîne, cônes, poubelles et cartons qu’on renverse, planches à casser, enseignes qui tombent ; tout est partagé en ligne', 'Météo qui change toute seule (couvert, brouillard, pluie, orage avec éclairs et tonnerre, bruine), vent, fumées d’incendie, braises, cendres qui tombent, flaques qui reflètent la ville, néons qui grésillent, lampes qui vacillent', 'Missions : découvrir 30 lieux, rallumer 3 groupes électrogènes pour rendre le courant à toute la ville, envoyer le signal radio du toit de la Tour Orion (un hélicoptère répond), trouver 18 caisses de ravitaillement', 'Événements : explosions de gaz, chutes de débris, alarmes de voiture, hélicoptère qui survole la ville', 'Vue à la 3e personne façon jeu d’action (K) sur Nécropolis, missions (O), logo, écran de chargement et intro cinématique', 'Appli Windows : les sons d’armes et les masques manquaient, ils sont maintenant inclus', 'Ballons de redéploiement façon Apex sur toutes les cartes : E (ou saut dans l’anneau bleu) = propulsé à 50 m, puis chute libre planée (regarde vers le bas pour piquer, vers le haut pour freiner)', 'Canons gravitationnels sur toutes les cartes : entre dans l’anneau violet, tu es projeté en cloche jusqu’au toit visé (la trajectoire est dessinée en pointillés)', 'Lurch : juste après un saut, change de direction pour rediriger ton élan', 'Marquage (ping) : clic molette ou B — repère un ennemi (rouge) ou un endroit (ambre), visible par tous les joueurs avec la distance', 'Toutes les cartes retouchées : particules d’ambiance (poussière, braises, neige, feuilles, lucioles, embruns, paillettes, poussière lunaire), lampadaires sur les cartes de nuit et décor en plus selon la carte (champignons, rondins, bonshommes de neige, caisses, bouées, mares de lave…)', 'Nouvelle carte : la Lune ! Gravité réduite (sauts presque 3 fois plus hauts, grenades en cloche), cratères, base lunaire, atterrisseur, la Terre dans le ciel étoilé', 'Nouvelle carte secrète sous l’eau : à toi de trouver comment y descendre… On y nage (saut maintenu : remonter, accroupi : plonger) entre épave, ruines, algues, coraux et bulles', 'Labo de test réservé au propriétaire : couloir de tir gradué tous les 10 m avec robots, murs d’escalade de 2 à 8 m, couloir de wall-jump, rampes de 15 à 45°, sauts en longueur de 3 à 9 m, tremplins et tyrolienne', 'Choix du micro pour le vocal de proximité (Réglages → Micro), changement à chaud, retour au micro par défaut s’il est débranché', 'Enchaînements de kills : Double, Triple, Quadra, Penta kill, Carnage, et séries (En série, Déchaîné, Inarrêtable, Divin, Légendaire) avec jingle, grande bannière et voix d’annonce (désactivable) ; nouvelle quête « Carnage »', 'Easter egg : une carte secrète à découvrir… (indice : un vieux code de jeux vidéo, ou 7 touchers sur le titre)', 'Optimisation : fuite de mémoire graphique corrigée (elle grossissait à chaque changement de carte), personnages hors champ plus dessinés, ombres des robots lointains et des petits objets coupées : jusqu’à 50 % d’appels de dessin en moins', 'Nouveaux sons d’armes : de vrais coups de feu (claquement, souffle, mécanique, écho dans le décor) pour la carabine, la mitraillette, le pompe, le sniper, le pistolet, le revolver, la mitrailleuse et la minigun, 3 variantes chacun pour ne jamais sonner pareil', 'Réglage « Sons personnalisés » retiré', 'Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Levels and XP: every kill, headshot, bhop, superglide, minute played, monster slain or race won gives XP; 100 levels, 10 titles (Recruit → Velocity incarnate), animated level-up', 'New Profile tab: level badge, XP bar, stats and trophy showcase', '31 bronze, silver and gold achievements, 14 of them secret and hidden (“???”) until unlocked', 'Each map has its own music, composed live in the map’s style (can be turned off in settings)', 'Animated main menu: speed streaks, embers, shining logo, cascading entrances, pulsing Play button', 'New map Neo-Dune: a futuristic city in the middle of the desert at sunset — a great Spire to climb, Arcology, Domes, Glider Port, Market, monorail, oasis and sandstorm', 'Necropolis turns to night: black starry sky, dark fog, pale moon, the flashlight stays on', 'Fisheye lens in Necropolis (curved edges, colour fringes that grow when a monster gets close); can be turned off in settings', 'Night vision (N key or button): amplified green image, grain, scan lines, round goggle view', 'New secret map: the Prism Track, a kart race on a rainbow ribbon floating in space — 3 laps against 5 drivers, two jumps over the void, boost pads, drifts with turbo, item cubes (turbos, shockwave), personal record', 'Sprint button on phones (hold it, movable like the others); as a monster, running also works with auto sprint and the gamepad', 'Play as a monster in Necropolis (H key or button): the Stalker (charge, climbing, Roar, Leap, Hunt) or the Withered (Blink, Scream, Lunge, senses players through walls); solo or as the online host', 'The Withered finally moves properly: it walks (swinging legs and arms), follows smoothed paths through the galleries, no longer gets stuck on trains and moves without harsh jerks', 'Discord status works out of the box in the Windows app: no need to create an application or paste an ID, the game logo shows up', 'Necropolis: the Withered, a new monster living underground — it always knows where you are in the metro and the galleries, closes in with jerky moves and detours, can appear from another corridor when you are not looking, and never comes up to the surface (“Devitalizer - 3D Horror” model by ShaxerTakkuY, CC BY-ND 4.0)', 'The Galleries: four huge mazes dug under the districts, connected to the metro tunnels — narrow corridors, dead ends, rooms, dead lamps, blood and rubble', 'Underground it is almost pitch black: short fog and a flashlight', 'The Stalker now always knows where you are on the surface and closes in through random detours', 'Necropolis: its own music in the metro and underground', 'Much louder ambient music in Necropolis and the Ghost Town', 'Horror in Necropolis: the Stalker no longer spots you instantly — it stops, stares, roars, then charges; its strikes are telegraphed and it no longer tracks you through walls', 'Gore: blood sprays when you hit the Stalker or a player, pools on the ground, blood on the screen when you are hurt and red edges at low health', 'Jump scare: when the Stalker catches you, its face fills the screen with a scream made for the game', 'Music: ambience in Necropolis and the Ghost Town, chase music when the Stalker hunts you', 'The closer it gets, the more the picture and sound crackle, and lamps around it go out', 'Thicker fog and light cones under the street lamps', 'The Stalker now has its real animated 3D model (walk, run, attack, climb): “Country Road Creature Rig” by NO DONT EAT ME CASEOH, CC BY 4.0', 'Necropolis: the Stalker, a huge creature roaming the city; it hears gunshots, sprints at 27 m/s, climbs facades up to the roofs and hits hard; it flees when hurt, then comes back (the host drives it online)', 'New map: Necropolis, a huge seamless dead city (600 m across) — downtown skyscrapers, industrial zone, residential district, two shopping districts and a metro under the avenues linking everything, with no loading between districts', 'Real free (CC0) 3D models: buildings, houses, factories, cars, trucks, containers, street lights, traffic lights, barriers, furniture, dead trees (Kenney and Quaternius packs), dirtied and burnt by the game', 'Buildings you can enter: Orion (11 floors, helipad) and Vega (collapsed top) towers linked by a sky bridge, Hôtel Royal, an apartment block, a two-level mall with escalators, a parking garage, a factory with catwalks, a warehouse, a gas station, a diner and shops', 'Underground: 5 metro stations, tunnels to walk, stopped or derailed trains, two underground car parks and a secret shelter behind planks', 'Destruction: glass shatters (shoot a shop window to get in), chain-reacting red barrels, cones, bins and boxes you knock over, planks to break, falling signs; all shared online', 'Changing weather (overcast, fog, rain, thunderstorm with lightning, drizzle), wind, fire smoke, embers, falling ash, puddles reflecting the city, buzzing neon, flickering lamps', 'Missions: discover 30 places, restart 3 generators to bring power back, send the radio signal from the Orion Tower roof (a helicopter answers), find 18 supply crates', 'Events: gas explosions, falling debris, car alarms, helicopter flyovers', 'Action-game third-person view (K) on Necropolis, missions (O), logo, loading screen and cinematic intro', 'Windows app: weapon sounds and masks were missing, now included', 'Apex-style redeploy balloons on every map: E (or jump in the blue ring) = launched 50 m up, then a gliding skydive', 'Gravity cannons on every map: step in the purple ring to be thrown onto a rooftop (dotted arc shows the path)', 'Lurch: right after a jump, change direction to redirect your momentum', 'Ping: middle click or B marks an enemy (red) or a spot (amber) for everyone, with distance', 'Every map reworked: ambient particles, night lamps and extra themed props', 'New map: the Moon! Low gravity, craters, moon base, lander, Earth in the starry sky', 'New secret underwater map: find how to get down there… You swim (hold jump: up, crouch: dive)', 'Owner-only test lab: shooting lane marked every 10 m, climb walls 2–8 m, wall-jump corridor, 15–45° ramps, 3–9 m long jumps', 'Microphone picker for proximity voice chat (Settings → Microphone)', 'Kill streaks: Double, Triple, Quadra, Penta kill, Carnage and sprees with jingle, banner and announcer voice (can be turned off); new « Carnage » quest', 'Easter egg: a secret map to discover… (hint: an old video game code, or 7 taps on the title)', 'Optimization: graphics memory leak fixed, off-screen characters culled, fewer shadows for far robots and small props: up to 50% fewer draw calls', 'New weapon sounds: real-sounding gunshots (crack, blast, action, echo) for every gun, 3 variants each', 'Custom sounds setting removed', 'Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -11918,6 +11919,7 @@ const qProg = q => { const v = QST[q.id]; return q.set ? (Array.isArray(v) ? v.l
 const qDone = q => qProg(q) >= q.n;
 const skinLocked = id => { if (id === 'celeste') return SKYQ.got.size < PLUME_POS.length && !xUnlocked; const q = QUESTS.find(x => x.sk === id); return !!q && !qDone(q) && !xUnlocked; };
 function questEv(ev, v = 1) {
+  try { progEv(ev, v); } catch (e) {}
   for (const q of QUESTS) {
     if (q.ev !== ev || qDone(q)) continue;
     const before = qProg(q);
@@ -15171,7 +15173,7 @@ function jsCrtSrc() { return CRT.on && CRT.g && CRT.vis ? { g: CRT.g, pos: CRT.p
 function jsTrigger(dead, src) {
   src = src || jsCrtSrc();
   if (!src || !src.g || HOR.js > 0 || (!dead && HOR.jsCd > 0) || S.jumpscare === false) return;
-  HOR.js = 1.05; HOR.jsCd = 40; HOR.jsS = src; jsScream(); camShake(0.9);
+  HOR.js = 1.05; HOR.jsCd = 40; HOR.jsS = src; jsScream(); camShake(0.9); questEv('scare');
   document.body.classList.add('jscare'); wScene.visible = false;
   // il se tourne vers toi et attaque
   const d = camera.position.clone().sub(src.pos); d.y = 0; if (d.lengthSq() < 0.01) d.set(0, 0, 1); d.normalize(); HOR.jsDir = d;
@@ -15355,7 +15357,7 @@ function horPostRender() {
 function horNvToggle() {
   if (!CITY.on) return; HOR.nv = !HOR.nv;
   try { tn(AC.currentTime, { f: HOR.nv ? 900 : 500, f2: HOR.nv ? 2400 : 200, dur: 0.25, type: 'sine', gain: 0.06 }); nz(AC.currentTime, { dur: 0.3, f: 5000, q: 0.7, gain: 0.08 }); } catch (e) {}
-  toast(ctr(HOR.nv ? 'hor.nvOn' : 'hor.nvOff'), 1.5); const b = $('nvBtn'); if (b) b.classList.toggle('on', HOR.nv);
+  toast(ctr(HOR.nv ? 'hor.nvOn' : 'hor.nvOff'), 1.5); if (HOR.nv) questEv('nv'); const b = $('nvBtn'); if (b) b.classList.toggle('on', HOR.nv);
 }
 function horNvTick(dt) {
   if (!CITY.on && HOR.nv) HOR.nv = false;
@@ -15685,7 +15687,7 @@ function mtrDamage(dmg, part, net = true) {
   if (MTR.st === 'idle') { MTR.lunge = 0.8; mtrScreech(cVol(MTR.pos)); }
   if (MTR.hp <= 0) {
     MTR.respawn = 40; MTR.g.visible = false; mtrScreech(cVol(MTR.pos) * 1.3); cDust(MTR.pos.clone().add(new V3(0, 1, 0)), 6);
-    cBanner(ctr('mtr.dead'), ctr('mtr.deadSub')); stats.kills++;
+    cBanner(ctr('mtr.dead'), ctr('mtr.deadSub')); stats.kills++; questEv('mtr');
   }
 }
 /* réseau : l'hôte le dirige */
@@ -15784,7 +15786,7 @@ function monStart(k) {
   document.body.classList.add('monctl'); document.body.classList.remove('crtHunt', 'mtrHunt');
   cBanner(ctr('mon.you'), M === CRT ? ctr('crt.name') : ctr('mtr.name'));
   if (k === 'crt') crtRoar(1.2); else mtrScreech(1.1);
-  monHudBuild(); monLabels();
+  monHudBuild(); monLabels(); questEv('possess');
 }
 function monExit(why) {
   if (!MON.ctrl) return; const M = monM();
@@ -16256,7 +16258,7 @@ function krtRespawn(K) {
 }
 function krtFinish(K) {
   K.fin = KART.karts.filter(O => O.fin).length + 1; K.finT = KART.time;
-  if (!K.bot) {
+  if (!K.bot) { questEv('kartfin', K.fin);
     KART.done = true; const best = +store.get('prismBest', 0) || 0, nb = !best || KART.time < best; if (nb) store.set('prismBest', KART.time);
     krtSndBeep(2); cBanner(K.fin === 1 ? ctr('kart.win') : ctr('kart.place').replace('{n}', K.fin), ctr('kart.time') + ' ' + krtFmt(KART.time) + (nb ? ' · ' + ctr('kart.record') : ''));
     if (K.fin === 1) { stats.kills++; try { questEv && questEv('win'); } catch (e) {} }
@@ -16397,6 +16399,520 @@ Object.assign(I18N.en, {
   'kart.it.turbo': 'TURBO', 'kart.it.turbo2': 'TURBO ×2', 'kart.it.turbo3': 'TURBO ×3', 'kart.it.wave': 'SHOCKWAVE',
   'kart.help': 'W: accelerate · S: brake · A/D: steer · Space while turning: drift (release for turbo) · {use} or E: item · R: restart'
 });
+
+/* ================= Progression : niveaux, XP, succès et trophées (certains cachés) =================
+   Tout est gardé dans le navigateur. Les gains arrivent par les mêmes événements que les défis (questEv). */
+const PROG = Object.assign({ xp: 0, lv: 1, st: {}, ach: {}, maps: [] }, store.get('prog', {}) || {});
+PROG.st = PROG.st || {}; PROG.ach = PROG.ach || {}; PROG.maps = Array.isArray(PROG.maps) ? PROG.maps : [];
+const PROG_MAX = 100;
+const progNeed = L => Math.round(300 + 120 * (L - 1) + 6 * (L - 1) * (L - 1));
+const PROG_TITLES = [[1, 'recruit'], [5, 'runner'], [10, 'glider'], [15, 'vaulter'], [20, 'tracer'], [30, 'ghost'], [40, 'storm'], [50, 'meteor'], [65, 'legend'], [80, 'velocity']];
+const progTitle = L => { let k = 'recruit'; for (const [l, id] of PROG_TITLES) if (L >= l) k = id; return k; };
+const progTier = L => L >= 75 ? 'prism' : L >= 50 ? 'plat' : L >= 25 ? 'gold' : L >= 10 ? 'silver' : 'bronze';
+// succès : t = palier (b/s/g), h = caché tant qu'il n'est pas débloqué
+const ACH = [
+  { id: 'first', t: 'b', f: s => s.kills >= 1 }, { id: 'hunter', t: 's', f: s => s.kills >= 100 }, { id: 'reaper', t: 'g', f: s => s.kills >= 1000 },
+  { id: 'heads', t: 's', f: s => s.heads >= 100 }, { id: 'blade', t: 's', f: s => s.kk >= 25 }, { id: 'multi', t: 'g', f: s => s.multi >= 5 },
+  { id: 'fast', t: 'b', f: s => s.vmax >= 20 }, { id: 'sonic', t: 'g', f: s => s.vmax >= 30 }, { id: 'bhop', t: 's', f: s => s.bhop >= 10 },
+  { id: 'glide', t: 'b', f: s => s.sg >= 1 }, { id: 'walls', t: 'b', f: s => s.wj >= 50 }, { id: 'hour', t: 's', f: s => s.min >= 60 },
+  { id: 'tourist', t: 's', f: () => PROG.maps.length >= 8 }, { id: 'globe', t: 'g', f: () => PROG_PUBLIC.every(m => PROG.maps.includes(m)) },
+  { id: 'lv10', t: 'b', f: () => PROG.lv >= 10 }, { id: 'lv25', t: 's', f: () => PROG.lv >= 25 }, { id: 'lv50', t: 'g', f: () => PROG.lv >= 50 },
+  { id: 'sky', t: 'g', h: 1, f: () => !!store.get('skyFound', false) }, { id: 'abyss', t: 'g', h: 1, f: () => !!store.get('abyssFound', false) },
+  { id: 'plumes', t: 'g', h: 1, f: () => { try { return SKYQ.got.size >= PLUME_POS.length; } catch (e) { return false; } } },
+  { id: 'prism', t: 's', h: 1, f: () => !!store.get('prismFound', false) }, { id: 'podium', t: 's', h: 1, f: s => s.kartFin >= 1 }, { id: 'champ', t: 'g', h: 1, f: s => s.kartWin >= 1 },
+  { id: 'slayer', t: 'g', h: 1, f: s => s.crt >= 1 }, { id: 'withered', t: 'g', h: 1, f: s => s.mtr >= 1 }, { id: 'monster', t: 'b', h: 1, f: s => s.poss >= 1 },
+  { id: 'nv', t: 'b', h: 1, f: s => s.nv >= 1 }, { id: 'scared', t: 'b', h: 1, f: s => s.scare >= 1 }, { id: 'stubborn', t: 's', h: 1, f: s => s.deaths >= 100 },
+  { id: 'owl', t: 'b', h: 1, f: s => s.owl >= 1 }, { id: 'summit', t: 'g', h: 1, f: s => s.summit >= 1 }
+];
+const PROG_PUBLIC = ['canyon', 'refinery', 'forest', 'castle', 'volcano', 'mega', 'ghost', 'ocean', 'arctic', 'world', 'room', 'mine', 'moon', 'city', 'desert'];
+const ACH_XP = { b: 200, s: 500, g: 1200 };
+let progSaveT = 0;
+function progSave() { clearTimeout(progSaveT); progSaveT = setTimeout(() => store.set('prog', PROG), 600); }
+function progAdd(xp, why) {
+  if (!(xp > 0)) return;
+  xp = Math.round(xp); PROG.xp += xp; let up = 0;
+  while (PROG.lv < PROG_MAX && PROG.xp >= progNeed(PROG.lv)) { PROG.xp -= progNeed(PROG.lv); PROG.lv++; up++; }
+  if (PROG.lv >= PROG_MAX) PROG.xp = Math.min(PROG.xp, progNeed(PROG.lv));
+  progSave(); progPop(xp, why);
+  if (up) progLevelUp();
+  progChip();
+}
+// gains par événement (mêmes événements que les défis)
+const PROG_EV = {
+  kill: [100, 'kills', 'kill'], head: [25, 'heads', 'head'], kkill: [50, 'kk', 'knife'], pkill: [150, 'pk', 'pkill'], wj: [4, 'wj', ''], min: [25, 'min', 'time'],
+  crt: [1000, 'crt', 'crt'], mtr: [800, 'mtr', 'mtr'], win: [600, 'kartWin', 'win'], sky: [10, '', ''], cannon: [10, '', ''],
+  possess: [50, 'poss', ''], nv: [0, 'nv', ''], scare: [30, 'scare', 'scare'], death: [0, 'deaths', ''], sglide: [30, 'sg', 'sglide']
+};
+function progEv(ev, v = 1) {
+  const s = PROG.st, e = PROG_EV[ev];
+  if (e) { if (e[1]) s[e[1]] = (s[e[1]] || 0) + 1; if (e[0]) progAdd(e[0], e[2]); }
+  else if (ev === 'speed') { if (v > (s.vmax || 0) + 0.05) { const old = s.vmax || 0; s.vmax = v; if (Math.floor(v / 5) > Math.floor(old / 5)) progAdd(60, 'speed'); } }
+  else if (ev === 'multi') { s.multi = Math.max(s.multi || 0, v); if (v >= 2) progAdd(v * 40, 'multi'); }
+  else if (ev === 'bhop') { s.bhop = Math.max(s.bhop || 0, v); if (v >= 3) progAdd(2 + Math.min(v, 15), ''); }
+  else if (ev === 'kartfin') { s.kartFin = (s.kartFin || 0) + 1; progAdd([0, 600, 400, 300, 220, 160, 120][v] || 100, 'kart'); }
+  else if (ev === 'map') { if (!PROG.maps.includes(v)) { PROG.maps.push(v); progAdd(150, 'map'); } }
+  else if (ev === 'summit') { if (!s.summit) { s.summit = 1; progAdd(400, 'summit'); } }
+  else return;
+  progSave(); progCheck();
+}
+function progCheck() {
+  for (const a of ACH) {
+    if (PROG.ach[a.id]) continue;
+    let ok = false; try { ok = a.f(PROG.st); } catch (e) {}
+    if (ok) { PROG.ach[a.id] = Date.now(); progSave(); achToast(a); progAdd(ACH_XP[a.t], 'ach'); if ($('profPanel') && !$('profPanel').hidden) profRender(); }
+  }
+}
+/* ---------- interface ---------- */
+function progCss() {
+  if ($('progCss')) return;
+  const st = document.createElement('style'); st.id = 'progCss';
+  st.textContent = `
+:root{--t-bronze:#d0894a;--t-silver:#c9d2dc;--t-gold:#ffc94a;--t-plat:#7ee8ff}
+#xpPop{position:fixed;left:50%;bottom:calc(196px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:26;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:5px;opacity:0;transition:opacity .25s}
+#xpPop.on{opacity:1}#xpPop b{font:800 20px/1 var(--f-display);letter-spacing:.08em;color:var(--amber);text-shadow:0 2px 8px rgba(0,0,0,.7)}#xpPop b small{font-size:13px;color:var(--ink);margin-left:6px;letter-spacing:.14em;text-transform:uppercase}
+#xpPop .bar{width:220px;height:5px;background:rgba(244,239,230,.15);border-radius:3px;overflow:hidden}#xpPop .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--amber),#fff3c4);transition:width .5s cubic-bezier(.2,.8,.2,1)}
+#xpPop .lv{font:700 11px/1 var(--f-display);letter-spacing:.22em;color:rgba(244,239,230,.8)}
+#lvUp{position:fixed;inset:0;z-index:70;pointer-events:none;display:grid;place-items:center;opacity:0}
+#lvUp.on{animation:lvIn 3.2s ease forwards}
+#lvUp .ring{position:absolute;width:340px;height:340px;border-radius:50%;background:repeating-conic-gradient(from 0deg,rgba(255,176,32,.0) 0 8deg,rgba(255,176,32,.35) 8deg 11deg);-webkit-mask:radial-gradient(circle,transparent 32%,#000 34%,#000 60%,transparent 70%);mask:radial-gradient(circle,transparent 32%,#000 34%,#000 60%,transparent 70%);animation:lvSpin 3.2s linear forwards}
+#lvUp .txt{position:relative;text-align:center;transform:skewX(-9deg)}#lvUp .k{font:700 16px/1 var(--f-display);letter-spacing:.5em;color:var(--amber)}
+#lvUp .n{font:900 140px/.9 var(--f-display);color:#fff;text-shadow:0 0 30px rgba(255,176,32,.8),0 6px 0 rgba(0,0,0,.4)}#lvUp .ti{font:800 22px/1 var(--f-display);letter-spacing:.3em;text-transform:uppercase;color:#fff3c4}
+@keyframes lvIn{0%{opacity:0;transform:scale(.6)}10%{opacity:1;transform:scale(1.08)}18%{transform:scale(1)}80%{opacity:1}100%{opacity:0;transform:scale(1.04)}}
+@keyframes lvSpin{to{transform:rotate(120deg) scale(1.3)}}
+#achToast{position:fixed;left:50%;top:calc(70px + env(safe-area-inset-top,0px));z-index:71;pointer-events:none;transform:translate(-50%,calc(-100% - 100px));visibility:hidden;transition:transform .5s cubic-bezier(.2,.9,.2,1.15),visibility 0s .5s;display:flex;gap:12px;align-items:center;background:linear-gradient(100deg,rgba(14,17,21,.96),rgba(30,24,12,.96));border:1px solid rgba(255,176,32,.45);border-left:4px solid var(--tc,var(--amber));padding:10px 18px 10px 12px;min-width:280px;max-width:calc(100% - 32px);box-shadow:0 10px 40px rgba(0,0,0,.5)}
+#achToast.on{transform:translate(-50%,0);visibility:visible;transition:transform .5s cubic-bezier(.2,.9,.2,1.15)}#achToast .ic{width:44px;height:44px;flex:none}#achToast .k{font:700 11px/1 var(--f-display);letter-spacing:.24em;color:var(--tc,var(--amber));text-transform:uppercase}#achToast .n{font:800 20px/1.1 var(--f-display);letter-spacing:.04em;color:var(--ink);margin:3px 0 2px}#achToast .d{font:500 13px/1.3 var(--f-body,system-ui);color:var(--ink-dim)}
+#lvChip{display:inline-flex;align-items:center;gap:8px;font:700 13px/1 var(--f-display);letter-spacing:.14em;color:var(--ink);background:rgba(13,17,21,.6);border:1px solid rgba(244,239,230,.22);padding:6px 10px 5px;transform:skewX(-12deg);cursor:pointer}
+#lvChip>*{transform:skewX(12deg)}#lvChip b{color:var(--tc,var(--amber));font-size:15px}#lvChip .mb{width:70px;height:4px;background:rgba(244,239,230,.15);overflow:hidden}#lvChip .mb i{display:block;height:100%;background:var(--tc,var(--amber))}
+#lvChip:hover{border-color:var(--amber)}
+.prof .pcard{display:grid;grid-template-columns:auto 1fr;gap:22px;align-items:center;padding:18px;border:1px solid rgba(244,239,230,.14);background:linear-gradient(120deg,rgba(255,176,32,.08),rgba(13,17,21,.4) 60%);position:relative;overflow:hidden}
+.prof .pcard::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.06) 50%,transparent 60%);transform:translateX(-100%);animation:pSheen 5s ease-in-out infinite}
+@keyframes pSheen{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.prof .badge{width:120px;height:120px;position:relative}.prof .badge svg{width:100%;height:100%;overflow:visible}.prof .badge .num{position:absolute;inset:0;display:grid;place-items:center;font:900 46px/1 var(--f-display);color:#fff;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.prof .who{font:800 34px/1 var(--f-display);letter-spacing:.02em;transform:skewX(-9deg);transform-origin:left;text-transform:uppercase}.prof .ttl{font:700 14px/1 var(--f-display);letter-spacing:.3em;text-transform:uppercase;color:var(--tc,var(--amber));margin:6px 0 12px}
+.prof .xpb{height:12px;background:rgba(244,239,230,.1);border:1px solid rgba(244,239,230,.18);position:relative;overflow:hidden;transform:skewX(-12deg)}.prof .xpb i{position:absolute;inset:0 auto 0 0;background:linear-gradient(90deg,var(--tc,var(--amber)),#fff3c4);transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.prof .xpt{display:flex;justify-content:space-between;font:600 13px/1 var(--f-display);letter-spacing:.08em;color:var(--ink-dim);margin-top:7px}
+.prof .pstats{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin:14px 0 22px}
+.prof .pstats div{padding:10px 12px;border:1px solid rgba(244,239,230,.12);background:rgba(13,17,21,.45)}.prof .pstats b{display:block;font:800 24px/1 var(--f-display);color:var(--ink)}.prof .pstats span{font:600 11px/1.2 var(--f-display);letter-spacing:.16em;text-transform:uppercase;color:var(--ink-dim)}
+.prof .thead{display:flex;flex-wrap:wrap;align-items:baseline;gap:14px;margin:0 0 12px}.prof .thead h3{font:700 16px/1 var(--f-display);letter-spacing:.2em;text-transform:uppercase;margin:0}.prof .thead span{font:600 13px/1 var(--f-display);letter-spacing:.1em;color:var(--ink-dim)}.prof .thead span b{color:var(--ink)}
+.prof .tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px}
+.prof .tr{display:grid;grid-template-columns:40px 1fr;gap:10px;align-items:center;padding:10px;border:1px solid rgba(244,239,230,.1);background:rgba(13,17,21,.45);opacity:0;animation:trIn .4s ease forwards}
+.prof .tr svg{width:40px;height:40px}.prof .tr .n{font:700 15px/1.1 var(--f-display);letter-spacing:.04em}.prof .tr .d{font:500 12px/1.3 var(--f-body,system-ui);color:var(--ink-dim);margin-top:2px}
+.prof .tr.got{border-color:color-mix(in srgb,var(--tc) 55%,transparent);background:linear-gradient(110deg,color-mix(in srgb,var(--tc) 14%,transparent),rgba(13,17,21,.45) 70%)}
+.prof .tr.lock{filter:grayscale(1)}.prof .tr.lock .n{color:var(--ink-dim)}.prof .tr.secret .n{letter-spacing:.3em}
+@keyframes trIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:620px){.prof .pcard{grid-template-columns:1fr;justify-items:start}.prof .badge{width:96px;height:96px}#lvUp .n{font-size:96px}}
+@media (prefers-reduced-motion:reduce){.prof .pcard::after,#lvUp .ring{animation:none}.prof .tr{animation:none;opacity:1}}`;
+  document.head.appendChild(st);
+}
+const TIER_C = { b: 'var(--t-bronze)', s: 'var(--t-silver)', g: 'var(--t-gold)' }, LV_C = { bronze: 'var(--t-bronze)', silver: 'var(--t-silver)', gold: 'var(--t-gold)', plat: 'var(--t-plat)', prism: '#ff7ad9' };
+function trophySvg(t, got) {
+  const c = got ? { b: '#d0894a', s: '#c9d2dc', g: '#ffc94a' }[t] : '#59606a';
+  return `<svg viewBox="0 0 40 40" aria-hidden="true"><path d="M12 6h16v7a8 8 0 0 1-16 0z" fill="${c}"/><path d="M12 8H7a5 5 0 0 0 5 7M28 8h5a5 5 0 0 1-5 7" fill="none" stroke="${c}" stroke-width="2.2"/><rect x="18" y="20" width="4" height="7" fill="${c}"/><rect x="12" y="27" width="16" height="4" rx="1" fill="${c}"/><path d="M16 9l2 4" stroke="#fff" stroke-opacity=".45" stroke-width="2" stroke-linecap="round"/></svg>`;
+}
+function badgeSvg(L, frac) {
+  const tier = progTier(L), c = tier === 'prism' ? 'url(#lgPr)' : { bronze: '#d0894a', silver: '#c9d2dc', gold: '#ffc94a', plat: '#7ee8ff' }[tier];
+  const hex = (r, cx = 60, cy = 60) => Array.from({ length: 6 }, (_, i) => { const a = Math.PI / 3 * i - Math.PI / 2; return (cx + r * Math.cos(a)).toFixed(1) + ',' + (cy + r * Math.sin(a)).toFixed(1); }).join(' ');
+  const R = 56, C = 2 * Math.PI * R;
+  return `<svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="lgPr" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff5a8a"/><stop offset=".35" stop-color="#ffd23a"/><stop offset=".65" stop-color="#4ae0a0"/><stop offset="1" stop-color="#7a8aff"/></linearGradient></defs>
+<circle cx="60" cy="60" r="${R}" fill="none" stroke="rgba(244,239,230,.12)" stroke-width="5"/>
+<circle cx="60" cy="60" r="${R}" fill="none" stroke="${c}" stroke-width="5" stroke-linecap="round" stroke-dasharray="${(C * frac).toFixed(1)} ${C.toFixed(1)}" transform="rotate(-90 60 60)"/>
+<polygon points="${hex(44)}" fill="rgba(13,17,21,.85)" stroke="${c}" stroke-width="3"/><polygon points="${hex(36)}" fill="none" stroke="${c}" stroke-opacity=".35" stroke-width="1.5"/></svg>`;
+}
+function progUI() {
+  if ($('xpPop')) return; progCss();
+  const x = document.createElement('div'); x.id = 'xpPop'; x.innerHTML = '<b></b><div class="bar"><i></i></div><span class="lv"></span>'; document.body.appendChild(x);
+  const l = document.createElement('div'); l.id = 'lvUp'; l.innerHTML = '<div class="ring"></div><div class="txt"><div class="k"></div><div class="n"></div><div class="ti"></div></div>'; document.body.appendChild(l);
+  const a = document.createElement('div'); a.id = 'achToast'; a.setAttribute('role', 'status'); a.innerHTML = '<div class="ic"></div><div><div class="k"></div><div class="n"></div><div class="d"></div></div>'; document.body.appendChild(a);
+  // pastille de niveau dans l'en-tête du menu, et onglet Profil
+  const row = document.querySelector('#menu .toprow');
+  if (row && !$('lvChip')) { const c = document.createElement('button'); c.type = 'button'; c.id = 'lvChip'; c.innerHTML = '<span class="l"></span><b></b><span class="mb"><i></i></span>'; c.addEventListener('click', () => window.showTab && showTab('prof')); row.insertBefore(c, row.lastElementChild); }
+  const nav = document.querySelector('#menu .tabs'), main = document.querySelector('#menu .menu-main');
+  if (nav && main && !$('profPanel')) {
+    const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = 'prof'; b.dataset.i18n = 'tab.prof'; b.textContent = t('tab.prof');
+    const first = nav.querySelector('[data-tab="char"]'); nav.insertBefore(b, first || null);
+    const p = document.createElement('div'); p.className = 'tabpanel'; p.id = 'profPanel'; p.dataset.tab = 'prof'; p.setAttribute('role', 'tabpanel'); p.hidden = true;
+    p.innerHTML = '<div class="block prof"><h2 data-i18n="prof.title"></h2><div class="pcard"><div class="badge"></div><div class="info"><div class="who"></div><div class="ttl"></div><div class="xpb"><i></i></div><div class="xpt"><span class="a"></span><span class="b"></span></div></div></div><div class="pstats"></div><div class="thead"><h3></h3><span class="cnt"></span></div><div class="tgrid"></div></div>';
+    const panels = [...main.querySelectorAll('.tabpanel')]; (panels[panels.length - 1] || nav).after(p);
+    b.addEventListener('click', () => showTab('prof'));
+    const orig = window.showTab;
+    window.showTab = function (id) { orig(id === 'prof' ? '__none' : id); if (id === 'prof') { for (const bb of nav.children) bb.setAttribute('aria-selected', String(bb.dataset.tab === 'prof')); store.set('menuTab', 'prof'); } p.hidden = id !== 'prof'; if (id === 'prof') profRender(); };
+    if (store.get('menuTab', 'play') === 'prof') showTab('prof');
+  }
+  progChip();
+}
+function progChip() {
+  const c = $('lvChip'); if (!c) return; const tier = progTier(PROG.lv);
+  c.style.setProperty('--tc', LV_C[tier]); c.querySelector('.l').textContent = t('prof.lvShort'); c.querySelector('b').textContent = PROG.lv;
+  c.querySelector('.mb i').style.width = (100 * PROG.xp / progNeed(PROG.lv)).toFixed(1) + '%';
+  c.title = t('prof.t.' + progTitle(PROG.lv));
+}
+let popT = 0, popSum = 0;
+function progPop(xp, why) {
+  const x = $('xpPop'); if (!x || menu.hidden === false) return;
+  popSum = (x.classList.contains('on') ? popSum : 0) + xp;
+  x.querySelector('b').innerHTML = '+' + popSum + ' XP' + (why ? '<small>' + t('xp.' + why) + '</small>' : '');
+  x.querySelector('.bar i').style.width = (100 * PROG.xp / progNeed(PROG.lv)).toFixed(1) + '%';
+  x.querySelector('.lv').textContent = t('prof.lvShort') + ' ' + PROG.lv;
+  x.classList.add('on'); clearTimeout(popT); popT = setTimeout(() => x.classList.remove('on'), 2200);
+}
+const progSndLv = snd((t0, v = 1) => { [523, 659, 784, 1046, 1318].forEach((f, i) => tn(t0 + i * 0.09, { f, dur: 0.35, type: 'triangle', gain: 0.09 * v })); nz(t0 + 0.4, { dur: 0.6, f: 6000, q: 0.5, gain: 0.08 * v }); });
+const progSndAch = snd((t0, v = 1) => { [784, 988, 1318].forEach((f, i) => tn(t0 + i * 0.07, { f, dur: 0.4, type: 'sine', gain: 0.08 * v })); });
+function progLevelUp() {
+  const l = $('lvUp'); if (!l) return;
+  l.style.setProperty('--tc', LV_C[progTier(PROG.lv)]);
+  l.querySelector('.k').textContent = t('prof.lvUp'); l.querySelector('.n').textContent = PROG.lv; l.querySelector('.ti').textContent = t('prof.t.' + progTitle(PROG.lv));
+  l.classList.remove('on'); void l.offsetWidth; l.classList.add('on'); progSndLv(1);
+  progCheck();
+}
+const achQ = []; let achBusy = false;
+function achToast(a) { achQ.push(a); if (!achBusy) achNext(); }
+function achNext() {
+  const el = $('achToast'), a = achQ.shift(); if (!el || !a) { achBusy = false; return; } achBusy = true;
+  el.style.setProperty('--tc', TIER_C[a.t]); el.querySelector('.ic').innerHTML = trophySvg(a.t, true);
+  el.querySelector('.k').textContent = t(a.h ? 'ach.secretGot' : 'ach.got'); el.querySelector('.n').textContent = t('ach.' + a.id); el.querySelector('.d').textContent = t('achd.' + a.id);
+  el.classList.add('on'); progSndAch(1);
+  setTimeout(() => { el.classList.remove('on'); setTimeout(achNext, 600); }, 4200);
+}
+function profRender() {
+  const p = $('profPanel'); if (!p) return;
+  const L = PROG.lv, need = progNeed(L), tier = progTier(L);
+  p.style.setProperty('--tc', LV_C[tier]);
+  p.querySelector('h2').textContent = t('prof.title');
+  p.querySelector('.badge').innerHTML = badgeSvg(L, PROG.xp / need) + `<div class="num">${L}</div>`;
+  p.querySelector('.who').textContent = (($('pseudo') && $('pseudo').value) || t('prof.player'));
+  p.querySelector('.ttl').textContent = t('prof.t.' + progTitle(L));
+  p.querySelector('.xpb i').style.width = (100 * PROG.xp / need).toFixed(1) + '%';
+  p.querySelector('.xpt .a').textContent = PROG.xp.toLocaleString() + ' / ' + need.toLocaleString() + ' XP';
+  const nx = PROG_TITLES.find(([l]) => l > L); p.querySelector('.xpt .b').textContent = nx ? t('prof.next', { t: t('prof.t.' + nx[1]), l: nx[0] }) : '';
+  const s = PROG.st, fmt = n => (n || 0).toLocaleString();
+  const tiles = [['kills', fmt(s.kills)], ['heads', fmt(s.heads)], ['vmax', (s.vmax || 0).toFixed(1) + ' m/s'], ['bhop', fmt(s.bhop)], ['time', Math.floor((s.min || 0) / 60) + ' h ' + ((s.min || 0) % 60) + ' min'], ['maps', PROG.maps.length + ' / ' + PROG_PUBLIC.length], ['monsters', fmt((s.crt || 0) + (s.mtr || 0))], ['races', fmt(s.kartWin)], ['deaths', fmt(s.deaths)]];
+  p.querySelector('.pstats').innerHTML = tiles.map(([k, v]) => `<div><b>${v}</b><span>${t('prof.s.' + k)}</span></div>`).join('');
+  const got = ACH.filter(a => PROG.ach[a.id]), byT = k => got.filter(a => a.t === k).length;
+  p.querySelector('.thead h3').textContent = t('prof.trophies');
+  p.querySelector('.thead .cnt').innerHTML = `<b>${got.length}</b> / ${ACH.length} · <span style="color:var(--t-gold)">●</span> ${byT('g')} <span style="color:var(--t-silver)">●</span> ${byT('s')} <span style="color:var(--t-bronze)">●</span> ${byT('b')}`;
+  p.querySelector('.tgrid').innerHTML = ACH.map((a, i) => {
+    const g = !!PROG.ach[a.id], sec = a.h && !g;
+    return `<div class="tr ${g ? 'got' : 'lock'}${sec ? ' secret' : ''}" style="--tc:${TIER_C[a.t]};animation-delay:${(i * 0.025).toFixed(3)}s">${trophySvg(a.t, g)}<div><div class="n">${sec ? '???' : t('ach.' + a.id)}</div><div class="d">${sec ? t('ach.hidden') : t('achd.' + a.id)}</div></div></div>`;
+  }).join('');
+}
+// vérifs régulières : cartes jouées, secrets trouvés, heure tardive
+setInterval(() => {
+  try {
+    progUI();
+    if (playing && !P.dead && S.map) progEv('map', S.map);
+    if (playing) { const h = new Date().getHours(); if (h < 5 && !PROG.st.owl) { PROG.st.owl = 1; progSave(); } }
+    progCheck();
+  } catch (e) {}
+}, 2500);
+addEventListener('velLang', () => { progChip(); if ($('profPanel') && !$('profPanel').hidden) profRender(); });
+Object.assign(I18N.fr, {
+  'tab.prof': 'Profil', 'prof.title': 'Profil et trophées', 'prof.lvShort': 'NIV.', 'prof.lvUp': 'NIVEAU SUPÉRIEUR', 'prof.player': 'Joueur', 'prof.trophies': 'Trophées', 'prof.next': 'Prochain titre : {t} (niv. {l})',
+  'prof.t.recruit': 'Recrue', 'prof.t.runner': 'Coureur', 'prof.t.glider': 'Glisseur', 'prof.t.vaulter': 'Voltigeur', 'prof.t.tracer': 'Traceur', 'prof.t.ghost': 'Fantôme', 'prof.t.storm': 'Tempête', 'prof.t.meteor': 'Météore', 'prof.t.legend': 'Légende', 'prof.t.velocity': 'Vélocité incarnée',
+  'prof.s.kills': 'Éliminations', 'prof.s.heads': 'Tirs à la tête', 'prof.s.vmax': 'Vitesse max', 'prof.s.bhop': 'Meilleure série de bhops', 'prof.s.time': 'Temps de jeu', 'prof.s.maps': 'Cartes jouées', 'prof.s.monsters': 'Monstres abattus', 'prof.s.races': 'Courses gagnées', 'prof.s.deaths': 'Morts',
+  'xp.kill': 'élimination', 'xp.head': 'tête', 'xp.knife': 'couteau', 'xp.pkill': 'joueur', 'xp.time': 'temps de jeu', 'xp.crt': 'Rôdeur abattu', 'xp.mtr': 'Asséché abattu', 'xp.win': 'victoire', 'xp.scare': 'survie', 'xp.sglide': 'superglide', 'xp.speed': 'record de vitesse', 'xp.multi': 'multi', 'xp.kart': 'course', 'xp.map': 'nouvelle carte', 'xp.ach': 'succès', 'xp.summit': 'sommet',
+  'ach.got': 'Succès débloqué', 'ach.secretGot': 'Succès secret débloqué', 'ach.hidden': 'Succès secret — continue d’explorer.',
+  'ach.first': 'Premier sang', 'achd.first': 'Élimine ton premier adversaire.', 'ach.hunter': 'Chasseur', 'achd.hunter': '100 éliminations.', 'ach.reaper': 'Faucheur', 'achd.reaper': '1 000 éliminations.',
+  'ach.heads': 'Œil de lynx', 'achd.heads': '100 tirs à la tête.', 'ach.blade': 'Lame silencieuse', 'achd.blade': '25 éliminations au couteau.', 'ach.multi': 'Carnage', 'achd.multi': '5 éliminations d’affilée.',
+  'ach.fast': 'Pied au plancher', 'achd.fast': 'Atteins 20 m/s.', 'ach.sonic': 'Mur du son', 'achd.sonic': 'Atteins 30 m/s.', 'ach.bhop': 'Lapin', 'achd.bhop': 'Enchaîne 10 bhops.',
+  'ach.glide': 'Superglisseur', 'achd.glide': 'Réussis un superglide.', 'ach.walls': 'Araignée', 'achd.walls': '50 sauts muraux.', 'ach.hour': 'Accro', 'achd.hour': 'Joue une heure au total.',
+  'ach.tourist': 'Touriste', 'achd.tourist': 'Joue sur 8 cartes différentes.', 'ach.globe': 'Globe-trotter', 'achd.globe': 'Joue sur toutes les cartes publiques.',
+  'ach.lv10': 'Niveau 10', 'achd.lv10': 'Atteins le niveau 10.', 'ach.lv25': 'Niveau 25', 'achd.lv25': 'Atteins le niveau 25.', 'ach.lv50': 'Niveau 50', 'achd.lv50': 'Atteins le niveau 50.',
+  'ach.sky': 'Au-dessus des nuages', 'achd.sky': 'Découvre le Château des Nuées.', 'ach.abyss': 'Plongée', 'achd.abyss': 'Découvre les Abysses.', 'ach.plumes': 'Plumes d’or', 'achd.plumes': 'Trouve les 5 plumes du château.',
+  'ach.prism': 'Arc-en-ciel', 'achd.prism': 'Découvre la Piste Prisme.', 'ach.podium': 'Pilote', 'achd.podium': 'Termine une course sur la Piste Prisme.', 'ach.champ': 'Champion du prisme', 'achd.champ': 'Gagne une course sur la Piste Prisme.',
+  'ach.slayer': 'Tueur de géant', 'achd.slayer': 'Abats le Rôdeur.', 'ach.withered': 'Lumière au bout du tunnel', 'achd.withered': 'Abats l’Asséché.', 'ach.monster': 'Dans la peau du monstre', 'achd.monster': 'Incarne un monstre.',
+  'ach.nv': 'Œil de nuit', 'achd.nv': 'Allume la vision nocturne.', 'ach.scared': 'Cœur fragile', 'achd.scared': 'Fais-toi surprendre par un monstre.', 'ach.stubborn': 'Têtu', 'achd.stubborn': 'Meurs 100 fois.',
+  'ach.owl': 'Oiseau de nuit', 'achd.owl': 'Joue entre minuit et 5 h.', 'ach.summit': 'Toit du désert', 'achd.summit': 'Atteins le sommet de la grande flèche de Néo-Dune.'
+});
+Object.assign(I18N.en, {
+  'tab.prof': 'Profile', 'prof.title': 'Profile and trophies', 'prof.lvShort': 'LV.', 'prof.lvUp': 'LEVEL UP', 'prof.player': 'Player', 'prof.trophies': 'Trophies', 'prof.next': 'Next title: {t} (lv. {l})',
+  'prof.t.recruit': 'Recruit', 'prof.t.runner': 'Runner', 'prof.t.glider': 'Glider', 'prof.t.vaulter': 'Vaulter', 'prof.t.tracer': 'Tracer', 'prof.t.ghost': 'Ghost', 'prof.t.storm': 'Storm', 'prof.t.meteor': 'Meteor', 'prof.t.legend': 'Legend', 'prof.t.velocity': 'Velocity incarnate',
+  'prof.s.kills': 'Kills', 'prof.s.heads': 'Headshots', 'prof.s.vmax': 'Top speed', 'prof.s.bhop': 'Best bhop chain', 'prof.s.time': 'Play time', 'prof.s.maps': 'Maps played', 'prof.s.monsters': 'Monsters slain', 'prof.s.races': 'Races won', 'prof.s.deaths': 'Deaths',
+  'xp.kill': 'kill', 'xp.head': 'headshot', 'xp.knife': 'knife', 'xp.pkill': 'player', 'xp.time': 'play time', 'xp.crt': 'Stalker slain', 'xp.mtr': 'Withered slain', 'xp.win': 'victory', 'xp.scare': 'survival', 'xp.sglide': 'superglide', 'xp.speed': 'speed record', 'xp.multi': 'multi', 'xp.kart': 'race', 'xp.map': 'new map', 'xp.ach': 'achievement', 'xp.summit': 'summit',
+  'ach.got': 'Achievement unlocked', 'ach.secretGot': 'Secret achievement unlocked', 'ach.hidden': 'Secret achievement — keep exploring.',
+  'ach.first': 'First blood', 'achd.first': 'Take down your first opponent.', 'ach.hunter': 'Hunter', 'achd.hunter': '100 kills.', 'ach.reaper': 'Reaper', 'achd.reaper': '1,000 kills.',
+  'ach.heads': 'Eagle eye', 'achd.heads': '100 headshots.', 'ach.blade': 'Silent blade', 'achd.blade': '25 knife kills.', 'ach.multi': 'Carnage', 'achd.multi': '5 kills in a row.',
+  'ach.fast': 'Pedal to the metal', 'achd.fast': 'Reach 20 m/s.', 'ach.sonic': 'Sound barrier', 'achd.sonic': 'Reach 30 m/s.', 'ach.bhop': 'Bunny', 'achd.bhop': 'Chain 10 bhops.',
+  'ach.glide': 'Superglider', 'achd.glide': 'Pull off a superglide.', 'ach.walls': 'Spider', 'achd.walls': '50 wall jumps.', 'ach.hour': 'Hooked', 'achd.hour': 'Play for an hour in total.',
+  'ach.tourist': 'Tourist', 'achd.tourist': 'Play on 8 different maps.', 'ach.globe': 'Globetrotter', 'achd.globe': 'Play on every public map.',
+  'ach.lv10': 'Level 10', 'achd.lv10': 'Reach level 10.', 'ach.lv25': 'Level 25', 'achd.lv25': 'Reach level 25.', 'ach.lv50': 'Level 50', 'achd.lv50': 'Reach level 50.',
+  'ach.sky': 'Above the clouds', 'achd.sky': 'Discover the Cloud Castle.', 'ach.abyss': 'Deep dive', 'achd.abyss': 'Discover the Abyss.', 'ach.plumes': 'Golden feathers', 'achd.plumes': 'Find the castle’s 5 feathers.',
+  'ach.prism': 'Rainbow', 'achd.prism': 'Discover the Prism Track.', 'ach.podium': 'Driver', 'achd.podium': 'Finish a race on the Prism Track.', 'ach.champ': 'Prism champion', 'achd.champ': 'Win a race on the Prism Track.',
+  'ach.slayer': 'Giant slayer', 'achd.slayer': 'Take down the Stalker.', 'ach.withered': 'Light at the end of the tunnel', 'achd.withered': 'Take down the Withered.', 'ach.monster': 'Monster within', 'achd.monster': 'Play as a monster.',
+  'ach.nv': 'Night eye', 'achd.nv': 'Turn on night vision.', 'ach.scared': 'Faint heart', 'achd.scared': 'Get caught off guard by a monster.', 'ach.stubborn': 'Stubborn', 'achd.stubborn': 'Die 100 times.',
+  'ach.owl': 'Night owl', 'achd.owl': 'Play between midnight and 5 am.', 'ach.summit': 'Roof of the desert', 'achd.summit': 'Reach the top of Neo-Dune’s great spire.'
+});
+
+/* ================= Musique propre à chaque carte : composée en direct (WebAudio), un style par carte =================
+   Le menu garde « Celestial Butterfly » ; une musique importée par le joueur reste prioritaire partout.
+   Nécropolis et la Ville fantôme gardent leurs propres morceaux. */
+const MGEN_ST = {
+  canyon: { bpm: 92, root: 50, sc: [0, 2, 3, 5, 7, 9, 10], prog: [0, 6, 3, 4], pad: ['sawtooth', 900, 0.045], bass: ['triangle', 'x..x..x.x...x...'], arp: ['triangle', 2, 0.8, 0.032, 1], dr: ['x.......x.x.....', '....x.......x...', '..x...x...x...x.', 0.5], lead: ['sine', 0.25] },
+  refinery: { bpm: 108, root: 52, sc: [0, 1, 3, 5, 7, 8, 10], prog: [0, 1, 0, 6], pad: ['square', 600, 0.03], bass: ['sawtooth', 'x.x.x.x.x.x.x.x.'], dr: ['x...x...x...x...', '....x.......x..x', 'xxxxxxxxxxxxxxxx', 0.55], lead: ['square', 0.1] },
+  forest: { bpm: 76, root: 55, sc: [0, 2, 4, 7, 9], prog: [0, 3, 4, 2], pad: ['sine', 2000, 0.06], bass: ['sine', 'x.......x.......'], arp: ['sine', 2, 0.6, 0.03, 2], lead: ['triangle', 0.35] },
+  castle: { bpm: 84, root: 57, sc: [0, 2, 3, 5, 7, 8, 10], prog: [0, 5, 2, 6], pad: ['triangle', 1400, 0.05], bass: ['triangle', 'x.....x.x.......'], arp: ['triangle', 2, 0.85, 0.035, 1], dr: ['x.......x.......', '........x.......', '', 0.45], lead: ['triangle', 0.3] },
+  volcano: { bpm: 126, root: 48, sc: [0, 2, 3, 5, 7, 8, 11], prog: [0, 5, 4, 0], pad: ['sawtooth', 700, 0.04], bass: ['sawtooth', 'x.xx.x.xx.xx.x.x'], dr: ['x..x..x.x..x..x.', '....x.......x...', 'x.x.x.x.x.x.x.x.', 0.6], lead: ['sawtooth', 0.2] },
+  mega: { bpm: 108, root: 54, sc: [0, 2, 3, 5, 7, 8, 10], prog: [0, 5, 2, 6], pad: ['sawtooth', 1400, 0.05], bass: ['sawtooth', 'x.x.x.x.x.x.x.x.'], arp: ['square', 1, 1, 0.022, 1], dr: ['x...x...x...x...', '....x.......x...', '..x...x...x...x.', 0.55], lead: ['sawtooth', 0.2] },
+  ocean: { bpm: 68, root: 51, sc: [0, 2, 4, 6, 7, 9, 11], prog: [0, 1, 0, 4], pad: ['sine', 1800, 0.06], bass: ['sine', 'x...........x...'], arp: ['sine', 2, 0.5, 0.03, 2], lead: ['sine', 0.2] },
+  arctic: { bpm: 72, root: 59, sc: [0, 2, 3, 5, 7, 8, 10], prog: [0, 5, 3, 4], pad: ['triangle', 1600, 0.05], arp: ['sine', 2, 0.45, 0.034, 2] },
+  world: { bpm: 100, root: 48, sc: [0, 2, 4, 5, 7, 9, 11], prog: [0, 4, 5, 3], pad: ['sawtooth', 1200, 0.04], bass: ['triangle', 'x...x.x.x...x.x.'], arp: ['triangle', 2, 0.8, 0.03, 1], dr: ['x.......x.......', '....x.......x...', 'x.x.x.x.x.x.x.x.', 0.45], lead: ['triangle', 0.3] },
+  room: { bpm: 120, root: 60, sc: [0, 2, 4, 5, 7, 9, 11], prog: [0, 3, 4, 0], pad: ['square', 1500, 0.02], bass: ['square', 'x...x...x...x...'], arp: ['square', 2, 0.9, 0.022, 1], dr: ['x...x...x...x...', '....x.......x...', '..x...x...x...x.', 0.4] },
+  mine: { bpm: 80, root: 50, sc: [0, 1, 3, 5, 7, 8, 10], prog: [0, 1, 0, 1], pad: ['sawtooth', 420, 0.05], bass: ['sine', 'x...............'], dr: ['', '', '.......x.....x..', 0.4] },
+  moon: { bpm: 60, root: 57, sc: [0, 2, 4, 6, 7, 9, 11], prog: [0, 1, 4, 0], pad: ['triangle', 1500, 0.055], arp: ['sine', 2, 0.35, 0.03, 2] },
+  skycastle: { bpm: 88, root: 53, sc: [0, 2, 4, 6, 7, 9, 11], prog: [0, 4, 1, 5], pad: ['triangle', 1800, 0.05], arp: ['sine', 2, 0.8, 0.03, 2], dr: ['x.......x.......', '', '....x.......x...', 0.35], lead: ['sine', 0.3] },
+  abyss: { bpm: 56, root: 49, sc: [0, 2, 3, 5, 7, 8, 10], prog: [0, 5, 0, 3], pad: ['sine', 500, 0.07], bass: ['sine', 'x...............'], arp: ['sine', 2, 0.2, 0.03, 1] },
+  lab: { bpm: 124, root: 57, sc: [0, 2, 3, 5, 7, 8, 10], prog: [0, 0, 5, 6], bass: ['square', 'x..x..x...x..x..'], arp: ['square', 1, 0.5, 0.02, 1], dr: ['x...x...x...x...', '....x.......x...', '..x...x...x...x.', 0.5] },
+  prism: { bpm: 140, root: 52, sc: [0, 2, 4, 5, 7, 9, 11], prog: [0, 4, 5, 3], pad: ['sawtooth', 2200, 0.04], bass: ['sawtooth', 'x.x.x.x.x.x.x.x.'], arp: ['sawtooth', 1, 1, 0.022, 1], dr: ['x...x...x...x...', '....x.......x...', 'xxxxxxxxxxxxxxxx', 0.55], lead: ['sawtooth', 0.45] },
+  desert: { bpm: 102, root: 50, sc: [0, 1, 4, 5, 7, 8, 10], prog: [0, 0, 6, 1], pad: ['sawtooth', 900, 0.04], bass: ['sine', 'x.....x...x.....'], arp: ['triangle', 2, 0.7, 0.034, 1], dr: ['x.....x...x.....', '....x.......x...', 'x.xxx.xxx.xxx.xx', 0.5], lead: ['triangle', 0.35] }
+};
+const MGEN = { on: false, bus: null, vol: 0, st: null, id: '', nextT: 0, step: 0, bar: 0, lead: 0, noise: null };
+S.mapMusic = store.get('mapMusic', true) !== false;
+function musGenWant() {
+  if (!S.mapMusic || MUSIC.url || !playing || S.music <= 0) return null;
+  if (KART && KART.on) return 'prism';
+  const id = S.map; if (id === 'city' || id === 'ghost') return null;
+  return MGEN_ST[id] ? id : 'canyon';
+}
+// la musique de fond normale se tait pendant que la musique de la carte joue
+function musGenOn() { return !!musGenWant(); }
+const mFreq = m => 440 * Math.pow(2, (m - 69) / 12);
+function mNote(st, deg, oct) { const n = st.sc.length, o = Math.floor(deg / n), i = ((deg % n) + n) % n; return st.root + 12 * (oct + o) + st.sc[i]; }
+function mVoice(t0, f, dur, type, gain, cut, att = 0.01, rel = 0.12, det = 0) {
+  const o = AC.createOscillator(), g = AC.createGain(), fl = AC.createBiquadFilter();
+  o.type = type; o.frequency.value = f; if (det) o.detune.value = det;
+  fl.type = 'lowpass'; fl.frequency.value = cut || 4000; fl.Q.value = 0.7;
+  g.gain.setValueAtTime(0, t0); g.gain.linearRampToValueAtTime(gain, t0 + att); g.gain.setValueAtTime(gain, t0 + Math.max(att, dur - rel)); g.gain.linearRampToValueAtTime(0, t0 + dur + 0.02);
+  o.connect(fl); fl.connect(g); g.connect(MGEN.bus); o.start(t0); o.stop(t0 + dur + 0.05);
+}
+function mNoise(t0, dur, type, f, gain, q = 0.8) {
+  if (!MGEN.noise) { const b = AC.createBuffer(1, AC.sampleRate * 0.5, AC.sampleRate), d = b.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; MGEN.noise = b; }
+  const s = AC.createBufferSource(), fl = AC.createBiquadFilter(), g = AC.createGain(); s.buffer = MGEN.noise; fl.type = type; fl.frequency.value = f; fl.Q.value = q;
+  g.gain.setValueAtTime(gain, t0); g.gain.exponentialRampToValueAtTime(0.001, t0 + dur); s.connect(fl); fl.connect(g); g.connect(MGEN.bus); s.start(t0); s.stop(t0 + dur + 0.02);
+}
+function mKick(t0, g) { const o = AC.createOscillator(), a = AC.createGain(); o.frequency.setValueAtTime(140, t0); o.frequency.exponentialRampToValueAtTime(42, t0 + 0.14); a.gain.setValueAtTime(g, t0); a.gain.exponentialRampToValueAtTime(0.001, t0 + 0.3); o.connect(a); a.connect(MGEN.bus); o.start(t0); o.stop(t0 + 0.32); }
+function mStep(t0) {
+  const st = MGEN.st, spb = 60 / st.bpm, s16 = spb / 4, i = MGEN.step % 16, bar = MGEN.bar, chord = st.prog[bar % st.prog.length];
+  // nappe : l'accord de la mesure
+  if (i === 0 && st.pad) for (const k of [0, 2, 4]) mVoice(t0, mFreq(mNote(st, chord + k, 0)), spb * 4, st.pad[0], st.pad[2], st.pad[1], spb * 0.9, spb * 1.2, (k - 2) * 6);
+  // basse
+  if (st.bass && st.bass[1][i] === 'x') mVoice(t0, mFreq(mNote(st, chord, -1) - (i % 8 === 4 && st.bpm > 100 ? 0 : 0)), s16 * 1.8, st.bass[0], 0.07, 700, 0.005, 0.06);
+  // arpège
+  if (st.arp && i % st.arp[1] === 0 && Math.random() < st.arp[2]) { const seq = [0, 2, 4, 7, 4, 2]; const d = chord + seq[(i / st.arp[1]) % seq.length | 0]; mVoice(t0, mFreq(mNote(st, d, st.arp[4])), s16 * st.arp[1] * 0.9, st.arp[0], st.arp[3], 3200, 0.004, 0.08); }
+  // mélodie : marche au hasard sur la gamme, une note par temps
+  if (st.lead && i % 4 === 0 && Math.random() < st.lead[1]) { MGEN.lead = clamp(MGEN.lead + [-2, -1, -1, 1, 1, 2, 0][Math.random() * 7 | 0], -3, 9); mVoice(t0, mFreq(mNote(st, chord + MGEN.lead, 1)), spb * (Math.random() < 0.3 ? 2 : 1) * 0.95, st.lead[0], 0.035, 2600, 0.03, 0.2); }
+  // batterie
+  if (st.dr) { const [k, s, h, g] = st.dr; if (k[i] === 'x') mKick(t0, 0.5 * g); if (s[i] === 'x') { mNoise(t0, 0.16, 'bandpass', 1800, 0.35 * g); mVoice(t0, 190, 0.08, 'triangle', 0.08 * g, 2000, 0.002, 0.05); } if (h && h[i] === 'x') mNoise(t0, 0.04, 'highpass', 7500, 0.16 * g); }
+  MGEN.step++; if (MGEN.step % 16 === 0) MGEN.bar++;
+}
+function musGenTick(dt) {
+  MGEN.acs = AC ? AC.state : 'none';
+  if (!AC || AC.state !== 'running') return;
+  const id = musGenWant(), duck = muted || document.hidden || horDuck() || (MON && MON.ctrl && false);
+  if (!MGEN.bus) { MGEN.bus = AC.createGain(); MGEN.bus.gain.value = 0; const comp = AC.createDynamicsCompressor(); comp.threshold.value = -18; comp.ratio.value = 3; MGEN.bus.connect(comp); comp.connect(AC.destination); }
+  const target = id && !duck ? S.music * 0.85 : 0;
+  MGEN.vol += (target - MGEN.vol) * (1 - Math.exp(-2.5 * dt)); MGEN.bus.gain.setTargetAtTime(MGEN.vol, AC.currentTime, 0.05);
+  if (id && id !== MGEN.id) { MGEN.id = id; MGEN.st = MGEN_ST[id]; MGEN.step = 0; MGEN.bar = 0; MGEN.lead = 0; MGEN.nextT = AC.currentTime + 0.1; }
+  if (!id && MGEN.vol < 0.003) { MGEN.id = ''; MGEN.st = null; return; }
+  if (!MGEN.st) return;
+  if (MGEN.nextT < AC.currentTime - 0.5) MGEN.nextT = AC.currentTime + 0.05;
+  let n = 0; while (MGEN.nextT < AC.currentTime + 0.25 && n++ < 8) { mStep(MGEN.nextT); MGEN.nextT += 60 / MGEN.st.bpm / 4; }
+}
+// réglage : musique propre à chaque carte
+setTimeout(() => {
+  const ref = $('fishOn') || $('autoSprint'); if (!ref || $('mapMusOn')) return;
+  const l = document.createElement('label'); l.className = 'check'; l.innerHTML = '<input type="checkbox" id="mapMusOn"> <span></span>'; l.querySelector('span').textContent = t('mus.perMap');
+  (ref.closest('label') || ref).after(l); const c = l.querySelector('input'); c.checked = S.mapMusic; c.addEventListener('change', () => { S.mapMusic = c.checked; store.set('mapMusic', S.mapMusic); });
+}, 1500);
+Object.assign(I18N.fr, { 'mus.perMap': 'Musique propre à chaque carte' });
+Object.assign(I18N.en, { 'mus.perMap': 'Each map has its own music' });
+
+/* ================= Menu principal animé : traînées de vitesse, braises, logo qui brille, entrées en cascade ================= */
+(function menuFx() {
+  const st = document.createElement('style');
+  st.textContent = `
+#menuFx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+#menu .menu-inner{position:relative;z-index:1}
+#menu::before{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:0;background:radial-gradient(40% 35% at 20% 30%,rgba(255,176,32,.16),transparent 70%),radial-gradient(35% 30% at 80% 70%,rgba(255,90,40,.10),transparent 70%);animation:mGlow 14s ease-in-out infinite alternate}
+@keyframes mGlow{0%{transform:translate(0,0) scale(1)}50%{transform:translate(4%,-3%) scale(1.08)}100%{transform:translate(-3%,4%) scale(1.02)}}
+#menu .logo{padding:.2em .06em .06em 0;margin-top:-.06em;background:linear-gradient(100deg,var(--ink) 0 42%,#fff7dc 48%,#ffd27a 50%,#fff7dc 52%,var(--ink) 58% 100%);background-size:260% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:logoSheen 7s ease-in-out infinite}
+@keyframes logoSheen{0%,55%{background-position:100% 0}85%,100%{background-position:0 0}}
+#menu .streak i{animation:stk 2.4s ease-in-out infinite;transform-origin:right}
+#menu .streak i:nth-child(2){animation-delay:.18s}#menu .streak i:nth-child(3){animation-delay:.36s}
+@keyframes stk{0%,100%{transform:scaleX(1);opacity:1}50%{transform:scaleX(1.6) translateX(-.08em);opacity:.75}}
+#menu #play{position:relative;overflow:hidden;animation:pGlow 2.6s ease-in-out infinite}
+#menu #play::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-60%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);animation:pShine 3.6s ease-in-out infinite}
+@keyframes pGlow{0%,100%{box-shadow:0 0 0 0 rgba(255,176,32,.0),0 6px 24px rgba(255,176,32,.25)}50%{box-shadow:0 0 0 6px rgba(255,176,32,.12),0 8px 34px rgba(255,176,32,.45)}}
+@keyframes pShine{0%,60%{left:-60%}100%{left:130%}}
+#menu .btn,#menu .btn2,#menu .btn3{transition:transform .18s cubic-bezier(.2,.9,.2,1.3),background .15s,border-color .15s,color .15s,box-shadow .2s}
+#menu .btn2:hover,#menu .btn3:hover{box-shadow:0 0 18px rgba(255,176,32,.25)}
+#menu .tabs button{transition:color .2s}#menu .tabs button::after{transition:transform .3s cubic-bezier(.2,.9,.2,1.2)}
+#menu .tabs button:hover{color:var(--ink)}
+#menu .stage .stagebox{animation:stFloat 6s ease-in-out infinite}
+@keyframes stFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+#menu .sname{animation:snIn .7s cubic-bezier(.2,.9,.2,1) both}
+@keyframes snIn{from{opacity:0;transform:skewX(-9deg) translateX(30px)}to{opacity:1;transform:skewX(-9deg)}}
+#menu.mIn .kicker{animation:kIn .9s cubic-bezier(.2,.9,.2,1) both}
+@keyframes kIn{from{opacity:0;letter-spacing:.6em}to{opacity:1;letter-spacing:.24em}}
+#menu.mIn .logo{animation:logoIn .9s cubic-bezier(.2,.9,.2,1) both,logoSheen 7s ease-in-out 1s infinite}
+@keyframes logoIn{from{opacity:0;transform:skewX(-9deg) translateX(-60px);filter:blur(8px)}to{opacity:1;transform:skewX(-9deg);filter:none}}
+#menu.mIn .lede,#menu.mIn .cta>*,#menu.mIn .tabs,#menu.mIn .tabpanel:not([hidden]),#menu.mIn .stage{animation:mUp .7s cubic-bezier(.2,.9,.2,1) both}
+#menu.mIn .lede{animation-delay:.15s}#menu.mIn .cta>*:nth-child(1){animation-delay:.22s}#menu.mIn .cta>*:nth-child(2){animation-delay:.28s}#menu.mIn .cta>*:nth-child(3){animation-delay:.34s}#menu.mIn .cta>*:nth-child(4){animation-delay:.4s}#menu.mIn .cta>*:nth-child(5){animation-delay:.46s}#menu.mIn .cta>*:nth-child(n+6){animation-delay:.52s}
+#menu.mIn .tabs{animation-delay:.5s}#menu.mIn .tabpanel:not([hidden]){animation-delay:.6s}#menu.mIn .stage{animation:mSide .9s cubic-bezier(.2,.9,.2,1) .3s both}
+#menu.mIn #play{animation:mUp .7s cubic-bezier(.2,.9,.2,1) .22s both,pGlow 2.6s ease-in-out 1s infinite}
+@keyframes mUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes mSide{from{opacity:0;transform:translateX(50px)}to{opacity:1;transform:none}}
+#menu .tabpanel.tIn{animation:tIn .35s cubic-bezier(.2,.9,.2,1) both}
+@keyframes tIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#menu *,#menu::before{animation:none!important;transition:none!important}#menuFx{display:none}}`;
+  document.head.appendChild(st);
+  const menuEl = $('menu'); if (!menuEl) return;
+  const cv = document.createElement('canvas'); cv.id = 'menuFx'; cv.setAttribute('aria-hidden', 'true'); menuEl.prepend(cv);
+  const g = cv.getContext('2d'); let W = 0, H = 0, dpr = 1;
+  const low = typeof LOWEND !== 'undefined' && LOWEND;
+  const streaks = [], embers = [];
+  const fit = () => { dpr = Math.min(devicePixelRatio || 1, 1.5); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; g.setTransform(dpr, 0, 0, dpr, 0, 0); };
+  fit(); addEventListener('resize', fit);
+  const nS = low ? 14 : 34, nE = low ? 30 : 80;
+  const mkS = (s, fresh) => Object.assign(s, { x: fresh ? Math.random() * W * 1.4 - W * 0.2 : -200 - Math.random() * 400, y: Math.random() * H, l: 80 + Math.random() * 260, v: 500 + Math.random() * 900, w: 0.6 + Math.random() * 1.8, a: 0.08 + Math.random() * 0.25, gold: Math.random() < 0.55 });
+  const mkE = (e, fresh) => Object.assign(e, { x: Math.random() * W, y: fresh ? Math.random() * H : H + 10, r: 0.6 + Math.random() * 2.2, vy: 12 + Math.random() * 40, vx: (Math.random() - 0.5) * 18, ph: Math.random() * 6.3, a: 0.2 + Math.random() * 0.6 });
+  for (let i = 0; i < nS; i++) streaks.push(mkS({}, true));
+  for (let i = 0; i < nE; i++) embers.push(mkE({}, true));
+  let last = performance.now(), mx = 0, my = 0;
+  addEventListener('pointermove', e => { mx = e.clientX / Math.max(1, W) - 0.5; my = e.clientY / Math.max(1, H) - 0.5; });
+  function draw(now) {
+    requestAnimationFrame(draw);
+    if (menuEl.hidden || document.hidden) { last = now; return; }
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    g.clearRect(0, 0, W, H);
+    // traînées de vitesse en diagonale
+    const sk = -0.18;
+    for (const s of streaks) {
+      s.x += s.v * dt; if (s.x - s.l > W + 200) mkS(s, false);
+      const x = s.x + mx * 30, y = s.y + (s.x) * sk * 0.2 + my * 20;
+      const gr = g.createLinearGradient(x - s.l, y, x, y); gr.addColorStop(0, 'rgba(0,0,0,0)'); gr.addColorStop(1, s.gold ? `rgba(255,176,32,${s.a})` : `rgba(244,239,230,${s.a * 0.7})`);
+      g.strokeStyle = gr; g.lineWidth = s.w; g.beginPath(); g.moveTo(x - s.l, y - s.l * sk * 0.2); g.lineTo(x, y); g.stroke();
+    }
+    // braises qui montent
+    for (const e of embers) {
+      e.y -= e.vy * dt; e.x += (e.vx + Math.sin(now / 900 + e.ph) * 10) * dt; if (e.y < -10) mkE(e, false);
+      const tw = 0.6 + 0.4 * Math.sin(now / 300 + e.ph);
+      g.fillStyle = `rgba(255,${150 + (e.r * 30 | 0)},60,${e.a * tw})`; g.beginPath(); g.arc(e.x + mx * 12, e.y + my * 8, e.r, 0, 6.283); g.fill();
+    }
+  }
+  requestAnimationFrame(draw);
+  // entrée en cascade à chaque ouverture du menu, et petit fondu des onglets
+  const play = () => { menuEl.classList.remove('mIn'); void menuEl.offsetWidth; menuEl.classList.add('mIn'); };
+  new MutationObserver(() => { if (!menuEl.hidden) play(); }).observe(menuEl, { attributes: true, attributeFilter: ['hidden'] });
+  if (!menuEl.hidden) play();
+  const nav = menuEl.querySelector('.tabs');
+  if (nav) nav.addEventListener('click', e => { if (!e.target.closest('button')) return; setTimeout(() => { for (const p of menuEl.querySelectorAll('.tabpanel')) if (!p.hidden) { p.classList.remove('tIn'); void p.offsetWidth; p.classList.add('tIn'); } }, 0); });
+})();
+
+/* ================= Carte NÉO-DUNE : ville futuriste au milieu du désert, au coucher du soleil =================
+   La Flèche au centre (on la grimpe par une spirale de plateformes à tremplin, tyrolienne pour redescendre),
+   l'Arcologie en gradins, les Dômes et la ferme solaire, le Port des glisseurs, le Marché couvert, un monorail
+   en anneau, une oasis, et une tempête de sable qui balaie la ville. */
+Object.assign(PAL, { sand: 0xd8b07a, sandstone: 0xc9935e, neo: 0xe9e5dc, neodark: 0x3a4250, glassb: 0x4a7a9a, solar: 0x1e2c4a, copper: 0xb8743a });
+Object.assign(SURF_OF, { sand: 'sand', sandstone: 'stone', neo: 'concrete', neodark: 'metal', glassb: 'metal', solar: 'metal', copper: 'metal' });
+GROUND_OF.desert = 'sand'; CLOUDS_OF.desert = 0.18;
+Object.assign(I18N.fr, { 'map.desert': '🏜 Néo-Dune (ville du désert)' });
+Object.assign(I18N.en, { 'map.desert': '🏜 Neo-Dune (desert city)' });
+const DES_SPAWNS = [[0, 0, 40, 3.14], [40, 0, 0, 1.57], [-40, 0, 0, -1.57], [0, 0, -40, 0], [70, 0, 70, 2.4], [-70, 0, 70, -2.4], [70, 0, -70, 0.8], [-70, 0, -70, -0.8], [95, 0, 10, 1.57], [-95, 0, -10, -1.57]];
+const DES_DUMMIES = [[0, 0, 24, 'jump'], [26, 0, 26, 'strafe', 'x'], [-26, 0, 26, 'circle'], [60, 0, -40, 'static'], [-60, 0, -50, 'strafe', 'z'], [55, 0, 60, 'jump'], [-62, 12.2, 62, 'static'], [0, 65.5, 0, 'static']];
+const DES = { dust: null, holo: [], beacons: [] };
+function buildDesert() {
+  const W = 120;
+  for (const [x, z, sx, sz] of [[0, -W, 2 * W + 4, 4], [0, W, 2 * W + 4, 4], [-W, 0, 4, 2 * W], [W, 0, 4, 2 * W]]) box(x, z, sx, sz, 0, 16, 'sandstone');
+  let seed = 4321; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const neon = (x, y, z, sx, sy, sz, col) => deco3(new THREE.BoxGeometry(sx, sy, sz), col, x, y, z, { basic: true });
+  const NEON = [0x3ae8ff, 0xff4ad8, 0xffb020, 0x7a5aff];
+  // ---------- La Flèche ----------
+  box(0, 0, 8, 8, 0, 64, 'w-neo'); box(0, 0, 15, 15, 64, 1.5, 'neo');
+  for (const [sx, sz] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) neon(sx * 4.05, 32, sz * 4.05, 0.25, 64, 0.25, 0x3ae8ff);
+  deco3(new THREE.ConeGeometry(4, 22, 4), 0xe9e5dc, 0, 76.5, 0, { rot: [0, Math.PI / 4, 0] }); neon(0, 88, 0, 0.4, 2.5, 0.4, 0xff4ad8);
+  const ring = deco3(new THREE.TorusGeometry(9.5, 0.25, 6, 48), 0x3ae8ff, 0, 66.2, 0, { basic: true, rot: [Math.PI / 2, 0, 0] }); DES.holo.push({ m: ring, s: 0.3 });
+  const sign = textSprite('NÉO-DUNE', '#3ae8ff', 3.2, 'rgba(0,10,20,.35)'); sign.position.set(0, 52, 4.6); mapRoot.add(sign);
+  // spirale de plateformes avec tremplins (chaque tremplin envoie ~6 m plus haut)
+  for (let k = 0; k < 13; k++) {
+    const a = k * 0.9 + 0.4, r = 9.5, x = Math.cos(a) * r, z = Math.sin(a) * r, y = 5 * k;
+    if (k > 0) box(x, z, 4.2, 4.2, y - 0.8, 0.8, 'neodark');
+    pad(x, k > 0 ? y : 0, z);
+    neon(x, y - 0.85, z, 4.3, 0.12, 4.3, NEON[k % 4]);
+  }
+  zipline(5, 66, 5, 70, 3, 70);
+  // ---------- l'oasis autour de la Flèche ----------
+  const pool = deco3(new THREE.RingGeometry(12, 22, 48), 0x2a9aa8, 0, 0.05, 0, { basic: true, op: 0.75, rot: [-Math.PI / 2, 0, 0] }); pool.receiveShadow = false;
+  deco3(new THREE.RingGeometry(22, 23.2, 48), 0xe9e5dc, 0, 0.07, 0, { rot: [-Math.PI / 2, 0, 0] });
+  const palm = (x, z, h) => { deco3(new THREE.CylinderGeometry(0.22, 0.34, h, 7), 0x8a6a4a, x, h / 2, z, { rot: [0.08, 0, 0.06] }); for (let i = 0; i < 6; i++) deco3(new THREE.ConeGeometry(0.6, 4.2, 4), 0x3a8a4a, x + Math.cos(i) * 1.6, h + 0.2, z + Math.sin(i) * 1.6, { rot: [Math.cos(i) * 1.2, 0, Math.sin(i) * 1.2] }); };
+  for (let i = 0; i < 10; i++) { const a = i / 10 * Math.PI * 2 + 0.2; palm(Math.cos(a) * 26, Math.sin(a) * 26, 6 + rnd() * 3); }
+  // ---------- NO : l'Arcologie (gradins) et passerelles ----------
+  const tiers = (cx, cz, s, n, key) => { for (let i = 0; i < n; i++) { const w = s - i * 5; box(cx, cz, w, w, i * 7, 7, i % 2 ? 'neo' : key); neon(cx, i * 7 + 7.05, cz, w + 0.3, 0.12, w + 0.3, NEON[(i + 1) % 4]); } };
+  tiers(-62, -62, 30, 4, 'w-neo'); tiers(-88, -24, 20, 3, 'w-neodark'); tiers(-28, -92, 20, 3, 'w-neodark');
+  ramp(-82, -77, -48, -40, 'x', 1, 0, 7); ramp(-46, -40, -82, -77, 'z', 1, 0, 7);
+  box(-75, -43, 4, 18, 14, 0.8, 'neodark'); box(-43, -75, 18, 4, 14, 0.8, 'neodark');
+  zipline(-62, 29, -62, -20, 2, -20);
+  // ---------- NE : les Dômes et la ferme solaire ----------
+  const dome = (x, z, r, col) => { box(x, z, r * 1.5, r * 1.5, 0, r * 0.55, 'neo'); deco3(new THREE.SphereGeometry(r, 28, 14, 0, Math.PI * 2, 0, Math.PI / 2), col, x, r * 0.55 - 0.2, z, { op: 0.55, basic: true }); neon(x, r * 0.55 + 0.05, z, r * 1.52, 0.1, r * 1.52, 0xffb020); };
+  dome(62, -62, 12, 0x9ad8ff); dome(90, -30, 8, 0xffc8a0); dome(34, -92, 7, 0xb0ffd8);
+  for (let i = 0; i < 5; i++) for (let j = 0; j < 4; j++) { const x = 56 + i * 9, z = -10 - j * 9; if (x > 105) continue; box(x, z, 6, 3.4, 0, 1.2, 'neodark'); deco3(new THREE.BoxGeometry(6.4, 0.12, 3.8), 0x1e2c4a, x, 2.1, z, { rot: [-0.45, 0, 0] }); }
+  ramp(68, 74, -50, -44, 'x', 1, 0, 6.6);
+  // ---------- SE : le Port des glisseurs ----------
+  for (const [x, z] of [[62, 62], [92, 40], [40, 94]]) { box(x, z, 14, 14, 0, 2.2, 'neodark'); deco3(new THREE.RingGeometry(4, 5.2, 32), 0xffb020, x, 2.25, z, { basic: true, rot: [-Math.PI / 2, 0, 0] }); for (let i = 0; i < 8; i++) { const a = i / 8 * 6.283; neon(x + Math.cos(a) * 6.6, 2.3, z + Math.sin(a) * 6.6, 0.4, 0.15, 0.4, 0x3ae8ff); } }
+  for (const [x, z] of [[62, 62]]) ramp(x - 7, x - 1, z + 7, z + 11, 'z', -1, 0, 2.2);
+  ramp(85, 91, 47, 53, 'z', -1, 0, 2.2); ramp(33, 39, 87, 93, 'x', 1, 0, 2.2);
+  const cont = ['c-teal', 'c-rust', 'c-navy', 'c-red'];
+  for (let i = 0; i < 12; i++) { const x = 30 + rnd() * 70, z = 30 + rnd() * 70; if (Math.hypot(x - 62, z - 62) < 11 || Math.hypot(x - 92, z - 40) < 10 || Math.hypot(x - 40, z - 94) < 10) continue; const rot = rnd() < 0.5; box(x, z, rot ? 6 : 2.6, rot ? 2.6 : 6, 0, 2.6, cont[i % 4]); if (rnd() < 0.35) box(x, z, rot ? 6 : 2.6, rot ? 2.6 : 6, 2.6, 2.6, cont[(i + 1) % 4]); }
+  // glisseur échoué
+  box(78, 82, 10, 4, 0, 2.4, 'neo'); deco3(new THREE.ConeGeometry(2, 6, 4), 0xe9e5dc, 85.5, 1.2, 82, { rot: [0, 0, -Math.PI / 2] }); neon(78, 2.45, 82, 10.2, 0.1, 0.3, 0xff4ad8);
+  // ---------- SO : le Marché couvert ----------
+  const shop = (x, z, w, d, h, cl) => { box(x, z, w, d, 0, h, 'sandstone'); deco3(new THREE.PlaneGeometry(w + 2, 3), cl, x, h - 0.6, z + d / 2 + 1.2, { rot: [-1.1, 0, 0], noShadow: true }); };
+  const cls = [0xc8382e, 0x2e6ac8, 0xd8a02a, 0x2a9a6a, 0x8a3ac8];
+  for (let i = 0; i < 5; i++) { shop(-40 - i * 13, 40, 10, 8, 5 + (i % 2) * 2, cls[i]); shop(-40 - i * 13, 72, 10, 8, 6 - (i % 2), cls[(i + 2) % 5]); }
+  for (let i = 0; i < 4; i++) { box(-46 - i * 13, 56, 1.2, 1.2, 0, 6, 'sandstone'); box(-40 - i * 13 - 6.5, 56, 1.2, 1.2, 0, 6, 'sandstone'); box(-43 - i * 13, 56, 7.4, 1.2, 6, 1, 'sandstone'); }
+  box(-62, 86, 22, 10, 0, 12, 'w-sandstone'); ramp(-76, -73, 80, 92, 'z', -1, 0, 12);
+  for (let i = 0; i < 6; i++) { const s = textSprite(['ÉPICES', 'NÉONS', 'PIÈCES', 'EAU', 'CRISTAUX', 'CARTES'][i], ['#ffb020', '#3ae8ff', '#ff4ad8', '#7affc8', '#c8a0ff', '#ffe08a'][i], 0.9); s.position.set(-40 - (i % 5) * 13, 6.8, 44.6 + (i > 4 ? 28 : 0)); mapRoot.add(s); }
+  // ---------- monorail en anneau (on peut courir dessus) ----------
+  const RR = 104, N = 40;
+  for (let i = 0; i < N; i++) {
+    const a = i / N * Math.PI * 2, x = Math.cos(a) * RR, z = Math.sin(a) * RR;
+    if (i % 4 === 0) box(x, z, 1.6, 1.6, 0, 9, 'neodark');
+  }
+  // l'anneau est fait de segments droits alignés sur les axes (collisions en boîtes) : quatre longues travées
+  box(0, -RR, 150, 4, 9, 0.8, 'neo'); box(0, RR, 150, 4, 9, 0.8, 'neo'); box(-RR, 0, 4, 150, 9, 0.8, 'neo'); box(RR, 0, 4, 150, 9, 0.8, 'neo');
+  for (const [x, z, sx, sz] of [[0, -RR, 150, 0.25], [0, RR, 150, 0.25], [-RR, 0, 0.25, 150], [RR, 0, 0.25, 150]]) neon(x, 9.85, z, sx, 0.1, sz, 0x3ae8ff);
+  ramp(-12, 12, -RR + 2, -RR + 10, 'z', -1, 0, 9); ramp(RR - 10, RR - 2, -12, 12, 'x', -1, 0, 9);
+  zipline(RR, 10.2, 20, 62, 3, 62);
+  // ---------- décor lointain : mer de dunes et silhouettes de tours ----------
+  for (let i = 0; i < 26; i++) { const a = i / 26 * 6.283 + rnd() * 0.2, r = 170 + rnd() * 120, s = 30 + rnd() * 40; deco3(new THREE.SphereGeometry(1, 18, 8, 0, Math.PI * 2, 0, Math.PI / 2), 0xc89a5a, Math.cos(a) * r, -2, Math.sin(a) * r, { sc: [s * 1.8, s * 0.35, s], rot: [0, a, 0], noShadow: true }); }
+  for (let i = 0; i < 14; i++) { const a = i / 14 * 6.283 + 0.3, r = 260 + rnd() * 80, h = 40 + rnd() * 90; deco3(new THREE.BoxGeometry(10 + rnd() * 12, h, 10 + rnd() * 12), 0x5a4a6a, Math.cos(a) * r, h / 2, Math.sin(a) * r, { noShadow: true }); neon(Math.cos(a) * r, h + 0.5, Math.sin(a) * r, 2, 1, 2, NEON[i % 4]); }
+  // balises qui clignotent sur les toits
+  for (const [x, y, z] of [[0, 89.5, 0], [-62, 28.2, -62], [62, 7.2, -62], [-62, 12.2, 86]]) { const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xff3a3a, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending })); s.position.set(x, y, z); s.scale.setScalar(4); mapRoot.add(s); DES.beacons.push(s); }
+  // tempête de sable : grains qui filent dans le vent
+  const n = (typeof LOWEND !== 'undefined' && LOWEND) ? 900 : 2200, pos = new Float32Array(n * 3);
+  for (let i = 0; i < n; i++) { pos[i * 3] = (Math.random() - 0.5) * 260; pos[i * 3 + 1] = Math.random() * 30; pos[i * 3 + 2] = (Math.random() - 0.5) * 260; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  DES.dust = new THREE.Points(g, new THREE.PointsMaterial({ color: 0xe8c08a, size: 0.18, transparent: true, opacity: 0.55, depthWrite: false })); DES.dust.frustumCulled = false; mapRoot.add(DES.dust);
+  MAP_TICK = desertTick;
+}
+function desertTick(dt) {
+  const t = performance.now() / 1000;
+  if (DES.dust && DES.dust.parent) {
+    const a = DES.dust.geometry.attributes.position, p = a.array, gust = 1 + 0.6 * Math.sin(t * 0.3);
+    for (let i = 0; i < p.length; i += 3) { p[i] += (14 * gust + Math.sin(t + i) * 2) * dt; p[i + 1] += Math.sin(t * 2 + i * 0.1) * 0.6 * dt; p[i + 2] += 3 * dt; if (p[i] > 130) { p[i] = -130; p[i + 1] = Math.random() * 30; } if (p[i + 2] > 130) p[i + 2] = -130; }
+    a.needsUpdate = true; DES.dust.position.set(camera.position.x * 0, 0, 0);
+  }
+  for (const h of DES.holo) if (h.m.parent) h.m.rotation.z += h.s * dt;
+  const on = Math.sin(t * 3) > 0.2; for (const b of DES.beacons) b.material.opacity = on ? 1 : 0.15;
+  // succès caché : le sommet de la Flèche
+  if (playing && !P.dead && P.pos.y > 65 && Math.abs(P.pos.x) < 8 && Math.abs(P.pos.z) < 8) { try { questEv('summit'); } catch (e) {} }
+}
+MAPS.desert = {
+  build: buildDesert, lim: 117.6, spawns: DES_SPAWNS, dummies: DES_DUMMIES,
+  theme: { top: 0x2a1a4a, mid: 0x9a4a5a, hor: 0xffa060, fog: 0xd8946a, fogFar: 460, hemiSky: 0xffd0b0, hemiGround: 0x8a5a3a, hemiI: 0.78, sun: 0xffc08a, sunI: 1.3, sunDir: [-0.72, 0.26, 0.42], ground: 0xd6a86a, clouds: 0.18, night: 0.12 }
+};
+{ // dans la liste des cartes, après la Banquise
+  const sel = $('mapSel');
+  if (sel && !sel.querySelector('option[value="desert"]')) { const o = document.createElement('option'); o.value = 'desert'; o.dataset.i18n = 'map.desert'; o.textContent = t('map.desert'); const after = sel.querySelector('option[value="arctic"]'); if (after && after.nextSibling) sel.insertBefore(o, after.nextSibling); else sel.appendChild(o); }
+}
 
 // badge Nécropolis dans le menu quand la carte est choisie
 (function () {
