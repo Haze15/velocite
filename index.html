@@ -6183,6 +6183,7 @@ function showStack(t, dealt, kind) {
   t.el.firstChild.animate([{ transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 140, easing: 'ease-out' });
 }
 function damageDummy(d, amount, part) {
+  if (amount > 0 && d.g) try { goreBurst(_p.set(d.g.position.x, d.g.position.y + (part === 'head' ? 1.7 : 1.1), d.g.position.z), part === 'head' ? 14 : 8, 1); } catch (e) {}
   if (part === 'head' && d.alive) questEv('head');
   const shBefore = d.sh;
   const toSh = Math.min(d.sh, amount); d.sh -= toSh;
@@ -6201,6 +6202,7 @@ function damageDummy(d, amount, part) {
   return part === 'head' ? 'head' : 'hit';
 }
 function damageRemote(rp, amount, part) {
+  if (amount > 0 && rp.g) try { goreBurst(_p.set(rp.g.position.x, rp.g.position.y + (part === 'head' ? 1.7 : 1.1), rp.g.position.z), part === 'head' ? 14 : 8, 1); } catch (e) {}
   // prédiction locale : le joueur visé applique les vrais dégâts de son côté
   const st = rp.st; if (!st) return 'hit';
   if (sameSide(rp)) return 'hit';
@@ -10369,11 +10371,12 @@ function musicStart() {
 }
 // un peu plus basse en jeu que dans le menu, coupée avec la touche muet
 function musicTick(dt) {
-  const target = muted || document.hidden ? 0 : S.music * (playing ? 0.55 : 1);
+  const target = muted || document.hidden || horDuck() ? 0 : S.music * (playing ? 0.55 : 1);
   MUSIC.vol += (target - MUSIC.vol) * (1 - Math.exp(-3 * dt));
   try { MUSIC.el.volume = clamp(MUSIC.vol, 0, 1); } catch (e) {}
   if (S.music <= 0 && !MUSIC.el.paused && MUSIC.vol < 0.01) MUSIC.el.pause();
-  else if (S.music > 0 && MUSIC.started && MUSIC.el.paused && !document.hidden) MUSIC.el.play().catch(() => {});
+  else if (S.music > 0 && MUSIC.started && MUSIC.el.paused && !document.hidden && !horDuck()) MUSIC.el.play().catch(() => {});
+  horTick(dt);
 }
 // musique importée : gardée dans le navigateur (IndexedDB), jamais envoyée en ligne
 function musicDb(fn) {
@@ -10901,10 +10904,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.13';
+const GAME_VERSION = '2026.11.14';
 const CHANGES = {
-  fr: ['Le Rôdeur a son vrai modèle 3D animé (marche, course, attaque, escalade) : « Country Road Creature Rig » de NO DONT EAT ME CASEOH, licence CC BY 4.0', 'Nécropolis : le Rôdeur, une créature immense qui rôde dans la ville, entend les coups de feu, sprinte à 27 m/s, grimpe aux façades jusqu’aux toits et frappe fort ; il fuit quand il est blessé, puis revient (en ligne, l’hôte le dirige)', 'Nouvelle carte : Nécropolis, une immense ville morte d’un seul tenant (600 m de côté) — centre-ville de gratte-ciel, quartier industriel, quartier résidentiel, deux quartiers commerçants et un métro sous les avenues qui relie tout, sans aucun chargement entre les quartiers', 'Vrais modèles 3D libres de droits (CC0) : immeubles, maisons, usines, voitures, camions, conteneurs, lampadaires, feux, barrières, mobilier, arbres morts (packs Kenney et Quaternius), salis et brûlés par le jeu', 'Bâtiments où l’on entre : tours Orion (11 étages, héliport) et Vega (sommet effondré) reliées par une passerelle au 5e étage, Hôtel Royal, Cité des Lilas, galerie marchande sur deux niveaux avec escalators, parking à étages, usine avec passerelles, entrepôt, station-service, diner, pharmacie, épicerie, laverie', 'Sous terre : 5 stations de métro, des tunnels à parcourir à pied, des rames à l’arrêt ou déraillées, deux parkings souterrains et un abri secret derrière des planches', 'Destruction : les vitres se brisent (on entre dans les boutiques en tirant dans la vitrine), barils rouges explosifs en chaîne, cônes, poubelles et cartons qu’on renverse, planches à casser, enseignes qui tombent ; tout est partagé en ligne', 'Météo qui change toute seule (couvert, brouillard, pluie, orage avec éclairs et tonnerre, bruine), vent, fumées d’incendie, braises, cendres qui tombent, flaques qui reflètent la ville, néons qui grésillent, lampes qui vacillent', 'Missions : découvrir 30 lieux, rallumer 3 groupes électrogènes pour rendre le courant à toute la ville, envoyer le signal radio du toit de la Tour Orion (un hélicoptère répond), trouver 18 caisses de ravitaillement', 'Événements : explosions de gaz, chutes de débris, alarmes de voiture, hélicoptère qui survole la ville', 'Vue à la 3e personne façon jeu d’action (K) sur Nécropolis, missions (O), logo, écran de chargement et intro cinématique', 'Appli Windows : les sons d’armes et les masques manquaient, ils sont maintenant inclus', 'Ballons de redéploiement façon Apex sur toutes les cartes : E (ou saut dans l’anneau bleu) = propulsé à 50 m, puis chute libre planée (regarde vers le bas pour piquer, vers le haut pour freiner)', 'Canons gravitationnels sur toutes les cartes : entre dans l’anneau violet, tu es projeté en cloche jusqu’au toit visé (la trajectoire est dessinée en pointillés)', 'Lurch : juste après un saut, change de direction pour rediriger ton élan', 'Marquage (ping) : clic molette ou B — repère un ennemi (rouge) ou un endroit (ambre), visible par tous les joueurs avec la distance', 'Toutes les cartes retouchées : particules d’ambiance (poussière, braises, neige, feuilles, lucioles, embruns, paillettes, poussière lunaire), lampadaires sur les cartes de nuit et décor en plus selon la carte (champignons, rondins, bonshommes de neige, caisses, bouées, mares de lave…)', 'Nouvelle carte : la Lune ! Gravité réduite (sauts presque 3 fois plus hauts, grenades en cloche), cratères, base lunaire, atterrisseur, la Terre dans le ciel étoilé', 'Nouvelle carte secrète sous l’eau : à toi de trouver comment y descendre… On y nage (saut maintenu : remonter, accroupi : plonger) entre épave, ruines, algues, coraux et bulles', 'Labo de test réservé au propriétaire : couloir de tir gradué tous les 10 m avec robots, murs d’escalade de 2 à 8 m, couloir de wall-jump, rampes de 15 à 45°, sauts en longueur de 3 à 9 m, tremplins et tyrolienne', 'Choix du micro pour le vocal de proximité (Réglages → Micro), changement à chaud, retour au micro par défaut s’il est débranché', 'Enchaînements de kills : Double, Triple, Quadra, Penta kill, Carnage, et séries (En série, Déchaîné, Inarrêtable, Divin, Légendaire) avec jingle, grande bannière et voix d’annonce (désactivable) ; nouvelle quête « Carnage »', 'Easter egg : une carte secrète à découvrir… (indice : un vieux code de jeux vidéo, ou 7 touchers sur le titre)', 'Optimisation : fuite de mémoire graphique corrigée (elle grossissait à chaque changement de carte), personnages hors champ plus dessinés, ombres des robots lointains et des petits objets coupées : jusqu’à 50 % d’appels de dessin en moins', 'Nouveaux sons d’armes : de vrais coups de feu (claquement, souffle, mécanique, écho dans le décor) pour la carabine, la mitraillette, le pompe, le sniper, le pistolet, le revolver, la mitrailleuse et la minigun, 3 variantes chacun pour ne jamais sonner pareil', 'Réglage « Sons personnalisés » retiré', 'Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['The Stalker now has its real animated 3D model (walk, run, attack, climb): “Country Road Creature Rig” by NO DONT EAT ME CASEOH, CC BY 4.0', 'Necropolis: the Stalker, a huge creature roaming the city; it hears gunshots, sprints at 27 m/s, climbs facades up to the roofs and hits hard; it flees when hurt, then comes back (the host drives it online)', 'New map: Necropolis, a huge seamless dead city (600 m across) — downtown skyscrapers, industrial zone, residential district, two shopping districts and a metro under the avenues linking everything, with no loading between districts', 'Real free (CC0) 3D models: buildings, houses, factories, cars, trucks, containers, street lights, traffic lights, barriers, furniture, dead trees (Kenney and Quaternius packs), dirtied and burnt by the game', 'Buildings you can enter: Orion (11 floors, helipad) and Vega (collapsed top) towers linked by a sky bridge, Hôtel Royal, an apartment block, a two-level mall with escalators, a parking garage, a factory with catwalks, a warehouse, a gas station, a diner and shops', 'Underground: 5 metro stations, tunnels to walk, stopped or derailed trains, two underground car parks and a secret shelter behind planks', 'Destruction: glass shatters (shoot a shop window to get in), chain-reacting red barrels, cones, bins and boxes you knock over, planks to break, falling signs; all shared online', 'Changing weather (overcast, fog, rain, thunderstorm with lightning, drizzle), wind, fire smoke, embers, falling ash, puddles reflecting the city, buzzing neon, flickering lamps', 'Missions: discover 30 places, restart 3 generators to bring power back, send the radio signal from the Orion Tower roof (a helicopter answers), find 18 supply crates', 'Events: gas explosions, falling debris, car alarms, helicopter flyovers', 'Action-game third-person view (K) on Necropolis, missions (O), logo, loading screen and cinematic intro', 'Windows app: weapon sounds and masks were missing, now included', 'Apex-style redeploy balloons on every map: E (or jump in the blue ring) = launched 50 m up, then a gliding skydive', 'Gravity cannons on every map: step in the purple ring to be thrown onto a rooftop (dotted arc shows the path)', 'Lurch: right after a jump, change direction to redirect your momentum', 'Ping: middle click or B marks an enemy (red) or a spot (amber) for everyone, with distance', 'Every map reworked: ambient particles, night lamps and extra themed props', 'New map: the Moon! Low gravity, craters, moon base, lander, Earth in the starry sky', 'New secret underwater map: find how to get down there… You swim (hold jump: up, crouch: dive)', 'Owner-only test lab: shooting lane marked every 10 m, climb walls 2–8 m, wall-jump corridor, 15–45° ramps, 3–9 m long jumps', 'Microphone picker for proximity voice chat (Settings → Microphone)', 'Kill streaks: Double, Triple, Quadra, Penta kill, Carnage and sprees with jingle, banner and announcer voice (can be turned off); new « Carnage » quest', 'Easter egg: a secret map to discover… (hint: an old video game code, or 7 taps on the title)', 'Optimization: graphics memory leak fixed, off-screen characters culled, fewer shadows for far robots and small props: up to 50% fewer draw calls', 'New weapon sounds: real-sounding gunshots (crack, blast, action, echo) for every gun, 3 variants each', 'Custom sounds setting removed', 'Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Horreur dans Nécropolis : le Rôdeur ne te repère plus instantanément — il s’arrête, te fixe, rugit, puis charge ; ses coups se voient venir et il ne te traque plus à travers les murs', 'Gore : giclées de sang quand on touche le Rôdeur ou un joueur, flaques au sol, sang sur l’écran quand on est blessé et bords rouges quand la vie est basse', 'Jump scare : quand le Rôdeur t’attrape, son visage surgit en plein écran avec un hurlement créé pour le jeu', 'Musiques : ambiance dans Nécropolis et la Ville fantôme, musique de poursuite quand le Rôdeur te chasse', 'Plus il approche, plus l’image et le son grésillent, et les lampes autour de lui s’éteignent', 'Brouillard plus épais et cônes de lumière sous les lampadaires', 'Le Rôdeur a son vrai modèle 3D animé (marche, course, attaque, escalade) : « Country Road Creature Rig » de NO DONT EAT ME CASEOH, licence CC BY 4.0', 'Nécropolis : le Rôdeur, une créature immense qui rôde dans la ville, entend les coups de feu, sprinte à 27 m/s, grimpe aux façades jusqu’aux toits et frappe fort ; il fuit quand il est blessé, puis revient (en ligne, l’hôte le dirige)', 'Nouvelle carte : Nécropolis, une immense ville morte d’un seul tenant (600 m de côté) — centre-ville de gratte-ciel, quartier industriel, quartier résidentiel, deux quartiers commerçants et un métro sous les avenues qui relie tout, sans aucun chargement entre les quartiers', 'Vrais modèles 3D libres de droits (CC0) : immeubles, maisons, usines, voitures, camions, conteneurs, lampadaires, feux, barrières, mobilier, arbres morts (packs Kenney et Quaternius), salis et brûlés par le jeu', 'Bâtiments où l’on entre : tours Orion (11 étages, héliport) et Vega (sommet effondré) reliées par une passerelle au 5e étage, Hôtel Royal, Cité des Lilas, galerie marchande sur deux niveaux avec escalators, parking à étages, usine avec passerelles, entrepôt, station-service, diner, pharmacie, épicerie, laverie', 'Sous terre : 5 stations de métro, des tunnels à parcourir à pied, des rames à l’arrêt ou déraillées, deux parkings souterrains et un abri secret derrière des planches', 'Destruction : les vitres se brisent (on entre dans les boutiques en tirant dans la vitrine), barils rouges explosifs en chaîne, cônes, poubelles et cartons qu’on renverse, planches à casser, enseignes qui tombent ; tout est partagé en ligne', 'Météo qui change toute seule (couvert, brouillard, pluie, orage avec éclairs et tonnerre, bruine), vent, fumées d’incendie, braises, cendres qui tombent, flaques qui reflètent la ville, néons qui grésillent, lampes qui vacillent', 'Missions : découvrir 30 lieux, rallumer 3 groupes électrogènes pour rendre le courant à toute la ville, envoyer le signal radio du toit de la Tour Orion (un hélicoptère répond), trouver 18 caisses de ravitaillement', 'Événements : explosions de gaz, chutes de débris, alarmes de voiture, hélicoptère qui survole la ville', 'Vue à la 3e personne façon jeu d’action (K) sur Nécropolis, missions (O), logo, écran de chargement et intro cinématique', 'Appli Windows : les sons d’armes et les masques manquaient, ils sont maintenant inclus', 'Ballons de redéploiement façon Apex sur toutes les cartes : E (ou saut dans l’anneau bleu) = propulsé à 50 m, puis chute libre planée (regarde vers le bas pour piquer, vers le haut pour freiner)', 'Canons gravitationnels sur toutes les cartes : entre dans l’anneau violet, tu es projeté en cloche jusqu’au toit visé (la trajectoire est dessinée en pointillés)', 'Lurch : juste après un saut, change de direction pour rediriger ton élan', 'Marquage (ping) : clic molette ou B — repère un ennemi (rouge) ou un endroit (ambre), visible par tous les joueurs avec la distance', 'Toutes les cartes retouchées : particules d’ambiance (poussière, braises, neige, feuilles, lucioles, embruns, paillettes, poussière lunaire), lampadaires sur les cartes de nuit et décor en plus selon la carte (champignons, rondins, bonshommes de neige, caisses, bouées, mares de lave…)', 'Nouvelle carte : la Lune ! Gravité réduite (sauts presque 3 fois plus hauts, grenades en cloche), cratères, base lunaire, atterrisseur, la Terre dans le ciel étoilé', 'Nouvelle carte secrète sous l’eau : à toi de trouver comment y descendre… On y nage (saut maintenu : remonter, accroupi : plonger) entre épave, ruines, algues, coraux et bulles', 'Labo de test réservé au propriétaire : couloir de tir gradué tous les 10 m avec robots, murs d’escalade de 2 à 8 m, couloir de wall-jump, rampes de 15 à 45°, sauts en longueur de 3 à 9 m, tremplins et tyrolienne', 'Choix du micro pour le vocal de proximité (Réglages → Micro), changement à chaud, retour au micro par défaut s’il est débranché', 'Enchaînements de kills : Double, Triple, Quadra, Penta kill, Carnage, et séries (En série, Déchaîné, Inarrêtable, Divin, Légendaire) avec jingle, grande bannière et voix d’annonce (désactivable) ; nouvelle quête « Carnage »', 'Easter egg : une carte secrète à découvrir… (indice : un vieux code de jeux vidéo, ou 7 touchers sur le titre)', 'Optimisation : fuite de mémoire graphique corrigée (elle grossissait à chaque changement de carte), personnages hors champ plus dessinés, ombres des robots lointains et des petits objets coupées : jusqu’à 50 % d’appels de dessin en moins', 'Nouveaux sons d’armes : de vrais coups de feu (claquement, souffle, mécanique, écho dans le décor) pour la carabine, la mitraillette, le pompe, le sniper, le pistolet, le revolver, la mitrailleuse et la minigun, 3 variantes chacun pour ne jamais sonner pareil', 'Réglage « Sons personnalisés » retiré', 'Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Horror in Necropolis: the Stalker no longer spots you instantly — it stops, stares, roars, then charges; its strikes are telegraphed and it no longer tracks you through walls', 'Gore: blood sprays when you hit the Stalker or a player, pools on the ground, blood on the screen when you are hurt and red edges at low health', 'Jump scare: when the Stalker catches you, its face fills the screen with a scream made for the game', 'Music: ambience in Necropolis and the Ghost Town, chase music when the Stalker hunts you', 'The closer it gets, the more the picture and sound crackle, and lamps around it go out', 'Thicker fog and light cones under the street lamps', 'The Stalker now has its real animated 3D model (walk, run, attack, climb): “Country Road Creature Rig” by NO DONT EAT ME CASEOH, CC BY 4.0', 'Necropolis: the Stalker, a huge creature roaming the city; it hears gunshots, sprints at 27 m/s, climbs facades up to the roofs and hits hard; it flees when hurt, then comes back (the host drives it online)', 'New map: Necropolis, a huge seamless dead city (600 m across) — downtown skyscrapers, industrial zone, residential district, two shopping districts and a metro under the avenues linking everything, with no loading between districts', 'Real free (CC0) 3D models: buildings, houses, factories, cars, trucks, containers, street lights, traffic lights, barriers, furniture, dead trees (Kenney and Quaternius packs), dirtied and burnt by the game', 'Buildings you can enter: Orion (11 floors, helipad) and Vega (collapsed top) towers linked by a sky bridge, Hôtel Royal, an apartment block, a two-level mall with escalators, a parking garage, a factory with catwalks, a warehouse, a gas station, a diner and shops', 'Underground: 5 metro stations, tunnels to walk, stopped or derailed trains, two underground car parks and a secret shelter behind planks', 'Destruction: glass shatters (shoot a shop window to get in), chain-reacting red barrels, cones, bins and boxes you knock over, planks to break, falling signs; all shared online', 'Changing weather (overcast, fog, rain, thunderstorm with lightning, drizzle), wind, fire smoke, embers, falling ash, puddles reflecting the city, buzzing neon, flickering lamps', 'Missions: discover 30 places, restart 3 generators to bring power back, send the radio signal from the Orion Tower roof (a helicopter answers), find 18 supply crates', 'Events: gas explosions, falling debris, car alarms, helicopter flyovers', 'Action-game third-person view (K) on Necropolis, missions (O), logo, loading screen and cinematic intro', 'Windows app: weapon sounds and masks were missing, now included', 'Apex-style redeploy balloons on every map: E (or jump in the blue ring) = launched 50 m up, then a gliding skydive', 'Gravity cannons on every map: step in the purple ring to be thrown onto a rooftop (dotted arc shows the path)', 'Lurch: right after a jump, change direction to redirect your momentum', 'Ping: middle click or B marks an enemy (red) or a spot (amber) for everyone, with distance', 'Every map reworked: ambient particles, night lamps and extra themed props', 'New map: the Moon! Low gravity, craters, moon base, lander, Earth in the starry sky', 'New secret underwater map: find how to get down there… You swim (hold jump: up, crouch: dive)', 'Owner-only test lab: shooting lane marked every 10 m, climb walls 2–8 m, wall-jump corridor, 15–45° ramps, 3–9 m long jumps', 'Microphone picker for proximity voice chat (Settings → Microphone)', 'Kill streaks: Double, Triple, Quadra, Penta kill, Carnage and sprees with jingle, banner and announcer voice (can be turned off); new « Carnage » quest', 'Easter egg: a secret map to discover… (hint: an old video game code, or 7 taps on the title)', 'Optimization: graphics memory leak fixed, off-screen characters culled, fewer shadows for far robots and small props: up to 50% fewer draw calls', 'New weapon sounds: real-sounding gunshots (crack, blast, action, echo) for every gun, 3 variants each', 'Custom sounds setting removed', 'Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -13985,7 +13988,8 @@ function cityLightsTick(dt, t) {
     const want = i > 0.5 ? S2.on : S2.off; if (S2.mesh.material.map !== want) { S2.mesh.material.map = want; S2.mesh.material.needsUpdate = true; }
   }
   const col = CFX.glow.geometry.attributes.color, cx = camera.position.x, cy = camera.position.y, cz = camera.position.z;
-  for (let k = 0; k < CITY.lamps.length; k++) { const L = CITY.lamps[k]; const i = cLampI(L, t); L.i = i; col.setXYZ(k, L.c.r * i, L.c.g * i, L.c.b * i); }
+  const cg = CRT.on && CRT.g && CRT.g.visible;
+  for (let k = 0; k < CITY.lamps.length; k++) { const L = CITY.lamps[k]; let i = cLampI(L, t); if (cg && Math.abs(L.p.x - CRT.pos.x) < 30 && Math.abs(L.p.z - CRT.pos.z) < 30) { const d = L.p.distanceTo(CRT.pos); if (d < 30 && Math.random() < 0.55 * (1 - d / 30)) i *= 0.04; } L.i = i; col.setXYZ(k, L.c.r * i, L.c.g * i, L.c.b * i); }
   col.needsUpdate = true;
   if ((CFX.acc += dt) > 0.2) {
     CFX.acc = 0;
@@ -14066,7 +14070,7 @@ function cityDecals() {
     const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
     mapRoot.add(new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x141414 })));
   }
-  if (S.quality !== 'low') for (const [h, sz, op] of [[CITY.SL + 1.4, 260, 0.22], [CITY.SL + 4.5, 340, 0.14]]) {
+  if (S.quality !== 'low') for (const [h, sz, op] of [[CITY.SL + 0.6, 200, 0.24], [CITY.SL + 1.8, 260, 0.22], [CITY.SL + 4.8, 340, 0.15]]) {
     const t = cDecal('fog').clone(); t.needsUpdate = true; t.repeat.set(sz / 90, sz / 90);
     const m = new THREE.Mesh(new THREE.PlaneGeometry(sz, sz), new THREE.MeshBasicMaterial({ map: t, color: 0x9a948c, transparent: true, opacity: op, depthWrite: false, fog: true }));
     m.rotation.x = -Math.PI / 2; m.position.y = h; m.renderOrder = 3; m.userData.base = op; mapRoot.add(m); CFX.fogL.push(m);
@@ -14517,7 +14521,7 @@ body.incity #cityMis{display:block}#cityMis.hide{display:none!important}
   const ob = document.createElement('div'); ob.id = 'cityObj'; ob.innerHTML = '<i></i><b></b><span></span>'; document.body.appendChild(ob);
   ld.addEventListener('pointerdown', () => { if (CITY.loaded) cityLoadDone(); });
 }
-const CITY_TIPS = () => [ctr('city.tip8'), ctr('city.tip1'), ctr('city.tip2'), ctr('city.tip3'), ctr('city.tip4'), ctr('city.tip5'), ctr('city.tip6'), ctr('city.tip7')];
+const CITY_TIPS = () => [ctr('city.tip9'), ctr('city.tip8'), ctr('city.tip1'), ctr('city.tip2'), ctr('city.tip3'), ctr('city.tip4'), ctr('city.tip5'), ctr('city.tip6'), ctr('city.tip7')];
 function cityLoadShow() {
   cityUI(); const ld = $('cityLoad'); ld.classList.remove('fade'); ld.classList.add('on');
   ld.querySelector('.st').textContent = ctr('city.loading'); ld.querySelector('.skip').textContent = '';
@@ -14592,12 +14596,12 @@ function buildCity() {
   cityStreets(); cityPerimeter(); cityPavements(); citySlab(); cityMarkings();
   // lierre et végétation sur quelques murs
   for (let i = 0; i < 70; i++) { const it = cpick(CITY.inst); if (!it || !it.bb || it.lay !== 'big' || it.bb[3] - it.bb[2] < 6) continue; const side = crnd() < 0.5, x = side ? it.bb[0] - 0.05 : crr(it.bb[0], it.bb[1]), z = side ? crr(it.bb[4], it.bb[5]) : it.bb[5] + 0.05; CITY.decals.push({ kind: 'ivy', x, z, s: 0, wall: [x, z, side, crr(3, 9), crr(2, 5)] }); }
-  cityGlassMesh(); cityBarricades(); citySigns(); cityInteractables(); citySmokes(); cityLights(); cityIvy(); cityDecals(); cityRain(); cityMapImage();
+  cityGlassMesh(); cityBarricades(); citySigns(); cityInteractables(); citySmokes(); cityLights(); cityIvy(); cityDecals(); cityRain(); cityMapImage(); try { cityCones(); } catch (e) { console.warn('cônes', e); }
   CITY.showObj = true;
   MAPS.city.spawns = CITY_SPAWNS;
   for (const v of [[4, SL, 40, 0], [-4, SL, -150, Math.PI], [150, SL, 4, -Math.PI / 2], [-150, SL, -4, Math.PI / 2], [180, SL, 90, 0, 'tank'], [-180, SL, 150, 0]]) VEH_SPAWNS.push(v);
   MAP_TICK = cityTick;
-  scene.fog.near = 18;
+  scene.fog.near = 8;
   document.body.classList.add('incity'); cityUI(); cityMisRender();
   if (CMOD.tpl) cityFinish(); else {
     cityLoadShow(); CITY.loaded = false;
@@ -14654,7 +14658,7 @@ Object.assign(AMB_DEF, { ash: { n: 520, col: 0xb8b2aa, size: 0.08, op: 0.6, v: [
 Object.assign(AMB_OF, { city: 'ash' }); Object.assign(GROUND_OF, { city: 'asphalt' }); Object.assign(CLOUDS_OF, { city: 0.86 });
 MAPS.city = {
   build: buildCity, lim: 292, noGround: true, vehicles: true, fx: cityFx, mm: cityMiniMap,
-  theme: { top: 0x23272c, mid: 0x4a4b4e, hor: 0x8a7462, fog: 0x5c5853, fogFar: 330, hemiSky: 0x9a9fa8, hemiGround: 0x34302c, hemiI: 0.72, sun: 0xffb48a, sunI: 0.66, sunDir: [0.55, 0.3, -0.42], ground: 0x3c3d3f, clouds: 0.86, night: 0.12 },
+  theme: { top: 0x23272c, mid: 0x4a4b4e, hor: 0x8a7462, fog: 0x56565a, fogFar: 300, hemiSky: 0x9a9fa8, hemiGround: 0x34302c, hemiI: 0.72, sun: 0xffb48a, sunI: 0.66, sunDir: [0.55, 0.3, -0.42], ground: 0x3c3d3f, clouds: 0.86, night: 0.12 },
   spawns: CITY_SPAWNS, dummies: [[40, 10.15, 26, 'static'], [6, 10.02, 30, 'strafe', 'z'], [31, 10.15 + 4.2, -26, 'static'], [-8, 1.1, -10, 'strafe', 'x'], [210, 10.15, -30, 'circle'], [32, 10.15, 150, 'strafe', 'z'], [-89, 10.15, -141, 'static'], [-151, 10.02, -6, 'jump'], [0, 10.02, -200, 'static']]
 };
 Object.assign(I18N.fr, {
@@ -14807,6 +14811,7 @@ function crtSees(p) {
 function crtHeard(p) { return CRT.lastShot && performance.now() - CRT.lastShot.t < 900 && CRT.pos.distanceTo(CRT.lastShot.p) < 130; }
 function crtNoise(p) { if (CRT.on) CRT.lastShot = { p: p.clone(), t: performance.now() }; }
 const crtRoar = snd((t0, v = 1) => { tn(t0, { f: 160, f2: 60, dur: 1.4, type: 'sawtooth', gain: 0.22 * v }); tn(t0, { f: 230, f2: 90, dur: 1.2, type: 'square', gain: 0.07 * v }); nz(t0, { dur: 1.3, f: 900, f2: 300, q: 1.5, gain: 0.32 * v }); });
+const crtGrowl = snd((t0, v = 1) => { tn(t0, { f: 85, f2: 70, dur: 1.1, type: 'sawtooth', gain: 0.12 * v }); nz(t0, { dur: 1.0, f: 300, q: 4, gain: 0.12 * v, f2: 220 }); });
 const crtStep = snd((t0, v = 1) => { tn(t0, { f: 70, f2: 35, dur: 0.12, type: 'sine', gain: 0.4 * v }); nz(t0, { dur: 0.08, f: 400, type: 'lowpass', q: 0.6, gain: 0.2 * v }); });
 const crtHitS = snd((t0, v = 1) => { nz(t0, { dur: 0.2, f: 1800, q: 1, gain: 0.5 * v }); tn(t0, { f: 120, f2: 50, dur: 0.25, type: 'triangle', gain: 0.4 * v }); });
 function crtAnim(dt, spd, atk) {
@@ -14833,23 +14838,37 @@ function crtTick(dt) {
   if (!CRT.on || !CRT.g) return;
   if (NET.mode === 'client') { crtNetFollow(dt); return; }
   if (CRT.respawn > 0) { CRT.respawn -= dt; if (CRT.respawn <= 0) { CRT.pos.copy(crtSpawnPoint()); CRT.hp = CRT.maxHp; CRT.st = 'roam'; CRT.g.visible = true; feed(ctr('crt.back'), '', 'kill'); } crtNetSend(dt); return; }
-  const tg = crtTargets(); let best = null, bd = 1e9;
-  for (const T of tg) { const d = CRT.pos.distanceTo(T.p); if ((d < bd) && (crtSees(T.p) || crtHeard(T.p) || (CRT.st === 'hunt' && CRT.tgt === T.id && d < 160))) { bd = d; best = T; } }
-  CRT.atkCd -= dt; CRT.roarT -= dt;
-  let goal = null, speed = CRT_WALK;
+  const tg = crtTargets(); let best = null, bd = 1e9, how = '';
+  for (const T of tg) { const d = CRT.pos.distanceTo(T.p); if (d >= bd) continue; const sw = crtSees(T.p), hr = !sw && crtHeard(T.p); if (sw || hr) { bd = d; best = T; how = sw ? 'see' : 'hear'; } }
+  if (best) CRT.last = { p: best.p.clone(), t: 0, id: best.id }; else if (CRT.last) CRT.last.t += dt;
+  CRT.atkCd -= dt; CRT.roarT -= dt; CRT.windup = Math.max(0, (CRT.windup || 0) - dt);
+  let goal = null, speed = CRT_WALK, hold = false;
   if (CRT.st === 'flee') { CRT.fleeT -= dt; CRT.hp = Math.min(CRT.maxHp, CRT.hp + dt * 40); if (CRT.fleeT <= 0) CRT.st = 'roam'; goal = CRT.wp; speed = CRT_RUN * 0.8; }
-  else if (best) {
-    if (CRT.st !== 'hunt') { CRT.st = 'hunt'; if (CRT.roarT <= 0) { crtRoar(cVol(CRT.pos) * 1.4); CRT.roarT = 9; camShake(0.15 * cVol(CRT.pos)); if (best.self) cBanner(ctr('crt.spotted'), ctr('crt.run')); } }
-    CRT.tgt = best.id; goal = best.p; speed = bd > 9 ? CRT_RUN : 11;
-  } else { if (CRT.st === 'hunt') { CRT.st = 'roam'; CRT.wp = null; } }
+  else if (CRT.st === 'hunt') {
+    // il ne te traque plus à travers les murs : il va voir là où il t'a vu, puis abandonne
+    if (best) { goal = best.p; CRT.tgt = best.id; speed = bd > 9 ? CRT_RUN : 11; }
+    else if (CRT.last && CRT.last.t < 5) { goal = CRT.last.p; speed = CRT_RUN * 0.7; }
+    else { CRT.st = 'roam'; CRT.wp = null; CRT.notice = 0; }
+    if (CRT.windup > 0 || CRT.strike) hold = true;
+  } else if (best) {
+    // temps de réaction : il se fige, te fixe (on a le temps de fuir), puis charge
+    if (!CRT.notice) { crtGrowl(cVol(CRT.pos)); }
+    CRT.notice = (CRT.notice || 0) + dt * (how === 'hear' ? 0.9 : bd < 20 ? 1.4 : 0.8);
+    CRT.st = 'notice'; hold = true; goal = best.p;
+    if (CRT.notice >= 1.7) {
+      CRT.st = 'hunt'; CRT.windup = 0.8; CRT.tgt = best.id;
+      if (CRT.roarT <= 0) { crtRoar(cVol(CRT.pos) * 1.4); CRT.roarT = 9; camShake(0.15 * cVol(CRT.pos)); }
+      if (best.self) cBanner(ctr('crt.spotted'), ctr('crt.run'));
+    }
+  } else { CRT.notice = Math.max(0, (CRT.notice || 0) - dt * 0.6); if (CRT.st === 'notice') CRT.st = 'roam'; }
   if (CRT.st === 'roam') {
     if (!CRT.wp || Math.hypot(CRT.wp.x - CRT.pos.x, CRT.wp.z - CRT.pos.z) < 4) { const c = cpick(C_LINES), a = crr(-270, 270); CRT.wp = Math.random() < 0.5 ? new V3(c, CITY.SL, a) : new V3(a, CITY.SL, c); }
     goal = CRT.wp; speed = CRT_WALK;
   }
   // déplacement : vers le but, glisse le long des obstacles, escalade si la cible est plus haut
   const dx = goal.x - CRT.pos.x, dz = goal.z - CRT.pos.z, dh = Math.hypot(dx, dz) || 1, up = goal.y - CRT.pos.y;
-  const vx = dx / dh * speed, vz = dz / dh * speed;
-  CRT.vel.x += (vx - CRT.vel.x) * Math.min(1, dt * (speed > 12 ? 5 : 3)); CRT.vel.z += (vz - CRT.vel.z) * Math.min(1, dt * (speed > 12 ? 5 : 3));
+  const vx = hold ? 0 : dx / dh * speed, vz = hold ? 0 : dz / dh * speed;
+  CRT.vel.x += (vx - CRT.vel.x) * Math.min(1, dt * (speed > 12 ? 2.4 : 3)); CRT.vel.z += (vz - CRT.vel.z) * Math.min(1, dt * (speed > 12 ? 2.4 : 3));
   if (dh < 1.6 && Math.abs(up) < 3) { CRT.vel.x *= 0.5; CRT.vel.z *= 0.5; }
   const nx = CRT.pos.x + CRT.vel.x * dt, nz = CRT.pos.z + CRT.vel.z * dt;
   let hitB = null;
@@ -14861,7 +14880,7 @@ function crtTick(dt) {
   CRT.climb = false;
   const gy = groundAtPoint(CRT.pos.x, CRT.pos.z, CRT.pos.y + 1.2);
   const headFree = () => !boxesNear(CRT.pos.x, CRT.pos.z, 0.2).some(b => !b.ground && CRT.pos.x > b.min.x && CRT.pos.x < b.max.x && CRT.pos.z > b.min.z && CRT.pos.z < b.max.z && CRT.pos.y + CRT_H + 0.3 > b.min.y && CRT.pos.y + CRT_H < b.max.y);
-  if (hitB && (up > 1.5 || CRT.st === 'hunt' || hitB.max.y - CRT.pos.y < 3.2) && CRT.pos.y < CITY.GY + 130 && headFree()) {
+  if (hitB && !hold && (up > 1.5 || CRT.st === 'hunt' || hitB.max.y - CRT.pos.y < 3.2) && CRT.pos.y < CITY.GY + 130 && headFree()) {
     // escalade la façade (ou saute par-dessus une voiture) ; dès que c'est libre devant, on passe par-dessus / par la fenêtre
     CRT.pos.y += CRT_CLIMB * dt; CRT.vel.y = 0; CRT.climb = true;
     const fx = CRT.pos.x + dx / dh * 0.9, fz = CRT.pos.z + dz / dh * 0.9;
@@ -14872,26 +14891,32 @@ function crtTick(dt) {
   if (CRT.st === 'roam' && Math.abs(up) < 2 && CRT.pos.y > CITY.GY + 1 && !CRT.climb && Math.random() < dt * 0.2) CRT.wp = null;
   // attaque
   let atk = false;
-  if (CRT.st === 'hunt' && best && CRT.pos.distanceTo(best.p) < 3.4 && CRT.atkCd <= 0) {
-    CRT.atkCd = 1.05; atk = true; CRT.atkT = 0.35; crtHitS(cVol(CRT.pos) * 1.3);
-    if (best.self) crtHurtMe(); else crtNetAtk(best.id);
-  }
+  // attaque annoncée : il lève les bras, frappe 0,45 s plus tard (on peut esquiver)
+  if (CRT.st === 'hunt' && best && !CRT.strike && CRT.pos.distanceTo(best.p) < 3.6 && CRT.atkCd <= 0) { CRT.strike = 0.45; CRT.strikeT = best; CRT.atkCd = 1.7; CRT.atkT = 0.8; crtGrowl(cVol(CRT.pos) * 1.2); }
+  if (CRT.strike) { CRT.strike -= dt; if (CRT.strike <= 0) { CRT.strike = 0; const T = CRT.strikeT; if (T && CRT.pos.distanceTo(T.p) < 4.4) { crtHitS(cVol(CRT.pos) * 1.3); if (T.self) crtHurtMe(); else crtNetAtk(T.id); } } }
   CRT.atkT = Math.max(0, (CRT.atkT || 0) - dt);
   const hs = Math.hypot(CRT.vel.x, CRT.vel.z);
-  if (hs > 0.5) { const want = Math.atan2(CRT.vel.x, CRT.vel.z); let d = want - CRT.ry; d = Math.atan2(Math.sin(d), Math.cos(d)); CRT.ry += d * Math.min(1, dt * 8); }
+  if (hold && goal) { const want = Math.atan2(goal.x - CRT.pos.x, goal.z - CRT.pos.z); let d = want - CRT.ry; d = Math.atan2(Math.sin(d), Math.cos(d)); CRT.ry += d * Math.min(1, dt * 4); }
+  else if (hs > 0.5) { const want = Math.atan2(CRT.vel.x, CRT.vel.z); let d = want - CRT.ry; d = Math.atan2(Math.sin(d), Math.cos(d)); CRT.ry += d * Math.min(1, dt * 8); }
   crtPlace(dt, hs, CRT.atkT > 0);
   if ((CRT.stepT -= dt) <= 0 && hs > 1 && !CRT.climb) { CRT.stepT = hs > 12 ? 0.16 : 0.5; crtStep(cVol(CRT.pos) * (hs > 12 ? 0.9 : 0.5)); }
   crtNetSend(dt);
 }
 function crtPlace(dt, hs, atk) {
-  CRT.g.position.copy(CRT.pos); CRT.g.rotation.y = CRT.ry; crtAnim(dt, hs, atk);
+  CRT.g.position.copy(CRT.pos); CRT.g.rotation.y = CRT.ry; crtAnim(dt, hs, atk || HOR.js > 0);
+  // recalage de la taille une fois l'animation lancée (la tête doit être vers CRT_HV)
+  if (CRT.mixer && CRT.vis && !CRT.vis.userData.refit && (CRT.fitT = (CRT.fitT || 0) + dt) > 0.4) {
+    let hb = null; CRT.vis.traverse(o => { if (!hb && o.isBone && /neck1_end|head/i.test(o.name)) hb = o; });
+    if (hb) { CRT.g.updateMatrixWorld(true); const w = new V3(); hb.getWorldPosition(w); const hh = w.y - CRT.pos.y; if (hh > 0.5) { const k = (CRT_HV - 0.35) / hh; CRT.vis.scale.multiplyScalar(k); CRT.vis.position.y *= k; } CRT.headB = hb; }
+    CRT.vis.userData.refit = true;
+  }
   const me = !P.dead && CITY.on, d = CRT.pos.distanceTo(P.pos), hunting = (CRT.st === 'hunt' || (CRT.net && CRT.net.st === 'hunt')) && d < 120 && CRT.g.visible;
   document.body.classList.toggle('crtHunt', hunting && me);
   const el = $('crtHud'); if (el) { el.classList.toggle('on', hunting && me); if (hunting) { el.children[0].textContent = ctr('crt.name') + ' · ' + Math.round(d) + ' m'; el.querySelector('b').style.width = Math.round(CRT.hp / CRT.maxHp * 100) + '%'; } }
 }
 function crtHurtMe() {
   if (P.dead) return;
-  hurtSelf(38, 99); camShake(0.5);
+  hurtSelf(38, 99); camShake(0.5); try { goreHurt(38, true); jsTrigger(P.dead); } catch (e) {}
   _cp.copy(P.pos).sub(CRT.pos).setY(0).normalize(); P.vel.x += _cp.x * 14; P.vel.z += _cp.z * 14; P.vel.y = Math.max(P.vel.y, 6.5); P.grounded = false;
   if (P.dead) { const e = $('deathBy'); if (e) e.textContent = ctr('crt.name').toLowerCase(); }
 }
@@ -14900,8 +14925,8 @@ function crtDamage(dmg, part, net = true) {
   if (!CRT.on || CRT.respawn > 0) return;
   const k = part === 'head' ? 2 : 1, d = dmg * k;
   if (NET.mode === 'client' && net) { netSend({ k: 'crtHit', d }); try { sfx.hit(part === 'head'); } catch (e) {} return; }
-  CRT.hp -= d; try { sfx.hit(part === 'head'); } catch (e) {}
-  if (CRT.st !== 'hunt' && CRT.st !== 'flee') { CRT.st = 'hunt'; }
+  CRT.hp -= d; try { sfx.hit(part === 'head'); goreBurst(_cp.set(CRT.pos.x, CRT.pos.y + (part === 'head' ? CRT_HV - 0.5 : 3), CRT.pos.z), 10, 0.9); } catch (e) {}
+  if (CRT.st !== 'hunt' && CRT.st !== 'flee') { CRT.st = 'hunt'; CRT.windup = 0.5; CRT.last = { p: P.pos.clone(), t: 0, id: NET.selfId || 'me' }; }
   if (CRT.hp <= 0) {
     CRT.respawn = 45; CRT.g.visible = false; crtRoar(cVol(CRT.pos)); cDust(CRT.pos.clone().add(new V3(0, 1, 0)), 8);
     cBanner(ctr('crt.dead'), ctr('crt.deadSub')); stats.kills++; questEv('crt');
@@ -14931,8 +14956,237 @@ function crtNetFollow(dt) {
   crtPlace(dt, hs, false);
   if ((CRT.stepT -= dt) <= 0 && hs > 1 && !CRT.climb) { CRT.stepT = hs > 12 ? 0.16 : 0.5; crtStep(cVol(CRT.pos) * (hs > 12 ? 0.9 : 0.5)); }
 }
-Object.assign(I18N.fr, { 'crt.name': 'LE RÔDEUR', 'crt.spotted': 'IL T’A REPÉRÉ', 'crt.run': 'Cours. Monte. Cache-toi.', 'crt.dead': 'LE RÔDEUR EST TOMBÉ', 'crt.deadSub': 'Il reviendra…', 'crt.back': 'Le Rôdeur est de retour', 'city.tip8': 'Le Rôdeur entend les coups de feu. Il court plus vite que toi et grimpe aux murs.' });
-Object.assign(I18N.en, { 'crt.name': 'THE STALKER', 'crt.spotted': 'IT SPOTTED YOU', 'crt.run': 'Run. Climb. Hide.', 'crt.dead': 'THE STALKER IS DOWN', 'crt.deadSub': 'It will come back…', 'crt.back': 'The Stalker is back', 'city.tip8': 'The Stalker hears gunshots. It runs faster than you and climbs walls.' });
+Object.assign(I18N.fr, { 'crt.name': 'LE RÔDEUR', 'crt.spotted': 'IL T’A REPÉRÉ', 'crt.run': 'Cours. Monte. Cache-toi.', 'crt.dead': 'LE RÔDEUR EST TOMBÉ', 'crt.deadSub': 'Il reviendra…', 'crt.back': 'Le Rôdeur est de retour', 'city.tip8': 'Le Rôdeur entend les coups de feu. Il court plus vite que toi et grimpe aux murs.', 'city.tip9': 'Quand l’image et le son grésillent, il est tout près. Quand il se fige et te fixe, cours.' });
+Object.assign(I18N.en, { 'crt.name': 'THE STALKER', 'crt.spotted': 'IT SPOTTED YOU', 'crt.run': 'Run. Climb. Hide.', 'crt.dead': 'THE STALKER IS DOWN', 'crt.deadSub': 'It will come back…', 'crt.back': 'The Stalker is back', 'city.tip8': 'The Stalker hears gunshots. It runs faster than you and climbs walls.', 'city.tip9': 'When the picture and sound crackle, it is close. When it freezes and stares at you, run.' });
+
+/* ---------- HORREUR : sang (impacts, flaques, éclaboussures à l'écran), jump scare, grésillement à l'approche du Rôdeur,
+   musiques (ambiance de la ville, poursuite), cônes de lumière et brouillard renforcé ---------- */
+const HOR = { hp: null, js: 0, jsCd: 0, jsDead: false, stat: 0, crk: null, mus: null, cones: null, coneL: [], coneT: 0 };
+/* --- sang --- */
+const GORE_N = 360, GORE = { pts: null, v: [], life: new Float32Array(GORE_N), k: 0, pools: [], poolK: 0 };
+function goreInit() {
+  if (GORE.pts) { if (!GORE.pts.parent) scene.add(GORE.pts); return; }
+  const g = new THREE.BufferGeometry(), pos = new Float32Array(GORE_N * 3).fill(-999);
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  GORE.pts = new THREE.Points(g, new THREE.PointsMaterial({ color: 0x8a0a0a, size: 0.09, transparent: true, opacity: 0.95, depthWrite: false }));
+  GORE.pts.frustumCulled = false; scene.add(GORE.pts);
+  for (let i = 0; i < GORE_N; i++) GORE.v.push(new V3());
+}
+// éclaboussure de sang au point p (n gouttes)
+function goreBurst(p, n = 8, k = 1) {
+  if (S.gore === false) return; goreInit();
+  const a = GORE.pts.geometry.attributes.position;
+  for (let i = 0; i < n; i++) {
+    const j = GORE.k = (GORE.k + 1) % GORE_N;
+    a.setXYZ(j, p.x + (Math.random() - 0.5) * 0.3, p.y + (Math.random() - 0.5) * 0.3, p.z + (Math.random() - 0.5) * 0.3);
+    GORE.v[j].set((Math.random() - 0.5) * 6 * k, Math.random() * 4 * k, (Math.random() - 0.5) * 6 * k); GORE.life[j] = 1.4 + Math.random();
+  }
+  a.needsUpdate = true;
+  if (Math.random() < 0.6) gorePool(p, 0.6 + Math.random() * 1.2 * k);
+}
+function gorePool(p, s) {
+  const gy = groundAtPoint(p.x, p.z, p.y + 0.5); if (!isFinite(gy) || p.y - gy > 6) return;
+  let m = GORE.pools[GORE.poolK];
+  if (!m) { m = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshLambertMaterial({ map: cDecal('blood'), transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -4 })); m.rotation.x = -Math.PI / 2; GORE.pools[GORE.poolK] = m; }
+  GORE.poolK = (GORE.poolK + 1) % 60;
+  m.position.set(p.x + (Math.random() - 0.5), gy + 0.02 + Math.random() * 0.004, p.z + (Math.random() - 0.5)); m.rotation.z = Math.random() * 6.28; m.scale.setScalar(s);
+  if (m.parent !== scene) scene.add(m);
+}
+function goreTick(dt) {
+  if (!GORE.pts) return;
+  const a = GORE.pts.geometry.attributes.position; let any = false;
+  for (let j = 0; j < GORE_N; j++) {
+    if (GORE.life[j] <= 0) continue; any = true; GORE.life[j] -= dt;
+    const v = GORE.v[j]; v.y -= 18 * dt; let x = a.getX(j) + v.x * dt, y = a.getY(j) + v.y * dt, z = a.getZ(j) + v.z * dt;
+    if (y < groundAtPoint(x, z, y + 0.3)) { v.set(0, 0, 0); }
+    if (GORE.life[j] <= 0) y = -999;
+    a.setXYZ(j, x, y, z);
+  }
+  if (any) a.needsUpdate = true;
+}
+// éclaboussures sur l'écran quand on prend des dégâts (plus il y a de dégâts, plus il y en a)
+function goreSplatCanvas() {
+  const c = document.createElement('canvas'), s = 256; c.width = c.height = s; const g = c.getContext('2d');
+  const col = () => `rgba(${110 + Math.random() * 60 | 0},${Math.random() * 12 | 0},${Math.random() * 10 | 0},${0.75 + Math.random() * 0.25})`;
+  g.fillStyle = col(); g.beginPath(); g.arc(s / 2, s / 2, 30 + Math.random() * 30, 0, 6.28); g.fill();
+  for (let i = 0; i < 26; i++) { const a = Math.random() * 6.28, d = 30 + Math.random() * 90, r = 2 + Math.random() * 12; g.fillStyle = col(); g.beginPath(); g.arc(s / 2 + Math.cos(a) * d, s / 2 + Math.sin(a) * d, r, 0, 6.28); g.fill(); }
+  for (let i = 0; i < 5; i++) { const x = s / 2 + (Math.random() - 0.5) * 80, w = 3 + Math.random() * 6; g.fillStyle = col(); g.fillRect(x - w / 2, s / 2, w, 40 + Math.random() * 90); g.beginPath(); g.arc(x, s / 2 + 40 + Math.random() * 90, w * 0.9, 0, 6.28); g.fill(); }
+  return c.toDataURL();
+}
+function goreHurt(dmg, big) {
+  if (S.gore === false) return;
+  const L = $('goreL'); if (!L) return;
+  const n = Math.min(6, 1 + (dmg / 14 | 0) + (big ? 2 : 0));
+  for (let i = 0; i < n; i++) {
+    const im = document.createElement('div'), sz = (big ? 26 : 14) + Math.random() * (big ? 28 : 16), edge = Math.random();
+    const x = edge < 0.5 ? (Math.random() < 0.5 ? Math.random() * 25 : 75 + Math.random() * 25) : Math.random() * 100, y = edge < 0.5 ? Math.random() * 100 : (Math.random() < 0.5 ? Math.random() * 25 : 70 + Math.random() * 30);
+    im.className = 'gsp'; im.style.cssText = `left:${x - sz / 2}vw;top:${y - sz / 2}vh;width:${sz}vw;height:${sz}vw;background-image:url(${HOR.splats[Math.random() * HOR.splats.length | 0]});transform:rotate(${Math.random() * 360}deg)`;
+    L.appendChild(im); setTimeout(() => im.remove(), 5200);
+  }
+  const f = $('goreF'); if (f) { f.classList.remove('on'); void f.offsetWidth; f.classList.add('on'); }
+}
+/* --- jump scare : la caméra se retrouve nez à nez avec le Rôdeur, cri strident, flash, parasites --- */
+function jsScream() {
+  if (!AC || AC.state !== 'running') return;
+  const t0 = AC.currentTime, out = AC.createGain(), ws = AC.createWaveShaper(), cv = new Float32Array(1024);
+  for (let i = 0; i < 1024; i++) { const x = i / 512 - 1; cv[i] = Math.tanh(x * 6); }
+  ws.curve = cv; out.gain.setValueAtTime(0.0001, t0); out.gain.exponentialRampToValueAtTime(0.9, t0 + 0.015); out.gain.exponentialRampToValueAtTime(0.001, t0 + 1.5);
+  ws.connect(out); out.connect(master);
+  for (const f of [740, 1130, 1490, 1980, 2630]) {
+    const o = AC.createOscillator(), g = AC.createGain(); o.type = 'sawtooth'; o.frequency.setValueAtTime(f * 1.5, t0); o.frequency.exponentialRampToValueAtTime(f * 0.62, t0 + 1.2); o.detune.value = (Math.random() - 0.5) * 60;
+    const lfo = AC.createOscillator(), lg = AC.createGain(); lfo.frequency.value = 23 + Math.random() * 14; lg.gain.value = f * 0.04; lfo.connect(lg); lg.connect(o.frequency); lfo.start(t0); lfo.stop(t0 + 1.5);
+    g.gain.value = 0.16; o.connect(g); g.connect(ws); o.start(t0); o.stop(t0 + 1.5);
+  }
+  const n = AC.createBufferSource(), hp = AC.createBiquadFilter(), ng = AC.createGain(); n.buffer = noiseBuf; hp.type = 'highpass'; hp.frequency.value = 1400; ng.gain.setValueAtTime(0.9, t0); ng.gain.exponentialRampToValueAtTime(0.001, t0 + 0.9);
+  n.connect(hp); hp.connect(ng); ng.connect(ws); n.start(t0); n.stop(t0 + 1);
+  const b = AC.createOscillator(), bg = AC.createGain(); b.type = 'sine'; b.frequency.setValueAtTime(70, t0); b.frequency.exponentialRampToValueAtTime(28, t0 + 0.7); bg.gain.setValueAtTime(1, t0); bg.gain.exponentialRampToValueAtTime(0.001, t0 + 0.8); b.connect(bg); bg.connect(out); b.start(t0); b.stop(t0 + 0.9);
+}
+// centre et taille de la tête (moyenne de sommets déformés par le squelette)
+function jsHeadInfo() {
+  // la tête prolonge le cou : on part de l'os du cou dans la direction colonne → cou
+  if (!HOR.jsB || HOR.jsB.vis !== CRT.vis) { let neck = null, sp = null; CRT.vis.traverse(o => { if (!o.isBone) return; if (/neck1_end|head/i.test(o.name) && !neck) neck = o; if (/spine4|spine2/i.test(o.name)) sp = o; }); HOR.jsB = { vis: CRT.vis, neck, sp }; }
+  const c = new V3(), s0 = new V3(), { neck, sp } = HOR.jsB;
+  if (neck) neck.getWorldPosition(c); else c.set(CRT.pos.x, CRT.pos.y + CRT_HV - 0.4, CRT.pos.z);
+  if (sp) { sp.getWorldPosition(s0); const d = c.clone().sub(s0); if (d.lengthSq() > 1e-4) c.addScaledVector(d.normalize(), 0.45); }
+  return { c, r: 0.7 };
+}
+function jsTrigger(dead) {
+  if (!CRT.on || !CRT.g || !CRT.vis || HOR.js > 0 || (!dead && HOR.jsCd > 0) || S.jumpscare === false) return;
+  HOR.js = 1.05; HOR.jsCd = 40; jsScream(); camShake(0.9);
+  document.body.classList.add('jscare'); wScene.visible = false;
+  // il se tourne vers toi et attaque
+  const d = camera.position.clone().sub(CRT.pos); d.y = 0; if (d.lengthSq() < 0.01) d.set(Math.sin(CRT.ry), 0, Math.cos(CRT.ry)); d.normalize(); HOR.jsDir = d;
+  CRT.ry = Math.atan2(d.x, d.z); if (CRT.g) CRT.g.rotation.y = CRT.ry;
+  // on ne garde que lui dans le noir : aucun mur ne vient boucher le cadre
+  HOR.jsHid = []; const keep = new Set(); for (let o = CRT.g; o; o = o.parent) keep.add(o);
+  const hide = par => { for (const o of par.children) { if (o === CRT.g || o.isLight || !o.visible) continue; if (keep.has(o)) hide(o); else { o.visible = false; HOR.jsHid.push(o); } } }; hide(scene);
+  HOR.jsBg = scene.background; scene.background = new THREE.Color(0x050203); HOR.jsFog = scene.fog; scene.fog = null;
+  if (!HOR.jsLight) { HOR.jsLight = new THREE.PointLight(0xffd0c0, 0, 10, 2); HOR.jsRim = new THREE.PointLight(0xff2010, 0, 12, 2); }
+  scene.add(HOR.jsLight); scene.add(HOR.jsRim);
+}
+function jsEnd() {
+  document.body.classList.remove('jscare'); wScene.visible = true;
+  for (const o of HOR.jsHid || []) o.visible = true; HOR.jsHid = null;
+  if (HOR.jsBg !== undefined) { scene.background = HOR.jsBg; scene.fog = HOR.jsFog; HOR.jsBg = undefined; }
+  if (HOR.jsLight) { HOR.jsLight.intensity = 0; HOR.jsRim.intensity = 0; }
+}
+function jsTick(dt) {
+  HOR.jsCd -= dt;
+  if (HOR.js <= 0) return;
+  HOR.js -= dt;
+  if (!CRT.g || !CRT.vis) { HOR.js = 0; jsEnd(); return; }
+  CRT.ry = Math.atan2(HOR.jsDir.x, HOR.jsDir.z); CRT.g.rotation.y = CRT.ry; CRT.g.updateMatrixWorld(true);
+  const h = jsHeadInfo().c, u = 1.05 - HOR.js, f = Math.max(1.1, 3.2 - u * 4.5), j = 0.05;
+  camera.position.set(h.x + HOR.jsDir.x * f + (Math.random() - 0.5) * j, h.y - 0.3 + (Math.random() - 0.5) * j, h.z + HOR.jsDir.z * f + (Math.random() - 0.5) * j); camera.lookAt(h.x, h.y - 0.55, h.z);
+  sky.position.copy(camera.position);
+  const k = Math.min(1, HOR.js * 3) * (0.8 + Math.random() * 0.4);
+  HOR.jsLight.position.copy(camera.position).lerp(h, 0.25); HOR.jsLight.position.y -= 0.6; HOR.jsLight.intensity = 4 * k;
+  HOR.jsRim.position.set(h.x - HOR.jsDir.x * 1.5, h.y + 1.2, h.z - HOR.jsDir.z * 1.5); HOR.jsRim.intensity = 3 * k;
+  if (HOR.js <= 0) jsEnd();
+}
+/* --- grésillement : plus il est proche, plus l'image et le son se brouillent ; les lampes près de lui sautent --- */
+function crtStaticTick(dt) {
+  const near = CRT.on && CRT.g && CRT.g.visible && CITY.on ? clamp(1 - CRT.pos.distanceTo(camera.position) / 70, 0, 1) : 0;
+  HOR.stat += (near - HOR.stat) * Math.min(1, dt * 3);
+  const k = HOR.stat * HOR.stat, el = $('crtStatic');
+  if (el) { el.style.opacity = (k * 0.5 + (HOR.js > 0 ? 0.25 : 0)).toFixed(3); if (k > 0.01 || HOR.js > 0) el.style.backgroundPosition = `${Math.random() * 256 | 0}px ${Math.random() * 256 | 0}px`; el.classList.toggle('glitch', k > 0.45 && Math.random() < k * 0.3); }
+  if (!AC || AC.state !== 'running') return;
+  if (!HOR.crk) {
+    const s = AC.createBufferSource(); s.buffer = noiseBuf; s.loop = true; const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 3200; bp.Q.value = 0.6;
+    const g = AC.createGain(); g.gain.value = 0; s.connect(bp); bp.connect(g); g.connect(master); s.start();
+    const hum = AC.createOscillator(), hg = AC.createGain(); hum.type = 'square'; hum.frequency.value = 50; hg.gain.value = 0; hum.connect(hg); hg.connect(master); hum.start();
+    HOR.crk = { g, hg, bp };
+  }
+  const n = AC.currentTime, crackle = k > 0.005 ? k * (Math.random() < 0.35 ? 0.35 + Math.random() * 0.6 : 0.06) : 0;
+  HOR.crk.g.gain.setTargetAtTime(muted ? 0 : crackle * 0.5, n, 0.012); HOR.crk.hg.gain.setTargetAtTime(muted ? 0 : k * 0.035, n, 0.1); HOR.crk.bp.frequency.setTargetAtTime(2200 + Math.random() * 3000, n, 0.02);
+}
+/* --- musiques : ambiance (Nécropolis et Ville fantôme), poursuite quand le Rôdeur te chasse --- */
+function horMusicInit() {
+  if (HOR.mus) return;
+  const mk = src => { const a = new Audio(); a.loop = true; a.preload = 'auto'; a.src = src; a.volume = 0; return { a, v: 0, fail: false, src }; };
+  HOR.mus = { amb: mk('assets/music/necro-ambiant.mp3'), chase: mk('assets/music/necro-chase.mp3') };
+  for (const k in HOR.mus) HOR.mus[k].a.addEventListener('error', () => { const m = HOR.mus[k]; if (!m.retried) { m.retried = true; m.a.src = SITE_URL + m.src; } else m.fail = true; });
+}
+function horMusicTick(dt) {
+  const here = CITY.on || S.map === 'ghost';
+  if (!here && !HOR.mus) return; horMusicInit();
+  const chase = CITY.on && document.body.classList.contains('crtHunt') ? 1 : 0;
+  const base = muted || document.hidden ? 0 : S.music > 0 ? Math.max(0.25, S.music) : 0;
+  const tg = { amb: here ? base * 0.75 * (1 - chase * 0.85) : 0, chase: chase * base * 1.1 };
+  for (const k in HOR.mus) {
+    const m = HOR.mus[k]; if (m.fail) continue;
+    m.v += (tg[k] - m.v) * (1 - Math.exp(-(k === 'chase' && tg[k] > m.v ? 6 : 1.5) * dt));
+    try { m.a.volume = clamp(m.v, 0, 1); } catch (e) {}
+    if (m.v > 0.005 && m.a.paused && (MUSIC.started || (AC && AC.state === 'running'))) { if (k === 'chase') m.a.currentTime = 0; m.a.play().catch(() => {}); }
+    else if (m.v <= 0.005 && !m.a.paused && tg[k] === 0) m.a.pause();
+  }
+}
+const horDuck = () => CITY.on || S.map === 'ghost';
+/* --- cônes de lumière sous les lampes (un seul maillage, intensité suivant chaque lampe) --- */
+function cityCones() {
+  const list = CITY.lamps.filter(L => (L.kind === 'street' && !L.dead) || L.kind === 'metro' || (L.kind === 'flicker' && !L.inside)).slice(0, 520);
+  if (!list.length) return;
+  const seg = 12, pos = [], col = [], uv = [], idx = []; HOR.coneL = [];
+  for (const L of list) {
+    const gy = Math.max(L.p.y < CITY.UC ? 0 : CITY.SL, groundAtPoint(L.p.x, L.p.z, L.p.y - 0.3)), h = Math.max(1.5, L.p.y - gy - 0.1), r0 = 0.18, r1 = h * (L.kind === 'metro' ? 0.5 : 0.42), b = pos.length / 3;
+    for (let i = 0; i <= seg; i++) { const a = i / seg * 6.283, c = Math.cos(a), s = Math.sin(a); pos.push(L.p.x + c * r0, L.p.y - 0.15, L.p.z + s * r0, L.p.x + c * r1, L.p.y - 0.15 - h, L.p.z + s * r1); uv.push(i / seg, 1, i / seg, 0); col.push(0, 0, 0, 0, 0, 0); }
+    for (let i = 0; i < seg; i++) { const q = b + i * 2; idx.push(q, q + 1, q + 2, q + 1, q + 3, q + 2); }
+    HOR.coneL.push([L, b, (seg + 1) * 2]);
+  }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(uv, 2)); g.setIndex(idx);
+  const t = canvasTex((cx, s) => { const gr = cx.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, '#fff'); gr.addColorStop(0.35, '#888'); gr.addColorStop(1, '#000'); cx.fillStyle = gr; cx.fillRect(0, 0, s, s); }, 64);
+  t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+  HOR.cones = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ map: t, vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false }));
+  HOR.cones.frustumCulled = false; HOR.cones.renderOrder = 6; mapRoot.add(HOR.cones);
+}
+function conesTick(dt) {
+  if (!HOR.cones || !HOR.cones.parent || (HOR.coneT -= dt) > 0) return; HOR.coneT = 0.05;
+  const c = HOR.cones.geometry.attributes.color, a = c.array, fogK = 0.11 + CWX.fog * 0.1 + CWX.rain * 0.05;
+  const cx = camera.position.x, cz = camera.position.z, fr = Math.max(40, scene.fog.far * 0.45);
+  for (const [L, b, n] of HOR.coneL) { const dd = Math.hypot(L.p.x - cx, L.p.z - cz), i = (L.i || 0) * fogK * clamp(1 - dd / fr, 0, 1); for (let v = 0; v < n; v++) { a[(b + v) * 3] = L.c.r * i; a[(b + v) * 3 + 1] = L.c.g * i; a[(b + v) * 3 + 2] = L.c.b * i; } }
+  c.needsUpdate = true;
+}
+// lampes qui sautent près du Rôdeur
+function crtLampGlitch() {
+  if (!CRT.on || !CRT.g || !CRT.g.visible) return;
+  for (const L of CITY.lamps) { if (Math.abs(L.p.x - CRT.pos.x) > 30 || Math.abs(L.p.z - CRT.pos.z) > 30) continue; const d = L.p.distanceTo(CRT.pos); if (d < 30 && Math.random() < 0.55 * (1 - d / 30)) L.i *= 0.04; }
+}
+/* --- interface --- */
+function horUI() {
+  if ($('goreL')) return;
+  HOR.splats = Array.from({ length: 6 }, goreSplatCanvas);
+  const nc = document.createElement('canvas'); nc.width = nc.height = 256; const g = nc.getContext('2d'), im = g.createImageData(256, 256);
+  for (let i = 0; i < im.data.length; i += 4) { const v = Math.random() * 255 | 0; im.data[i] = im.data[i + 1] = im.data[i + 2] = v; im.data[i + 3] = 255; }
+  g.putImageData(im, 0, 0);
+  const st = document.createElement('style');
+  st.textContent = `#goreL{position:fixed;inset:0;pointer-events:none;z-index:9;overflow:hidden}
+.gsp{position:absolute;background-size:contain;background-repeat:no-repeat;animation:gsp 5.2s ease-in forwards;mix-blend-mode:multiply}
+@keyframes gsp{0%{opacity:0;filter:saturate(1.3)}4%{opacity:.95}70%{opacity:.85}100%{opacity:0;translate:0 6vh}}
+#goreF{position:fixed;inset:0;pointer-events:none;z-index:9;background:radial-gradient(ellipse at center,rgba(160,0,0,0) 35%,rgba(150,0,0,.6));opacity:0}
+#goreF.on{animation:goreF .7s ease-out}@keyframes goreF{from{opacity:1}to{opacity:0}}
+#goreLow{position:fixed;inset:0;pointer-events:none;z-index:8;background:radial-gradient(ellipse at center,transparent 45%,rgba(110,0,0,.75));opacity:0;transition:opacity .4s}
+#crtStatic{position:fixed;inset:0;pointer-events:none;z-index:9;opacity:0;mix-blend-mode:overlay;background-image:url(${nc.toDataURL()});background-size:256px 256px}
+#crtStatic.glitch{transform:skewX(3deg) translateX(8px);filter:contrast(1.8);background-size:256px 40px}
+body.jscare canvas{filter:contrast(1.3) saturate(1.3) brightness(1.35)}
+body.jscare #hud,body.jscare #cityMis,body.jscare #minimap{opacity:0!important}
+#jsFlash{position:fixed;inset:0;pointer-events:none;z-index:10;background:#fff;opacity:0}
+body.jscare #jsFlash{animation:jsF 1.05s linear}@keyframes jsF{0%{opacity:.85;background:#fff}6%{opacity:.0}10%{opacity:.5;background:#600}40%{opacity:.15}100%{opacity:0}}`;
+  document.head.appendChild(st);
+  for (const id of ['goreLow', 'goreL', 'goreF', 'crtStatic', 'jsFlash']) { const d = document.createElement('div'); d.id = id; document.body.appendChild(d); }
+}
+// tick global (toutes les cartes) : sang, sang à l'écran, musique, jump scare, parasites
+function horTick(dt) {
+  if (!(dt >= 0)) dt = 0.016;
+  try {
+    horUI();
+    if (HOR.hp != null && P.hp < HOR.hp - 0.5 && playing) goreHurt(HOR.hp - P.hp, false);
+    if (HOR.hp != null && P.hp > HOR.hp) HOR.hp = P.hp; HOR.hp = P.hp;
+    const low = $('goreLow'); if (low) low.style.opacity = playing && !P.dead && S.gore !== false ? clamp((60 - P.hp) / 60, 0, 1).toFixed(2) : P.dead && playing ? '0.9' : '0';
+    goreTick(dt); jsTick(dt); crtStaticTick(dt); horMusicTick(dt);
+    if (CITY.on) { conesTick(dt); }
+  } catch (e) { console.warn('horreur', e); }
+}
+S.gore = store.get('gore', true) !== false; S.jumpscare = store.get('jumpscare', true) !== false;
 
 // badge Nécropolis dans le menu quand la carte est choisie
 (function () {
