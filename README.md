@@ -249,6 +249,15 @@ Télécharge **[Velocite.apk](https://github.com/Haze15/velocite/releases/downlo
 
 Deux éliminations à moins de 4,5 s d'écart = **Double kill**, puis Triple, Quadra, Penta, Carnage ; et des séries sans mourir (3, 5, 8, 12, 16, 20 : Ça chauffe, En série, Déchaîné, Inarrêtable, Divin, Légendaire). Chaque palier a son jingle, une grande bannière et une voix d'annonce (synthèse vocale du navigateur, désactivable dans les réglages). Quête « Carnage » : un quadra kill → skin Carnage.
 
+## Mouvements façon Apex
+
+- **Ballons de redéploiement** (anneau bleu au sol, câble vers un ballon rouge) : E ou saut dans l'anneau → propulsé à environ 50 m, puis **chute libre planée** : on avance vers où l'on regarde, regarder vers le bas pour piquer plus vite, vers le haut pour ralentir ; s'arrête à l'atterrissage.
+- **Canons gravitationnels** (anneau violet) : marcher dedans projette sur une trajectoire en cloche jusqu'à un toit (l'arc est dessiné en pointillés, la cible au sol).
+- **Lurch** : dans les 0,2 s après un saut, changer de direction redirige une partie de l'élan (avec une petite perte de vitesse).
+- **Marquage (ping)** : clic molette ou B. Vise un ennemi → marqueur rouge, sinon marqueur ambre à l'endroit visé, avec la distance ; vu par tous les joueurs de la partie.
+
+Ballons et canons sont placés automatiquement sur chaque carte (sur des emplacements libres, loin des points d'apparition, canons tournés vers les toits les plus hauts). Chaque carte a aussi ses particules d'ambiance et du décor en plus.
+
 ## Lune et Labo de test
 
 - **Lune** : gravité à 38 % (sauts presque 3× plus hauts, chutes lentes, grenades et robots aussi), cratères, base lunaire avec toits accessibles, atterrisseur, tremplins géants, la Terre dans un ciel noir étoilé.

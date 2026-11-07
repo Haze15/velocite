@@ -503,6 +503,10 @@ html{scroll-behavior:smooth}
 .lo-ask{display:flex;gap:7px;align-items:center;font:500 13px var(--f-body);color:var(--ink-dim);cursor:pointer}
 .lo-key{font:500 12px var(--f-body);color:var(--ink-faint)}
 #loMenuBtn{margin-left:12px}
+.ping{position:fixed;left:0;top:0;z-index:25;pointer-events:none;display:flex;flex-direction:column;align-items:center;gap:2px;margin:-34px 0 0 -40px;width:80px;font:700 12px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:#ffb020;text-shadow:0 1px 2px #000}
+.ping i{width:14px;height:14px;transform:rotate(45deg);border:2px solid currentColor;background:rgba(255,176,32,.25);box-shadow:0 0 10px currentColor}
+.ping span{font:500 11px var(--f-body);color:#fff;text-transform:none}
+.ping.enemy{color:#ff4a3a}.ping.enemy i{background:rgba(255,60,40,.3)}
 body.underwater #c{filter:saturate(1.15) hue-rotate(-8deg)}
 body.underwater::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:5;background:radial-gradient(ellipse at 50% 40%,rgba(40,160,220,.0) 40%,rgba(4,30,60,.45) 100%)}
 #ksBanner{position:fixed;left:50%;top:36%;transform:translate(-50%,-50%) scale(.6);z-index:40;pointer-events:none;opacity:0;font:900 44px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;color:#fff;text-shadow:0 0 18px rgba(255,176,32,.9),0 3px 0 rgba(0,0,0,.55);white-space:nowrap}
@@ -1309,6 +1313,8 @@ Object.assign(I18N.fr, {"map.skycastle": "☁ Château des Nuées (secret)", "sk
 Object.assign(I18N.en, {"map.skycastle": "☁ Cloud Castle (secret)", "sky.found": "A secret passage opens in the clouds… Welcome to the Cloud Castle! 5 golden feathers are hidden here.", "sky.again": "Back to the Cloud Castle.", "sky.client": "The castle is open for you: host a match or play solo to go there (it is now in the map list).", "sky.plume": "Golden feather {n}/{max}!", "sky.all": "All 5 golden feathers are yours! « Celestial » weapon skin unlocked.", "skin.celeste": "Celestial (secret)"});
 Object.assign(I18N.fr, {"map.moon": "Lune (gravité réduite)", "map.abyss": "🐚 Abysses (secret)", "map.lab": "🔧 Labo de test (propriétaire)", "abyss.found": "Tu es tombé au fond du puits… Bienvenue dans les Abysses ! Saut maintenu : remonter · accroupi : plonger.", "abyss.again": "Retour aux Abysses.", "lab.unlocked": "Labo de test débloqué dans la liste des cartes."});
 Object.assign(I18N.en, {"map.moon": "Moon (low gravity)", "map.abyss": "🐚 Abyss (secret)", "map.lab": "🔧 Test lab (owner)", "abyss.found": "You fell down the well… Welcome to the Abyss! Hold jump: swim up · crouch: dive.", "abyss.again": "Back to the Abyss.", "lab.unlocked": "Test lab unlocked in the map list."});
+Object.assign(I18N.fr, {"mv.redeploy": "REDÉPLOIEMENT", "mv.cannon": "CANON GRAVITATIONNEL", "mv.useBalloon": "{key} ou Saut : Redéploiement (chute libre planée)", "ping.enemy": "Ennemi", "ping.here": "Par ici", "act.ping": "Marquer (ping)"});
+Object.assign(I18N.en, {"mv.redeploy": "REDEPLOY", "mv.cannon": "GRAVITY CANNON", "mv.useBalloon": "{key} or Jump: Redeploy (gliding skydive)", "ping.enemy": "Enemy", "ping.here": "Over here", "act.ping": "Ping"});
 Object.assign(I18N.fr, {"cs.lab": "Skin du perso", "cs.none": "Aucun (tenue d’origine)", "cs.camo": "Camouflage", "cs.jungle": "Jungle", "cs.urban": "Urbain", "cs.tiger": "Tigre", "cs.carbon": "Carbone", "cs.sakura": "Sakura", "cs.ocean": "Océan", "cs.galaxy": "Galaxie (lumineux)", "cs.neon": "Néon (lumineux)", "cs.lava": "Lave (lumineux)", "cs.gold": "Or", "cs.chrome": "Chrome"});
 Object.assign(I18N.en, {"cs.lab": "Character skin", "cs.none": "None (original outfit)", "cs.camo": "Camo", "cs.jungle": "Jungle", "cs.urban": "Urban", "cs.tiger": "Tiger", "cs.carbon": "Carbon", "cs.sakura": "Sakura", "cs.ocean": "Ocean", "cs.galaxy": "Galaxy (glowing)", "cs.neon": "Neon (glowing)", "cs.lava": "Lava (glowing)", "cs.gold": "Gold", "cs.chrome": "Chrome"});
 Object.assign(I18N.fr, {"q.ultra": "Ultra (effets de lumière)"});
@@ -3186,6 +3192,241 @@ MAPS.lab = {
   theme: { top: 0x3a4a5a, mid: 0x8a98a8, hor: 0xc8d0d8, fog: 0xc8d0d8, fogFar: 520, hemiSky: 0xe8eef4, hemiGround: 0x6a7078, hemiI: 0.95, sun: 0xffffff, sunI: 0.9, sunDir: [0.4, 0.8, 0.3], ground: 0xb8bcc2, clouds: 0.25 }
 };
 Object.assign(GROUND_OF, { moon: 'ash', abyss: 'sand', lab: 'concrete' });
+/* ================= Mouvements façon Apex : ballons de redéploiement (chute libre planée), canons gravitationnels, lurch ; marquage (ping) ================= */
+const BALLOONS = [], GCANNONS = [];
+const MV = { skyCd: 0, gcCd: 0 };
+const _mv = new V3(), _mv2 = new V3();
+// --- ballon de redéploiement : un câble monte jusqu'à un ballon ; E (ou sauter dans l'anneau) = propulsé en l'air, puis on plane
+function addBalloon(x, y, z, h = 62) {
+  const b = { pos: new V3(x, y, z), h };
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(2.2, 0.16, 8, 40), new THREE.MeshBasicMaterial({ color: 0x5ae0ff })); ring.rotation.x = Math.PI / 2; ring.position.set(x, y + 0.12, z); mapRoot.add(ring);
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(2.1, 32), new THREE.MeshBasicMaterial({ color: 0x5ae0ff, transparent: true, opacity: 0.18, depthWrite: false })); disc.rotation.x = -Math.PI / 2; disc.position.set(x, y + 0.06, z); mapRoot.add(disc);
+  const cab = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, h, 6), new THREE.MeshBasicMaterial({ color: 0xd8f6ff, transparent: true, opacity: 0.55 })); cab.position.set(x, y + h / 2, z); mapRoot.add(cab);
+  const bal = new THREE.Mesh(new THREE.SphereGeometry(3.2, 20, 14), new THREE.MeshLambertMaterial({ color: 0xff5a3a, emissive: 0x3a0a00 })); bal.scale.y = 1.25; bal.position.set(x, y + h + 3, z); mapRoot.add(bal);
+  const band = new THREE.Mesh(new THREE.TorusGeometry(3.15, 0.25, 6, 30), new THREE.MeshLambertMaterial({ color: 0xffd34a })); band.rotation.x = Math.PI / 2; band.position.copy(bal.position); mapRoot.add(band);
+  const glow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0x5ae0ff, transparent: true, opacity: 0.5, depthWrite: false, blending: THREE.AdditiveBlending })); glow.scale.setScalar(6); glow.position.set(x, y + 1, z); mapRoot.add(glow);
+  b.ring = ring; BALLOONS.push(b); return b;
+}
+function balloonNear() { for (const b of BALLOONS) if (Math.hypot(P.pos.x - b.pos.x, P.pos.z - b.pos.z) < 2.3 && Math.abs(P.pos.y - b.pos.y) < 2) return b; return null; }
+function balloonLaunch(b) {
+  if (MV.skyCd > 0 || P.dead || P.veh) return;
+  MV.skyCd = 1.5; P.grounded = false; P.sliding = false; P.climbing = false; P.airT = 0;
+  const top = b.pos.y + b.h * 0.85, g = G * RULES.g * MAP_GRAV;
+  P.vel.set(P.vel.x * 0.2, Math.sqrt(2 * g * Math.max(10, top - P.pos.y)), P.vel.z * 0.2);
+  P.sky = { t: 0 }; sfx.jet(); feed(t('mv.redeploy'), '', 'cyan'); questEv('sky');
+}
+// chute libre : on plane vers où on regarde ; regarder vers le bas = piquer (plus vite), vers le haut = freiner
+function skyGlide(dt, v) {
+  const S2 = P.sky; S2.t += dt;
+  if (v.y > 0) return; // phase de montée
+  const sy = Math.sin(P.yaw), cy = Math.cos(P.yaw), dive = clamp(-P.pitch, -0.4, 1.2);
+  const fwd = 13 + dive * 16, fall = -(5.5 + Math.max(0, dive) * 20);
+  v.x += (-sy * fwd - v.x) * Math.min(1, dt * 1.6); v.z += (-cy * fwd - v.z) * Math.min(1, dt * 1.6);
+  if (v.y < fall) v.y += (fall - v.y) * Math.min(1, dt * 3);
+}
+// --- canon gravitationnel : marcher dans l'anneau = projeté sur une trajectoire en cloche jusqu'à la cible
+function addCannon(x, y, z, tx, ty, tz) {
+  const c = { pos: new V3(x, y, z), to: new V3(tx, ty, tz), T: clamp(Math.hypot(tx - x, tz - z) / 20, 1.6, 3.2) };
+  const base = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 2.2, 0.35, 28), new THREE.MeshLambertMaterial({ color: 0x2a2f36 })); base.position.set(x, y + 0.17, z); mapRoot.add(base);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(1.5, 0.14, 8, 36), new THREE.MeshBasicMaterial({ color: 0xc07aff })); ring.rotation.x = Math.PI / 2; ring.position.set(x, y + 0.42, z); mapRoot.add(ring);
+  // arc en pointillés qui montre où l'on va atterrir
+  const g = G * MAP_GRAV, vx = (tx - x) / c.T, vz = (tz - z) / c.T, vy = (ty - y + 0.5 * g * c.T * c.T) / c.T, pts = [];
+  for (let i = 0; i <= 40; i++) { const tt = c.T * i / 40; pts.push(new V3(x + vx * tt, y + 1 + vy * tt - 0.5 * g * tt * tt, z + vz * tt)); }
+  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineDashedMaterial({ color: 0xc07aff, dashSize: 1.2, gapSize: 0.9, transparent: true, opacity: 0.55 })); line.computeLineDistances(); mapRoot.add(line);
+  const tgt = new THREE.Mesh(new THREE.RingGeometry(1.1, 1.4, 24), new THREE.MeshBasicMaterial({ color: 0xc07aff, side: THREE.DoubleSide })); tgt.rotation.x = -Math.PI / 2; tgt.position.set(tx, ty + 0.06, tz); mapRoot.add(tgt);
+  c.ring = ring; GCANNONS.push(c); return c;
+}
+function cannonTick(dt) {
+  MV.gcCd -= dt; MV.skyCd -= dt;
+  const tt = performance.now() / 1000;
+  for (const c of GCANNONS) c.ring.scale.setScalar(1 + 0.08 * Math.sin(tt * 5));
+  for (const b of BALLOONS) b.ring.rotation.z = tt * 0.8;
+  if (P.dead || P.veh || P.zip || MV.gcCd > 0) return;
+  for (const c of GCANNONS) {
+    if (Math.hypot(P.pos.x - c.pos.x, P.pos.z - c.pos.z) < 1.6 && Math.abs(P.pos.y - c.pos.y) < 1.2) {
+      const g = G * RULES.g * MAP_GRAV;
+      P.vel.set((c.to.x - P.pos.x) / c.T, (c.to.y - P.pos.y + 0.5 * g * c.T * c.T) / c.T, (c.to.z - P.pos.z) / c.T);
+      P.grounded = false; P.sliding = false; P.airT = 0; P.cannonT = c.T; MV.gcCd = 1.2;
+      sfx.impulse(1); camShake(0.25); feed(t('mv.cannon'), '', 'cyan'); questEv('cannon');
+      return;
+    }
+  }
+}
+// --- lurch : juste après un saut, changer de direction redirige une partie de l'élan (au prix d'un peu de vitesse)
+function lurchStep(v, wx, wz, hasWish) {
+  if (!P.lurchOK || !hasWish || P.airT > 0.2 || P.cannonT > 0 || P.sky) return;
+  const hs = Math.hypot(v.x, v.z); if (hs < 4) return;
+  const dx = v.x / hs, dz = v.z / hs, dot = dx * wx + dz * wz;
+  if (dot > 0.85) return;
+  P.lurchOK = false;
+  const k = 0.55, nx = dx + (wx - dx) * k, nz = dz + (wz - dz) * k, nl = Math.hypot(nx, nz) || 1, ns = hs * (0.84 + 0.12 * Math.max(0, dot));
+  v.x = nx / nl * ns; v.z = nz / nl * ns;
+  feed('LURCH', ns.toFixed(1) + ' m/s', 'cyan');
+}
+/* ---------- marquage (ping) : clic molette ou B ; ennemi repéré en rouge, lieu en ambre ; partagé avec les autres joueurs ---------- */
+const PINGS = [];
+function pingMake(p, enemy, who, mine) {
+  const el = document.createElement('div'); el.className = 'ping' + (enemy ? ' enemy' : '');
+  el.innerHTML = '<i></i><b></b><span></span>'; el.children[1].textContent = enemy ? t('ping.enemy') : t('ping.here'); el.children[2].textContent = who || '';
+  document.body.appendChild(el);
+  const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: enemy ? 0xff3a2a : 0xffb020, transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending })); sp.scale.setScalar(2.2); sp.position.copy(p); scene.add(sp);
+  while (PINGS.length >= 6) pingDrop(PINGS[0]);
+  PINGS.push({ p: p.clone(), el, sp, t: enemy ? 6 : 9 }); try { sfx.ckBeep(); } catch (e) {}
+}
+function pingDrop(pg) { pg.el.remove(); scene.remove(pg.sp); const i = PINGS.indexOf(pg); if (i >= 0) PINGS.splice(i, 1); }
+function doPing() {
+  if (!playing || P.dead) return;
+  camera.updateMatrixWorld(); camera.getWorldDirection(_mv);
+  _mv2.setFromMatrixPosition(camera.matrixWorld);
+  // ennemi le plus proche de la ligne de visée
+  let best = null, bd = 1.6;
+  const test = (pos, h = 1) => { const rel = pos.clone().add(new V3(0, h, 0)).sub(_mv2), along = rel.dot(_mv); if (along < 1 || along > 220) return; const off = rel.addScaledVector(_mv, -along).length() / Math.max(1, along * 0.03); if (off < bd) { bd = off; best = pos.clone().add(new V3(0, h + 1.2, 0)); } };
+  for (const d of dummies) if (d.alive && d.g.visible) test(d.g.position);
+  for (const rp of remotes.values()) if (rp.st && !rp.st.dead && !sameSide(rp)) test(rp.g.position);
+  let enemy = !!best, p = best;
+  if (!p) { raycaster.set(_mv2, _mv); raycaster.far = 300; const h = raycaster.intersectObjects(WORLD, false)[0]; p = h ? h.point.clone() : _mv2.clone().addScaledVector(_mv, 60); }
+  pingMake(p, enemy, S.name, true);
+  const m = { k: 'ping', p: [r2(p.x), r2(p.y), r2(p.z)], e: enemy ? 1 : 0 };
+  if (NET.mode === 'client') netSend(m); else if (NET.mode === 'host') broadcast(Object.assign({ from: NET.selfId }, m), NET.selfId);
+}
+function pingRecv(m, from) { if (!Array.isArray(m.p)) return; const rp = remotes.get(from); pingMake(new V3(m.p[0], m.p[1], m.p[2]), !!m.e, rp ? rp.name : '', false); }
+const _pv = new V3();
+function pingTick(dt) {
+  for (const pg of [...PINGS]) {
+    pg.t -= dt; if (pg.t <= 0) { pingDrop(pg); continue; }
+    _pv.copy(pg.p).project(camera);
+    const vis = _pv.z < 1 && Math.abs(_pv.x) < 1.2 && Math.abs(_pv.y) < 1.2;
+    pg.el.style.display = vis ? '' : 'none';
+    if (vis) { pg.el.style.transform = `translate(${(_pv.x * 0.5 + 0.5) * innerWidth}px,${(-_pv.y * 0.5 + 0.5) * innerHeight}px)`; pg.el.children[2].textContent = Math.round(pg.p.distanceTo(camera.position)) + ' m'; }
+    pg.el.style.opacity = Math.min(1, pg.t);
+  }
+}
+/* ================= Retouche de toutes les cartes : particules d'ambiance, éléments de mouvement Apex placés automatiquement, décor en plus ================= */
+const AMB = { pts: null, kind: null, vel: null };
+const AMB_OF = { canyon: 'dust', refinery: 'embers', forest: 'leaves', castle: 'fireflies', volcano: 'embers', mega: 'dust', ghost: 'fireflies', ocean: 'spray', arctic: 'snow', world: 'leaves', mine: 'cave', skycastle: 'sparkle', moon: 'moondust', lab: null, room: 'dust', abyss: null };
+const AMB_DEF = {
+  dust: { n: 420, col: 0xffe2b8, size: 0.09, op: 0.55, v: [0.6, -0.05, 0.25], h: 14 },
+  embers: { n: 380, col: 0xff8a3a, size: 0.12, op: 0.9, v: [0.2, 1.1, 0.1], h: 22, add: true },
+  leaves: { n: 220, col: 0xc8a040, size: 0.16, op: 0.85, v: [0.5, -0.6, 0.3], h: 18 },
+  fireflies: { n: 160, col: 0xe8ff7a, size: 0.14, op: 1, v: [0.1, 0.08, 0.1], h: 6, add: true, wob: 1 },
+  spray: { n: 300, col: 0xeaf8ff, size: 0.08, op: 0.6, v: [0.9, 0.05, 0.2], h: 10 },
+  snow: { n: 700, col: 0xffffff, size: 0.12, op: 0.95, v: [0.3, -1.3, 0.15], h: 26 },
+  cave: { n: 300, col: 0xffd8a8, size: 0.07, op: 0.5, v: [0.05, 0.06, 0.05], h: 30, wob: 1 },
+  sparkle: { n: 260, col: 0xfff2a8, size: 0.12, op: 1, v: [0.05, 0.25, 0.05], h: 24, add: true, wob: 1 },
+  moondust: { n: 200, col: 0xd8d8d8, size: 0.06, op: 0.45, v: [0.1, -0.03, 0.05], h: 6 }
+};
+function ambientBuild(id) {
+  AMB.pts = null; AMB.kind = AMB_OF[id] || null;
+  if (!AMB.kind || S.quality === 'low') return;
+  const d = AMB_DEF[AMB.kind], n = S.quality === 'ultra' ? d.n * 1.5 | 0 : d.n, pos = new Float32Array(n * 3), seedv = new Float32Array(n);
+  for (let i = 0; i < n; i++) { pos[i * 3] = (Math.random() - 0.5) * 70; pos[i * 3 + 1] = Math.random() * d.h; pos[i * 3 + 2] = (Math.random() - 0.5) * 70; seedv[i] = Math.random() * 6.28; }
+  const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const m = new THREE.PointsMaterial({ color: d.col, size: d.size, transparent: true, opacity: d.op, depthWrite: false, blending: d.add ? THREE.AdditiveBlending : THREE.NormalBlending, sizeAttenuation: true });
+  AMB.pts = new THREE.Points(g, m); AMB.pts.frustumCulled = false; AMB.seed = seedv; AMB.def = d; mapRoot.add(AMB.pts);
+}
+// les particules suivent le joueur (boîte de 70 m autour de lui), et rebouclent
+function ambientTick(dt) {
+  if (!AMB.pts) return;
+  const p = AMB.pts.geometry.attributes.position, d = AMB.def, cx = camera.position.x, cz = camera.position.z, by = Math.max(0, camera.position.y - 4), t = performance.now() / 1000;
+  for (let i = 0; i < p.count; i++) {
+    let x = p.getX(i) + d.v[0] * dt, y = p.getY(i) + d.v[1] * dt, z = p.getZ(i) + d.v[2] * dt;
+    if (d.wob) { x += Math.sin(t * 1.3 + AMB.seed[i]) * 0.4 * dt; y += Math.cos(t * 1.1 + AMB.seed[i]) * 0.3 * dt; }
+    if (x - cx > 35) x -= 70; else if (x - cx < -35) x += 70;
+    if (z - cz > 35) z -= 70; else if (z - cz < -35) z += 70;
+    if (y > by + d.h) y = by; else if (y < by) y = by + d.h;
+    p.setXYZ(i, x, y, z);
+  }
+  p.needsUpdate = true;
+  if (AMB.kind === 'fireflies' || AMB.kind === 'sparkle') AMB.pts.material.opacity = d.op * (0.7 + 0.3 * Math.sin(t * 3));
+}
+// emplacements libres au sol : loin des murs, des rampes, des points d'apparition
+function freeSpots(n, minGap, avoid = []) {
+  const L = MAP_LIM - 6, out = [], sp = (MAPS[S.map].spawns || []).map(s => [s[0], s[2]]);
+  let seed = 1 + S.map.length * 97; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let k = 0; k < 900 && out.length < n; k++) {
+    const x = (rnd() * 2 - 1) * L, z = (rnd() * 2 - 1) * L;
+    let ok = true;
+    for (const b of BOXES) { if (b.ground) continue; if (x > b.min.x - 3.2 && x < b.max.x + 3.2 && z > b.min.z - 3.2 && z < b.max.z + 3.2 && b.min.y < 3) { ok = false; break; } }
+    if (!ok) continue;
+    for (const r of RAMPS) if (x > r.x0 - 3 && x < r.x1 + 3 && z > r.z0 - 3 && z < r.z1 + 3) { ok = false; break; }
+    if (!ok || sp.some(s => Math.hypot(s[0] - x, s[1] - z) < 8)) continue;
+    if (out.some(o => Math.hypot(o[0] - x, o[1] - z) < minGap) || avoid.some(o => Math.hypot(o[0] - x, o[1] - z) < 10)) continue;
+    if (WATER.some(w => x > w.x0 && x < w.x1 && z > w.z0 && z < w.z1 && (!TERRAIN || terrainH(x, z) < w.lvl + 0.4))) continue;
+    if (TERRAIN) { const h0 = terrainH(x, z); if (Math.abs(terrainH(x + 2, z) - h0) > 1.2 || Math.abs(terrainH(x, z + 2) - h0) > 1.2) continue; } // pente trop raide
+    out.push([x, z]);
+  }
+  return out;
+}
+// toits atteignables pour les canons : blocs de 4 à 22 m de haut, assez larges, pas des murs d'enceinte
+function roofSpots() {
+  const out = [];
+  for (const b of BOXES) {
+    if (b.ground) continue; const w = b.max.x - b.min.x, d = b.max.z - b.min.z, h = b.max.y;
+    if (h < 4 || h > 22 || w < 4 || d < 4 || Math.max(w, d) > 60) continue;
+    const cx = (b.min.x + b.max.x) / 2, cz = (b.min.z + b.max.z) / 2;
+    if (Math.abs(cx) > MAP_LIM - 4 || Math.abs(cz) > MAP_LIM - 4) continue;
+    if (BOXES.some(o => o !== b && !o.ground && o.min.y < h + 2.5 && o.max.y > h + 0.1 && cx > o.min.x && cx < o.max.x && cz > o.min.z && cz < o.max.z)) continue; // quelque chose posé dessus
+    out.push([cx, h, cz]);
+  }
+  return out;
+}
+const gy = (x, z) => TERRAIN ? terrainH(x, z) : groundAtPoint(x, z, 2.5);
+function mapFx(id) {
+  BALLOONS.length = 0; GCANNONS.length = 0;
+  ambientBuild(id);
+  if (MAPS[id].noMv || id === 'room' || EDIT.on) return;
+  // un ou deux ballons de redéploiement
+  const nb = MAP_LIM > 80 ? 2 : 1, bs = freeSpots(nb, 40);
+  for (const [x, z] of bs) addBalloon(x, gy(x, z), z, id === 'abyss' ? 24 : id === 'mine' ? 30 : 62);
+  // canons gravitationnels vers les toits les plus hauts
+  const roofs = roofSpots().sort((a, b) => b[1] - a[1]).slice(0, 6), cs = freeSpots(3, 25, bs);
+  let made = 0;
+  for (const [x, z] of cs) {
+    const r = roofs.filter(r2 => Math.hypot(r2[0] - x, r2[2] - z) > 22 && Math.hypot(r2[0] - x, r2[2] - z) < 75)[made % 3];
+    if (r) { addCannon(x, gy(x, z), z, r[0], r[1], r[2]); made++; }
+    else if (made < 2) { const ang = Math.atan2(-z, -x), dd = 38; const tx = clamp(x + Math.cos(ang) * dd, -MAP_LIM + 4, MAP_LIM - 4), tz = clamp(z + Math.sin(ang) * dd, -MAP_LIM + 4, MAP_LIM - 4); addCannon(x, gy(x, z), z, tx, gy(tx, tz), tz); made++; }
+    if (made >= 2) break;
+  }
+  mapDecor(id);
+}
+// décor thématique en plus (sans collision) le long des bords et sur les points libres
+function mapDecor(id) {
+  const spots = freeSpots(14, 9, [...BALLOONS.map(b => [b.pos.x, b.pos.z]), ...GCANNONS.map(c => [c.pos.x, c.pos.z])]);
+  let seed = 7 + id.length; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const lamp = (x, z, col) => { const y0 = gy(x, z); deco3(new THREE.CylinderGeometry(0.08, 0.12, 4, 6), 0x2a2f36, x, y0 + 2, z); deco3(new THREE.SphereGeometry(0.26, 10, 8), col, x, y0 + 4.1, z, { basic: true }); const h = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: col, transparent: true, opacity: 0.7, depthWrite: false, blending: THREE.AdditiveBlending })); h.scale.setScalar(3.2); h.position.set(x, y0 + 4.1, z); mapRoot.add(h); };
+  const night = ['refinery', 'volcano', 'ghost', 'mine', 'moon'].includes(id);
+  for (const [x, z] of spots) {
+    const y0 = gy(x, z), k = rnd();
+    if (night && k < 0.55) { lamp(x, z, id === 'volcano' ? 0xff7a3a : id === 'ghost' ? 0x9affc8 : 0xffc870); continue; }
+    switch (id) {
+      case 'canyon': case 'mega': case 'world':
+        if (k < 0.5) { deco3(new THREE.CylinderGeometry(0.35, 0.4, 1.1, 10), 0x7a3a24, x, y0 + 0.55, z); deco3(new THREE.TorusGeometry(0.36, 0.04, 4, 12), 0x3a3a3a, x, y0 + 0.9, z, { rot: [Math.PI / 2, 0, 0] }); }
+        else { deco3(new THREE.DodecahedronGeometry(0.6 + rnd() * 0.8, 0), 0x9a7a5a, x, y0 + 0.4, z, { sc: [1, 0.6, 1.2] }); }
+        break;
+      case 'forest': case 'castle': case 'skycastle':
+        if (k < 0.6) { for (let i = 0; i < 3; i++) { const mx = x + (rnd() - 0.5) * 1.6, mz = z + (rnd() - 0.5) * 1.6, hh = 0.25 + rnd() * 0.35; deco3(new THREE.CylinderGeometry(0.06, 0.08, hh, 6), 0xf0e8d8, mx, y0 + hh / 2, mz); deco3(new THREE.SphereGeometry(0.18 + rnd() * 0.1, 10, 6, 0, 6.3, 0, 1.6), 0xd83a2a, mx, y0 + hh, mz); } }
+        else deco3(new THREE.CylinderGeometry(0.35, 0.4, 3.5, 8), 0x5e4129, x, y0 + 0.35, z, { rot: [0, rnd() * 3, Math.PI / 2] });
+        break;
+      case 'arctic':
+        deco3(new THREE.SphereGeometry(0.8 + rnd(), 10, 8), 0xf4f8ff, x, y0 + 0.2, z, { sc: [1.4, 0.5, 1] });
+        if (k < 0.4) deco3(new THREE.ConeGeometry(0.4, 1.6, 6), 0xbfe6ff, x + 0.6, y0 + 0.8, z, { op: 0.8 });
+        break;
+      case 'ocean':
+        deco3(new THREE.CylinderGeometry(0.12, 0.12, 1.4, 6), 0x7a5a3a, x, y0 + 0.7, z); deco3(new THREE.TorusGeometry(0.3, 0.08, 6, 14), 0xff5a3a, x, y0 + 1.2, z);
+        break;
+      case 'refinery': case 'mine':
+        deco3(new THREE.BoxGeometry(1.2, 0.8, 0.8), 0x4a5058, x, y0 + 0.4, z); deco3(new THREE.BoxGeometry(1.25, 0.12, 0.85), 0xe0b23a, x, y0 + 0.82, z);
+        break;
+      case 'volcano':
+        { const r = deco3(new THREE.CircleGeometry(0.9 + rnd(), 16), 0xff5a10, x, y0 + 0.03, z, { basic: true, rot: [-Math.PI / 2, 0, 0] }); r.castShadow = false; }
+        break;
+      case 'moon':
+        deco3(new THREE.BoxGeometry(0.6, 0.6, 0.6), 0xd8dade, x, y0 + 0.3, z); deco3(new THREE.BoxGeometry(0.62, 0.08, 0.62), 0xffb020, x, y0 + 0.62, z);
+        break;
+      default: break;
+    }
+  }
+}
 /* ---------- décor varié : tonneaux, caisses, rochers, cactus, lampadaires, feux, bouches d'incendie… (fusionnés par matériau) ---------- */
 Object.assign(PAL, { cactus: 0x5f8a4a, cone: 0xff6a1a, bush: 0x4c7536, leaf: 0x6a9a48, mush: 0xc8402e, flY: 0xffd84a, flW: 0xf4f0f0, flP: 0xd86ad8, flR: 0xe84a4a, tire: 0x1e1e1e,
   dump: 0x2f5a3a, sand: 0xb8a070, bin: 0x3a4a3e, hyd: 0xc8302a, news: 0x2f5fa8, woodlt: 0xc8a070, ironblk: 0x2a2a2c, banner1: 0x9e2a2a, banner2: 0x2a4a9e });
@@ -3454,6 +3695,7 @@ function buildMap(id) {
   MAPS[id].build();
   mergeStatic();
   if (MAPS[id].after) MAPS[id].after();
+  try { mapFx(id); } catch (e) { console.warn('mapFx', e); }
   // les petits objets du décor ne projettent plus d'ombre (sauf en Ultra) : beaucoup moins d'appels de dessin pour la passe d'ombres
   if (S.quality !== 'ultra') mapRoot.traverse(o => { if (o.isMesh && o.castShadow && !WORLD.includes(o) && o.geometry) { if (!o.geometry.boundingSphere) o.geometry.computeBoundingSphere(); const sc = o.scale ? Math.max(o.scale.x, o.scale.y, o.scale.z) : 1; if (o.geometry.boundingSphere.radius * sc < 0.9) o.castShadow = false; } });
   for (const m of TERRAIN_MESHES) { mapRoot.add(m); WORLD.push(m); }
@@ -3675,7 +3917,7 @@ function tryWall(fx, fz) {
   if (top !== null && top - P.pos.y <= 1.35) { startMantle(top, n); return; }
   if (!P.climbing && P.climbAvail && P.vel.y > -7) startClimb(n);
 }
-function startClimb(n) { P.climbing = true; P.climbT = 0; P.climbN = n; P.climbAvail = false; P.sliding = false; sfx.climb(); }
+function startClimb(n) { P.climbing = true; P.lurchOK = false; P.climbT = 0; P.climbN = n; P.climbAvail = false; P.sliding = false; sfx.climb(); }
 function climbStep(dt, fwdHeld, fx, fz, wx, wz, hasWish) {
   const v = P.vel, n = P.climbN;
   P.climbT += dt;
@@ -3730,7 +3972,7 @@ function rampKick(n, wx, wz, hasWish) {
   if (hasWish) { v.x += wx * WJ_SIDE * 0.6; v.z += wz * WJ_SIDE * 0.6; }
   v.addScaledVector(n, WJ_OUT * 0.45); v.y = Math.max(v.y, WJ_UP);
   const hs = Math.hypot(v.x, v.z); if (hs > 19) { v.x *= 19 / hs; v.z *= 19 / hs; }
-  P.climbing = false; P.jumpBuf = 0; P.wallJumps++; P.wjCd = 0.18; P.airT = 0;
+  P.climbing = false; P.jumpBuf = 0; P.wallJumps++; P.wjCd = 0.18; P.airT = 0; P.lurchOK = false;
   feed('WALL-JUMP', '×' + P.wallJumps + ' · ' + Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan', 'wj'); sfx.jump();
 }
 // Garde la vitesse le long du mur, remplace la composante vers le mur par une poussée
@@ -3742,7 +3984,7 @@ function wallKick(n, wx, wz, hasWish) {
   v.set(tx + n.x * WJ_OUT, WJ_UP, tz + n.z * WJ_OUT);
   const hs = Math.hypot(v.x, v.z);
   if (hs > 19) { v.x *= 19 / hs; v.z *= 19 / hs; }
-  P.climbing = false; P.jumpBuf = 0; P.wallJumps++; P.wjCd = 0.18; P.airT = 0;
+  P.climbing = false; P.jumpBuf = 0; P.wallJumps++; P.wjCd = 0.18; P.airT = 0; P.lurchOK = false;
   feed('WALL-JUMP', '×' + P.wallJumps + ' · ' + Math.hypot(v.x, v.z).toFixed(1) + ' m/s', 'cyan', 'wj'); sfx.jump();
 }
 function startMantle(top, n) {
@@ -3835,7 +4077,7 @@ function slideStep(dt, wx, wz, hasWish, crouchHeld) {
   if (!crouchHeld || ns < SLIDE_END) P.sliding = false;
 }
 function doJump(hs) {
-  P.vel.y = JUMP_V * (X.superjump && xUnlocked ? 2.3 : 1); P.grounded = false; P.jumpBuf = 0; P.airT = 0;
+  P.vel.y = JUMP_V * (X.superjump && xUnlocked ? 2.3 : 1); P.grounded = false; P.jumpBuf = 0; P.airT = 0; P.lurchOK = true;
   if (simTime - P.landT < BHOP_WIN && P.landSpeed > 6 * K) {
     // rend la vitesse perdue au sol et ajoute un petit gain à chaque saut enchaîné
     const v = P.vel, base = Math.max(hs, P.landSpeed);
@@ -3853,6 +4095,9 @@ function doJump(hs) {
 function airStep(dt, wx, wz, hasWish, fwdHeld, tapPulse, fx, fz) {
   const v = P.vel; P.sliding = false; P.airT += dt;
   v.y -= G * RULES.g * MAP_GRAV * dt;
+  if (P.sky) skyGlide(dt, v);
+  if (P.cannonT > 0) P.cannonT -= dt;
+  lurchStep(v, wx, wz, hasWish);
   if (MAP_WATER) { // nage : l'eau freine, saut maintenu = remonter, accroupi = plonger
     const k = Math.exp(-1.1 * dt); v.x *= k; v.z *= k; v.y *= Math.exp(-1.6 * dt);
     if (act('jump')) v.y = Math.min(v.y + 15 * dt, 4.2); else if (act('crouch')) v.y = Math.max(v.y - 12 * dt, -5);
@@ -3905,7 +4150,7 @@ function onLand(vy) {
   P.landT = simTime; P.landSpeed = Math.hypot(v.x, v.z);
   P.landDir = P.landSpeed > 0.1 ? { x: v.x / P.landSpeed, z: v.z / P.landSpeed } : { x: 0, z: 0 };
   P.wallJumps = 0; P.wr = null;
-  P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.snapAcc = 0; P.doubleJump = false; P.airT = 0;
+  P.climbAvail = true; P.tapBudget = TAP_BUDGET; P.tapAcc = 0; P.snapAcc = 0; P.doubleJump = false; P.airT = 0; P.sky = null; P.cannonT = 0; P.lurchOK = false;
   const impact = clamp(-vy / 16, 0, 1);
   P.dip = Math.max(P.dip, impact * 0.16);
   if (impact > 0.45) camShake(impact * 0.6);
@@ -4236,6 +4481,7 @@ function step(dt) {
   simTime += dt; P.prev.copy(P.pos);
   P.slideBoostT += dt; P.padCd -= dt; P.jumpBuf -= dt; P.wjCd -= dt;
   abilityStep(dt);
+  if (!SPEC.on && !EDIT.on) { cannonTick(dt); if (P.grounded && P.jumpBuf > 0 && !P.veh && !P.zip) { const bl = balloonNear(); if (bl) { P.jumpBuf = 0; balloonLaunch(bl); } } }
   if (SPEC.on) { if (SPEC.free) flyStep(dt); else P.vel.set(0, 0, 0); return; }
   if (ADM.freezeT > 0) { ADM.freezeT -= dt; P.vel.set(0, 0, 0); return; }
   if (EDIT.on) { editorStep(dt); return; }
@@ -6728,6 +6974,7 @@ function hostRecv(from, m) {
   if (m.k === 'snd') { csHostRecv(from, m); return; }
   if (m.k === 'mdl') { cmHostRecv(from, m); return; }
   if (m.k === 'cskin') { cskHostRecv(from, m); return; }
+  if (m.k === 'ping') { broadcast(Object.assign({}, m, { from }), from); pingRecv(m, from); return; }
   if (m.k === 'chat') { chatHostRecv(from, m); return; }
   if (m.k === 'report') { hostReport(from, m.r || {}); return; }
   if (m.k === 'st') pl.st = m.s;
@@ -6769,6 +7016,7 @@ function clientRecv(m) {
   if (m.k === 'reportx') { if (m.r && typeof m.r === 'object') { ACC.remoteReports.push({ at: +m.r.at || Date.now(), from: String(m.r.from || '?').slice(0, 14), target: String(m.r.target || '?').slice(0, 14), reason: REPORT_REASONS.includes(m.r.reason) ? m.r.reason : 'other', text: String(m.r.text || '').slice(0, 200) }); toast(t('rep.new', { name: String(m.r.target || '?').slice(0, 14) }), 4); if (ADM.open && ADM.tab === 'reports') admRender(); } return; }
   if (m.k === 'mapdef') { recvMapdef(m); return; }
   if (m.k === 'cskin') { cskRecv(m); return; }
+  if (m.k === 'ping') { if (m.from !== NET.selfId) pingRecv(m, m.from); return; }
   if (m.k === 'full') { setNetStatus(t('net.full'), 'err'); leaveNet(); return; }
   if (m.k === 'end') { NET.ended = true; return; }
   if (m.k === 'sys') { toast(m.t ? t('sys.' + m.t, { name: m.name }) : String(m.msg || ''), 2.5); sfx.join(); return; }
@@ -9129,7 +9377,8 @@ function updateVehicles(dt) {
   const VK = { buggy: '', tank: 'Tank', heli: 'Heli', plane: 'Plane', jet: 'Jet', boat: 'Boat' };
   const pk = !me && !P.pass && !P.dead && !P.zip && playing && !SPEC.on ? nearPickup() : null;
   const ch = !pk && !me && !P.pass && !P.dead && !P.zip && playing && !SPEC.on ? nearChest() : null;
-  const key = P.pass ? 'veh.leave' : P.zip ? 'zip.ride' : pk ? 'pick.take' : ch ? 'chest.open' : zipHit ? 'zip.grab' : me ? (performance.now() - (me.enterT || 0) > 6000 ? 'veh.out' : 'veh.exit' + VK[me.type]) : near ? (near.driver ? 'veh.ride' : 'veh.enter' + VK[near.type]) : '';
+  const bal = !me && !P.pass && !P.dead && !P.zip && playing && !SPEC.on && !pk && !ch ? balloonNear() : null;
+  const key = P.pass ? 'veh.leave' : P.zip ? 'zip.ride' : pk ? 'pick.take' : ch ? 'chest.open' : bal ? 'mv.useBalloon' : zipHit ? 'zip.grab' : me ? (performance.now() - (me.enterT || 0) > 6000 ? 'veh.out' : 'veh.exit' + VK[me.type]) : near ? (near.driver ? 'veh.ride' : 'veh.enter' + VK[near.type]) : '';
   usePrompt.hidden = !key || SPEC.on;
   const kk = key + LANG + (pk ? pk.w : '');
   if (key && usePrompt.dataset.k !== kk) { usePrompt.dataset.k = kk; usePrompt.innerHTML = t(key).replace('{name}', pk ? itemName(pk.w) : '').replace('{key}', '<kbd>' + codeLabel(BINDS.use[0] || BINDS.use[1] || 'KeyE') + '</kbd>'); }
@@ -9893,7 +10142,7 @@ const ACTIONS = [
   ['w1', 'Carabine', ['Digit1', null]], ['w2', 'Mitraillette', ['Digit2', null]], ['w3', 'Pompe', ['Digit3', null]],
   ['w4', 'Sniper', ['Digit4', null]], ['w5', 'Pistolet', ['Digit5', null]], ['w6', 'Couteau', ['Digit6', 'KeyV']], ['w7', 'Arme spéciale', ['Digit7', null]],
   ['next', 'Arme suivante', [null, null]], ['prev', 'Arme précédente', [null, null]],
-  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]], ['chat', 'Chat', ['Enter', 'KeyY']], ['talk', 'Parler (micro)', ['KeyN', null]], ['loadout', 'Équipement', ['KeyL', null]]
+  ['board', 'Scores (en ligne)', ['Tab', null]], ['respawn', 'Réapparaître', ['KeyT', null]], ['map', 'Mini-carte', ['KeyM', null]], ['tactical', 'Capacité tactique', ['KeyQ', null]], ['ultimate', 'Capacité ultime', ['KeyF', null]], ['inspect', 'Inspecter', ['KeyX', null]], ['emote', 'Emotes', ['KeyJ', null]], ['use', 'Véhicule', ['KeyE', null]], ['grenade', 'Grenade', ['KeyG', null]], ['grenType', 'Type de grenade', ['KeyH', null]], ['mute', 'Couper le son', ['KeyP', null]], ['chat', 'Chat', ['Enter', 'KeyY']], ['talk', 'Parler (micro)', ['KeyN', null]], ['loadout', 'Équipement', ['KeyL', null]], ['ping', 'Marquer (ping)', ['Mouse1', 'KeyB']]
 ];
 const DEFAULT_BINDS = Object.fromEntries(ACTIONS.map(a => [a[0], a[2].slice()]));
 const BINDS = {};
@@ -9933,6 +10182,8 @@ function onAction(id) {
   }
   else if (id === 'inspect') inspect();
   else if (id === 'emote') { if (EMOTE.on) endEmote(); else if (!P.veh) openEmoteMenu(!EMOTE.menu); }
+  else if (id === 'ping') doPing();
+  else if (id === 'use' && !P.veh && !P.pass && !P.zip && balloonNear()) balloonLaunch(balloonNear());
   else if (id === 'use') {
     const pk = !P.veh && !P.pass && !P.zip ? nearPickup() : null;
     const chs = !pk && !P.veh && !P.pass && !P.zip ? nearChest() : null;
@@ -10637,10 +10888,10 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.09b';
+const GAME_VERSION = '2026.11.10';
 const CHANGES = {
-  fr: ['Nouvelle carte : la Lune ! Gravité réduite (sauts presque 3 fois plus hauts, grenades en cloche), cratères, base lunaire, atterrisseur, la Terre dans le ciel étoilé', 'Nouvelle carte secrète sous l’eau : à toi de trouver comment y descendre… On y nage (saut maintenu : remonter, accroupi : plonger) entre épave, ruines, algues, coraux et bulles', 'Labo de test réservé au propriétaire : couloir de tir gradué tous les 10 m avec robots, murs d’escalade de 2 à 8 m, couloir de wall-jump, rampes de 15 à 45°, sauts en longueur de 3 à 9 m, tremplins et tyrolienne', 'Choix du micro pour le vocal de proximité (Réglages → Micro), changement à chaud, retour au micro par défaut s’il est débranché', 'Enchaînements de kills : Double, Triple, Quadra, Penta kill, Carnage, et séries (En série, Déchaîné, Inarrêtable, Divin, Légendaire) avec jingle, grande bannière et voix d’annonce (désactivable) ; nouvelle quête « Carnage »', 'Easter egg : une carte secrète à découvrir… (indice : un vieux code de jeux vidéo, ou 7 touchers sur le titre)', 'Optimisation : fuite de mémoire graphique corrigée (elle grossissait à chaque changement de carte), personnages hors champ plus dessinés, ombres des robots lointains et des petits objets coupées : jusqu’à 50 % d’appels de dessin en moins', 'Nouveaux sons d’armes : de vrais coups de feu (claquement, souffle, mécanique, écho dans le décor) pour la carabine, la mitraillette, le pompe, le sniper, le pistolet, le revolver, la mitrailleuse et la minigun, 3 variantes chacun pour ne jamais sonner pareil', 'Réglage « Sons personnalisés » retiré', 'Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
-  en: ['New map: the Moon! Low gravity, craters, moon base, lander, Earth in the starry sky', 'New secret underwater map: find how to get down there… You swim (hold jump: up, crouch: dive)', 'Owner-only test lab: shooting lane marked every 10 m, climb walls 2–8 m, wall-jump corridor, 15–45° ramps, 3–9 m long jumps', 'Microphone picker for proximity voice chat (Settings → Microphone)', 'Kill streaks: Double, Triple, Quadra, Penta kill, Carnage and sprees with jingle, banner and announcer voice (can be turned off); new « Carnage » quest', 'Easter egg: a secret map to discover… (hint: an old video game code, or 7 taps on the title)', 'Optimization: graphics memory leak fixed, off-screen characters culled, fewer shadows for far robots and small props: up to 50% fewer draw calls', 'New weapon sounds: real-sounding gunshots (crack, blast, action, echo) for every gun, 3 variants each', 'Custom sounds setting removed', 'Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
+  fr: ['Ballons de redéploiement façon Apex sur toutes les cartes : E (ou saut dans l’anneau bleu) = propulsé à 50 m, puis chute libre planée (regarde vers le bas pour piquer, vers le haut pour freiner)', 'Canons gravitationnels sur toutes les cartes : entre dans l’anneau violet, tu es projeté en cloche jusqu’au toit visé (la trajectoire est dessinée en pointillés)', 'Lurch : juste après un saut, change de direction pour rediriger ton élan', 'Marquage (ping) : clic molette ou B — repère un ennemi (rouge) ou un endroit (ambre), visible par tous les joueurs avec la distance', 'Toutes les cartes retouchées : particules d’ambiance (poussière, braises, neige, feuilles, lucioles, embruns, paillettes, poussière lunaire), lampadaires sur les cartes de nuit et décor en plus selon la carte (champignons, rondins, bonshommes de neige, caisses, bouées, mares de lave…)', 'Nouvelle carte : la Lune ! Gravité réduite (sauts presque 3 fois plus hauts, grenades en cloche), cratères, base lunaire, atterrisseur, la Terre dans le ciel étoilé', 'Nouvelle carte secrète sous l’eau : à toi de trouver comment y descendre… On y nage (saut maintenu : remonter, accroupi : plonger) entre épave, ruines, algues, coraux et bulles', 'Labo de test réservé au propriétaire : couloir de tir gradué tous les 10 m avec robots, murs d’escalade de 2 à 8 m, couloir de wall-jump, rampes de 15 à 45°, sauts en longueur de 3 à 9 m, tremplins et tyrolienne', 'Choix du micro pour le vocal de proximité (Réglages → Micro), changement à chaud, retour au micro par défaut s’il est débranché', 'Enchaînements de kills : Double, Triple, Quadra, Penta kill, Carnage, et séries (En série, Déchaîné, Inarrêtable, Divin, Légendaire) avec jingle, grande bannière et voix d’annonce (désactivable) ; nouvelle quête « Carnage »', 'Easter egg : une carte secrète à découvrir… (indice : un vieux code de jeux vidéo, ou 7 touchers sur le titre)', 'Optimisation : fuite de mémoire graphique corrigée (elle grossissait à chaque changement de carte), personnages hors champ plus dessinés, ombres des robots lointains et des petits objets coupées : jusqu’à 50 % d’appels de dessin en moins', 'Nouveaux sons d’armes : de vrais coups de feu (claquement, souffle, mécanique, écho dans le décor) pour la carabine, la mitraillette, le pompe, le sniper, le pistolet, le revolver, la mitrailleuse et la minigun, 3 variantes chacun pour ne jamais sonner pareil', 'Réglage « Sons personnalisés » retiré', 'Skins de mêlée pour TOUTES les lames (plus seulement le katana) : 22 au choix, dont 8 légendaires ✦ avec effets autour de la lame — Brasier (flammes), Glacier (cristaux), Tempête (arcs électriques qui crépitent), Lune de sang (gouttes), Esprits (feux follets en orbite), Hanami (pétales), Runique (runes dorées), Abysse (anneaux du vide) — et un halo lumineux qui pulse', 'Masques (onglet Personnage) : Chat tout mignon, Kitsune, Oni, Hockey, Smiley, Crâne — posés sur le visage, vus par tout le monde', '10 nouveaux skins d’arme légendaires : Démon (flammes qui dansent), Mecha (propulseurs), Nature (lianes, fleurs), Glace (stalactites), Pirate (crâne, sabres), Steampunk (engrenages qui tournent), Cosmos (planètes en orbite), Samouraï (pompon qui se balance), Toxique (gouttes qui tombent), Synthwave (néons) — 16 légendaires en tout', 'Appli Android (APK) : le jeu complet embarqué, plein écran, micro pour le vocal, bouton retour = menu', 'Textures sur tout le décor : béton en panneaux, pierre de taille, tôle rivetée, roche fissurée, planches, tuiles, et un sol propre à chaque carte (sable, herbe, pavés, neige, cendre…)', 'Nouveau ciel : vrais nuages qui défilent (plus ou moins couverts selon la carte), soleil éclatant, étoiles la nuit', '12 skins de perso (onglet Personnage) : Camouflage, Jungle, Urbain, Tigre, Carbone, Sakura, Océan, Galaxie, Néon, Lave, Or, Chrome — les autres joueurs les voient', '6 skins d’arme légendaires façon Apex qui changent le modèle : Dragon (cornes, écailles, yeux de braise), Cyber (ailerons, anneaux holo qui tournent), Cristal, Royal (or, couronne), Ange (ailes, auréole), Os (côtes, crâne)', 'Nouveau réglage Graphismes « Ultra » : halo lumineux autour des lampes et des effets (bloom), couleurs étalonnées, vignette, anticrénelage 4×, ombres 4096 plus douces, résolution jusqu’à 2×, 60 % d’herbe en plus. « Élevés » a aussi le bloom, en plus léger', 'Lunettes de sniper comme dans Battlefield : l’image zoomée s’affiche dans le verre avec un réticule (croix graduée, cercle rouge), et on voit toujours le décor autour', 'En visée, le pistolet, le revolver et les pompes sont baissés : on voit les ennemis, un point rouge au centre de l’écran sert de viseur', 'Point de visée : viseur point rouge sur la carabine, la mitraillette, la rafale et la mitrailleuse ; guidon rouge lumineux sur le pistolet, le revolver et les pompes, pile au centre quand tu vises', 'Armes mieux placées à l’écran : plus petites, plus à droite, les deux mains visibles sur l’arme', 'Corrigé : en visée, les bras du perso cachaient l’écran (énormes avant-bras noirs). Arme tenue plus loin, épaules plus basses, sans cape ni épaulières en 1re personne', 'Mains en 1re personne : ce sont maintenant les bras et les mains de ton perso (Soldat, X-Bot, Nova, Corbeau, Titan…), placés sur l’arme', 'Vrais modèles 3D pour les armes : carabine, mitraillette, pompe, sniper, pistolet, revolver, rafale, pompe auto, sniper lourd et mitrailleuse (pack Quaternius, CC0)', 'Karambit en acier et recoloré par les skins ; couteaux mieux tenus', 'Chat vocal corrigé : on peut enfin parler avec l’hôte ; son de la voix séparé du son du jeu ; jauge du micro dans les réglages', 'Quêtes (nouvel onglet) : 8 défis qui débloquent 8 skins spéciaux (Braise, Obsidienne, Néant, Aurore, Hologramme, Dragon, Champion, Prisme)', 'Ton propre skin d’arme : importe une image dans Armes et skins, les autres joueurs la voient aussi', 'Plein écran de l’appli Windows : la fenêtre entière passe en plein écran (F11)', 'Plein écran : touche F11 ou bouton « Plein écran » dans le menu (marche aussi dans l’appli Windows)', 'Corrigé : « L’hôte a fermé la partie » qui s’affichait alors que la partie continuait. Une petite coupure ne ferme plus la partie de l’hôte, et les joueurs se reconnectent tout seuls (score gardé)', 'Bannir demande une confirmation (2e clic), date de chaque ban, bouton « Débannir tout le monde » dans Comptes', 'Wall-jump contre les rampes (en l\'air près d\'une pente : Saut pour rebondir dessus)', 'Caméra 3e personne plus haute', 'Animations des nouveaux persos : Corbeau suspendu à ses câbles, Spirale en vrille, Gasmask girl plus lumineuse', 'Wall-jump (et course sur les murs) contre les côtés des rampes', 'Caméra 3e personne plus haute', 'Le couteau choisi est en main dès le début, même en mode butin', 'Nouveau perso : Corbeau, double grappin (Avancer = gaz) et ultime Spirale', 'Nouvelle carte : Mine (caverne, galeries, wagonnets, cristaux)', 'Écran Équipement : choisis perso et couteau avant la partie, et à tout moment avec L', 'Chaque couteau a une capacité au clic droit (fente, lancer, parade, fracas…)', 'Nouvelle arme : Épée géante ; couteaux refaits ; karambit 3D', 'Skins admin : Titan devient Gasmask girl (Xinus22, CC BY), Spectre pastel', 'Voitures : décollent sur les bosses et ne traversent plus le sol', 'Interface plus lisse ; mode économie automatique sur les petits PC', 'Katana refait (lame courbe à facettes, ligne de trempe, tsuba ajourée, poignée tressée)', 'Inspection stylée du katana et des couteaux', 'X-Bot admin : skin noir et or avec auréole', 'Triches accessibles sur mobile avec le mot de passe admin', 'Rejoindre une partie depuis un téléphone en 4G : relais réseau ajouté', 'Collision des rampes corrigée', 'Couteaux refaits avec de vrais modèles 3D (combat, dague, machette) + hachette et épée longue', 'Skin de katana ★ Lame céleste (ultra)', 'Panneau admin accessible sur mobile', 'Nouvelle carte : la chambre géante, avec ses jouets', 'Chat écrit et vocal de proximité', 'Nouveau perso : Lynx, qui court sur les murs (ultime Survoltage)', 'Bras à la première personne refaits aux couleurs de ton perso, nouvelles animations', 'On voit les autres tenir leur arme devant eux', 'Viseur personnalisable', 'Boutons réassignables à la manette, boutons tactiles déplaçables', 'Version mobile : joystick, visée au doigt et boutons tactiles (sur iPhone : Partager → Sur l’écran d’accueil pour le plein écran)', 'Inverser la souris (réglages)', 'Panneau admin (Inser) accessible avec un mot de passe admin', 'Nouveau modèle squelette (visible en ligne)', 'Véhicules à plusieurs : monte en passager (E) dans un véhicule déjà conduit, et tire depuis ta place', 'Nova et les modèles importés : squelette corrigé (orientation, sauts, superglide, emotes, position assise)', 'Panneau admin : la souris ne vise plus quand il est ouvert, clic à côté pour le fermer', 'Mode 2 équipes (bleus contre rouges, pas de tir ami)', 'Mode zombies : les zombies n’ont que le couteau, chaque humain tué devient zombie', 'Snap strafe facile activé pour tout le monde, au clavier aussi', 'Plus de limite de vitesse', 'Importe ton propre modèle 3D (.glb) : les autres le voient en ligne', 'Comptes avec mot de passe, bannissement et signalements', 'Nova court droit'],
+  en: ['Apex-style redeploy balloons on every map: E (or jump in the blue ring) = launched 50 m up, then a gliding skydive', 'Gravity cannons on every map: step in the purple ring to be thrown onto a rooftop (dotted arc shows the path)', 'Lurch: right after a jump, change direction to redirect your momentum', 'Ping: middle click or B marks an enemy (red) or a spot (amber) for everyone, with distance', 'Every map reworked: ambient particles, night lamps and extra themed props', 'New map: the Moon! Low gravity, craters, moon base, lander, Earth in the starry sky', 'New secret underwater map: find how to get down there… You swim (hold jump: up, crouch: dive)', 'Owner-only test lab: shooting lane marked every 10 m, climb walls 2–8 m, wall-jump corridor, 15–45° ramps, 3–9 m long jumps', 'Microphone picker for proximity voice chat (Settings → Microphone)', 'Kill streaks: Double, Triple, Quadra, Penta kill, Carnage and sprees with jingle, banner and announcer voice (can be turned off); new « Carnage » quest', 'Easter egg: a secret map to discover… (hint: an old video game code, or 7 taps on the title)', 'Optimization: graphics memory leak fixed, off-screen characters culled, fewer shadows for far robots and small props: up to 50% fewer draw calls', 'New weapon sounds: real-sounding gunshots (crack, blast, action, echo) for every gun, 3 variants each', 'Custom sounds setting removed', 'Melee skins for ALL blades: 22 to pick from, 8 legendary ✦ with effects around the blade (flames, ice, electric arcs, blood drips, spirits, petals, runes, void rings) and a pulsing glow', 'Masks (Character tab): Cute cat, Kitsune, Oni, Hockey, Smiley, Skull — on the face, visible to everyone', '10 new legendary weapon skins: Demon, Mecha, Nature, Ice, Pirate, Steampunk, Cosmos, Samurai, Toxic, Synthwave — 16 legendaries total', 'Android app (APK): full game embedded, fullscreen, mic for voice chat, back button = menu', 'Textures on the whole map: concrete panels, cut stone, riveted metal, cracked rock, planks, roof tiles, and a ground for each map (sand, grass, pavers, snow, ash…)', 'New sky: real drifting clouds, bright sun, stars at night', '12 character skins (Character tab), visible to other players', '6 Apex-style legendary weapon skins that change the model: Dragon, Cyber, Crystal, Royal, Angel, Bone', 'New « Ultra » graphics setting: bloom glow around lamps and effects, color grading, vignette, 4× anti-aliasing, softer 4096 shadows, up to 2× resolution, 60% more grass. « High » also gets a lighter bloom', 'Battlefield-style sniper scopes: the zoomed view shows inside the lens with a reticle, and you still see around it', 'When aiming, the pistol, revolver and shotguns sit lower so you can see enemies; a red dot at the screen center is the sight', 'Aim point: red-dot sight on the carbine, SMG, burst rifle and LMG; glowing red front sight on the pistol, revolver and shotguns, right at the center when aiming', 'Better weapon placement: smaller, further right, both hands visible on the weapon', 'Fixed: while aiming, the character’s arms covered the screen. Weapon held farther, lower shoulders, no cape or shoulder pads in first person', 'First-person hands are now your character’s own arms and hands, placed on the weapon', 'Real 3D weapon models: carbine, SMG, shotgun, sniper, pistol, revolver, burst rifle, auto shotgun, heavy sniper and LMG (Quaternius pack, CC0)', 'Steel karambit that takes weapon skins; knives held better', 'Voice chat fixed: you can finally talk with the host; voice volume separate from game sound; mic level meter in settings', 'Quests (new tab): 8 challenges unlocking 8 special skins', 'Your own weapon skin: import an image in Weapons and skins, other players see it too', 'Windows app fullscreen: the whole window goes fullscreen (F11)', 'Fullscreen: F11 key or « Fullscreen » button in the menu (works in the Windows app too)', 'Fixed: « The host closed the match » showing while the match was still on. A short network drop no longer closes the host’s match, and players reconnect on their own (score kept)', 'Banning now needs a confirmation (2nd click), each ban shows its date, « Unban everyone » button in Accounts', 'Wall-jump off ramps (in the air near a slope: Jump to kick off it)', 'Higher third-person camera', 'New character animations: Raven hangs from his cables, spinning Spiral, brighter Gasmask girl', 'Wall-jump (and wall running) off the sides of ramps', 'Higher third-person camera', 'Your chosen knife is available from the start, even in loot mode', 'New character: Raven, twin grappling hooks (Forward = gas) and Spiral ultimate', 'New map: Mine (cavern, tunnels, minecarts, crystals)', 'Loadout screen: pick character and knife before the match, and anytime with L', 'Every knife has a right-click ability (lunge, throw, parry, slam…)', 'New weapon: Greatsword; reworked knives; 3D karambit', 'Admin skins: Titan becomes Gasmask girl (Xinus22, CC BY), pastel Spectre', 'Cars: take off over bumps and no longer sink into the ground', 'Smoother interface; automatic low-spec mode on small PCs', 'Rebuilt katana (curved faceted blade, temper line, pierced tsuba, wrapped grip)', 'Stylish katana and knife inspects', 'Admin X-Bot: black and gold skin with a halo', 'Cheats on mobile with the admin password', 'Joining from a phone on 4G: network relay added', 'Ramp collision fixed', 'Knives rebuilt with real 3D models (combat, dagger, machete) + hatchet and longsword', '★ Celestial blade katana skin (ultra)', 'Admin panel on mobile', 'New map: the giant bedroom, full of toys', 'Proximity text and voice chat', 'New character: Lynx, who runs on walls (Overdrive ultimate)', 'First-person arms rebuilt in your character’s colors, new animations', 'You can see other players holding their weapon in front of them', 'Custom crosshair', 'Remappable controller buttons, movable touch buttons', 'Mobile version: joystick, finger aiming and touch buttons (on iPhone: Share → Add to Home Screen for full screen)', 'Invert mouse (settings)', 'Admin panel (Insert) unlocked with an admin password', 'New skeleton model (visible online)', 'Vehicles for several players: ride as a passenger (E) in a vehicle someone is driving, and shoot from your seat', 'Nova and imported models: skeleton fixed (facing, jumps, superglide, emotes, sitting)', 'Admin panel: the mouse no longer aims while it’s open, click outside to close it', '2-team mode (blue vs red, no friendly fire)', 'Zombie mode: zombies only have a knife, every human they kill turns', 'Easy snap strafe on for everyone, keyboard included', 'No more speed limit', 'Import your own 3D model (.glb): others see it online', 'Accounts with passwords, bans and reports', 'Nova now runs straight']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -12558,6 +12809,7 @@ function frame(now) {
   for (const c in wheelT) if (wheelT[c] > 0) wheelT[c] -= dt;
   GRASS_T.value += dt;
   try { skyTick(now / 1000); } catch (e) {}
+  try { if (menu.hidden) { pingTick(dt); ambientTick(dt); } } catch (e) {}
   // ombres des robots seulement près de la caméra (les robots lointains en projetaient pour rien)
   if ((frame._sh = (frame._sh || 0) + dt) > 0.3) { frame._sh = 0; try { for (const d of dummies) { const near = d.g.visible && d.g.position.distanceToSquared(camera.position) < 38 * 38; if (d._sh !== near) { d._sh = near; d.g.traverse(o => { if (o.isMesh) o.castShadow = near; }); } } } catch (e) {} }
   if (playing) { mouse.left = act('fire'); mouse.right = act('ads'); } else { mouse.left = mouse.right = false; }
