@@ -387,12 +387,7 @@ Chaque joueur a 75 de bouclier et 100 de vie. Le bouclier se recharge après 4 s
 
 Dans l'appli, Discord peut afficher ce que tu fais : carte, solo ou en ligne avec le nombre de joueurs, arme ou buggy, éliminations, temps de jeu, et un bouton « Rejoindre la partie » qui ouvre le lien de ta partie. Un site web ne peut pas parler à Discord, donc ça ne marche que dans `Velocite.exe`, avec Discord ouvert sur le même PC.
 
-Discord demande une « application » pour afficher le nom du jeu. À faire une seule fois :
-
-1. Va sur https://discord.com/developers/applications et clique sur **New Application**. Le nom que tu choisis (par exemple « Vélocité ») est celui qui s'affichera : « Joue à Vélocité ».
-2. Copie l'**Application ID** (page General Information).
-3. Facultatif : dans **Rich Presence → Art Assets**, ajoute une image (512×512 minimum) nommée exactement `logo` pour avoir l'icône dans le statut. `launcher/discord-logo.png` est prévue pour ça.
-4. Dans le jeu, menu Réglages → **Statut Discord** : coche la case et colle l'ID. Le message passe à « Connecté » quand Discord reçoit le statut.
+C'est prêt à l'emploi : le jeu utilise l'application Discord « Vélocité » (ID `1568593945200435251`), donc le statut affiche « Joue à Vélocité » avec le logo du jeu (`assets/discord-logo.png`, chargé depuis le site). Le statut est activé par défaut ; on peut le couper dans Réglages → **Statut Discord**, ou y coller l'ID d'une autre application.
 
 Dans Discord, le partage d'activité doit être activé (Paramètres → Confidentialité de l'activité → « Partager mon activité »). On peut aussi mettre l'ID dans un fichier `discord-id.txt` à côté de `Velocite.exe`.
 
