@@ -249,9 +249,14 @@ Télécharge **[Velocite.apk](https://github.com/Haze15/velocite/releases/downlo
 
 Deux éliminations à moins de 4,5 s d'écart = **Double kill**, puis Triple, Quadra, Penta, Carnage ; et des séries sans mourir (3, 5, 8, 12, 16, 20 : Ça chauffe, En série, Déchaîné, Inarrêtable, Divin, Légendaire). Chaque palier a son jingle, une grande bannière et une voix d'annonce (synthèse vocale du navigateur, désactivable dans les réglages). Quête « Carnage » : un quadra kill → skin Carnage.
 
+## Lune et Labo de test
+
+- **Lune** : gravité à 38 % (sauts presque 3× plus hauts, chutes lentes, grenades et robots aussi), cratères, base lunaire avec toits accessibles, atterrisseur, tremplins géants, la Terre dans un ciel noir étoilé.
+- **Labo de test** (visible seulement une fois le mode propriétaire débloqué) : couloir de tir avec repères au sol tous les 10 m et robots à 10, 25, 50, 75 et 100 m ; murs d'escalade de 2, 3, 4, 6 et 8 m ; couloir de wall-jump ; rampes de 15°, 25°, 35° et 45° ; sauts en longueur de 3 à 9 m ; tremplins, plateforme haute et tyrolienne.
+
 ## Secret
 
-Il y a une carte cachée. Indice : un très vieux code de jeux vidéo, tapé n'importe où (ou 7 touchers rapides sur le titre du menu sur téléphone). On y cherche 5 plumes d'or.
+Il y a une carte cachée. Indice : un très vieux code de jeux vidéo, tapé n'importe où (ou 7 touchers rapides sur le titre du menu sur téléphone). On y cherche 5 plumes d'or… et ce château cache lui-même un autre passage, vers un monde où l'on nage.
 
 ## Décor, ciel et skins
 
