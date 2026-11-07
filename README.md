@@ -309,6 +309,13 @@ Une métropole abandonnée après une catastrophe, d'un seul tenant, sous un cie
 Les bâtiments en modèles 3D ont leurs vraies dimensions de collision ; ceux où l'on entre sont construits étage par étage. Les modèles sont regroupés par quartier, les objets loin de la caméra ne sont plus dessinés et les petits PC ont moins de décor (la ville et ses collisions restent les mêmes pour tous les joueurs).
 
 
+
+## Viseurs et skins
+
+- **Viseur au choix** (onglet Armes, sous l'aperçu) : holographique, point rouge, lunette tactique ×4, lunette longue ×8 ou mire métallique sur la carabine, la mitraillette, le fusil en rafale et la mitrailleuse ; réticule et grossissement sur les fusils de précision. Les pompes et le pistolet restent à la mire.
+- **Galerie** : chaque skin d'arme (ou de mêlée quand on regarde la lame) a sa vignette rendue sur l'arme choisie ; un clic l'équipe.
+- **Nouveaux skins** : Hexacarbone, Camo numérique, Acier de Damas, Marbre noir et or, Aurore polaire, Vaporwave, et le légendaire **Insecte** (six pattes qui s'agitent à chaque tir, antennes, mandibules).
+
 ## Progression
 
 - **Niveaux et XP** : éliminations, tirs à la tête, bhops, superglides, temps de jeu, monstres abattus, courses de karts, nouvelles cartes et succès rapportent de l'XP. 100 niveaux et 10 titres, de Recrue à Vélocité incarnée.
