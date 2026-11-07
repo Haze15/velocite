@@ -1,0 +1,227 @@
+diff --git a/README.md b/README.md
+index cf11e6e..cf38e38 100644
+--- a/README.md
++++ b/README.md
+@@ -223,6 +223,8 @@ Dans les réglages : forme (croix, croix en T, croix en X, cercle, point), coule
+ 
+ ## Multijoueur
+ 
++- **Arme vraiment tenue** : l'arme est posée devant la poitrine et suit la visée ; les deux mains (la droite seule pour un couteau) sont placées sur ses prises par une IK à deux os, quel que soit le squelette du personnage. L'aperçu du menu et l'avatar à la troisième personne utilisent la même tenue.
++
+ 1. Un joueur clique sur **Créer une partie** : il héberge la partie et reçoit un code de 5 caractères.
+ 2. Les autres entrent ce code et cliquent sur **Rejoindre**, ou ouvrent directement le lien partagé (`…/velocite/#CODE`).
+ 3. Tout le monde clique sur **Entrer dans l'arène**.
+diff --git a/index.html b/index.html
+index bde8c43..8adbb3b 100644
+--- a/index.html
++++ b/index.html
+@@ -904,6 +904,7 @@ if (window.__velFatal) return; // moteur absent : le bandeau explique, inutile d
+   const LM = THREE.MeshLambertMaterial;
+   THREE.MeshLambertMaterial = function (params) {
+     if (window.__velPbr) { const p = Object.assign({ roughness: 0.85, metalness: 0 }, params || {}); const m = new THREE.MeshStandardMaterial(p); m.envMapIntensity = window.__velEnvK || 0.6; return m; }
++    if (params && params.flatShading !== undefined) { params = Object.assign({}, params); delete params.flatShading; } // Lambert ne connaît pas flatShading (avertissement à chaque création)
+     return new LM(params);
+   };
+   THREE.MeshLambertMaterial.prototype = LM.prototype;
+@@ -6835,6 +6836,52 @@ function fpaBuild(ch) {
+   for (const h of by.hide || []) h.scale.setScalar(0.001);
+   FPA.vis = vis; FPA.sides = sides; return true;
+ }
++/* ---------- bras des avatars sur l'arme : IK à deux os (épaule, coude, main) vers les points de prise de l'arme.
++   Remplace les angles fixes de HOLD_GUN, qui ne valaient que pour le squelette X-Bot (le Soldat et le Titan finissaient
++   les bras en l'air). Ici la pose dépend de la géométrie, pas des axes d'os du modèle. ---------- */
++function holdRigBuild(vis) {
++  try {
++    const by = fpaBones(vis.obj);
++    const need = s => by[s + 'Arm'] && by[s + 'ForeArm'] && by[s + 'Hand'] && by[s + 'HandIndex1'] && by[s + 'HandPinky1'];
++    if (!need('Right') || !need('Left')) return null;
++    vis.obj.updateMatrixWorld(true);
++    const sides = {};
++    for (const [k, sd] of [['r', 'Right'], ['l', 'Left']]) {
++      const A = by[sd + 'Arm'], B = by[sd + 'ForeArm'], C = by[sd + 'Hand'];
++      const wp = o => o.getWorldPosition(new V3());
++      const sc = A.getWorldScale(new V3()).x || 1;
++      const l1 = wp(A).distanceTo(wp(B)) / sc, l2 = wp(B).distanceTo(wp(C)) / sc;
++      const inv = C.matrixWorld.clone().invert(), loc = o => wp(o).applyMatrix4(inv);
++      const mid = by[sd + 'HandMiddle1'] || by[sd + 'HandIndex1'], idx = by[sd + 'HandIndex1'], pk = by[sd + 'HandPinky1'];
++      const fL = loc(mid).normalize(), across = loc(idx).sub(loc(pk)).normalize();
++      const nL = k === 'r' ? fL.clone().cross(across) : across.clone().cross(fL); nL.sub(fL.clone().multiplyScalar(nL.dot(fL))).normalize();
++      const axL = fL.clone().cross(nL).normalize(), hq = C.getWorldQuaternion(new THREE.Quaternion());
++      const fingers = [];
++      for (const f of ['Index', 'Middle', 'Ring', 'Pinky', 'Thumb']) for (let i = 1; i <= 3; i++) {
++        const b = by[sd + 'Hand' + f + i]; if (!b) continue;
++        const parRel = hq.clone().invert().multiply(b.parent.getWorldQuaternion(new THREE.Quaternion()));
++        fingers.push({ b, thumb: f === 'Thumb', i, ax: axL.clone().applyQuaternion(parRel.invert()).normalize(), rest: b.quaternion.clone() });
++      }
++      sides[k] = { A, B, C, l1, l2, fL, nL, fingers, scale: sc, restA: A.quaternion.clone(), restB: B.quaternion.clone(), restC: C.quaternion.clone() };
++    }
++    return sides;
++  } catch (e) { return null; }
++}
++const _hqa = new THREE.Quaternion(), _hqb = new THREE.Quaternion(), _hqc = new THREE.Quaternion(), _hwq = new THREE.Quaternion(), _hgt = new V3();
++// pose les deux mains (ou la droite seule pour un couteau) sur l'arme `vm` (groupe déjà placé dans le monde) ; w = poids 0..1
++function holdIK(rig, vm, w) {
++  if (!rig || !vm.hands || w <= 0.001) return;
++  vm.g.updateMatrixWorld(true); vm.g.getWorldQuaternion(_hwq);
++  const knife = vm.kind === 5, pistol = vm.kind === 4;
++  for (const side of ['r', 'l']) {
++    const h = vm.hands[side], S2 = rig[side]; if (!h || !S2) continue;
++    _hqa.copy(S2.A.quaternion); _hqb.copy(S2.B.quaternion); _hqc.copy(S2.C.quaternion);
++    _hgt.set(h[0], h[1], h[2]).applyMatrix4(vm.g.matrixWorld);
++    const pose = FPA_POSE[knife ? (side === 'r' ? 'knifeR' : 'knifeL') : side === 'r' ? 'gunR' : pistol ? 'pistolL' : 'gunL'];
++    fpaSide(S2, _hgt, pose, _hwq, side, pose.c);
++    if (w < 0.999) { S2.A.quaternion.slerp(_hqa, 1 - w); S2.B.quaternion.slerp(_hqb, 1 - w); S2.C.quaternion.slerp(_hqc, 1 - w); S2.A.updateMatrixWorld(true); }
++  }
++}
+ // pivote un os pour que le point `from` (monde) passe par `to`
+ function fpaAim(bone, from, to) {
+   bone.getWorldPosition(_fv);
+@@ -6847,8 +6894,9 @@ function fpaAim(bone, from, to) {
+ }
+ function fpaSetWorldQ(bone, q) { bone.parent.getWorldQuaternion(_fq).invert(); bone.quaternion.copy(_fq.multiply(q)); bone.updateMatrixWorld(true); }
+ // orientation monde d'un repère (f, n) → quaternion qui amène (fL, nL) de la main sur (f, n)
++const _fpB1 = new V3(), _fpB2 = new V3(), _fpN = new V3(), _fpD = new V3(), _fpPole = new V3(), _fpQ = new THREE.Quaternion();
+ function fpaBasisQ(f, n, fL, nL, out) {
+-  const b = new V3().crossVectors(f, n), bL = new V3().crossVectors(fL, nL);
++  const b = _fpB1.crossVectors(f, n), bL = _fpB2.crossVectors(fL, nL);
+   _fm.makeBasis(f, n, b); _fm2.makeBasis(fL, nL, bL).transpose();
+   return out.setFromRotationMatrix(_fm.multiply(_fm2));
+ }
+@@ -6856,21 +6904,21 @@ function fpaSide(S2, target, pose, wq, side, curl) {
+   const { A, B, C } = S2;
+   A.quaternion.copy(S2.restA); B.quaternion.copy(S2.restB); C.quaternion.copy(S2.restC); A.updateMatrixWorld(true);
+   const F = _fpP.set(pose.F[0], pose.F[1], pose.F[2]).normalize().applyQuaternion(wq);
+-  const N = new V3(pose.N[0], pose.N[1], pose.N[2]); N.sub(_fv.copy(F).multiplyScalar(N.dot(F)));
++  const N = _fpN.set(pose.N[0], pose.N[1], pose.N[2]); N.sub(_fv.copy(F).multiplyScalar(N.dot(F)));
+   if (N.lengthSq() < 1e-6) N.set(0, 1, 0); N.normalize(); N.applyQuaternion(wq); N.sub(_fv.copy(F).multiplyScalar(N.dot(F))).normalize();
+   // poignet = point de prise reculé le long des doigts et décollé de la paume
+   _fpT.copy(target).addScaledVector(F, -pose.back).addScaledVector(N, -pose.out);
+   A.getWorldPosition(_fpA);
+-  const l1 = S2.l1 * FPA.scale, l2 = S2.l2 * FPA.scale;
+-  const d = _fpT.clone().sub(_fpA); const dist = clamp(d.length(), 0.05, (l1 + l2) * 0.999); d.normalize();
++  const sc = S2.scale || FPA.scale, l1 = S2.l1 * sc, l2 = S2.l2 * sc;
++  const d = _fpD.copy(_fpT).sub(_fpA); const dist = clamp(d.length(), 0.05, (l1 + l2) * 0.999); d.normalize();
+   _fpT.copy(_fpA).addScaledVector(d, dist);
+   const cosA = clamp((l1 * l1 + dist * dist - l2 * l2) / (2 * l1 * dist), -1, 1), sinA = Math.sqrt(1 - cosA * cosA);
+-  // le coude part vers le bas et vers l'extérieur
+-  const pole = new V3(side === 'r' ? 0.55 : -0.55, -1, 0.15); pole.sub(_fv.copy(d).multiplyScalar(pole.dot(d))).normalize();
++  // le coude part vers le bas et vers l'extérieur (en repère monde : on tourne le pôle avec l'arme pour les avatars)
++  const pole = _fpPole.set(side === 'r' ? 0.55 : -0.55, -1, 0.15); if (S2.scale) pole.applyQuaternion(wq); pole.sub(_fv.copy(d).multiplyScalar(pole.dot(d))).normalize();
+   _fpE.copy(_fpA).addScaledVector(d, l1 * cosA).addScaledVector(pole, l1 * sinA);
+   B.getWorldPosition(_fpB); fpaAim(A, _fpB, _fpE);
+   C.getWorldPosition(_fpC); fpaAim(B, _fpC, _fpT);
+-  fpaSetWorldQ(C, fpaBasisQ(F, N, S2.fL, S2.nL, new THREE.Quaternion()));
++  fpaSetWorldQ(C, fpaBasisQ(F, N, S2.fL, S2.nL, _fpQ));
+   for (const f of S2.fingers) {
+     const a = f.thumb ? pose.th * (f.i === 1 ? 0.3 : 0.6) : (f.i === 1 ? 0.9 : f.i === 2 ? 1 : 0.75) * (curl);
+     f.b.quaternion.copy(f.rest).multiply(_fq.setFromAxisAngle(f.ax, a));
+@@ -7469,6 +7517,8 @@ function attachChar(rp) {
+   let hand = null; rp.vis.obj.traverse(o => { if (!hand && o.isBone && CHARS[used].hand.test(o.name)) hand = o; });
+   if (!hand) rp.vis.obj.traverse(o => { if (!hand && CHARS[used].hand.test(o.name)) hand = o; });
+   rp.hand = hand;
++  rp.vis.holdRig = holdRigBuild(rp.vis); // rig IK des bras, pris en pose de liaison (avant toute animation)
++  rp.vis.obj.traverse(o => { if (!rp.vis.chest && o.isBone && /Spine2$/.test(o.name)) rp.vis.chest = o; });
+   playAnim(rp.vis, CHARS[used].anim.idle, 0);
+ }
+ function removeRemote(id) {
+@@ -7859,7 +7909,7 @@ function animateAvatar(vis, dt, o) {
+   // arme tenue à deux mains devant la poitrine (couteau : bras droit seulement) ; le buste suit la visée
+   const hw = vis.holdW = approach(vis.holdW || 0, o.hold ? 1 : 0, dt * 7);
+   if (hw > 0.001) {
+-    const H = o.hold === 'knife' ? HOLD_KNIFE : HOLD_GUN;
++    const H = vis.holdRig ? {} : o.hold === 'knife' ? HOLD_KNIFE : HOLD_GUN; // rig IK présent : les bras sont posés sur l'arme dans updateRemoteGun
+     for (const b in H) {
+       const bone = rig[b]; if (!bone || !bone.userData.rest) continue; const v = H[b];
+       _dq.identity(); for (let i = 2; i >= 0; i--) if (v[i]) _dq.multiply(_pq.setFromAxisAngle(_axes[i], v[i]));
+@@ -7973,6 +8023,13 @@ function updateSelfAvatar(dt) {
+     animateAvatar(vis, dt, { loco: hs > 4.6 * K ? 'run' : hs > 0.6 ? 'walk' : 'idle', state: P.zip || (ODM.a.length && air) ? 'zip' : SPIRAL.t > 0 || (P.sgT > 0.1 && air) ? 'sg' : P.sliding ? 'slide' : P.crouch ? 'crouch' : air ? 'air' : 'ground', hold: WS.cur === 5 ? 'knife' : 'gun', pitch: X.spin ? -1.35 : P.pitch });
+     vis.obj.position.y = -MODELS.chars[vis.ch].minY * vis.base - (vis.lower || 0);
+     updateOutfit(vis, SELF.g);
++    // à la troisième personne, on tient sa vraie arme comme les autres joueurs (même placement, même IK des bras)
++    if (!SELF.rp || SELF.rp.vis !== vis) {
++      if (SELF.rp && SELF.rp.gun) SELF.g.remove(SELF.rp.gun.vm.g);
++      SELF.rp = { id: 'self', g: SELF.g, vis, hand: null, gun: null, st: null };
++      vis.holdRig = holdRigBuild(vis); vis.obj.traverse(o => { if (!vis.chest && o.isBone && /Spine2$/.test(o.name)) vis.chest = o; if (!SELF.rp.hand && o.isBone && CHARS[vis.ch] && CHARS[vis.ch].hand.test(o.name)) SELF.rp.hand = o; });
++    }
++    SELF.rp.st = myState(); delete SELF.rp.st.ads; if (SELF.rp.hand || SELF.rp.vis.holdRig) updateRemoteGun(SELF.rp, dt);
+     return;
+   }
+   if (!EMOTE.on) { if (SELF.g.visible && !thirdOn()) SELF.g.visible = false; return; }
+@@ -9770,15 +9827,26 @@ function updateRemoteGun(rp, dt) {
+     const kind = clamp(st.w | 0, 0, 6), kt = kind === 6 ? (SPECIALS[st.sp] ? st.sp : 'burst') : KNIVES[st.kt] ? st.kt : 'combat';
+     const vm = buildViewmodel(kind, kt); wScene.remove(vm.g);
+     vm.g.scale.setScalar(0.92); vm.g.traverse(o => { if (o.isMesh && o !== vm.flash) o.castShadow = true; });
+-    applySkinVM(vm, kind === 5 && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : (st.sk === 'custom' ? SKINS['c:' + rp.id] : SKINS[st.sk]) || SKINS.std);
++    applySkinVM(vm, kind === 5 && KSKINS[st.ks] ? KSKINS[st.ks] : kind === 5 && kt === 'morgane' ? MORGANE_SKIN : kind === 5 && kt === 'trident' ? TRIDENT_SKIN : (st.sk === 'custom' ? (rp.id === 'self' ? SKINS.custom : SKINS['c:' + rp.id]) : SKINS[st.sk]) || SKINS.std);
+     rp.g.add(vm.g); rp.gun = { vm, key, flashT: 0 };
+   }
+   const vm = rp.gun.vm, g = vm.g; g.visible = true;
+   rp.vis.obj.updateMatrixWorld(true);
+-  rp.hand.getWorldPosition(_gw); rp.g.worldToLocal(_gw);
++  if (rp.vis.holdRig === undefined) { rp.vis.holdRig = holdRigBuild(rp.vis); if (!rp.vis.chest) rp.vis.obj.traverse(o => { if (!rp.vis.chest && o.isBone && /Spine2$/.test(o.name)) rp.vis.chest = o; }); }
+   g.rotation.set(clamp(st.pi || 0, -1.4, 1.4), 0, 0);
+-  const h = vm.hands.r; _gq.setFromEuler(g.rotation); _gv.set(h[0], h[1], h[2]).multiplyScalar(g.scale.x).applyQuaternion(_gq);
+-  g.position.copy(_gw).sub(_gv);
++  _gq.setFromEuler(g.rotation);
++  if (rp.vis.holdRig && rp.vis.chest && vm.hands) {
++    // l'arme est posée devant la poitrine (suit la visée et le buste), les mains vont la chercher
++    rp.vis.chest.getWorldPosition(_gw); rp.g.worldToLocal(_gw);
++    const knife = vm.kind === 5, sc = rp.vis.obj.scale.x || 1;
++    _gv.set(knife ? 0.22 : 0.06, knife ? -0.2 : -0.12, knife ? -0.2 : -0.3).multiplyScalar(sc).applyQuaternion(_gq);
++    g.position.copy(_gw).add(_gv);
++    holdIK(rp.vis.holdRig, vm, rp.vis.holdW || 0);
++  } else {
++    rp.hand.getWorldPosition(_gw); rp.g.worldToLocal(_gw);
++    const h = vm.hands.r; _gv.set(h[0], h[1], h[2]).multiplyScalar(g.scale.x).applyQuaternion(_gq);
++    g.position.copy(_gw).sub(_gv);
++  }
+   rp.gun.flashT -= dt; vm.flash.visible = rp.gun.flashT > 0 && vm.kind !== 5;
+   if (vm.flash.visible) vm.flash.rotation.z = Math.random() * 6;
+   // reflet de lunette : visible quand un sniper vise dans ta direction
+@@ -12195,7 +12263,8 @@ mapSel.addEventListener('change', () => {
+ });
+ /* ---------- aperçu 3D du perso dans le menu ---------- */
+ const prevCanvas = $('charPrev');
+-let prevR = null, prevScene = null, prevCam = null, prevVis = null;
++let prevR = null, prevScene = null, prevCam = null, prevVis = null, prevRoot = null;
++const PREV = { rp: null }; // l'aperçu du menu tient la carabine avec le skin choisi (même placement et IK que les autres joueurs)
+ function refreshPreview() {
+   needModel(S.char);
+   if (!prevR) {
+@@ -12208,16 +12277,24 @@ function refreshPreview() {
+     const rim = new THREE.DirectionalLight(0xffb020, 0.6); rim.position.set(-2, 2, -3); prevScene.add(rim);
+   }
+   const pch = myChar(), model = MODELS.chars[pch];
+-  if (prevVis) { prevScene.remove(prevVis.obj); prevVis = null; }
++  if (!prevRoot) { prevRoot = new THREE.Group(); prevScene.add(prevRoot); }
++  if (prevVis) { prevRoot.remove(prevVis.obj); if (PREV.rp && PREV.rp.gun) prevRoot.remove(PREV.rp.gun.vm.g); prevVis = null; PREV.rp = null; }
+   if (!model) return;
+   prevVis = cloneModel(model); prevVis.ch = pch; prevVis.obj.rotation.y = CHARS[pch].yaw;
+   prevVis.cs = S.cskin; prevVis.mk = S.mask; tintChar(prevVis, pch, TINTS[S.tint] || COLORS[0]);
+-  prevScene.add(prevVis.obj);
++  prevRoot.add(prevVis.obj);
++  let hand = null; prevVis.obj.traverse(o => { if (!hand && o.isBone && CHARS[pch].hand && CHARS[pch].hand.test(o.name)) hand = o; });
++  prevVis.holdRig = holdRigBuild(prevVis); prevVis.obj.traverse(o => { if (!prevVis.chest && o.isBone && /Spine2$/.test(o.name)) prevVis.chest = o; });
++  PREV.rp = { id: 'self', g: prevRoot, vis: prevVis, hand, gun: null, st: { w: 0, sk: S.skin, pi: 0 } };
+   playAnim(prevVis, CHARS[pch].anim.idle, 0);
+ }
+ function renderPreview(dt) {
+   if (!prevR || !prevVis) return;
+-  prevVis.mixer.update(dt); prevVis.obj.rotation.y += dt * 0.45;
++  prevRoot.rotation.y += dt * 0.45;
++  if (PREV.rp && (PREV.rp.hand || prevVis.holdRig)) {
++    animateAvatar(prevVis, dt, { loco: 'idle', state: 'ground', hold: 'gun', pitch: 0 });
++    PREV.rp.st.sk = S.skin; try { updateRemoteGun(PREV.rp, dt); } catch (e) { PREV.rp = null; }
++  } else prevVis.mixer.update(dt);
+   prevR.render(prevScene, prevCam);
+ }
+ const charSel = $('charSel'), tintSel = $('tintSel');
+@@ -17599,7 +17676,7 @@ function arLightTick(dt) {
+     } catch (e) { LGT.cube = null; }
+   }
+   if (LGT.cube) for (const vm of [...VM, WP && WP.vm && WP.vm.src]) {
+-    if (!vm || !vm.mats || vm.mats._envV === LGT.ver) continue; vm.mats._envV = LGT.ver;
++    if (!vm || !vm.mats || vm._envV === LGT.ver) continue; vm._envV = LGT.ver; // (avant : stocké dans vm.mats, ce qui faisait planter applySkinVM au changement de couteau)
+     for (const [role, r] of [['steel', 0.32], ['dark', 0.12], ['mid', 0.1], ['blk', 0.05], ['teal', 0.12], ['tan', 0.04]]) { const m = vm.mats[role]; if (!m) continue; m.envMap = LGT.cube; m.combine = THREE.MixOperation; m.reflectivity = r; m.needsUpdate = true; }
+   }
+   if (WP && WP.vm) { try { kitTick(WP.vm.src, performance.now() / 1000); } catch (e) {} }

@@ -1,0 +1,48 @@
+diff --git a/README.md b/README.md
+index b163245..4cefb4d 100644
+--- a/README.md
++++ b/README.md
+@@ -145,8 +145,23 @@ Le mode se choisit dans le menu (à côté de la carte) ou dans le panneau admin
+ 
+ ## Comptes et signalements
+ 
+-- **Mot de passe :** dans l'onglet Multijoueur, à côté du pseudo. Le premier mot de passe tapé avec un pseudo crée le compte chez l'hôte ; ensuite il faut le même pour rejoindre avec ce pseudo. Sans mot de passe, on peut toujours jouer avec un pseudo libre (sauf si l'hôte rend le mot de passe obligatoire).
+-- **Panneau admin, onglet Comptes :** liste des comptes, dernière connexion, réinitialiser ou définir un mot de passe, bannir ou débannir, supprimer. Les mots de passe sont stockés sous forme d'empreinte SHA-256 salée : personne ne peut les lire, on peut seulement les remplacer. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien.
++- **Mot de passe :** dans l'onglet Multijoueur, à côté du pseudo. Le premier mot de passe tapé avec un pseudo crée le compte chez l'hôte ; ensuite il faut le même pour rejoindre avec ce pseudo. Sans mot de passe, on peut toujours jouer avec un pseudo libre (sauf si l'hôte rend le mot de passe obligatoire). Le mot de passe **ne quitte jamais ton appareil** : l'hôte envoie un défi (sel + nonce) et ton jeu répond par une empreinte ; l'hôte ne voit ni ne stocke le mot de passe lui-même.
++- **Panneau admin, onglet Comptes :** liste des comptes, dernière connexion, réinitialiser ou définir un mot de passe, bannir ou débannir, supprimer. Les mots de passe sont stockés sous forme d'empreinte SHA-256 salée : personne ne peut les lire, on peut seulement les remplacer. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien. Un pseudo de la liste des admins n'obtient le droit admin qu'avec un compte existant dont le mot de passe vient d'être vérifié.
++
++## Sécurité en ligne
++
++Il n'y a pas de serveur de jeu : l'hôte relaie ce que chaque joueur dit de lui-même. Il ne peut pas rejouer la physique de tous, mais il refuse ce qui est impossible :
++
++- états malformés ou hors carte (chaque champ est typé et borné avant d'être rediffusé) ;
++- dégâts au-delà de ce qu'une arme peut faire (300 maximum par coup, budget de 450 puis 350/s par paire tireur → victime), coups portés par un joueur mort, corps à corps ou percussion à distance, impulsion depuis l'autre bout de la carte ;
++- une élimination n'est créditée qu'à celui dont l'hôte a relayé un coup sur la victime dans les 6 s ;
++- plus d'un certain débit par type de message (grenades, chat, modèles, états…) : le surplus est ignoré ;
++- un modèle 3D importé n'est relayé qu'après vérification de chaque morceau, et un fichier qui référence des images externes est refusé ;
++- la reprise de session après une coupure demande un jeton secret remis à la connexion.
++
++Les triches intégrées (onglet Triche du propriétaire) sont automatiquement coupées en ligne.
++
++**Propriétaire et admin :** le jeu ne contient que deux **clés publiques** Ed25519 (`X_PUB` et `ADM_PUB` dans `index.html`). Le mot de passe tapé sert de graine à la clé privée, qui reste sur ton appareil ; en ligne, ton jeu prouve qu'il a la clé en signant un nonce envoyé par l'hôte. Pour choisir tes mots de passe : `node tools/keygen.js "monMotDePasseProprietaire" "monMotDePasseAdmin"` affiche les deux clés à coller dans `index.html` (6 à 16 caractères ; plus c'est long, mieux c'est). Il faut un navigateur récent (Chrome/Edge 113+, Safari 17+, Firefox 130+).
+ - **Signaler :** en ligne, l'onglet Multijoueur propose de signaler un joueur (triche, insultes, spam, inactif, autre). Les signalements arrivent chez l'hôte et chez les admins, dans l'onglet **Signalements** du panneau admin, avec un bouton pour expulser ou bannir.
+ 
+ ## Skins réservés
+@@ -417,7 +432,7 @@ Pour la reconstruire : `launcher/build-exe.sh` (Go 1.21+, et [rsrc](https://gith
+ 
+ ## Lancer en local
+ 
+-Les modèles 3D sont chargés depuis `assets/`, il faut donc un petit serveur :
++Les modèles 3D et les bibliothèques sont chargés depuis `assets/`, il faut donc un petit serveur :
+ 
+ ```sh
+ python3 -m http.server 8000
+@@ -427,6 +442,8 @@ python3 -m http.server 8000
+ ## Structure
+ 
+ - `index.html` : tout le jeu (rendu three.js r128, physique de mouvement à 120 Hz, armes, HUD, réseau).
++- `assets/vendor/` : three.js r128, GLTFLoader, SkeletonUtils et PeerJS 1.5.4, servis avec le jeu (les CDN ne servent plus que de repli, ils sont souvent bloqués sur les réseaux d'entreprise ou d'école).
++- `tools/keygen.js` : calcule les clés publiques du propriétaire et de l'admin à partir de mots de passe.
+ - `assets/models/` : modèles de personnages animés.
+ - `assets/models/city/city.glb` : modèles de Nécropolis, regroupés par `tools/citypack.py` d'après la liste `tools/city-models.txt`.
+ 

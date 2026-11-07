@@ -1,0 +1,582 @@
+diff --git a/index.html b/index.html
+index 98e9746..0d522b6 100644
+--- a/index.html
++++ b/index.html
+@@ -1331,8 +1331,8 @@ Object.assign(I18N.fr, {"mode.label": "Mode", "mode.ffa": "Chacun pour soi", "mo
+ Object.assign(I18N.en, {"mode.label": "Mode", "mode.ffa": "Free for all", "mode.teams": "2 teams", "mode.zombie": "Zombies", "mode.blue": "BLUE", "mode.red": "RED", "mode.youZombie": "YOU ARE A ZOMBIE: knife only, infect them all", "mode.youHuman": "HUMAN: survive", "mode.survive": "the robots are zombies, survive", "mode.firstZombie": "You are patient zero! Knife only, kill the humans.", "mode.roundStart": "New round: a zombie is among you…", "mode.zWin": "The zombies win!", "mode.hWin": "The humans survived!", "mode.infected": "infected: you come back as a zombie", "mode.set": "Game mode: {m}", "mode.hostOnly": "Only the host picks the mode.", "news.title": "What’s new", "news.ok": "Let’s go", "news.btn": "What’s new", "upd.new": "New version available ({v})", "upd.download": "Download the new app", "upd.reload": "Reload", "cm.import": "Import my model (.glb)", "cm.flip": "Rotate 180°", "cm.clear": "Remove", "cm.hint": "A .glb file, 4 MB max. With a Mixamo skeleton it uses the game’s animations; otherwise its own (idle, walk, run). Other players see it online.", "cm.tooBig": "Model too large (4 MB max).", "cm.bad": "This file isn’t a readable .glb model.", "cm.loaded": "Model “{name}” loaded: other players will see it.", "cm.option": "My model", "cm.none": "no model imported", "char.custom": "My model", "login.pass": "Password", "login.passPh": "optional", "login.banned": "You are banned from this match (by the host). Ask them to unban you: admin panel, Accounts tab.", "login.needpw": "This name has an account: enter its password.", "login.badpw": "Wrong password.", "rep.title": "Report a player", "rep.r.cheat": "Cheating", "rep.r.insult": "Insults", "rep.r.spam": "Spam", "rep.r.afk": "AFK", "rep.r.other": "Other", "rep.ph": "Details (optional)", "rep.send": "Send", "rep.sent": "Report sent to the host. Thanks!", "rep.new": "New report: {name}", "rep.none": "No reports.", "rep.by": "by", "acc.note": "Accounts of players who join your matches. The first password typed creates the account. Passwords are hashed (salted SHA-256): nobody can read them, not even you, but you can reset them or set a new one. After a reset, the next password the player types becomes theirs.", "acc.require": "Password required to join", "acc.none": "No accounts yet.", "acc.last": "seen", "acc.pwSet": "password set", "acc.pwReset": "reset: waiting for a new one", "acc.newPw": "new password", "acc.reset": "Reset", "acc.setPw": "Set", "acc.pwChanged": "{name}’s password changed.", "acc.ban": "Ban", "acc.unban": "Unban", "acc.banned": "banned", "adm.tabAccounts": "Accounts", "adm.tabReports": "Reports", "set.easySnap": "Easy snap strafe (keyboard and controller)"});
+ Object.assign(I18N.fr, { 'veh.ride': '{key} Monter en passager', 'veh.leave': '{key} Descendre', 'veh.passHint': 'Passager : tu peux viser et tirer · {key} pour descendre' });
+ Object.assign(I18N.en, { 'veh.ride': '{key} Ride as passenger', 'veh.leave': '{key} Get out', 'veh.passHint': 'Passenger: you can aim and shoot · {key} to get out' });
+-Object.assign(I18N.fr, { 'adm.pwTitle': 'PANNEAU ADMIN', 'adm.pwAsk': 'Mot de passe admin :', 'adm.pwGo': 'Entrer', 'adm.pwBad': 'Mot de passe incorrect.' });
+-Object.assign(I18N.en, { 'adm.pwTitle': 'ADMIN PANEL', 'adm.pwAsk': 'Admin password:', 'adm.pwGo': 'Enter', 'adm.pwBad': 'Wrong password.' });
++Object.assign(I18N.fr, { 'adm.pwTitle': 'PANNEAU ADMIN', 'adm.pwAsk': 'Mot de passe admin :', 'adm.pwGo': 'Entrer', 'adm.pwBad': 'Mot de passe incorrect.', 'adm.noEd': 'Ce navigateur ne sait pas vérifier la clé (Ed25519) : mets-le à jour.', 'x.online': 'Triches désactivées en ligne.', 'net.flood': 'Connexion coupée : trop de messages.' });
++Object.assign(I18N.en, { 'adm.pwTitle': 'ADMIN PANEL', 'adm.pwAsk': 'Admin password:', 'adm.pwGo': 'Enter', 'adm.pwBad': 'Wrong password.', 'adm.noEd': 'This browser cannot check the key (Ed25519): please update it.', 'x.online': 'Cheats are off online.', 'net.flood': 'Disconnected: too many messages.' });
+ Object.assign(I18N.fr, {"tch.use": "PRENDRE", "tch.reload": "RECH.", "tch.crouch": "ACCR.", "tch.jump": "SAUT", "tch.ads": "VISER", "tch.fire": "TIR", "tch.rotate": "Tourne ton téléphone en mode paysage", "menu.touch2": "Sur mobile : joystick à gauche, glisse le doigt à droite pour viser. Joue en mode paysage.", "menu.ios": "Sur iPhone, pour jouer en plein écran : bouton <b>Partager</b> de Safari → <b>Sur l’écran d’accueil</b>, puis lance Vélocité depuis l’icône.", "set.invY": "Inverser la souris (haut / bas)", "set.invX": "Inverser la souris (gauche / droite)", "set.touch": "Commandes tactiles (mobile)", "set.touchSens": "Sensibilité tactile"});
+ Object.assign(I18N.en, {"tch.use": "USE", "tch.reload": "RELOAD", "tch.crouch": "CROUCH", "tch.jump": "JUMP", "tch.ads": "AIM", "tch.fire": "FIRE", "tch.rotate": "Turn your phone sideways (landscape)", "menu.touch2": "On mobile: joystick on the left, slide your finger on the right to aim. Play in landscape.", "menu.ios": "On iPhone, to play full screen: Safari’s <b>Share</b> button → <b>Add to Home Screen</b>, then open Vélocité from the icon.", "set.invY": "Invert mouse (up / down)", "set.invX": "Invert mouse (left / right)", "set.touch": "Touch controls (mobile)", "set.touchSens": "Touch sensitivity"});
+ Object.assign(I18N.fr, {"map.room": "Chambre géante", "char.lynx": "Lynx", "cls.runner": "Coureuse de murs", "ab.overdrive": "SURVOLTAGE", "abd.overdrive": "8 s : +30 % de vitesse et course sur les murs sans limite. Passif : cours sur les murs (saute contre un mur sur le côté en avançant).", "wr.kick": "saut du mur", "act.chat": "Chat", "act.talk": "Parler (micro)", "chat.near": "PROCHE", "chat.modeNear": "Proche", "chat.modeAll": "Tous", "chat.ph": "Message… (Entrée pour envoyer)", "chat.send": "Envoyer", "chat.offline": "Le chat marche en partie en ligne.", "voice.title": "Chat vocal de proximité", "voice.mode": "Micro", "voice.off": "Coupé", "voice.ptt": "Appuyer pour parler (N)", "voice.open": "Toujours ouvert", "voice.vol": "Volume des voix", "voice.hint": "On entend les joueurs à moins de 45 m, plus fort quand ils sont près. Le chat écrit (Entrée) est aussi de proximité par défaut (Tab dans la barre pour écrire à tous).", "voice.denied": "Micro refusé : autorise-le dans le navigateur pour le chat vocal.", "xh.title": "Viseur", "xh.style": "Forme", "xh.cross": "Croix", "xh.t": "Croix en T", "xh.x": "Croix en X", "xh.circle": "Cercle", "xh.dot": "Point", "xh.color": "Couleur", "xh.len": "Longueur", "xh.thick": "Épaisseur", "xh.gap": "Écart", "xh.op": "Opacité", "xh.dotOn": "Point au centre", "xh.dyn": "S’écarte avec la dispersion", "xh.outline": "Contour noir", "xh.reset": "Viseur par défaut", "pad.mapHint": "Clique sur un bouton puis appuie sur le bouton de la manette à utiliser (Start annule).", "pad.reset": "Boutons par défaut", "pad.press": "Appuie…", "pad.clear": "Retirer", "pad.a.jump": "Sauter", "pad.a.crouch": "S’accroupir / glisser", "pad.a.use": "Utiliser / recharger", "pad.a.next": "Arme suivante", "pad.a.prev": "Arme précédente", "pad.a.tactical": "Capacité tactique", "pad.a.ultimate": "Capacité ultime", "pad.a.ads": "Viser", "pad.a.fire": "Tirer", "pad.a.board": "Scores", "pad.a.sprint": "Sprint", "pad.a.w6": "Couteau", "pad.a.emote": "Emotes", "pad.a.grenade": "Grenade", "pad.a.grenType": "Type de grenade", "pad.a.reload": "Recharger", "pad.a.chat": "Chat", "pad.a.talk": "Parler (micro)", "pad.a.inspect": "Inspecter", "pad.a.map": "Mini-carte", "tch.edit": "Disposer les boutons tactiles", "tch.editHint": "Glisse les boutons pour les déplacer. Touche un bouton pour changer son action ou sa taille.", "tch.action": "Action", "tch.size": "Taille", "tch.reset": "Par défaut", "tch.done": "Terminé", "tch.pick": "Choisis un bouton", "tch.abil": "Capacités", "tch.slots": "Armes", "tch.fire": "TIR", "tch.jump": "SAUT", "tch.crouch": "ACCR.", "tch.aim": "VISER", "tch.aimHold": "VISER (maintenu)", "tch.reload": "RECH.", "tch.use": "PRENDRE", "tch.tactical": "TACTIQUE", "tch.ultimate": "ULTIME", "tch.grenade": "GRENADE", "tch.next": "ARME +", "tch.prev": "ARME −", "tch.sprint": "SPRINT", "tch.knife": "COUTEAU", "tch.emote": "EMOTE", "tch.chat": "CHAT", "tch.talk": "MICRO", "tch.map": "CARTE", "tch.board": "SCORES", "tch.inspect": "INSPECTER"});
+@@ -1363,7 +1363,34 @@ function t(key, vars) {
+ const wName = i => i === 5 ? t('knife.' + (S.knife || 'combat')).toUpperCase() : i === 6 ? (SP.held ? t('sp.' + SP.held).toUpperCase() : '—') : t('w' + i), wShort = i => i === 6 ? (SP.held ? t('sp.' + SP.held).toUpperCase() : '—') : t('w' + i + 's');
+ 
+ /* ================= Mode secret ================= */
+-const X_HASH = 'e99ca6495c4f655f8314f7af87026b5acca4978bed48525edfc8c05c16e5b8d3';
++// Propriétaire et admin : clés publiques Ed25519 (voir tools/keygen.js). Le mot de passe tapé sert de graine à la clé privée,
++// qui ne quitte jamais l'appareil ; en ligne, on prouve qu'on l'a en signant un nonce émis par l'hôte. Une empreinte SHA-256
++// visible dans le code suffisait à n'importe qui pour se faire passer pour le propriétaire (claim rejoué tel quel).
++const X_PUB = 'G7cJJp6LCd2z3MUNtl3CPuj8ZuWEuQZUpgBqVFhXjT4';
++const ADM_PUB = '8m6ievJFRFlngA2axIQ1KjZS1ObTYASbO4uk_w5NmVE';
++const ED = { pkcs8: new Uint8Array([0x30, 0x2e, 0x02, 0x01, 0x00, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x04, 0x22, 0x04, 0x20]), ok: null };
++const b64u = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
++const unb64u = s => { s = String(s || '').replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
++const hexOf = u8 => Array.from(u8).map(b => b.toString(16).padStart(2, '0')).join('');
++const unhex = h => Uint8Array.from((String(h || '').match(/.{2}/g) || []).map(x => parseInt(x, 16)));
++const randHex = n => hexOf(crypto.getRandomValues(new Uint8Array(n)));
++// graine (32 octets) → clé privée Ed25519 + clé publique (base64url, telle que dans X_PUB / ADM_PUB)
++async function edFromSeed(seed) {
++  const pkcs8 = new Uint8Array(48); pkcs8.set(ED.pkcs8); pkcs8.set(seed, 16);
++  const key = await crypto.subtle.importKey('pkcs8', pkcs8, { name: 'Ed25519' }, true, ['sign']);
++  return { key, pub: (await crypto.subtle.exportKey('jwk', key)).x, seed: hexOf(seed) };
++}
++async function edFromPw(pw) { return edFromSeed(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(pw)))); }
++async function edSign(key, msg) { return b64u(new Uint8Array(await crypto.subtle.sign({ name: 'Ed25519' }, key, new TextEncoder().encode(msg)))); }
++async function edVerify(pub, msg, sig) {
++  try {
++    const k = await crypto.subtle.importKey('jwk', { kty: 'OKP', crv: 'Ed25519', x: pub }, { name: 'Ed25519' }, false, ['verify']);
++    return await crypto.subtle.verify({ name: 'Ed25519' }, k, unb64u(sig), new TextEncoder().encode(msg));
++  } catch (e) { return false; }
++}
++// Ed25519 dans WebCrypto : Chrome/Edge 113+, Safari 17+, Firefox 130+ ; sinon le mode propriétaire/admin reste inaccessible (jamais contournable)
++async function edSupported() { if (ED.ok === null) { try { await edFromSeed(new Uint8Array(32)); ED.ok = true; } catch (e) { ED.ok = false; } } return ED.ok; }
++const claimMsg = (who, code, nonce) => 'velocite|' + who + '|' + code + '|' + nonce;
+ const X = { spin: false, glow: false, skel: false, silent: false, autobhop: false, radar: false, third: false, god: false, oneshot: false, norecoil: false, ammo: false, wall: false, speed: false, jumps: false, aim: false, snap: false, nocd: false, aimbot: false, head: true, vis: true, trigger: false, esp: false, rapid: false, fly: false, superjump: false, tp: false };
+ const XV = Object.assign({ fov: 30, smooth: 0.15 }, store.get('xv', {}));
+ const RULES = { g: 1, s: 1, bots: true, mode: 'ffa' };
+@@ -6955,18 +6982,25 @@ function sendTo(id, m) {
+ function broadcast(m, except) { for (const id of NET.players.keys()) if (id !== except) sendTo(id, m); }
+ function helloAccept(from, m, r) {
+     let keep = null;
+-    if (m.prev && m.prev !== from && NET.players.has(m.prev) && NET.players.get(m.prev).name === String(m.name || 'Joueur').slice(0, 14)) {
+-      keep = NET.players.get(m.prev); const oc = NET.conns.get(m.prev);
+-      NET.players.delete(m.prev); NET.conns.delete(m.prev); CS.host.delete(m.prev); CM.host.delete(m.prev); try { oc && oc.close(); } catch (e) {}
+-      broadcast({ k: 'sys', t: 'leave', name: keep.name }, from);
++    const name = String(m.name || 'Joueur').slice(0, 14);
++    // reprise de session : il faut le jeton secret remis dans « welcome » (l'identifiant seul est public dans les snapshots)
++    if (m.prev && m.prev !== from && NET.players.has(m.prev)) {
++      const old = NET.players.get(m.prev);
++      if (old.name === name && old.tok && typeof m.tok === 'string' && m.tok === old.tok) {
++        keep = old; const oc = NET.conns.get(m.prev);
++        NET.players.delete(m.prev); NET.conns.delete(m.prev); CS.host.delete(m.prev); CM.host.delete(m.prev); try { oc && oc.close(); } catch (e) {}
++        broadcast({ k: 'sys', t: 'leave', name: keep.name }, from);
++      }
+     }
+     if (NET.players.size >= 8) { sendTo(from, { k: 'full' }); return; }
+     const used = new Set([...NET.players.values()].map(p => p.color));
+     const color = COLORS.find(c => !used.has(c)) || COLORS[NET.players.size % COLORS.length];
+-    NET.players.set(from, { name: String(m.name || 'Joueur').slice(0, 14), color: keep ? keep.color : color, kills: keep ? keep.kills : 0, deaths: keep ? keep.deaths : 0, st: null });
+-    sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map });
+-    broadcast({ k: 'sys', t: 'join', name: String(m.name || 'Joueur').slice(0, 14) }, from);
+-    if (isListedAdmin(m.name) && r.auth) { NET.players.get(from).admin = true; sendTo(from, { k: 'admx', act: 'admin', arg: true }); }
++    const tok = randHex(16), nonce = randHex(16);
++    NET.players.set(from, { name, color: keep ? keep.color : color, kills: keep ? keep.kills : 0, deaths: keep ? keep.deaths : 0, st: null, tok, nonce, auth: !!r.auth, rl: {}, hitBy: null, deadT: 0 });
++    sendTo(from, { k: 'welcome', id: from, code: NET.code, map: S.map, nonce, tok });
++    broadcast({ k: 'sys', t: 'join', name }, from);
++    // admin par pseudo : seulement un compte existant (pas créé à l'instant) dont le mot de passe vient d'être vérifié
++    if (isListedAdmin(name) && r.auth && !r.created) { const q = NET.players.get(from); q.admin = true; q.adminBy = 'list'; sendTo(from, { k: 'admx', act: 'admin', arg: true }); }
+     lobbyShow();
+     setTimeout(() => { if (NET.players.has(from)) { csHostWelcome(from); mapdefTo(from); cmShare(from); cskWelcome(from); for (const [o, c] of CM.host) if (o !== from) cmSendCached(from, o, c); if (RULES.mode === 'zombie' && MODE.active) sendTo(from, { k: 'zsync', t: MODE.zT }); } }, 400);
+ }
+@@ -6975,12 +7009,16 @@ function hostRecv(from, m) {
+   if (m.k === 'hello') {
+     if (NET.players.has(from)) return;
+     if (from === NET.selfId) { helloAccept(from, m, { ok: true, auth: true }); return; }
+-    const pend = NET.pendingLogin || (NET.pendingLogin = new Set());
+-    if (pend.has(from)) return; pend.add(from);
+-    loginCheck(m).then(r => { pend.delete(from); if (!NET.conns.has(from)) return; if (!r.ok) { accKick(from, r.why); return; } helloAccept(from, m, r); });
++    const pend = NET.pendingLogin || (NET.pendingLogin = new Map());
++    if (pend.has(from)) return;
++    const r = loginStart(from, m, pend);
++    if (r) { if (!r.ok) accKick(from, r.why); else helloAccept(from, m, r); }
+     return;
+   }
++  if (m.k === 'auth') { loginFinish(from, m); return; }
+   if (!pl) return;
++  const now = performance.now();
++  if (m.k !== 'bye' && from !== NET.selfId && !rateOk(pl, m.k, now)) return;
+   if (m.k === 'bye') {
+     if (from === NET.selfId) return;
+     const c = NET.conns.get(from);
+@@ -6998,30 +7036,91 @@ function hostRecv(from, m) {
+   if (m.k === 'ping') { broadcast(Object.assign({}, m, { from }), from); pingRecv(m, from); return; }
+   if (m.k === 'chat') { chatHostRecv(from, m); return; }
+   if (m.k === 'report') { hostReport(from, m.r || {}); return; }
+-  if (m.k === 'st') pl.st = m.s;
+-  else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w, sp: typeof m.sp === 'string' ? m.sp.slice(0, 12) : undefined, bl: m.bl, a: m.a, e: m.e }, from);
++  if (m.k === 'st') { const s = cleanState(m.s); if (s) pl.st = s; }
++  else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w | 0, sp: typeof m.sp === 'string' ? m.sp.slice(0, 12) : undefined, bl: !!m.bl, a: vec3Of(m.a), e: Array.isArray(m.e) ? m.e.slice(0, 24).map(vec3Of).filter(Boolean) : [] }, from);
+   else if (m.k === 'adm') admHost(from, m);
+-  else if ((m.k === 'vspawn' || m.k === 'vreset' || m.k === 'chestfill') && (NET.players.get(from) || {}).admin) broadcast(m.k === 'vspawn' ? { k: 'vspawn', t: String(m.t), p: (m.p || []).slice(0, 3).map(Number), y: +m.y || 0 } : { k: m.k }, from);
++  else if ((m.k === 'vspawn' || m.k === 'vreset' || m.k === 'chestfill') && (NET.players.get(from) || {}).admin) broadcast(m.k === 'vspawn' ? { k: 'vspawn', t: String(m.t).slice(0, 16), p: vec3Of(m.p) || [0, 0, 0], y: num(m.y, -10, 10) } : { k: m.k }, from);
+   else if (m.k === 'chest') broadcast({ k: 'chest', id: String(m.id).slice(0, 20) }, from);
+   else if (m.k === 'pick') broadcast({ k: 'pick', id: String(m.id).slice(0, 40) }, from);
+-  else if (m.k === 'wdrop' && Array.isArray(m.p)) broadcast({ k: 'wdrop', id: String(m.id).slice(0, 40), w: String(m.w).slice(0, 16), p: m.p.slice(0, 3).map(Number), a: typeof m.a === 'number' ? m.a : undefined }, from);
+-  else if (m.k === 'strike' && Array.isArray(m.p)) broadcast({ k: 'strike', p: m.p.slice(0, 3).map(Number) }, from);
+-  else if (m.k === 'dome' && Array.isArray(m.p)) broadcast({ k: 'dome', p: m.p.slice(0, 3).map(Number), o: from }, from);
+-  else if (m.k === 'lpad' && Array.isArray(m.p)) broadcast({ k: 'lpad', p: m.p.slice(0, 3).map(Number), o: from }, from);
+-  else if (m.k === 'odm' && Array.isArray(m.a)) broadcast({ k: 'odm', o: from, a: m.a.slice(0, 2).filter(Array.isArray).map(p => p.slice(0, 3).map(Number)) }, from);
+-  else if (m.k === 'blink' && Array.isArray(m.a)) broadcast({ k: 'blink', a: m.a.slice(0, 3).map(Number), b: Array.isArray(m.b) ? m.b.slice(0, 3).map(Number) : undefined }, from);
+-  else if (m.k === 'trid' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'trid', p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
+-  else if (m.k === 'vdmg') broadcast({ k: 'vdmg', i: m.i | 0, d: +m.d || 0, by: from }, from);
+-  else if (m.k === 'gren' && Array.isArray(m.p) && Array.isArray(m.v)) broadcast({ k: 'gren', t: String(m.t), p: m.p.slice(0, 3).map(Number), v: m.v.slice(0, 3).map(Number), o: from }, from);
+-  else if (m.k === 'push' && Array.isArray(m.v)) { if (NET.players.has(m.to)) sendTo(m.to, { k: 'push', v: m.v.slice(0, 3).map(v => clamp(+v || 0, -30, 30)) }); }
+-  else if (m.k === 'portal' && Array.isArray(m.a) && Array.isArray(m.b)) broadcast({ k: 'portal', a: m.a.slice(0, 3).map(Number), b: m.b.slice(0, 3).map(Number), o: from }, from);
+-  else if (m.k === 'hit') { if (NET.players.has(m.to)) sendTo(m.to, { k: 'hit', from, dmg: m.dmg, head: m.head, w: m.w, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
++  else if (m.k === 'wdrop' && vec3Of(m.p)) broadcast({ k: 'wdrop', id: String(m.id).slice(0, 40), w: String(m.w).slice(0, 16), p: vec3Of(m.p), a: typeof m.a === 'number' && isFinite(m.a) ? m.a : undefined }, from);
++  else if (m.k === 'strike' && vec3Of(m.p)) broadcast({ k: 'strike', p: vec3Of(m.p) }, from);
++  else if (m.k === 'dome' && vec3Of(m.p)) broadcast({ k: 'dome', p: vec3Of(m.p), o: from }, from);
++  else if (m.k === 'lpad' && vec3Of(m.p)) broadcast({ k: 'lpad', p: vec3Of(m.p), o: from }, from);
++  else if (m.k === 'odm' && Array.isArray(m.a)) broadcast({ k: 'odm', o: from, a: m.a.slice(0, 2).map(vec3Of).filter(Boolean) }, from);
++  else if (m.k === 'blink' && vec3Of(m.a)) broadcast({ k: 'blink', a: vec3Of(m.a), b: vec3Of(m.b) || undefined }, from);
++  else if (m.k === 'trid' && vec3Of(m.p) && vec3Of(m.v)) broadcast({ k: 'trid', p: vec3Of(m.p), v: vec3Of(m.v), o: from }, from);
++  else if (m.k === 'vdmg') broadcast({ k: 'vdmg', i: clamp(m.i | 0, 0, 999), d: num(m.d, 0, 600), by: from }, from);
++  else if (m.k === 'gren' && vec3Of(m.p) && vec3Of(m.v)) broadcast({ k: 'gren', t: String(m.t).slice(0, 12), p: vec3Of(m.p), v: vec3Of(m.v), o: from }, from);
++  else if (m.k === 'push' && vec3Of(m.v)) { if (pushOk(pl, from, m, now)) sendTo(m.to, { k: 'push', v: m.v.slice(0, 3).map(v => clamp(+v || 0, -30, 30)) }); }
++  else if (m.k === 'portal' && vec3Of(m.a) && vec3Of(m.b)) broadcast({ k: 'portal', a: vec3Of(m.a), b: vec3Of(m.b), o: from }, from);
++  else if (m.k === 'hit') { if (hitOk(pl, from, m, now)) sendTo(m.to, { k: 'hit', from, dmg: Math.round(+m.dmg), head: !!m.head, w: m.w | 0, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
+   else if (m.k === 'dead') {
+-    pl.deaths++;
+-    const killer = NET.players.get(m.by);
+-    if (killer && m.by !== from) killer.kills++;
+-    broadcast({ k: 'kf', by: m.by, victim: from, w: m.w, mg: m.kt === 'morgane' ? 1 : undefined });
+-  }
++    // une mort compte pour celui qui a porté le dernier coup relayé par l'hôte (sinon : mort sans crédit, environnement)
++    pl.deaths++; pl.deadT = now + 2500;
++    const by = typeof m.by === 'string' ? m.by : '';
++    const killer = NET.players.get(by);
++    const credited = !!(killer && by !== from && pl.hitBy && pl.hitBy.from === by && now - pl.hitBy.t < 6000);
++    if (credited) killer.kills++;
++    pl.hitBy = null;
++    broadcast({ k: 'kf', by: credited ? by : (by === from ? from : ''), victim: from, w: m.w | 0, mg: m.kt === 'morgane' ? 1 : undefined });
++  }
++}
++/* ---------- garde-fous de l'hôte ----------
++   Il n'y a pas de serveur : l'hôte relaie ce que les joueurs disent d'eux-mêmes. Il ne peut pas rejouer la physique de chacun,
++   mais il peut refuser ce qui est impossible : états malformés ou hors carte, dégâts au-delà de ce qu'une arme fait,
++   coups portés par un mort, corps à corps à distance, kills sans coup porté, et tout ce qui dépasse un débit raisonnable. */
++// (num(v, lo, hi, d) : voir sanitizeDef plus haut)
++const vec3Of = (a, lim = 4000) => Array.isArray(a) && a.length >= 3 && a.slice(0, 3).every(x => Number.isFinite(+x) && Math.abs(+x) <= lim) ? [+a[0], +a[1], +a[2]] : null;
++const strOf = (v, n) => typeof v === 'string' ? v.slice(0, n) : undefined;
++// ce que les autres ont le droit de savoir d'un joueur : chaque champ typé et borné, rien d'autre ne passe
++function cleanState(s) {
++  if (!s || typeof s !== 'object') return null;
++  const p = vec3Of(s.p), v = vec3Of(s.v, 400);
++  if (!p || !v) return null;
++  const o = { p, v, y: num(s.y, -7, 7), pi: num(s.pi, -1.7, 1.7), a: strOf(s.a, 8) || 'ground', w: clamp(s.w | 0, 0, 6), hp: num(s.hp, 0, MAX_HP, MAX_HP), sh: num(s.sh, 0, MAX_SH, 0), dead: !!s.dead, z: s.z ? 1 : 0, mic: s.mic ? 1 : 0 };
++  for (const k of ['ch', 'tc', 'mk', 'sp', 'sk', 'kt', 'ks']) if (typeof s[k] === 'string') o[k] = s[k].slice(0, 24);
++  if (typeof s.cs === 'string') o.cs = s.cs.slice(0, 48);
++  if (s.em) { o.em = clamp(s.em | 0, 1, 6); o.ey = num(s.ey, -7, 7); }
++  if (s.spec) o.spec = 1; if (s.mg) o.mg = 1; if (s.ads) o.ads = 1;
++  if (s.pv) { o.pv = clamp(s.pv | 0, 1, 64); o.ps = clamp(s.ps | 0, 0, 7); }
++  if (s.vh) { o.vh = clamp(s.vh | 0, 1, 64); o.vy = num(s.vy, -7, 7); if (Array.isArray(s.vq)) o.vq = s.vq.slice(0, 4).map(x => num(x, -7, 7)); }
++  const gp = vec3Of(s.gp); if (gp) o.gp = gp;
++  return o;
++}
++// débit maximal par joueur et par type de message (messages/s) ; seau à jetons, rafales tolérées jusqu'à 2 s de débit
++const NET_RATES = { st: 45, shot: 40, hit: 90, dead: 1, gren: 5, dome: 2, lpad: 2, strike: 2, portal: 3, odm: 12, blink: 8, trid: 5, wdrop: 8, chest: 8, pick: 12, vdmg: 40, push: 12, ping: 4, chat: 4, cbrk: 40, crtHit: 40, mtrHit: 40, adm: 6, snd: 80, mdl: 80, cskin: 80, report: 0.2, vspawn: 2, vreset: 1, chestfill: 1, auth: 1 };
++function rateOk(pl, k, now) {
++  const lim = NET_RATES[k]; if (!lim) return true;
++  const cap = Math.max(2, lim * 2), b = pl.rl[k] || (pl.rl[k] = { n: cap, t: now });
++  b.n = Math.min(cap, b.n + (now - b.t) / 1000 * lim); b.t = now;
++  if (b.n < 1) { pl.dropped = (pl.dropped || 0) + 1; return false; }
++  b.n -= 1; return true;
++}
++const MAX_HIT = 300; // plus fort coup possible : sniper lourd dans la tête (140 × 2) ; le ×10 « oneshot » ne passe donc jamais
++const THROWN_BLADES = ['dagger', 'hatchet', 'trident'];
++function hitOk(pl, from, m, now) {
++  const to = m.to; if (typeof to !== 'string' || to === from) return false;
++  const tgt = NET.players.get(to); if (!tgt) return false;
++  const dmg = +m.dmg; if (!(dmg > 0) || !Number.isFinite(dmg) || dmg > MAX_HIT) return false;
++  if (pl.deadT > now || (pl.st && pl.st.dead)) return false;   // un mort (ou un « fantôme » qui se dit mort) ne blesse personne
++  if (tgt.st && tgt.st.dead) return false;
++  const w = m.w | 0, kt = typeof m.kt === 'string' ? m.kt : '';
++  // lames et percussions : il faut être près de la cible (positions connues à 20 Hz : marge large) ; les lames lancées sont exemptées
++  const melee = (w === 5 && !THROWN_BLADES.includes(kt)) || (w === 6 && kt === 'gunblade'), ram = w === 9 || w === 13;
++  if ((melee || ram) && pl.st && tgt.st) { const a = pl.st.p, b = tgt.st.p; if (Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) > (melee ? 16 : 14)) return false; }
++  // budget de dégâts par paire tireur → victime : 450 d'un coup puis 350/s (aucune arme ne fait plus ; une victime n'a que 175)
++  const b = pl.rl['d:' + to] || (pl.rl['d:' + to] = { n: 450, t: now });
++  b.n = Math.min(450, b.n + (now - b.t) / 1000 * 350); b.t = now;
++  if (b.n < dmg) return false; b.n -= dmg;
++  tgt.hitBy = { from, t: now };
++  return true;
++}
++function pushOk(pl, from, m, now) {
++  if (typeof m.to !== 'string' || !NET.players.has(m.to) || m.to === from) return false;
++  if (pl.deadT > now || (pl.st && pl.st.dead)) return false;
++  const tgt = NET.players.get(m.to);
++  if (pl.st && tgt.st) { const a = pl.st.p, b = tgt.st.p; if (Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]) > 80) return false; } // grenade à impulsion : portée de lancer + 6,5 m, jamais à l'autre bout de la carte
++  return true;
+ }
+ function snapshot() {
+   const pl = [];
+@@ -7029,7 +7128,18 @@ function snapshot() {
+   return { k: 'snap', pl, map: S.map, rules: RULES };
+ }
+ function clientRecv(m) {
+-  if (m.k === 'welcome') { NET.selfId = m.id; setTimeout(cskShare, 700); if (xUnlocked) setTimeout(() => netSend({ k: 'adm', act: 'claim', arg: X_HASH }), 400); else if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 400); if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); if (ADM.pwOk) setTimeout(() => netSend({ k: 'adm', act: 'claimPw', arg: store.get('admKey', '') }), 500); return; }
++  if (m.k === 'welcome') {
++    NET.selfId = m.id; NET.nonce = typeof m.nonce === 'string' ? m.nonce.slice(0, 64) : ''; NET.tok = typeof m.tok === 'string' ? m.tok.slice(0, 64) : ''; REJOIN.tok = NET.tok;
++    setTimeout(cskShare, 700);
++    if (xUnlocked) setTimeout(ownerClaim, 400); else if (ADM.pwOk) setTimeout(adminClaim, 400);
++    if (m.map && m.map !== S.map) switchMap(m.map, true); setTimeout(() => csShareAll(), 300); setTimeout(() => cmShare(), 700); return;
++  }
++  // défi de connexion : l'hôte a un compte pour ce pseudo (ou en crée un) ; on répond avec des empreintes, jamais le mot de passe
++  if (m.k === 'chal') {
++    const salt = String(m.salt || '').slice(0, 64), nonce = String(m.nonce || '').slice(0, 64), pw = String(NET.pw || '').slice(0, 64);
++    sha256(salt + '|' + pw).then(async h => netSend({ k: 'auth', h: m.create ? h : undefined, r: await sha256(nonce + '|' + h) })).catch(() => {});
++    return;
++  }
+   if (m.k === 'snd') { csClientRecv(m); return; }
+   if (m.k === 'mdl') { cmClientRecv(m); return; }
+   if (m.k === 'chat') { chatRecv(m); return; }
+@@ -7070,6 +7180,7 @@ function clientRecv(m) {
+     const rp = remotes.get(m.from);
+     if (!rp) return;
+     rp.pingT = 2.5; if (rp.gun) rp.gun.flashT = 0.06;
++    if (!Array.isArray(m.a)) return;
+     const a = new V3(m.a[0], m.a[1], m.a[2]);
+     for (const e of m.e || []) spawnTracer(a, new V3(e[0], e[1], e[2]), 0xff9a7a);
+     const dist = camera.position.distanceTo(a);
+@@ -9619,7 +9730,12 @@ function leaveNet() {
+   $('hostBtn').disabled = false; $('joinBtn').disabled = false;
+   setPlayLbl(playing || everPlayed ? 'play.resume' : 'play.solo');
+ }
++// en ligne, les triches intégrées (visée automatique, ESP, invulnérabilité, dégâts ×10…) sont toutes coupées : l'hôte refuse de toute façon
++// les dégâts impossibles, mais le propriétaire ne doit pas non plus pouvoir s'en servir d'un clic contre les autres
++const X_COSMETIC = ['spin', 'glow', 'skel', 'third', 'head', 'vis'];
++function xOffline() { let changed = false; for (const k in X) if (!X_COSMETIC.includes(k) && X[k]) { X[k] = false; changed = true; } if (changed) { try { renderX(); } catch (e) {} } }
+ function onlineReady(code) {
++  xOffline();
+   NET.code = code; DC.start = Date.now(); CSK.host.clear(); if (NET.mode === 'host') setTimeout(cskShare, 300);
+   $('netBadge').hidden = false; $('netBadge').textContent = t('net.badge', { code });
+   $('me').hidden = false;
+@@ -9641,14 +9757,19 @@ function hostGame() {
+   peer.on('call', c => { try { voiceOnCall(c); } catch (e) {} });
+   peer.on('open', () => {
+     NET.mode = 'host'; NET.selfId = 'host-' + code;
+-    NET.players.set(NET.selfId, { name: S.name, color: COLORS[0], kills: 0, deaths: 0, st: null });
++    NET.players.set(NET.selfId, { name: S.name, color: COLORS[0], kills: 0, deaths: 0, st: null, auth: true, rl: {}, hitBy: null, deadT: 0 });
+     onlineReady(code);
+     setNetStatus(t('net.created'), 'ok');
+     lobbyShow();
+   });
+   peer.on('connection', conn => {
+-    conn.on('open', () => { NET.conns.set(conn.peer, conn); });
+-    conn.on('data', m => { if (m && typeof m === 'object') hostRecv(conn.peer, m); });
++    conn.on('open', () => {
++      // pas plus de connexions ouvertes que de places (plus une marge pour les reconnexions), et un « hello » sous 15 s
++      if (NET.conns.size >= 12) { try { conn.close(); } catch (e) {} return; }
++      NET.conns.set(conn.peer, conn);
++      setTimeout(() => { if (NET.conns.get(conn.peer) === conn && !NET.players.has(conn.peer)) { NET.conns.delete(conn.peer); try { conn.close(); } catch (e) {} } }, 15000);
++    });
++    conn.on('data', m => { if (m && typeof m === 'object' && NET.conns.get(conn.peer) === conn) { try { hostRecv(conn.peer, m); } catch (e) { console.warn('hostRecv', e); } } });
+     const bye = () => {
+       NET.conns.delete(conn.peer);
+       const p = NET.players.get(conn.peer);
+@@ -9679,7 +9800,7 @@ const ICE = { servers: [{ urls: ['stun:stun.l.google.com:19302', 'stun:stun1.l.g
+   } catch (e) {}
+ })();
+ function iceConfig() { return { iceServers: ICE.servers, sdpSemantics: 'unified-plan' }; }
+-const REJOIN = { code: '', tries: 0, prev: '' };
++const REJOIN = { code: '', tries: 0, prev: '', tok: '' };
+ function joinGame(code, retry = 0) {
+   code = (code || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+   if (!retry) { REJOIN.tries = 0; REJOIN.prev = ''; }
+@@ -9702,12 +9823,13 @@ function joinGame(code, retry = 0) {
+     conn.on('open', () => {
+       clearTimeout(timeout);
+       NET.mode = 'client'; mapSel.disabled = true;
+-      conn.send({ k: 'hello', name: S.name, pw: $('pass').value || '', prev: REJOIN.prev || undefined });
++      NET.pw = $('pass').value || '';
++      conn.send({ k: 'hello', name: S.name, hasPw: !!NET.pw, prev: REJOIN.prev || undefined, tok: REJOIN.prev ? REJOIN.tok : undefined });
+       if (retry) { REJOIN.tries = 0; toast(t('net.reconnected'), 2.5); }
+       onlineReady(code);
+       setNetStatus(t('net.connected', { code }), 'ok');
+     });
+-    conn.on('data', m => { if (m && typeof m === 'object') clientRecv(m); });
++    conn.on('data', m => { if (m && typeof m === 'object') { try { clientRecv(m); } catch (e) { console.warn('clientRecv', e); } } });
+     conn.on('close', () => {
+       if (NET.mode !== 'client' || NET.hostConn !== conn) return;
+       if (NET.ended) { leaveNet(); setNetStatus(t('net.hostClosed'), 'err'); toast(t('toast.hostClosed'), 4); return; }
+@@ -10079,29 +10201,46 @@ function applyQuality() {
+   scene.traverse(o => { if (o.material) (Array.isArray(o.material) ? o.material : [o.material]).forEach(m => { m.needsUpdate = true; }); });
+ }
+ // Mot de passe tapé dans le menu (hors champs de saisie), comparé à son empreinte SHA-256
+-let xBuf = '';
++let xBuf = '', xBusy = false;
++// la graine de la clé propriétaire est gardée localement (xseed) pour signer les défis des hôtes ; sans elle, « xu » seul ne donne rien en ligne
+ addEventListener('keydown', e => {
+   if (playing || !e.key || e.key.length !== 1) return;
+   const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'SELECT' || t.tagName === 'TEXTAREA')) return;
+-  xBuf = (xBuf + e.key).slice(-6);
+-  if (xBuf.length < 6 || !(window.crypto && crypto.subtle)) return;
+-  const tried = xBuf;
+-  crypto.subtle.digest('SHA-256', new TextEncoder().encode(tried)).then(buf => {
+-    const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+-    if (hex !== X_HASH) return;
+-    xBuf = '';
+-    xUnlocked = !xUnlocked; store.set('xu', xUnlocked);
+-    if (xUnlocked && NET.mode === 'client') netSend({ k: 'adm', act: 'claim', arg: X_HASH });
+-    if (!xUnlocked) for (const k in X) X[k] = false;
+-    renderX();
+-  }).catch(() => {});
++  xBuf = (xBuf + e.key).slice(-16);
++  if (xBuf.length < 6 || xBusy || !(window.crypto && crypto.subtle)) return;
++  xBusy = true;
++  (async () => {
++    if (!(await edSupported())) return;
++    let tried = '';
++    while (tried !== xBuf) { // les touches tapées pendant une vérification sont reprises au tour suivant
++      tried = xBuf;
++      for (let n = 6; n <= tried.length; n++) {
++        const k = await edFromPw(tried.slice(-n));
++        if (k.pub !== X_PUB) continue;
++        xBuf = '';
++        xUnlocked = !xUnlocked; store.set('xu', xUnlocked);
++        if (xUnlocked) { store.set('xseed', k.seed); if (NET.mode !== 'off') ownerClaim(); }
++        else { store.set('xseed', ''); for (const q in X) X[q] = false; }
++        renderX();
++        return;
++      }
++    }
++  })().catch(() => {}).then(() => { xBusy = false; });
+ });
++// en ligne : prouve à l'hôte qu'on a la clé en signant son nonce (jamais de secret statique sur le réseau)
++async function signedClaim(who, seedHex) {
++  if (NET.mode !== 'client' || !NET.nonce || !seedHex) return;
++  try { const k = await edFromSeed(unhex(seedHex)); netSend({ k: 'adm', act: 'claimSig', who, sig: await edSign(k.key, claimMsg(who, NET.code, NET.nonce)) }); } catch (e) {}
++}
++function ownerClaim() { if (xUnlocked) signedClaim('owner', store.get('xseed', '')); }
++function adminClaim() { if (ADM.pwOk) signedClaim('admin', store.get('admSeed', '')); }
+ function renderX() {
+   $('xlockBlock').hidden = !xUnlocked;
+   try { syncAdmin(); } catch (e) { /* panneau pas encore initialisé */ }
+   document.querySelectorAll('[data-x]').forEach(el => { el.checked = !!X[el.dataset.x]; });
+ }
+ document.querySelectorAll('[data-x]').forEach(el => el.addEventListener('change', () => {
++  if (NET.mode !== 'off' && el.checked && !X_COSMETIC.includes(el.dataset.x)) { el.checked = false; toast(t('x.online'), 2.5); return; }
+   X[el.dataset.x] = el.checked; store.set('xs', X);
+ }));
+ {
+@@ -10504,18 +10643,28 @@ syncAdmin();
+ // accès : le propriétaire (code secret) ou les joueurs à qui l'hôte a donné le droit admin
+ const ADM = { granted: false, open: false, tab: 'players', list: (() => { const l = store.get('admins', {}); return l && typeof l === 'object' ? l : {}; })(), freezeT: 0 };
+ const canAdmin = () => xUnlocked || ADM.granted || ADM.pwOk;
+-// mot de passe du panneau admin : seule son empreinte est dans le code ; en ligne, l'hôte vérifie le mot de passe lui-même
+-const ADM_PW_HASH = '98b11be2da84a40864fc535d9e23a44a1253a85c8f918380af5ec6fc897e6705';
++// mot de passe du panneau admin : seule la clé publique ADM_PUB est dans le code ; le mot de passe ne sert qu'à dériver la clé
++// privée (graine gardée localement dans admSeed), et en ligne on signe le nonce de l'hôte. Le mot de passe ne circule jamais.
+ ADM.pwOk = false;
+-async function admPwCheck(pw) { return typeof pw === 'string' && pw.length <= 64 && await sha256(pw) === ADM_PW_HASH; }
++async function admPwCheck(pw) {
++  if (typeof pw !== 'string' || pw.length < 6 || pw.length > 64 || !(await edSupported())) return null;
++  const k = await edFromPw(pw); return k.pub === ADM_PUB ? k : null;
++}
+ async function admPwTry(pw, quiet) {
+-  if (!(await admPwCheck(pw))) { if (!quiet) { toast(t('adm.pwBad'), 2.5); $('admPwIn').select(); } return; }
+-  ADM.pwOk = true; store.set('admKey', pw); $('admLogin').hidden = true;
++  const k = await admPwCheck(pw);
++  if (!k) { if (!quiet) { toast(t(ED.ok === false ? 'adm.noEd' : 'adm.pwBad'), 3); $('admPwIn').select(); } return; }
++  ADM.pwOk = true; store.set('admSeed', k.seed); $('admLogin').hidden = true;
+   if (!xUnlocked) { xUnlocked = true; store.set('xu', true); try { renderX(); } catch (e) {} try { extraMapOptions(); toast(t('lab.unlocked'), 4); } catch (e) {} }
+-  if (NET.mode === 'client') netSend({ k: 'adm', act: 'claimPw', arg: pw });
++  if (NET.mode === 'client') adminClaim();
+   if (!quiet) { toast(t('adm.granted'), 2.5); admShow(true); }
+ }
+-{ const k = store.get('admKey', ''); if (k) admPwTry(k, true); }
++// au lancement : les graines gardées localement ne valent que si elles correspondent encore aux clés du jeu (mot de passe changé = graine jetée)
++(async () => {
++  try { localStorage.removeItem('velocite_admKey'); } catch (e) {} // ancienne version : mot de passe admin gardé en clair
++  if (!(await edSupported())) return;
++  const a = store.get('admSeed', ''); if (a) { try { const k = await edFromSeed(unhex(a)); if (k.pub === ADM_PUB) { ADM.pwOk = true; $('admLogin').hidden = true; } else store.set('admSeed', ''); } catch (e) { store.set('admSeed', ''); } }
++  const x = store.get('xseed', ''); if (x) { try { const k = await edFromSeed(unhex(x)); if (k.pub !== X_PUB) store.set('xseed', ''); } catch (e) { store.set('xseed', ''); } }
++})();
+ function admLoginShow(v) { $('admLogin').hidden = !v; if (v) { if (document.pointerLockElement) document.exitPointerLock(); clearInput(); $('admPwIn').value = ''; setTimeout(() => $('admPwIn').focus(), 30); } }
+ $('admPwGo').addEventListener('click', () => admPwTry($('admPwIn').value));
+ $('admPwX').addEventListener('click', () => admLoginShow(false));
+@@ -10532,12 +10681,18 @@ function admAct(act, to, arg) {
+ }
+ function admHost(from, m) {
+   const pl = NET.players.get(from);
+-  if (m.act === 'claim') { if (m.arg === X_HASH && pl) pl.admin = true; return; }
+-  if (m.act === 'claimPw') { admPwCheck(m.arg).then(ok => { if (ok && pl) { pl.admin = true; if (from !== NET.selfId) sendTo(from, { k: 'admx', act: 'admin', arg: true }); } }); return; }
++  if (m.act === 'claimSig') {
++    // preuve de possession de la clé propriétaire ou admin : signature du nonce donné dans « welcome », liée au code de la partie
++    if (!pl || from === NET.selfId || !pl.nonce || pl.admin) return;
++    const who = m.who === 'owner' ? 'owner' : 'admin', pub = who === 'owner' ? X_PUB : ADM_PUB;
++    if (typeof m.sig !== 'string' || m.sig.length > 120) return;
++    edVerify(pub, claimMsg(who, NET.code, pl.nonce), m.sig).then(ok => { if (ok && NET.players.get(from) === pl) { pl.admin = true; pl.adminBy = who; sendTo(from, { k: 'admx', act: 'admin', arg: true }); } });
++    return;
++  }
+   if (from !== NET.selfId && !(pl && pl.admin)) return;
+   const tgt = NET.players.get(m.to);
+   if (m.act === 'kick') { if (!tgt || m.to === NET.selfId) return; sendTo(m.to, { k: 'kick' }); setTimeout(() => { const c = NET.conns.get(m.to); try { c && c.close(); } catch (e) {} }, 300); NET.players.delete(m.to); broadcast({ k: 'sys', t: 'leave', name: tgt.name }); return; }
+-  if (m.act === 'grant') { if (tgt) tgt.admin = !!m.arg; if (m.to === NET.selfId) ADM.granted = !!m.arg; else sendTo(m.to, { k: 'admx', act: 'admin', arg: !!m.arg }); return; }
++  if (m.act === 'grant') { if (tgt) { tgt.admin = !!m.arg; tgt.adminBy = m.arg ? 'grant' : ''; } if (m.to === NET.selfId) ADM.granted = !!m.arg; else sendTo(m.to, { k: 'admx', act: 'admin', arg: !!m.arg }); return; }
+   if (m.act === 'map') { if (MAPS[m.arg]) switchMap(m.arg, false); return; }
+   if (m.act === 'rule') { if (m.arg && ['g', 's', 'bots'].includes(m.arg.k)) setRule(m.arg.k, m.arg.v); else if (m.arg && m.arg.k === 'mode' && ['ffa', 'teams', 'zombie'].includes(m.arg.v)) setRule('mode', m.arg.v); return; }
+   if (m.act === 'say') { broadcast({ k: 'sys', msg: '[ADMIN] ' + String(m.arg).slice(0, 80) }); return; }
+@@ -10661,7 +10816,13 @@ function admRender() {
+ // l'hôte applique la liste d'accès aux joueurs connectés (et à ceux qui arrivent)
+ function admSyncGrants() {
+   if (NET.mode !== 'host') return;
+-  for (const [id, pl] of NET.players) { if (id === NET.selfId) continue; const on = isListedAdmin(pl.name); if (!!pl.admin !== on) { pl.admin = on; sendTo(id, { k: 'admx', act: 'admin', arg: on }); } }
++  // la liste par pseudo ne vaut que pour un joueur dont le mot de passe a été vérifié ; elle ne touche pas aux admins reconnus par clé (claimSig) ou par « grant »
++  for (const [id, pl] of NET.players) {
++    if (id === NET.selfId) continue;
++    const on = isListedAdmin(pl.name) && !!pl.auth;
++    if (on && !pl.admin) { pl.admin = true; pl.adminBy = 'list'; sendTo(id, { k: 'admx', act: 'admin', arg: true }); }
++    else if (!on && pl.admin && pl.adminBy === 'list') { pl.admin = false; pl.adminBy = ''; sendTo(id, { k: 'admx', act: 'admin', arg: false }); }
++  }
+ }
+ for (const b of admPanel.querySelectorAll('.admtabs button')) b.addEventListener('click', () => { ADM.tab = b.dataset.t; admRender(); });
+ $('admClose').addEventListener('click', () => admShow(false));
+@@ -10767,19 +10928,36 @@ const accSave = () => { store.set('accounts', ACC.list); store.set('banned', ACC
+ async function sha256(s) { const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)); return Array.from(new Uint8Array(b)).map(x => x.toString(16).padStart(2, '0')).join(''); }
+ const newSalt = () => Array.from(crypto.getRandomValues(new Uint8Array(12))).map(x => x.toString(16).padStart(2, '0')).join('');
+ async function accSetPw(key, pw) { const a = ACC.list[key] || (ACC.list[key] = { created: Date.now() }); a.salt = newSalt(); a.h = await sha256(a.salt + '|' + pw); accSave(); }
+-// vérifie le pseudo et le mot de passe d'un joueur qui arrive ; renvoie { ok, auth } ou { ok: false, why }
+-async function loginCheck(m) {
+-  const name = String(m.name || 'Joueur').slice(0, 14), key = name.toLowerCase(), pw = typeof m.pw === 'string' ? m.pw.slice(0, 64) : '';
++// Connexion en deux temps, sans mot de passe sur le réseau : « hello » dit seulement s'il y a un mot de passe ; s'il en faut un,
++// l'hôte envoie un défi { salt, nonce } et le joueur répond r = SHA-256(nonce | SHA-256(salt | mdp)). À la création d'un compte,
++// il envoie aussi h = SHA-256(salt | mdp), ce que l'hôte stockait déjà. L'hôte ne voit donc jamais le mot de passe lui-même.
++// renvoie { ok, auth } ou { ok: false, why } tout de suite, ou null si un défi est parti (la réponse arrive dans loginFinish)
++function loginStart(from, m, pend) {
++  const name = String(m.name || 'Joueur').slice(0, 14), key = name.toLowerCase();
+   if (ACC.banned[key]) return { ok: false, why: 'banned' };
+-  const a = ACC.list[key];
+-  if (!a) {
+-    if (!pw) return ACC.require ? { ok: false, why: 'needpw' } : { ok: true, auth: false };
+-    await accSetPw(key, pw); ACC.list[key].last = Date.now(); accSave(); return { ok: true, auth: true, created: true };
+-  }
+-  if (!a.h) { if (!pw) return { ok: false, why: 'needpw' }; await accSetPw(key, pw); ACC.list[key].last = Date.now(); accSave(); return { ok: true, auth: true }; }
+-  if (!pw) return { ok: false, why: 'needpw' };
+-  if (await sha256(a.salt + '|' + pw) !== a.h) return { ok: false, why: 'badpw' };
+-  a.last = Date.now(); accSave(); return { ok: true, auth: true };
++  const a = ACC.list[key], has = !!(a && a.h);
++  if (!m.hasPw) return has || ACC.require ? { ok: false, why: 'needpw' } : { ok: true, auth: false };
++  const salt = has ? a.salt : newSalt(), nonce = randHex(16);
++  pend.set(from, { m, key, salt, nonce, create: !has, t: Date.now() });
++  setTimeout(() => { if (pend.get(from) && pend.get(from).nonce === nonce) { pend.delete(from); accKick(from, 'badpw'); } }, 12000);
++  sendTo(from, { k: 'chal', salt, nonce, create: has ? undefined : 1 });
++  return null;
++}
++async function loginFinish(from, m) {
++  const pend = NET.pendingLogin; const pd = pend && pend.get(from); if (!pd) return; pend.delete(from);
++  const hex64 = v => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v) ? v : '';
++  const done = r => { if (!NET.conns.has(from) || NET.players.has(from)) return; if (!r.ok) accKick(from, r.why); else helloAccept(from, pd.m, r); };
++  if (ACC.banned[pd.key]) return done({ ok: false, why: 'banned' });
++  if (pd.create) {
++    const h = hex64(m.h); if (!h) return done({ ok: false, why: 'badpw' });
++    const a = ACC.list[pd.key] || (ACC.list[pd.key] = { created: Date.now() });
++    a.salt = pd.salt; a.h = h; a.last = Date.now(); accSave();
++    return done({ ok: true, auth: true, created: true });
++  }
++  const a = ACC.list[pd.key]; if (!a || !a.h) return done({ ok: false, why: 'badpw' });
++  const exp = await sha256(pd.nonce + '|' + a.h);
++  if (hex64(m.r) !== exp) return done({ ok: false, why: 'badpw' });
++  a.last = Date.now(); accSave(); done({ ok: true, auth: true });
+ }
+ // bannir demande un 2e clic de confirmation (évite les bans par erreur) ; on garde la date du ban
+ function banBtn(k, online, after) {
+@@ -10867,7 +11045,7 @@ function cmBuild(gltf, key, flip) {
+   MODELS.chars[key] = m;
+ }
+ function cmParse(b64, key, flip) {
+-  return new Promise((res, rej) => { try { new THREE.GLTFLoader().parse(b64ToBuf(b64), '', g => { cmBuild(g, key, flip); res(); }, rej); } catch (e) { rej(e); } });
++  return new Promise((res, rej) => { try { const buf = b64ToBuf(b64); if (key !== 'custom' && glbExternal(buf)) { rej(new Error('external uri')); return; } new THREE.GLTFLoader().parse(buf, '', g => { cmBuild(g, key, flip); res(); }, rej); } catch (e) { rej(e); } });
+ }
+ async function cmImport(file) {
+   if (!file) return;
+@@ -10893,8 +11071,10 @@ function cmSendCached(toId, owner, r) {
+   const d = r.b64, n = Math.ceil(d.length / CM.CHUNK), id = Math.random().toString(36).slice(2, 8);
+   for (let i = 0; i < n; i++) sendTo(toId, { k: 'mdl', o: owner, id, i, n, f: r.f ? 1 : 0, d: d.slice(i * CM.CHUNK, (i + 1) * CM.CHUNK) });
+ }
++// un morceau bien formé : texte base64 borné (jamais plus que CM.CHUNK), index et total cohérents, identifiant court
++function cmChunkOk(m) { return typeof m.d === 'string' && m.d.length <= CM.CHUNK && typeof m.id === 'string' && m.id.length <= 12 && (m.n >= 1 && m.n <= 600) && (m.i >= 0 && m.i < m.n) && Number.isInteger(m.i) && Number.isInteger(m.n); }
+ function cmAssemble(owner, m) {
+-  if (typeof m.d !== 'string' || !(m.n >= 1 && m.n <= 600) || !(m.i >= 0 && m.i < m.n)) return null;
++  if (!cmChunkOk(m)) return null;
+   let a = CM.pend.get(owner); if (!a || a.id !== m.id) { a = { id: m.id, n: m.n, parts: [], got: 0, f: m.f }; CM.pend.set(owner, a); }
+   if (a.parts[m.i] === undefined) { a.parts[m.i] = m.d; a.got++; }
+   if (a.got < a.n) return null;
+@@ -10902,10 +11082,23 @@ function cmAssemble(owner, m) {
+   return full.length <= CM.MAX && full.startsWith('data:') ? { b64: full, f: a.f } : null;
+ }
+ function cmHostRecv(from, m) {
+-  broadcast(Object.assign({}, m, { o: from }), from);
++  // rien n'est relayé avant d'avoir été vérifié : morceau bien formé, et pas plus d'un nouveau modèle par joueur toutes les 20 s
++  if (!cmChunkOk(m)) return;
++  const pl = NET.players.get(from); if (!pl) return;
++  if (pl.cmId !== m.id) { const now = performance.now(); if (pl.cmT && now - pl.cmT < 20000) return; pl.cmId = m.id; pl.cmT = now; }
++  broadcast({ k: 'mdl', o: from, id: m.id, i: m.i, n: m.n, f: m.f ? 1 : 0, d: m.d }, from);
+   const r = cmAssemble('h' + from, m); if (!r) return;
+   CM.host.set(from, r); cmGot(from, r);
+ }
++// un GLB reçu d'un autre joueur ne doit référencer aucun fichier externe (image « uri » http) : chaque client irait le chercher
++function glbExternal(buf) {
++  try {
++    const dv = new DataView(buf); if (dv.getUint32(0, true) !== 0x46546C67) return true;
++    const len = dv.getUint32(12, true); if (dv.getUint32(16, true) !== 0x4E4F534A) return true;
++    const json = new TextDecoder().decode(new Uint8Array(buf, 20, Math.min(len, buf.byteLength - 20)));
++    return /"uri"\s*:\s*"(?!data:)/i.test(json);
++  } catch (e) { return true; }
++}
+ function cmClientRecv(m) { const r = cmAssemble(m.o, m); if (r) cmGot(m.o, r); }
+ async function cmGot(owner, r) {
+   if (owner === NET.selfId) return;
+@@ -17360,7 +17553,8 @@ function frame(now) {
+   aimAssist(dt);
+   xAimbot(dt);
+   updateCamera(dt, playing || NET.mode !== 'off' ? acc / STEP : 1);
+-  updateRemotes(dt);
++  // un état distant inattendu ne doit jamais figer le rendu de tout le monde
++  try { updateRemotes(dt); } catch (e) { if (!(frame._re = ((frame._re || 0) + 1) % 120)) console.warn('updateRemotes', e); }
+   modeTick(dt);
+   updateSelfAvatar(dt);
+   updateFpLegs(dt);
+@@ -17379,7 +17573,7 @@ function frame(now) {
+   updateAbilityFx(dt);
+   if (playing && !(MON && MON.ctrl) && !(KART && KART.drive)) updateWeapon(dt);
+   updateViewmodel(dt);
+-  updateNet(dt);
++  try { updateNet(dt); } catch (e) { if (!(frame._ne = ((frame._ne || 0) + 1) % 120)) console.warn('updateNet', e); }
+   for (const tr of tracers) { if (tr.t > 0) { tr.t -= dt; tr.ln.material.opacity = Math.max(0, tr.t / 0.08) * 0.85; } }
+   for (const s of sparks) {
+     if (s.t <= 0) continue;
+diff --git a/tools/keygen.js b/tools/keygen.js
+new file mode 100644
+index 0000000..ddbe102
+--- /dev/null
++++ b/tools/keygen.js
+@@ -0,0 +1,23 @@
++#!/usr/bin/env node
++// Génère les clés publiques du mode propriétaire et du mot de passe admin de Vélocité.
++//   node tools/keygen.js                 → tire deux mots de passe aléatoires (12 caractères) et affiche les clés
++//   node tools/keygen.js "monMdp" "adm"  → calcule les clés pour des mots de passe choisis (6 à 16 caractères)
++// Colle ensuite les deux valeurs dans index.html : const X_PUB = '…' (propriétaire) et const ADM_PUB = '…' (admin).
++// Principe : clé privée Ed25519 = SHA-256(mot de passe) ; seule la clé publique est dans le jeu. Un joueur qui lit le code
++// ne peut ni retrouver le mot de passe (sauf force brute : choisis-le long), ni se faire passer pour toi auprès d'un hôte.
++const { webcrypto: crypto } = require('crypto');
++const PKCS8 = Buffer.from('302e020100300506032b657004220420', 'hex');
++const ALPHA = 'abcdefghijkmnpqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ23456789';
++const randPw = n => Array.from(crypto.getRandomValues(new Uint8Array(n))).map(b => ALPHA[b % ALPHA.length]).join('');
++async function pubOf(pw) {
++  const seed = Buffer.from(await crypto.subtle.digest('SHA-256', Buffer.from(pw, 'utf8')));
++  const key = await crypto.subtle.importKey('pkcs8', Buffer.concat([PKCS8, seed]), { name: 'Ed25519' }, true, ['sign']);
++  return (await crypto.subtle.exportKey('jwk', key)).x;
++}
++(async () => {
++  const [, , o, a] = process.argv;
++  const owner = o || randPw(12), admin = a || randPw(12);
++  for (const [n, pw] of [['propriétaire', owner], ['admin', admin]]) if (pw.length < 6 || pw.length > 16) { console.error(`Mot de passe ${n} : 6 à 16 caractères.`); process.exit(1); }
++  console.log(`Mot de passe propriétaire : ${owner}\n  const X_PUB = '${await pubOf(owner)}';`);
++  console.log(`Mot de passe admin        : ${admin}\n  const ADM_PUB = '${await pubOf(admin)}';`);
++})();

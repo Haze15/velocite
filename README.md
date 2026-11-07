@@ -145,8 +145,23 @@ Le mode se choisit dans le menu (à côté de la carte) ou dans le panneau admin
 
 ## Comptes et signalements
 
-- **Mot de passe :** dans l'onglet Multijoueur, à côté du pseudo. Le premier mot de passe tapé avec un pseudo crée le compte chez l'hôte ; ensuite il faut le même pour rejoindre avec ce pseudo. Sans mot de passe, on peut toujours jouer avec un pseudo libre (sauf si l'hôte rend le mot de passe obligatoire).
-- **Panneau admin, onglet Comptes :** liste des comptes, dernière connexion, réinitialiser ou définir un mot de passe, bannir ou débannir, supprimer. Les mots de passe sont stockés sous forme d'empreinte SHA-256 salée : personne ne peut les lire, on peut seulement les remplacer. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien.
+- **Mot de passe :** dans l'onglet Multijoueur, à côté du pseudo. Le premier mot de passe tapé avec un pseudo crée le compte chez l'hôte ; ensuite il faut le même pour rejoindre avec ce pseudo. Sans mot de passe, on peut toujours jouer avec un pseudo libre (sauf si l'hôte rend le mot de passe obligatoire). Le mot de passe **ne quitte jamais ton appareil** : l'hôte envoie un défi (sel + nonce) et ton jeu répond par une empreinte ; l'hôte ne voit ni ne stocke le mot de passe lui-même.
+- **Panneau admin, onglet Comptes :** liste des comptes, dernière connexion, réinitialiser ou définir un mot de passe, bannir ou débannir, supprimer. Les mots de passe sont stockés sous forme d'empreinte SHA-256 salée : personne ne peut les lire, on peut seulement les remplacer. Après une réinitialisation, le prochain mot de passe tapé par le joueur devient le sien. Un pseudo de la liste des admins n'obtient le droit admin qu'avec un compte existant dont le mot de passe vient d'être vérifié.
+
+## Sécurité en ligne
+
+Il n'y a pas de serveur de jeu : l'hôte relaie ce que chaque joueur dit de lui-même. Il ne peut pas rejouer la physique de tous, mais il refuse ce qui est impossible :
+
+- états malformés ou hors carte (chaque champ est typé et borné avant d'être rediffusé) ;
+- dégâts au-delà de ce qu'une arme peut faire (300 maximum par coup, budget de 450 puis 350/s par paire tireur → victime), coups portés par un joueur mort, corps à corps ou percussion à distance, impulsion depuis l'autre bout de la carte ;
+- une élimination n'est créditée qu'à celui dont l'hôte a relayé un coup sur la victime dans les 6 s ;
+- plus d'un certain débit par type de message (grenades, chat, modèles, états…) : le surplus est ignoré ;
+- un modèle 3D importé n'est relayé qu'après vérification de chaque morceau, et un fichier qui référence des images externes est refusé ;
+- la reprise de session après une coupure demande un jeton secret remis à la connexion.
+
+Les triches intégrées (onglet Triche du propriétaire) sont automatiquement coupées en ligne.
+
+**Propriétaire et admin :** le jeu ne contient que deux **clés publiques** Ed25519 (`X_PUB` et `ADM_PUB` dans `index.html`). Le mot de passe tapé sert de graine à la clé privée, qui reste sur ton appareil ; en ligne, ton jeu prouve qu'il a la clé en signant un nonce envoyé par l'hôte. Pour choisir tes mots de passe : `node tools/keygen.js "monMotDePasseProprietaire" "monMotDePasseAdmin"` affiche les deux clés à coller dans `index.html` (6 à 16 caractères ; plus c'est long, mieux c'est). Il faut un navigateur récent (Chrome/Edge 113+, Safari 17+, Firefox 130+).
 - **Signaler :** en ligne, l'onglet Multijoueur propose de signaler un joueur (triche, insultes, spam, inactif, autre). Les signalements arrivent chez l'hôte et chez les admins, dans l'onglet **Signalements** du panneau admin, avec un bouton pour expulser ou bannir.
 
 ## Skins réservés
@@ -207,6 +222,8 @@ Dans les réglages : forme (croix, croix en T, croix en X, cercle, point), coule
 - Sur mobile : boutons CHAT et MICRO.
 
 ## Multijoueur
+
+- **Arme vraiment tenue** : l'arme est posée devant la poitrine et suit la visée ; les deux mains (la droite seule pour un couteau) sont placées sur ses prises par une IK à deux os, quel que soit le squelette du personnage. L'aperçu du menu et l'avatar à la troisième personne utilisent la même tenue.
 
 1. Un joueur clique sur **Créer une partie** : il héberge la partie et reçoit un code de 5 caractères.
 2. Les autres entrent ce code et cliquent sur **Rejoindre**, ou ouvrent directement le lien partagé (`…/velocite/#CODE`).
@@ -279,7 +296,20 @@ Il y a une carte cachée. Indice : un très vieux code de jeux vidéo, tapé n'i
 
 ## Graphismes Ultra
 
-Réglages → Graphismes → **Ultra** : post-traitement maison (halo lumineux autour des lampes, des tirs et des effets, étalonnage des couleurs, vignette), anticrénelage multi-échantillons 4×, ombres en 4096 adoucies, résolution jusqu'à 2× et 60 % d'herbe en plus. « Élevés » garde un bloom plus léger. Pour les PC modestes, « Auto » et « Rapides » n'ont pas ces effets.
+Réglages → Graphismes → **Ultra** : post-traitement maison (halo lumineux autour des lampes, des tirs et des effets, étalonnage des couleurs, vignette), ombres en 4096 adoucies, résolution jusqu'à 2× et 60 % d'herbe en plus. « Élevés » garde un bloom plus léger. Pour les PC modestes, « Auto » et « Rapides » n'ont pas ces effets.
+
+### Rendu (toutes qualités)
+
+Le jeu est rendu en espace linéaire avec sortie sRGB et tone mapping ACES : les couleurs du code et les textures sont lues comme des couleurs d'écran, l'exposition et l'équilibre ambiant/soleil sont réglés par carte. Le brouillard est un brouillard de hauteur (nappe au sol, sommets dégagés), réglé par carte.
+
+### Rendu Élevé / Ultra
+
+- **Matériaux PBR** : tout le décor passe en matériaux physiques (rugosité par matière : béton, pierre, tôle, roche, bois, tuiles, sable, herbe, neige, pavés, cendre), avec des **cartes de relief dérivées des textures procédurales** (joints, fissures, rides de sable) ; les conteneurs sont de la tôle peinte, les vitres du verre.
+- **Environnement** : le ciel de la carte (dégradé, soleil, nuages) est capturé et préfiltré (PMREM) ; il éclaire les matériaux et se reflète dessus, cohérent avec chaque carte.
+- **Occlusion ambiante (SSAO)** : demi-résolution, 16 échantillons, flou 5×5 ; pose les objets au sol et creuse les coins. Elle remplace l'anticrénelage multi-échantillons par un FXAA (la profondeur doit pouvoir être lue).
+- **Rayons de lumière** : le ciel autour du soleil est étiré radialement, les obstacles laissent des ombres dans le faisceau.
+
+Le passage d'Auto/Rapide à Élevé/Ultra (ou l'inverse) reconstruit la carte courante avec les nouveaux matériaux (Nécropolis : au prochain chargement).
 
 ## Optimisation
 
@@ -417,7 +447,7 @@ Pour la reconstruire : `launcher/build-exe.sh` (Go 1.21+, et [rsrc](https://gith
 
 ## Lancer en local
 
-Les modèles 3D sont chargés depuis `assets/`, il faut donc un petit serveur :
+Les modèles 3D et les bibliothèques sont chargés depuis `assets/`, il faut donc un petit serveur :
 
 ```sh
 python3 -m http.server 8000
@@ -427,6 +457,8 @@ python3 -m http.server 8000
 ## Structure
 
 - `index.html` : tout le jeu (rendu three.js r128, physique de mouvement à 120 Hz, armes, HUD, réseau).
+- `assets/vendor/` : three.js r128, GLTFLoader, SkeletonUtils et PeerJS 1.5.4, servis avec le jeu (les CDN ne servent plus que de repli, ils sont souvent bloqués sur les réseaux d'entreprise ou d'école).
+- `tools/keygen.js` : calcule les clés publiques du propriétaire et de l'admin à partir de mots de passe.
 - `assets/models/` : modèles de personnages animés.
 - `assets/models/city/city.glb` : modèles de Nécropolis, regroupés par `tools/citypack.py` d'après la liste `tools/city-models.txt`.
 
