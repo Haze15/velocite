@@ -186,7 +186,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 #usePrompt kbd{margin-right:6px}
 #emoteWheel{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);min-width:330px;padding:16px 18px 12px;background:rgba(14,18,22,.82);border:1px solid rgba(255,176,32,.45);backdrop-filter:blur(4px)}
 .ew-title{margin:0 0 10px;font:700 15px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:var(--amber);text-align:center}
-.ew-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ew-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.ew-grid div{cursor:pointer}.ew-grid div:hover{border-color:var(--amber)}
 .ew-grid div{display:flex;align-items:center;gap:8px;padding:9px 10px;background:rgba(244,239,230,.06);border:1px solid var(--ink-faint);font:600 15px/1.1 var(--f-display);letter-spacing:.04em;color:var(--ink)}
 .ew-hint{margin:10px 0 0;font-size:12.5px;color:var(--ink-dim);text-align:center}
 .lobbies{display:grid;gap:8px;border-top:1px solid var(--ink-faint);padding-top:12px}
@@ -602,6 +602,7 @@ body.touch .lo-key{display:none}
     <div class="ew-grid">
       <div><kbd>1</kbd><span data-i18n="em.wave">Salut</span></div><div><kbd>2</kbd><span data-i18n="em.dance">Danse</span></div><div><kbd>3</kbd><span data-i18n="em.thumbs">Pouce levé</span></div>
       <div><kbd>4</kbd><span data-i18n="em.clap">Bravo</span></div><div><kbd>5</kbd><span data-i18n="em.sit">Assis</span></div><div><kbd>6</kbd><span data-i18n="em.flex">Muscles</span></div>
+      <div><kbd>7</kbd><span data-i18n="em.moonwalk">Moonwalk</span></div><div><kbd>8</kbd><span data-i18n="em.northern">Northern Soul</span></div><div><kbd>9</kbd><span data-i18n="em.thriller">Danse zombie</span></div><div><kbd>0</kbd><span data-i18n="em.silly">Danse folle</span></div>
     </div>
     <p class="ew-hint" data-i18n-html="em.hint">Choisis avec <kbd>1</kbd>–<kbd>6</kbd>. Bouger ou tirer arrête l’emote.</p>
   </div>
@@ -5278,7 +5279,7 @@ function cloneModel(m) {
   const mixer = new THREE.AnimationMixer(obj);
   const actions = {};
   for (const clip of m.anims) actions[clip.name] = mixer.clipAction(clip);
-  return { obj, mixer, actions, mats, cur: null, retD: m.retD || null };
+  return { obj, mixer, actions, mats, cur: null, retD: m.retD || null, retDP: m.retDP || null };
 }
 function playAnim(av, name, fade = 0.2, once = false) {
   if (!av || av.cur === name || !av.actions[name]) return;
@@ -5323,6 +5324,7 @@ function retargetFromXbot(m, ownClips, prepOnly) {
   for (const name in bn) { const a = bx[name], b = bn[name]; if (!a || !a.parent || !b.parent) continue; D[name] = wq(a).invert().multiply(wq(b)); DP[name] = wq(a.parent).invert().multiply(wq(b.parent)).invert(); }
   // les poses ajoutées par le code (saut, superglide, emotes, assis) sont réglées pour les axes du X-Bot : on garde D pour les convertir
   m.retD = {}; for (const k in D) m.retD[bn[k].name] = D[k].clone();
+  m.retDP = {}; for (const k in DP) m.retDP[bn[k].name] = DP[k].clone(); // pour les emotes capturées (mocap)
   if (prepOnly) return null;
   const qa = new THREE.Quaternion(), qb = new THREE.Quaternion();
   return XCLIPS.list.map(c => new THREE.AnimationClip(c.name, c.duration, // une piste vers un os absent (yeux du X-Bot…) serait liée à la racine du modèle et la ferait pivoter : on l'écarte
@@ -5355,7 +5357,7 @@ if (THREE.GLTFLoader) {
   // Soldat / Titan : leurs propres animations, mais les poses ajoutées (arme tenue, saut…) passent par les axes du X-Bot
   function soldierRig() {
     const m = MODELS.chars.soldier; if (!m || !MODELS.chars.xbot || m.retD) return;
-    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD;
+    retargetFromXbot(m, [], true); MODELS.chars.titan.retD = m.retD; MODELS.chars.titan.retDP = m.retDP;
   }
   function skelReady() {
     if (!XCLIPS.list || !XCLIPS.skel || MODELS.chars.skel) return;
@@ -7304,7 +7306,7 @@ function cleanState(s) {
   const o = { p, v, y: num(s.y, -7, 7), pi: num(s.pi, -1.7, 1.7), a: strOf(s.a, 8) || 'ground', w: clamp(s.w | 0, 0, 6), hp: num(s.hp, 0, MAX_HP, MAX_HP), sh: num(s.sh, 0, MAX_SH, 0), dead: !!s.dead, z: s.z ? 1 : 0, mic: s.mic ? 1 : 0 };
   for (const k of ['ch', 'tc', 'mk', 'sp', 'sk', 'kt', 'ks']) if (typeof s[k] === 'string') o[k] = s[k].slice(0, 24);
   if (typeof s.cs === 'string') o.cs = s.cs.slice(0, 48);
-  if (s.em) { o.em = clamp(s.em | 0, 1, 6); o.ey = num(s.ey, -7, 7); }
+  if (s.em) { o.em = clamp(s.em | 0, 1, 10); o.ey = num(s.ey, -7, 7); }
   if (s.spec) o.spec = 1; if (s.mg) o.mg = 1; if (s.ads) o.ads = 1;
   if (s.pv) { o.pv = clamp(s.pv | 0, 1, 64); o.ps = clamp(s.ps | 0, 0, 7); }
   if (s.vh) { o.vh = clamp(s.vh | 0, 1, 64); o.vy = num(s.vy, -7, 7); if (Array.isArray(s.vq)) o.vq = s.vq.slice(0, 4).map(x => num(x, -7, 7)); }
@@ -7881,8 +7883,31 @@ const POSES = {
   sit: () => ({ lUp: [-1.55, 0, 0.12], rUp: [-1.55, 0, -0.12], lLeg: [1.6, 0, 0], rLeg: [1.6, 0, 0], rArm: [0, 0.35, -0.15], lArm: [0, -0.35, 0.15], spine: [0.15, 0, 0] }),
   flex: t => { const k = 0.12 * Math.sin(t * 6); return { rArm: [0, 0, -1.5], lArm: [0, 0, 1.5], rFore: [0, 0, -1.75 - k], lFore: [0, 0, 1.75 + k], spine: [-0.1, 0, 0] }; }
 };
-const EMOTES = ['wave', 'dance', 'thumbs', 'clap', 'sit', 'flex'];
-const ROBOT_EMOTE = { wave: ['Wave'], dance: ['Dance'], thumbs: ['ThumbsUp', true], clap: ['Yes'], sit: ['Sitting', true], flex: ['Punch'] };
+const EMOTES = ['wave', 'dance', 'thumbs', 'clap', 'sit', 'flex', 'moonwalk', 'northern', 'thriller', 'silly'];
+const ROBOT_EMOTE = { wave: ['Wave'], dance: ['Dance'], thumbs: ['ThumbsUp', true], clap: ['Yes'], sit: ['Sitting', true], flex: ['Punch'], moonwalk: ['Dance'], northern: ['Dance'], thriller: ['Dance'], silly: ['Dance'] };
+/* emotes capturées (Mixamo, converties dans les axes du X-Bot) : rotations locales par os, 24 images/s, hy = hauteur des hanches */
+const MOCAP = {}, MOCAP_IDS = ['moonwalk', 'northern', 'thriller', 'silly'];
+function mocapGet(id) {
+  if (!MOCAP_IDS.includes(id)) return null;
+  if (MOCAP[id] === undefined) { MOCAP[id] = null; fetch('assets/emotes/' + id + '.json').then(r => r.ok ? r.json() : null).then(j => { if (j && j.b) { j.n = j.hy.length; MOCAP[id] = j; } else delete MOCAP[id]; }).catch(() => { delete MOCAP[id]; }); }
+  return MOCAP[id];
+}
+const _mq1 = new THREE.Quaternion(), _mq2 = new THREE.Quaternion();
+const mocNorm = n => String(n).replace(/^mixamorig\d*[:_]?/i, '').replace(/_\d+$/, '').toLowerCase();
+function mocapApply(vis, id, w) {
+  const M = mocapGet(id); if (!M || w <= 0.001) return 0;
+  if (!vis._emB) { vis._emB = {}; vis.obj.traverse(o => { if (o.isBone) { const k = mocNorm(o.name); if (!vis._emB[k]) vis._emB[k] = o; } }); }
+  const f = (vis.emT * M.fps) % (M.n - 1), i = Math.floor(f), a = f - i;
+  for (const k in M.b) {
+    const bone = vis._emB[k]; if (!bone) continue; const v = M.b[k];
+    _mq1.fromArray(v, i * 4); _mq2.fromArray(v, (i + 1) * 4); _mq1.slerp(_mq2, a);
+    const D = vis.retD && vis.retD[bone.name], DP = vis.retDP && vis.retDP[bone.name];
+    if (D && DP) _mq1.premultiply(DP).multiply(D);
+    bone.quaternion.slerp(_mq1, w);
+  }
+  const hy = M.hy[i] + (M.hy[i + 1] - M.hy[i]) * a;
+  return -hy * 0.95 * ((CHARS[vis.ch] && CHARS[vis.ch].h) || 1.8) / 1.8 * w;
+}
 const _dq = new THREE.Quaternion(), _dqi = new THREE.Quaternion(), _pq = new THREE.Quaternion(), _axes = [new V3(1, 0, 0), new V3(0, 1, 0), new V3(0, 0, 1)];
 // état d'animation d'un avatar : 'idle' | 'walk' | 'run' plus une pose (saut, superglide, emote)
 function animateAvatar(vis, dt, o) {
@@ -7926,6 +7951,9 @@ function animateAvatar(vis, dt, o) {
     if (k === 'sit') lower += 0.48 * w;
     if (k === 'dance') lower += -0.04 * Math.abs(Math.sin(vis.emT * 5.2)) * w;
   }
+  // emotes capturées : jouées par-dessus la pose de repos, avec un fondu d'entrée et de sortie
+  vis.mocW = vis.mocW || {};
+  for (const id of MOCAP_IDS) { vis.mocW[id] = approach(vis.mocW[id] || 0, id === pose ? 1 : 0, dt * 5); if (vis.mocW[id] > 0.001) lower += mocapApply(vis, id, vis.mocW[id]); }
   vis.lower = lower;
   // arme tenue à deux mains devant la poitrine (couteau : bras droit seulement) ; le buste suit la visée
   const hw = vis.holdW = approach(vis.holdW || 0, o.hold ? 1 : 0, dt * 7);
@@ -10663,8 +10691,8 @@ addEventListener('keydown', e => {
   if (c === 'Escape') { if (EMOTE.menu) { openEmoteMenu(false); return; } if (unlockedMode) pause(); return; }
   if (EDIT.on && editorKey(c, e)) { e.preventDefault(); keys[c] = true; return; }
   if (EMOTE.menu) {
-    const m = /^(?:Digit|Numpad)([1-6])$/.exec(c);
-    if (m) { e.preventDefault(); keys[c] = true; startEmote(+m[1] - 1); return; }
+    const m = /^(?:Digit|Numpad)([0-9])$/.exec(c);
+    if (m) { e.preventDefault(); keys[c] = true; startEmote(m[1] === '0' ? 9 : +m[1] - 1); return; }
   }
   if (boundCodes().has(c) || c === 'Space' || c === 'Tab') e.preventDefault();
   if (!keys[c]) pressCode(c);
@@ -11397,11 +11425,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.31';
+const GAME_VERSION = '2026.12.01';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Corrigé pour de bon : on ne voit plus l’arme et la lunette en fantôme dans le verre de la lunette (qualité Élevée et Ultra)'],
-  en: ['Fixed for good: the gun and scope no longer show as a ghost inside the scope lens (High and Ultra quality)']
+  fr: ['4 nouvelles emotes dansées, en vraie capture de mouvement : Moonwalk (7), Northern Soul (8), Danse zombie (9) et Danse folle (0) — sur tous les personnages, vues par tout le monde en ligne', 'La roue des emotes se clique aussi à la souris'],
+  en: ['4 new motion-captured dance emotes: Moonwalk (7), Northern Soul (8), Zombie dance (9) and Silly dance (0) — on every character, seen by everyone online', 'You can also click in the emote wheel']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -18806,6 +18834,21 @@ function frame(now) {
   renderer.clear(); renderer.render(scene, camera);
   if (menu.hidden) { renderer.clearDepth(); renderer.render(wScene, wCam); }
 }
+/* ================= Emotes capturées : libellés, clic dans la roue, préchargement ================= */
+Object.assign(I18N.fr, { 'em.moonwalk': 'Moonwalk', 'em.northern': 'Northern Soul', 'em.thriller': 'Danse zombie', 'em.silly': 'Danse folle', 'em.hint': 'Choisis avec <kbd>1</kbd>–<kbd>9</kbd> et <kbd>0</kbd>, ou clique. Bouger ou tirer arrête l’emote.' });
+Object.assign(I18N.en, { 'em.moonwalk': 'Moonwalk', 'em.northern': 'Northern Soul', 'em.thriller': 'Zombie dance', 'em.silly': 'Silly dance', 'em.hint': 'Pick with <kbd>1</kbd>–<kbd>9</kbd> and <kbd>0</kbd>, or click. Moving or shooting stops the emote.' });
+for (const L of ['af', 'zu']) if (I18N[L]) Object.assign(I18N[L], { 'em.moonwalk': 'Moonwalk', 'em.northern': 'Northern Soul', 'em.thriller': 'Zombie', 'em.silly': 'Silly' });
+{
+  const cells = [...emoteWheel.querySelectorAll('.ew-grid > div')];
+  cells.forEach((d, i) => d.addEventListener('click', e => { e.stopPropagation(); startEmote(i); }));
+  for (const d of cells) { const sp = d.querySelector('[data-i18n]'); if (sp) sp.textContent = t(sp.dataset.i18n); }
+  const h = emoteWheel.querySelector('[data-i18n-html="em.hint"]'); if (h) h.innerHTML = t('em.hint');
+  // les données des danses se chargent dès qu'on ouvre la roue (et 10 s après le démarrage)
+  const pre = () => { for (const id of MOCAP_IDS) mocapGet(id); };
+  new MutationObserver(() => { if (!emoteWheel.hidden) pre(); }).observe(emoteWheel, { attributes: true, attributeFilter: ['hidden'] });
+  setTimeout(pre, 10000);
+}
+
 /* ================= Menu façon Fortnite : barre du haut (logo, onglets, niveau, admin, langue), bouton Jouer sous le personnage ================= */
 (function fnMenu() {
   const menuEl = $('menu'), inner = menuEl && menuEl.querySelector('.menu-inner.shell'); if (!inner || $('fnTop')) return;
