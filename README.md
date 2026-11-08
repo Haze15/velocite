@@ -28,9 +28,10 @@ Chaque personnage a une classe avec une capacité tactique (**Q**, A en AZERTY) 
 | Spectre | Fantôme | Dash : propulsion éclair au sol ou en l'air dans la direction de tes touches (recharge 3,5 s) | Téléport : 50 m droit devant en gardant l'élan, s'arrête avant un mur (recharge 20 s) |
 | Lynx | Coureuse de murs | Dash (recharge 3,5 s). Passif : **course sur les murs** — en l'air, en avançant avec un mur sur le côté, elle court dessus jusqu'à 1,7 s ; Espace la propulse loin du mur | Survoltage : 8 s à +30 % de vitesse, course sur les murs sans limite de temps (recharge 45 s) |
 | Corbeau | Voltigeur | Double grappin : deux câbles tirés de part et d'autre de la visée (70 m), tu te balances entre eux ; **Avancer** = jet de gaz dans la direction regardée, **Espace** = lâcher, Q de nouveau = lâcher avec un petit saut. Le gaz se recharge (vite au sol) (recharge 1,2 s) | Spirale : ruée en vrille de 1,3 s qui tranche tout autour de toi (40 dégâts par passage, 3 passages max par cible) (recharge 40 s) |
+| Ancre | Ingénieure | Tourelle : posée sur la surface visée (8 m), elle tire 2 fois par seconde sur la cible la plus proche à moins de 25 m pendant 12 s (8 dégâts par balle) ; une seule à la fois (recharge 18 s) | Rempart : mur d'énergie de 7 m × 3 m, 3 m devant toi pendant 10 s ; il arrête les tirs, les explosions et le passage, chez tout le monde (recharge 45 s) |
 
 
-Soldat, X-Bot, Nova, Spectre, Titan, Lynx ou Corbeau, avec dix-huit couleurs. Le Corbeau porte un harnais croisé, deux bonbonnes de gaz aux hanches et une cape courte. Lynx porte un bandeau lumineux et une écharpe aux couleurs choisies. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
+Soldat, X-Bot, Nova, Spectre, Titan, Lynx, Corbeau ou Ancre, avec dix-huit couleurs. Ancre porte un casque de chantier à lampe frontale, une visière de soudure relevée, des épaulières, un sac à dos à antenne, une ceinture à outils et des genouillères, sur une carrosserie anthracite aux articulations orange sécurité. Le Corbeau porte un harnais croisé, deux bonbonnes de gaz aux hanches et une cape courte. Lynx porte un bandeau lumineux et une écharpe aux couleurs choisies. Le Spectre porte une capuche, un masque blanc aux yeux lumineux, une cape déchirée, des épaulières et des brassards ; ses yeux, ses articulations et ses runes prennent la couleur choisie. Le choix se fait dans le menu avec un aperçu 3D, et c'est ce que les autres joueurs voient en ligne.
 
 Les autres joueurs tiennent leur arme à deux mains devant eux (le couteau d'une main), et leur buste suit leur visée vers le haut ou le bas. À la première personne, les bras et les mains (doigts refermés sur l'arme) ont les couleurs de ton perso : gants et manches du Soldat, peau et bracelet de Nova, os du squelette, bracelets lumineux du Spectre et de Lynx… Les animations ont été refaites : balancement de marche, respiration, sprint avec l'arme en travers, atterrissage, rechargement en trois temps (la main gauche va chercher le chargeur), changement d'arme.
 
@@ -95,6 +96,11 @@ Les armes spéciales sortent des coffres et se rangent dans l'emplacement **7**.
 | Pompe automatique | 8 plombs, 240 coups/min |
 | Sniper lourd | 140 dégâts, tête ×2, lunette ×4,5 |
 | Mitrailleuse lourde | 100 balles, 700 coups/min |
+| Fusil à plasma | Boules d'énergie rapides (48 m/s) qui explosent à l'impact : 64 dégâts à 3,4 m, 14 charges |
+| Mortier M-7 | Tir en cloche : l'obus retombe exactement sur le point visé et siffle en descendant ; 150 dégâts à 8 m, 6 obus |
+| Arc Tesla | Éclair instantané (38 m) qui saute sur jusqu'à 3 cibles de plus à moins de 8 m les unes des autres : 24, 16, 10, 7 dégâts |
+| Essaim | Salve de 3 micro-missiles qui se guident sur la cible la plus proche de ton canon : 48 dégâts chacun à 2,8 m, 6 salves |
+| Canon à impulsion | Cône de 10 m : jusqu'à 44 dégâts, projette les ennemis, renvoie les projectiles (roquettes, grenades, missiles) ; le recul te propulse à l'opposé — vise le sol pour un saut d'impulsion |
 
 L'onglet **Armes** du menu montre chaque arme en 3D avec ton skin (fais-la tourner à la souris).
 
@@ -356,6 +362,10 @@ Les bâtiments en modèles 3D ont leurs vraies dimensions de collision ; ceux o�
 ## Néo-Dune
 
 Ville futuriste au milieu du désert, au coucher du soleil : la grande Flèche au centre (spirale de plateformes à tremplin jusqu'au sommet, tyrolienne pour redescendre), l'Arcologie en gradins et ses passerelles, les Dômes et la ferme solaire, le Port des glisseurs et ses conteneurs, le Marché couvert, un monorail en anneau sur lequel on peut courir, une oasis et une tempête de sable.
+
+## Les Docks
+
+Port de commerce à l'heure bleue, sous une bruine fine. Les quais sont surélevés au-dessus d'un bassin où l'on nage (échelles pour remonter, ou wall-jump). Au nord, la jetée des portiques : deux grues à conteneurs qui enjambent le cargo **ARGONAUTE** amarré (coque, pont chargé de conteneurs sur deux couloirs, château arrière à trois niveaux, passerelle d'embarquement, grue de pont, amarres), une tour d'accès à tremplins jusqu'à la flèche du portique G1 (26 m), la capitainerie-phare au bout de la jetée dont le faisceau balaie le port. À l'ouest, l'entrepôt 7 (hangar ouvert avec rayonnages, passerelle intérieure, chariot élévateur, établi, bobines de câble), l'entrepôt 3 (camion porte-conteneur, conteneurs frigorifiques), l'entrepôt frigorifique au toit accessible, le bureau du port et sa terrasse, la cour à conteneurs (cinq files, piles de 1 à 3, voies peintes, mâts d'éclairage), le parc à cuves (trois réservoirs avec passerelles, tuyauterie, vannes, muret de rétention), une voie ferrée avec locotracteur et wagons. Au sud, la marina : pontons flottants, station carburant, bateaux et bouées qui tanguent ; un appontement en bois isolé relié par une longue tyrolienne depuis le toit du bureau. À l'est, la digue et ses feux d'entrée ; au large, des cargos ; derrière, la skyline éclairée de la ville. Mouettes, lampes au sodium, feux qui clignotent, radar qui tourne. Les cinq armes spéciales ajoutées avec la carte (plasma, mortier, arc Tesla, essaim, impulsion) y sont posées à demeure : dans l'entrepôt 7, sur une cuve, sur le pont du cargo, sur la flèche du portique G1 et au bout des pontons.
 
 ## Commandes
 
