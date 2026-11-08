@@ -6004,7 +6004,7 @@ function buildViewmodel(kind, knifeType) {
     }
     else if (gm.lens) { // lunette : verre qui affiche une vraie image zoomée (rendue à part), avec son réticule
       const lp = P2(gm.lens[0], gm.lens[1]), lr = gm.lens[2] * L * sc;
-      const lens = new THREE.Mesh(new THREE.CircleGeometry(lr, 48), new THREE.MeshBasicMaterial({ color: 0x0a1418, depthTest: false }));
+      const lens = new THREE.Mesh(new THREE.CircleGeometry(lr, 48), new THREE.MeshBasicMaterial({ color: 0x0a1418, depthFunc: THREE.AlwaysDepth }));
       lens.position.set(0, lp[1], lp[2] + .006); lens.renderOrder = 4; g.add(lens);
       const ret = new THREE.Mesh(new THREE.CircleGeometry(lr, 48), new THREE.MeshBasicMaterial({ map: scopeReticle(), transparent: true, depthWrite: false, depthTest: false }));
       ret.position.z = .0008; ret.renderOrder = 5; ret.visible = false; lens.add(ret);
@@ -11397,11 +11397,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.11.30';
+const GAME_VERSION = '2026.11.31';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Sons de tir personnalisés de retour : dans Réglages → Sons personnalisés, importe ton propre son pour chaque arme (et pour le saut, le kill, le grappin…) ; les autres joueurs l’entendent en ligne', 'Un bot Discord annonce maintenant chaque mise à jour du jeu', 'Liste des nouveautés allégée : seulement ce qui change dans la dernière version'],
-  en: ['Custom gunshot sounds are back: in Settings → Custom sounds, import your own sound for each weapon (and for jump, kill, grapple…); other players hear it online', 'A Discord bot now announces every game update', 'Shorter What’s new list: only what changed in the latest version']
+  fr: ['Corrigé pour de bon : on ne voit plus l’arme et la lunette en fantôme dans le verre de la lunette (qualité Élevée et Ultra)'],
+  en: ['Fixed for good: the gun and scope no longer show as a ghost inside the scope lens (High and Ultra quality)']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -18321,7 +18321,7 @@ function optBuild(type, g, mp, mats, glass) {
   const B = (a, b, c) => new THREE.BoxGeometry(a, b, c), CY = (r, l, n = 22, r2, open) => new THREE.CylinderGeometry(r2 === undefined ? r : r2, r, l, n, 1, !!open);
   const inner = new THREE.MeshBasicMaterial({ color: 0x050608, side: THREE.BackSide });
   const lensOf = (r, z, ret, cy) => {
-    const lens = new THREE.Mesh(new THREE.CircleGeometry(r, 40), new THREE.MeshBasicMaterial({ color: 0x0a1418, depthTest: false }));
+    const lens = new THREE.Mesh(new THREE.CircleGeometry(r, 40), new THREE.MeshBasicMaterial({ color: 0x0a1418, depthFunc: THREE.AlwaysDepth }));
     lens.position.set(0, cy, z); lens.renderOrder = 4; g.add(lens);
     const rt = new THREE.Mesh(new THREE.CircleGeometry(r, 40), new THREE.MeshBasicMaterial({ map: optReticle(ret), transparent: true, depthWrite: false, depthTest: false }));
     rt.position.z = 0.0008; rt.renderOrder = 5; rt.visible = false; lens.add(rt); return { lens, ret: rt };
