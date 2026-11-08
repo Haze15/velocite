@@ -40,12 +40,14 @@ jobs:
               'username': 'Vélocité',
               'avatar_url': site + 'assets/discord-logo.png',
               'embeds': [{
-                  'title': f'🚀 Mise à jour {v}',
+                  'author': {'name': 'NOUVELLE MISE À JOUR'},
+                  'title': f'🚀 Vélocité {v}',
                   'url': site,
                   'description': desc,
-                  'color': 0xFFB020,
+                  'color': 0xFF2A3D,
                   'thumbnail': {'url': site + 'assets/icon-192.png'},
-                  'footer': {'text': 'Vélocité · le jeu se met à jour tout seul au prochain lancement'},
+                  'footer': {'text': 'Annonce automatique · le jeu se met à jour tout seul au prochain lancement'},
+                  'timestamp': __import__('datetime').datetime.now(__import__('datetime').timezone.utc).isoformat(),
               }],
           }
           req = urllib.request.Request(os.environ['WEBHOOK'], data=json.dumps(body).encode(), headers={'Content-Type': 'application/json', 'User-Agent': 'velocite-update-bot'})
