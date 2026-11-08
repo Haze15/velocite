@@ -11054,6 +11054,9 @@ function admRender() {
   if (ADM.tab === 'players') {
     const tbl = document.createElement('div'); tbl.className = 'admlist';
     const give = document.createElement('select'); give.innerHTML = itemOptions(); give.className = 'admsel';
+    // l'objet choisi est gardé quand la liste des joueurs se rafraîchit (avant : retour à la carabine toutes les 2,5 s)
+    if (ADM.giveSel && [...give.options].some(o => o.value === ADM.giveSel)) give.value = ADM.giveSel;
+    give.addEventListener('change', () => { ADM.giveSel = give.value; });
     const top = document.createElement('div'); top.className = 'admrow';
     top.append(Object.assign(document.createElement('span'), { textContent: t('adm.itemToGive') }), give,
       admBtn(t('adm.healAll'), () => admAct('all', NET.mode === 'off' ? null : 'x', { act: 'heal' })),
@@ -11135,7 +11138,7 @@ function admSyncGrants() {
 for (const b of admPanel.querySelectorAll('.admtabs button')) b.addEventListener('click', () => { ADM.tab = b.dataset.t; admRender(); });
 $('admClose').addEventListener('click', () => admShow(false));
 $('admMenuBtn').addEventListener('click', () => { if (canAdmin()) admShow(true); else admLoginShow(true); });
-setInterval(() => { if (ADM.open && ADM.tab === 'players') admRender(); }, 2500);
+setInterval(() => { if (ADM.open && ADM.tab === 'players' && !(document.activeElement && document.activeElement.tagName === 'SELECT' && document.activeElement.closest('#admBody'))) admRender(); }, 2500);
 // véhicules ajoutés par un admin (synchronisés : même ordre partout)
 function spawnVehicleNet(type, p, yaw) { addVehicleAt(type, p, yaw); netSend({ k: 'vspawn', t: type, p, y: yaw }); }
 function addVehicleAt(type, p, yaw) {
@@ -11425,11 +11428,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.02';
+const GAME_VERSION = '2026.12.03';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['La lunette tactique zoome plus fort : environ ×6,5 au lieu de ×4'],
-  en: ['The tactical scope zooms in more: about 6.5× instead of 4×']
+  fr: ['Panneau admin : « Donner » donne bien l’arme choisie (la liste revenait toute seule à la carabine toutes les 2 secondes)'],
+  en: ['Admin panel: « Give » now gives the weapon you picked (the list kept jumping back to the carbine every 2 seconds)']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
