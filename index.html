@@ -11425,11 +11425,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.01';
+const GAME_VERSION = '2026.12.02';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['4 nouvelles emotes dansées, en vraie capture de mouvement : Moonwalk (7), Northern Soul (8), Danse zombie (9) et Danse folle (0) — sur tous les personnages, vues par tout le monde en ligne', 'La roue des emotes se clique aussi à la souris'],
-  en: ['4 new motion-captured dance emotes: Moonwalk (7), Northern Soul (8), Zombie dance (9) and Silly dance (0) — on every character, seen by everyone online', 'You can also click in the emote wheel']
+  fr: ['La lunette tactique zoome plus fort : environ ×6,5 au lieu de ×4'],
+  en: ['The tactical scope zooms in more: about 6.5× instead of 4×']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -18305,7 +18305,7 @@ Object.assign(I18N.en, {
   'skin.hexa': 'Hexacarbon', 'skin.digital': 'Digital camo', 'skin.damas26': 'Damascus steel', 'skin.marble': 'Black and gold marble', 'skin.polar26': 'Polar aurora', 'skin.vapor': 'Vaporwave', 'skin.lg_insect': 'Legendary: Insect (legs move when you fire)'
 });
 const OPT_HOLO = ['holo', 'reddot', 'acog', 'scope', 'iron'], OPT_LENS = ['mil', 'duplex', 'dot', 'chev'];
-const OPT_ZOOM = { acog: 0.25, scope: 0.125, mil: 0.125, duplex: 0.083, dot: 0.25, chev: 0.167 };
+const OPT_ZOOM = { acog: 0.15, scope: 0.125, mil: 0.125, duplex: 0.083, dot: 0.25, chev: 0.167 };
 const OPT_MAG = { holo: '×1', reddot: '×1', acog: '×4', scope: '×8', iron: '×1', mil: '×8', duplex: '×12', dot: '×4', chev: '×6' };
 const optType = k => (k === 0 || k === 1 || k === 'burst' || k === 'lmg') ? 'holo' : (k === 3 || k === 'hsniper') ? 'lens' : null;
 S.optics = Object.assign({}, store.get('optics', {}) || {});
