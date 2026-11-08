@@ -1,0 +1,54 @@
+name: Annonce Discord
+
+# Poste un message dans un salon Discord à chaque nouvelle version du jeu (version.json qui change).
+# À régler une seule fois : un webhook Discord (Paramètres du salon → Intégrations → Webhooks),
+# dont l'URL est rangée dans le secret du dépôt DISCORD_WEBHOOK. Sans ce secret, rien n'est envoyé.
+
+on:
+  push:
+    branches: [main]
+    paths: ['version.json']
+  workflow_dispatch:
+
+jobs:
+  annonce:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { fetch-depth: 2 }
+      - name: Envoyer l'annonce
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+          MANUAL: ${{ github.event_name == 'workflow_dispatch' }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then echo "Secret DISCORD_WEBHOOK absent : pas d'annonce."; exit 0; fi
+          python3 - <<'PY'
+          import json, os, subprocess, urllib.request
+          cur = json.load(open('version.json'))
+          try:
+              prev = json.loads(subprocess.run(['git', 'show', 'HEAD~1:version.json'], capture_output=True, text=True, check=True).stdout).get('v')
+          except Exception:
+              prev = None
+          if prev == cur.get('v') and os.environ.get('MANUAL') != 'true':
+              print('Même version qu’avant : pas d’annonce.'); raise SystemExit(0)
+          v = cur.get('v', '?')
+          lines = cur.get('discord') or (cur.get('notes') or {}).get('fr') or []
+          site = 'https://haze15.github.io/velocite/'
+          desc = '\n'.join('• ' + l for l in lines)[:3500]
+          desc += f"\n\n🎮 **[Jouer dans le navigateur]({site})**\n💻 [Appli Windows](https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe) · 📱 [APK Android](https://github.com/Haze15/velocite/releases/download/apk/Velocite.apk)"
+          body = {
+              'username': 'Vélocité',
+              'avatar_url': site + 'assets/discord-logo.png',
+              'embeds': [{
+                  'title': f'🚀 Mise à jour {v}',
+                  'url': site,
+                  'description': desc,
+                  'color': 0xFFB020,
+                  'thumbnail': {'url': site + 'assets/icon-192.png'},
+                  'footer': {'text': 'Vélocité · le jeu se met à jour tout seul au prochain lancement'},
+              }],
+          }
+          req = urllib.request.Request(os.environ['WEBHOOK'], data=json.dumps(body).encode(), headers={'Content-Type': 'application/json', 'User-Agent': 'velocite-update-bot'})
+          with urllib.request.urlopen(req) as r:
+              print('Annonce envoyée', r.status)
+          PY
