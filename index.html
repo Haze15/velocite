@@ -11429,11 +11429,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.05';
+const GAME_VERSION = '2026.12.06';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Boutique de skins : les 17 skins légendaires et les 9 skins de quête s’achètent avec des crédits ₵', 'Crédits gagnés en jouant : kill +10, joueur éliminé +15, quête finie +250, niveau gagné +100, coffre ouvert +10, chaque minute +5', 'Le jeton doré est caché dans les coffres (1 sur 20 environ) : si tu le trouves, toute la boutique devient gratuite', 'Connexion avec Discord : ton pseudo et ton avatar Discord dans le jeu'],
-  en: ['Skin shop: the 17 legendary skins and 9 quest skins can be bought with ₵ credits', 'Earn credits by playing: kill +10, player eliminated +15, quest done +250, level up +100, chest opened +10, every minute +5', 'The golden token is hidden in chests (about 1 in 20): find it and the whole shop becomes free', 'Sign in with Discord: your Discord name and avatar in the game']
+  fr: ['Transfert de progression : dans Profil, « Copier mon code » sur le site puis « Importer » sur le PC (ou l’inverse) pour garder niveau, crédits, skins, jeton et quêtes'],
+  en: ['Progress transfer: in Profile, “Copy my code” on the website then “Import” on the PC (or the other way) to keep level, credits, skins, token and quests']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -17134,6 +17134,50 @@ function profRender() {
     const g = !!PROG.ach[a.id], sec = a.h && !g;
     return `<div class="tr ${g ? 'got' : 'lock'}${sec ? ' secret' : ''}" style="--tc:${TIER_C[a.t]};animation-delay:${(i * 0.025).toFixed(3)}s">${trophySvg(a.t, g)}<div><div class="n">${sec ? '???' : t('ach.' + a.id)}</div><div class="d">${sec ? t('ach.hidden') : t('achd.' + a.id)}</div></div></div>`;
   }).join('');
+  xferBox(); xferText();
+}
+/* ---------- Transfert de progression (site ↔ PC ↔ téléphone) ----------
+   Chaque version du jeu (site, exe, appli) a sa propre mémoire : on exporte tout dans un code VELO1-…, à coller de l'autre côté.
+   Jamais exportés : les clés propriétaire/admin (xseed, admSeed, xu), les comptes/bans/signalements de l'hôte, la session Discord. */
+const XFER_SKIP = new Set(['xseed', 'admSeed', 'xu', 'accounts', 'banned', 'reports', 'reqLogin', 'admins', 'discordUser', 'micId', 'menuTab']);
+const xferSum = str => { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0).toString(36); };
+function xferExport() {
+  const d = {};
+  for (let i = 0; i < localStorage.length; i++) { const k = localStorage.key(i); if (!k || !k.startsWith('velocite_')) continue; const n = k.slice(9); if (XFER_SKIP.has(n)) continue; d[n] = localStorage.getItem(k); }
+  const js = JSON.stringify({ v: 1, at: Date.now(), d }), b = btoa(unescape(encodeURIComponent(js)));
+  return 'VELO1-' + xferSum(b) + '-' + b;
+}
+function xferImport(code) {
+  const m = /^VELO1-([0-9a-z]+)-([A-Za-z0-9+/=]+)$/.exec(String(code || '').replace(/\s+/g, ''));
+  if (!m || xferSum(m[2]) !== m[1]) return false;
+  let o; try { o = JSON.parse(decodeURIComponent(escape(atob(m[2])))); } catch (e) { return false; }
+  if (!o || o.v !== 1 || !o.d || typeof o.d !== 'object') return false;
+  for (const n in o.d) { if (XFER_SKIP.has(n) || typeof o.d[n] !== 'string' || !/^[A-Za-z0-9_]{1,40}$/.test(n)) continue; try { JSON.parse(o.d[n]); localStorage.setItem('velocite_' + n, o.d[n]); } catch (e) {} }
+  return true;
+}
+function xferBox() {
+  const p = $('profPanel'); if (!p || p.querySelector('.xfer')) return;
+  const box = document.createElement('div'); box.className = 'xfer';
+  box.innerHTML = `<h3></h3><p class="hint"></p><div class="xrow"><button type="button" class="xb" data-a="copy"></button><button type="button" class="xb" data-a="save"></button><button type="button" class="xb" data-a="load"></button></div><textarea rows="3" spellcheck="false"></textarea><div class="xrow"><button type="button" class="xb go" data-a="imp"></button></div><input type="file" accept=".txt,text/plain" hidden>`;
+  p.append(box);
+  const ta = box.querySelector('textarea'), fi = box.querySelector('input[type=file]');
+  const doImp = txt => { if (!xferImport(txt)) { toast(t('xfer.bad'), 4); return; } toast(t('xfer.ok'), 3); setTimeout(() => location.reload(), 1200); };
+  box.addEventListener('click', async e => {
+    const a = e.target.closest('[data-a]'); if (!a) return; a.blur();
+    if (a.dataset.a === 'copy') { const c = xferExport(); ta.value = c; try { await navigator.clipboard.writeText(c); toast(t('xfer.copied'), 3); } catch (err) { ta.select(); toast(t('xfer.copyHand'), 4); } }
+    else if (a.dataset.a === 'save') { const u = URL.createObjectURL(new Blob([xferExport()], { type: 'text/plain' })); const l = document.createElement('a'); l.href = u; l.download = 'velocite-progression.txt'; document.body.append(l); l.click(); l.remove(); setTimeout(() => URL.revokeObjectURL(u), 4000); }
+    else if (a.dataset.a === 'load') fi.click();
+    else if (a.dataset.a === 'imp') { if (!ta.value.trim()) { try { ta.value = await navigator.clipboard.readText(); } catch (err) {} } if (ta.value.trim()) doImp(ta.value); else ta.focus(); }
+  });
+  fi.addEventListener('change', () => { const f = fi.files && fi.files[0]; if (!f) return; f.text().then(doImp); fi.value = ''; });
+  const st = document.createElement('style'); st.textContent = `#profPanel .xfer{margin:22px 0 8px;padding:16px 18px;border:1px solid rgba(255,255,255,.12);border-radius:12px;background:rgba(0,0,0,.25)}#profPanel .xfer h3{margin:0 0 4px;font-size:15px;letter-spacing:.08em;text-transform:uppercase}#profPanel .xfer .xrow{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}#profPanel .xfer .xb{padding:8px 14px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:inherit;font:inherit;font-weight:700;cursor:pointer}#profPanel .xfer .xb.go{background:#ffd23f;color:#1a1300;border-color:#ffd23f}#profPanel .xfer textarea{width:100%;box-sizing:border-box;background:rgba(0,0,0,.35);color:inherit;border:1px solid rgba(255,255,255,.15);border-radius:8px;padding:8px;font:12px monospace;resize:vertical}`;
+  document.head.append(st);
+}
+function xferText() {
+  const b = $('profPanel') && $('profPanel').querySelector('.xfer'); if (!b) return;
+  b.querySelector('h3').textContent = t('xfer.title'); b.querySelector('.hint').textContent = t('xfer.hint');
+  for (const [k, v] of [['copy', 'xfer.copy'], ['save', 'xfer.save'], ['load', 'xfer.load'], ['imp', 'xfer.imp']]) b.querySelector(`[data-a="${k}"]`).textContent = t(v);
+  b.querySelector('textarea').placeholder = t('xfer.ph');
 }
 // vérifs régulières : cartes jouées, secrets trouvés, heure tardive
 setInterval(() => {
@@ -18871,6 +18915,7 @@ for (const L of ['af', 'zu']) if (I18N[L]) Object.assign(I18N[L], { 'em.moonwalk
 }
 
 Object.assign(I18N.fr, {
+  'xfer.title': 'Transférer ma progression', 'xfer.hint': 'Le site, le PC et le téléphone gardent chacun leur propre sauvegarde. Sur l’ancien : « Copier mon code » (ou « Enregistrer en fichier »). Sur le nouveau : colle le code ici puis « Importer » (ou « Charger un fichier »). Niveau, XP, crédits, skins achetés, jeton, quêtes, trophées, pseudo, réglages et amis sont transférés. Les droits propriétaire/admin ne le sont jamais : reconnecte-toi avec ton mot de passe.', 'xfer.copy': 'Copier mon code', 'xfer.save': 'Enregistrer en fichier', 'xfer.load': 'Charger un fichier', 'xfer.imp': 'Importer', 'xfer.ph': 'Colle ici ton code VELO1-…', 'xfer.copied': 'Code copié ! Colle-le dans l’autre version du jeu.', 'xfer.copyHand': 'Copie le code sélectionné (Ctrl+C).', 'xfer.ok': 'Progression importée ! Redémarrage…', 'xfer.bad': 'Code invalide ou incomplet.',
   'tab.shop': 'Boutique', 'shop.title': 'Boutique de skins', 'shop.hint': 'Gagne des crédits ₵ en jouant : kill +10, joueur éliminé +15, quête finie +250, niveau gagné +100, coffre ouvert +10, chaque minute +5. Le jeton doré, caché dans les coffres, rend toute la boutique gratuite.',
   'shop.tokOnHint': 'Tu as le jeton doré : toute la boutique est gratuite pour toi. Prends tout ce que tu veux !', 'shop.tokBadge': 'Jeton doré · tout gratuit',
   'shop.secLg': 'Légendaires', 'shop.secQ': 'Skins de quête', 'shop.rarLg': 'Légendaire', 'shop.rarQ': 'Quête', 'shop.buy': 'Acheter', 'shop.get': 'Obtenir', 'shop.equip': 'Équiper', 'shop.equippedTag': 'Équipé',
@@ -18880,6 +18925,7 @@ Object.assign(I18N.fr, {
   'dcl.login': 'Connexion Discord', 'dcl.logout': 'Se déconnecter', 'dcl.out': 'Déconnecté de Discord', 'dcl.hello': 'Connecté avec Discord : salut {n} !', 'dcl.fail': 'La connexion Discord n’a pas marché, réessaie.', 'dcl.asUser': 'Connecté en tant que {n}', 'dcl.unavail': 'La connexion Discord marche sur le site du jeu, l’appli Windows et l’appli Android.'
 });
 Object.assign(I18N.en, {
+  'xfer.title': 'Transfer my progress', 'xfer.hint': 'The website, the PC app and the phone each keep their own save. On the old one: “Copy my code” (or “Save to file”). On the new one: paste the code here then “Import” (or “Load a file”). Level, XP, credits, bought skins, token, quests, trophies, name, settings and friends are transferred. Owner/admin rights never are: sign in again with your password.', 'xfer.copy': 'Copy my code', 'xfer.save': 'Save to file', 'xfer.load': 'Load a file', 'xfer.imp': 'Import', 'xfer.ph': 'Paste your VELO1-… code here', 'xfer.copied': 'Code copied! Paste it in the other version of the game.', 'xfer.copyHand': 'Copy the selected code (Ctrl+C).', 'xfer.ok': 'Progress imported! Restarting…', 'xfer.bad': 'Invalid or incomplete code.',
   'tab.shop': 'Shop', 'shop.title': 'Skin shop', 'shop.hint': 'Earn ₵ credits by playing: kill +10, player eliminated +15, quest done +250, level up +100, chest opened +10, every minute +5. The golden token, hidden in chests, makes the whole shop free.',
   'shop.tokOnHint': 'You have the golden token: the whole shop is free for you. Take everything you want!', 'shop.tokBadge': 'Golden token · all free',
   'shop.secLg': 'Legendary', 'shop.secQ': 'Quest skins', 'shop.rarLg': 'Legendary', 'shop.rarQ': 'Quest', 'shop.buy': 'Buy', 'shop.get': 'Get', 'shop.equip': 'Equip', 'shop.equippedTag': 'Equipped',
