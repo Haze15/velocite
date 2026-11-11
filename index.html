@@ -2391,9 +2391,173 @@ function scatterGrass(x0, z0, x1, z1, count, tint = 0xffffff, avoid) {
   mesh.receiveShadow = true; mesh.frustumCulled = true; mesh.userData.grass = { c: gg.boundingSphere.center.clone(), r: Math.hypot(x1 - x0, z1 - z0) / 2 }; mapRoot.add(mesh); GRASS_MESHES.push(mesh);
 }
 /* ---------- Carte 1 : Canyon ---------- */
+/* ---------- Canyon : avant-poste du désert ----------
+   Route goudronnée nord-sud, station-service, saloon à fausse façade, maisons en adobe, bus abandonné, rochers, poteaux
+   électriques et couvertures. Tout ce qui est solide passe par box() / ramp() : la collision est exactement la forme visible
+   (murs percés de vraies portes et fenêtres, toits praticables). Le reste (marquage au sol, câbles, enseigne) est plat ou hors d'atteinte. */
+Object.assign(PAL, { cliffA: 0xb27a50, cliffB: 0x9c6646, cliffC: 0xc58f63, adobe: 0xcfa57c, adobeTrim: 0x8b5b3a, asphalt: 0x4a4641,
+  plank: 0x8a6236, tin: 0x8d918c, canopy: 0xe7e1d6, canopyRed: 0xb3302a, bus: 0xd6a12c, busWin: 0x6c7f86, curb: 0xb9b1a2, pump: 0xb3302a });
+Object.assign(SURF_OF, { cliffA: 'rock', cliffB: 'rock', cliffC: 'rock', adobe: 'concrete', adobeTrim: 'wood', asphalt: 'concrete', plank: 'wood',
+  tin: 'metal', canopy: 'metal', canopyRed: 'metal', bus: 'metal', curb: 'concrete', pump: 'metal' });
+// zones bâties : le décor semé au hasard n'y tombe pas (portes et intérieurs restent dégagés)
+const CANYON_KEEP = [[-60, 21, -47, 46], [8, -62, 20, -49], [-10, 45, 4, 62], [-24.5, -62, -15.5, 62], [16, 52, 28, 58], [-38, -35, -29, -26], [46, 28, 55, 36]];
+const canyonKept = (x, z) => CANYON_KEEP.some(r => x > r[0] && x < r[2] && z > r[1] && z < r[3]);
+let canyonDecalMats = null;
+function canyonDecalMat(key, col) {
+  if (!canyonDecalMats) canyonDecalMats = {};
+  if (canyonDecalMats[key]) return canyonDecalMats[key];
+  const m = key === 'asphalt' ? M('asphalt').clone() : new THREE.MeshLambertMaterial({ color: col });
+  m.polygonOffset = true; m.polygonOffsetFactor = key === 'asphalt' ? -2 : -4; m.polygonOffsetUnits = key === 'asphalt' ? -2 : -4;
+  return (canyonDecalMats[key] = m);
+}
+// plan posé à plat (marquages, goudron) : géométries fusionnées par matériau
+function flatQuads(list, mat, y, uvScale = 0) {
+  const geos = list.map(([x0, z0, x1, z1]) => {
+    const g = new THREE.PlaneGeometry(x1 - x0, z1 - z0); g.rotateX(-Math.PI / 2); g.translate((x0 + x1) / 2, y, (z0 + z1) / 2);
+    if (uvScale) { const uv = g.attributes.uv; for (let i = 0; i < uv.count; i++) uv.setXY(i, uv.getX(i) * (x1 - x0) / uvScale, uv.getY(i) * (z1 - z0) / uvScale); }
+    return g.index ? g.toNonIndexed() : g;
+  });
+  const m = new THREE.Mesh(mergeGeos(geos, ['position', 'normal', 'uv']), mat); m.receiveShadow = true; mapRoot.add(m);
+}
+/* bâtiment à murs fins : ouvertures = { n|s|e|w: [[centre, largeur, bas, haut], …] } (n : côté z0, s : côté z1, w : côté x0, e : côté x1) */
+function shell(x0, z0, x1, z1, h, key, roofKey, open = {}, th = 0.3) {
+  const side = (along, fixed, a0, a1, list) => {
+    const ops = (list || []).slice().sort((p, q) => p[0] - q[0]); let cur = a0;
+    const seg = (b0, b1, y0, y1) => { if (b1 - b0 < 0.02 || y1 - y0 < 0.02) return; const c = (b0 + b1) / 2, L = b1 - b0;
+      if (along === 'x') box(c, fixed, L, th, y0, y1 - y0, key); else box(fixed, c, th, L, y0, y1 - y0, key); };
+    for (const [c, w, y0, y1] of ops) { seg(cur, c - w / 2, 0, h); seg(c - w / 2, c + w / 2, 0, y0); seg(c - w / 2, c + w / 2, y1, h); cur = c + w / 2; }
+    seg(cur, a1, 0, h);
+  };
+  side('x', z0 + th / 2, x0, x1, open.n); side('x', z1 - th / 2, x0, x1, open.s);
+  side('z', x0 + th / 2, z0 + th, z1 - th, open.w); side('z', x1 - th / 2, z0 + th, z1 - th, open.e);
+  box((x0 + x1) / 2, (z0 + z1) / 2, x1 - x0, z1 - z0, h, 0.3, roofKey);
+}
+function signTex(text, bg, fg) {
+  const c = document.createElement('canvas'); c.width = 512; c.height = 128; const g = c.getContext('2d');
+  g.fillStyle = bg; g.fillRect(0, 0, 512, 128); g.strokeStyle = fg; g.lineWidth = 6; g.strokeRect(10, 10, 492, 108);
+  g.fillStyle = fg; g.font = '800 78px "Saira Condensed","Arial Narrow",Impact,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText(text, 256, 68);
+  const t = new THREE.CanvasTexture(c); t.encoding = THREE.sRGBEncoding; t.anisotropy = MAX_ANISO; return t;
+}
+let canyonSigns = null;
+function canyonSign(text, x, y, z, w, h, ry, bg, fg) {
+  canyonSigns = canyonSigns || {};
+  const mat = canyonSigns[text] || (canyonSigns[text] = new THREE.MeshLambertMaterial({ map: signTex(text, bg, fg) }));
+  const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), mat); m.position.set(x, y, z); m.rotation.y = ry; mapRoot.add(m);
+}
+// grès des falaises : texture étirée (une grande strate tous les ~9 m au lieu d'un motif répété tous les 2 m)
+function cliffMats() {
+  for (const k of ['cliffA', 'cliffB', 'cliffC']) {
+    const m = M(k); if (m.userData.cliff) continue; m.userData.cliff = true;
+    for (const slot of ['map', 'normalMap', 'roughnessMap']) if (m[slot]) { const t = m[slot].clone(); t.repeat.set(0.22, 0.3); t.needsUpdate = true; m[slot] = t; }
+  }
+}
+/* falaises vivantes : contreforts de roche le long de l'enceinte (côté intérieur) et crête déchiquetée au sommet.
+   Des blocs, donc collision exacte ; aucun contrefort près d'un point d'apparition, d'une cible, d'un pad, d'une tyrolienne ou d'un bâtiment. */
+function canyonCliffs() {
+  let seed = 41; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const keys = ['cliffA', 'cliffB', 'cliffC'], sp = MAPS.canyon.spawns, du = MAPS.canyon.dummies;
+  const blocked = (x0, z0, x1, z1) => {
+    const near = (x, z, r) => x > x0 - r && x < x1 + r && z > z0 - r && z < z1 + r;
+    if (sp.some(s2 => near(s2[0], s2[2], 3.5)) || du.some(d => near(d[0], d[2], 3.5)) || PADS.some(p2 => near(p2.x, p2.z, 3))) return true;
+    if (VEH_SPAWNS.some(v => near(v[0], v[2], 5)) || ZIPS.some(zp => near(zp.a.x, zp.a.z, 2.5) || near(zp.b.x, zp.b.z, 2.5))) return true;
+    return BOXES.some(b => !b.ground && (b.max.x - b.min.x) < 100 && (b.max.z - b.min.z) < 100 && b.max.x > x0 - 1 && b.min.x < x1 + 1 && b.max.z > z0 - 1 && b.min.z < z1 + 1);
+  };
+  // côtés : [axe le long, coordonnée de la face intérieure, sens vers l'intérieur]
+  for (const [along, face, dir] of [['x', -62, 1], ['x', 62, -1], ['z', -62, 1], ['z', 62, -1]]) {
+    for (let a = -60; a < 60;) {
+      const w = 3 + rnd() * 5, d = 0.5 + rnd() * 1.3, h = rnd() < 0.35 ? 20 : 5 + rnd() * 12, k = keys[rnd() * 3 | 0];
+      const c = a + w / 2, inner = face + dir * d / 2;
+      const [x0, z0, x1, z1] = along === 'x' ? [c - w / 2, Math.min(face, face + dir * d), c + w / 2, Math.max(face, face + dir * d)] : [Math.min(face, face + dir * d), c - w / 2, Math.max(face, face + dir * d), c + w / 2];
+      if (rnd() < 0.72 && !blocked(x0, z0, x1, z1)) { if (along === 'x') box(c, inner, w, d, 0, h, k); else box(inner, c, d, w, 0, h, k); }
+      a += w + rnd() * 3;
+    }
+    // crête : blocs posés sur le haut du mur (hors de portée en jeu normal)
+    for (let a = -66; a < 66;) {
+      const w = 4 + rnd() * 8, h = 1 + rnd() * 6, k = keys[rnd() * 3 | 0], c = a + w / 2, mid = face - dir * 2;
+      if (along === 'x') box(c, mid, w, 3.6, 20, h, k); else box(mid, c, 3.6, w, 20, h, k);
+      a += w + rnd() * 4;
+    }
+  }
+}
+const CANYON_INDOOR = [[-9.5, 56.2, 2.5, 61.8], [8.5, -61.5, 19.5, -49.9], [-58.5, 23, -49.5, 31], [-58.5, 36, -49.5, 44], [-9, 45.5, 3, 54.5]];
+const canyonIndoor = (x, z) => CANYON_INDOOR.some(r => x > r[0] - 0.3 && x < r[2] + 0.3 && z > r[1] - 0.3 && z < r[3] + 0.3);
+function buildCanyonTown() {
+  cliffMats();
+  { const fl = k => { canyonDecalMats = canyonDecalMats || {}; if (canyonDecalMats['fl-' + k]) return canyonDecalMats['fl-' + k];
+      const m = M(k).clone(); m.polygonOffset = true; m.polygonOffsetFactor = m.polygonOffsetUnits = -2; return (canyonDecalMats['fl-' + k] = m); };
+    const wood = fl('plank'), tile = fl('curb'), clay = fl('adobeTrim');
+    flatQuads([[8.8, -61.2, 19.2, -51.8]], wood, 0.01, 2);
+    flatQuads([[-9.2, 56.5, 2.2, 61.5], [-9, 45.5, 3, 54.5]], tile, 0.01, 2);
+    flatQuads([[-58.2, 23.3, -49.8, 30.7], [-58.2, 36.3, -49.8, 43.7]], clay, 0.01, 2); }
+  /* route nord-sud : goudron, lignes de rive, pointillés jaunes, passage piéton */
+  flatQuads([[-24, -62, -16, 62]], canyonDecalMat('asphalt'), 0.012, 4);
+  const lines = [[-23.7, -62, -23.5, 62], [-16.5, -62, -16.3, 62]], dash = [], walk = [];
+  for (let z = -60; z < 60; z += 6) if (z < 28 || z > 34) dash.push([-20.1, z, -19.9, z + 3]);
+  for (let x = -23.4; x < -16.4; x += 1.1) walk.push([x, 29, x + 0.6, 33]);
+  flatQuads(lines.concat(walk), canyonDecalMat('lineW', 0xe8dfca), 0.018);
+  flatQuads(dash, canyonDecalMat('lineY', 0xd9a531), 0.018);
+  /* station-service (sud) : auvent sur 4 piliers, 2 îlots de pompes, boutique avec porte et vitrine */
+  box(-3, 50, 12.4, 9.4, 4.6, 0.45, 'canopy');
+  for (const [cx, cz, sx, sz] of [[-3, 45.24, 12.6, 0.12], [-3, 54.76, 12.6, 0.12], [-9.24, 50, 0.12, 9.4], [3.24, 50, 0.12, 9.4]]) box(cx, cz, sx, sz, 4.45, 0.75, 'canopyRed');
+  for (const [px, pz] of [[-8.3, 46.2], [2.3, 46.2], [-8.3, 53.8], [2.3, 53.8]]) box(px, pz, 0.42, 0.42, 0, 4.6, 'canopy');
+  for (const ix of [-5.6, -0.4]) { box(ix, 50, 1.2, 3.2, 0, 0.2, 'curb'); box(ix, 50, 0.7, 0.55, 0.2, 1.65, 'pump'); box(ix, 50, 0.76, 0.6, 1.85, 0.12, 'steel'); }
+  shell(-9.5, 56.2, 2.5, 61.8, 3.6, 'concrete', 'tin', { n: [[-4, 1.6, 0, 2.4], [-0.6, 3.2, 1.0, 2.6], [-7.6, 1.4, 1.0, 2.4]] });
+  box(-6.4, 59.6, 3.2, 0.7, 0, 1.0, 'plank'); box(0.2, 61.25, 4, 0.5, 0, 1.8, 'steel');
+  canyonSign('CARBURANT', -3, 4.82, 45.17, 5.2, 0.62, Math.PI, '#b3302a', '#f1ece2');
+  canyonSign('CARBURANT', -3, 4.82, 54.83, 5.2, 0.62, 0, '#b3302a', '#f1ece2');
+  /* saloon (nord) : fausse façade de western, porche en bois, porte et deux fenêtres, comptoir à l'intérieur */
+  shell(8.5, -61.5, 19.5, -51.5, 4.2, 'plank', 'tin', { s: [[14, 1.8, 0, 2.5], [10.8, 1.6, 1.0, 2.4], [17.2, 1.6, 1.0, 2.4]], w: [[-56.5, 1.4, 1.1, 2.3]] });
+  box(14, -51.65, 11, 0.3, 4.2, 2.6, 'plank');                 // fausse façade (au-dessus du mur sud)
+  box(14, -51.65, 11.4, 0.4, 6.8, 0.18, 'adobeTrim');          // corniche
+  box(14, -50.7, 11, 1.6, 0, 0.22, 'plank');                   // plancher du porche
+  for (const px of [8.8, 14 - 2.2, 14 + 2.2, 19.2]) box(px, -50.1, 0.2, 0.2, 0.22, 2.8, 'adobeTrim');
+  box(14, -50.7, 11.2, 1.8, 3.02, 0.14, 'tin');                // auvent du porche
+  box(14, -59.6, 6, 0.8, 0, 1.1, 'adobeTrim');                 // comptoir
+  box(10, -58, 1.2, 1.2, 0, 0.75, 'plank'); box(17.5, -57, 1.2, 1.2, 0, 0.75, 'plank');
+  canyonSign('SALOON', 14, 5.55, -51.48, 7.2, 1.5, 0, '#3a2414', '#e9d7b0');
+  /* maisons en adobe (ouest) : portes côté est, fenêtres, toits plats à parapet, caisses pour monter sur le toit */
+  for (const [cz, win] of [[27, 'n'], [40, 's']]) {
+    const z0 = cz - 4, z1 = cz + 4, o = { e: [[cz, 1.6, 0, 2.4]] }; o[win] = [[-54, 1.4, 1.1, 2.2]]; o.w = [[cz + 1.8, 1.2, 1.2, 2.2]];
+    shell(-58.5, z0, -49.5, z1, 3.6, 'adobe', 'adobe', o);
+    box(-54, z0 + 0.1, 9.2, 0.2, 3.9, 0.45, 'adobeTrim'); box(-54, z1 - 0.1, 9.2, 0.2, 3.9, 0.45, 'adobeTrim');
+    box(-58.4, cz, 0.2, 7.6, 3.9, 0.45, 'adobeTrim'); box(-49.6, cz, 0.2, 7.6, 3.9, 0.45, 'adobeTrim');
+    for (const bz of [cz - 2.6, cz + 0.4]) box(-49.1, bz, 0.6, 0.12, 2.7, 0.12, 'plank');   // poutres qui dépassent (vigas)
+    box(-55.5, cz + 2, 2, 0.9, 0, 0.8, 'plank');               // table
+    for (const fz of [cz - 0.9, cz + 0.9]) box(-49.42, fz, 0.16, 0.18, 0, 2.5, 'adobeTrim');   // encadrement de porte
+    box(-49.42, cz, 0.16, 1.98, 2.4, 0.16, 'adobeTrim');
+  }
+  box(-48.85, 24.6, 1.3, 1.3, 0, 1.3, 'plank'); box(-48.95, 24.6, 1.1, 1.1, 1.3, 1.1, 'plank');   // caisses pour grimper sur les toits
+  box(-48.85, 42.6, 1.3, 1.3, 0, 1.3, 'plank');
+  for (const [fx, fz0, fz1] of [[-46.5, 20.5, 24.5], [-46.5, 42.5, 46]]) { box(fx, (fz0 + fz1) / 2, 0.1, fz1 - fz0, 0, 1.1, 'plank'); }
+  /* bus scolaire abandonné (sud-est) : carrosserie, bande de vitres, bloc moteur */
+  box(22, 55, 9, 2.6, 0.35, 1.6, 'bus'); box(22, 55, 9, 2.6, 1.95, 0.9, 'w-busWin'); box(22, 55, 9.1, 2.7, 2.85, 0.12, 'bus');
+  box(27.1, 55, 1.2, 2.3, 0.35, 1.4, 'bus'); box(22, 55, 8, 2.2, 0, 0.35, 'tire');
+  /* affleurements rocheux (blocs = collision exacte) */
+  box(-33.5, -30.5, 7, 5, 0, 3.0, 'cliffA'); box(-34.2, -31, 4.2, 3.2, 3.0, 1.8, 'cliffB'); box(-31, -29, 2, 2, 0, 1.4, 'cliffC');
+  box(50.5, 32, 7, 4.6, 0, 2.6, 'cliffB'); box(51, 32.4, 3.8, 3, 2.6, 1.4, 'cliffA'); box(47.4, 30.6, 1.6, 1.6, 0, 1.1, 'cliffC');
+  /* poteaux électriques le long de la route (fût solide) et câbles hors d'atteinte */
+  const { K, finish, add, col } = makeProps(97), poles = [-52, -34, -14, 4, 22, 42];
+  for (const z of poles) {
+    add(new THREE.CylinderGeometry(0.12, 0.16, 8.4, 8), M('plank'), -14.6, 4.2, z); col(-14.6, z, 0.34, 0.34, 0, 8.4);
+    add(new THREE.BoxGeometry(0.14, 0.14, 2.2), M('plank'), -14.6, 7.9, z, 0, Math.PI / 2);
+    for (const o of [-0.9, 0.9]) add(new THREE.CylinderGeometry(0.05, 0.05, 0.2, 6), M('canopy'), -14.6 + o, 8.05, z);
+  }
+  for (let i = 0; i < poles.length - 1; i++) for (const o of [-0.9, 0.9]) {
+    const a = new V3(-14.6 + o, 8.1, poles[i]), b = new V3(-14.6 + o, 8.1, poles[i + 1]), mid = a.clone().add(b).multiplyScalar(0.5); mid.y -= 0.6;
+    const curve = new THREE.QuadraticBezierCurve3(a, mid, b);
+    add(new THREE.TubeGeometry(curve, 10, 0.025, 4, false), M('tire'), 0, 0, 0, 0, 0, 0, 1, 1, 1, false);
+  }
+  /* couvertures au milieu de la route et lampadaires (éteints de jour) */
+  K.jersey(-20, -3, 0); K.jersey(-20, 9, 0); K.jersey(-18.5, -26, Math.PI / 2);
+  K.sandbags(-26.5, 4, 1.57); K.sandbags(-13, -20, 0);
+  for (const z of [-44, -8, 36]) K.lamp(-25.2, z, -Math.PI / 2, 0, false);
+  finish();
+}
 function buildCanyon() {
-  box(0, -64, 132, 4, 0, 20, 'wall'); box(0, 64, 132, 4, 0, 20, 'wall');
-  box(-64, 0, 4, 124, 0, 20, 'wall'); box(64, 0, 4, 124, 0, 20, 'wall');
+  // enceinte : paroi de grès en trois strates (mêmes volumes de collision qu'un mur de 20 m)
+  for (const [y0, h, k] of [[0, 7, 'cliffA'], [7, 6, 'cliffB'], [13, 7, 'cliffC']]) {
+    box(0, -64, 132, 4, y0, h, k); box(0, 64, 132, 4, y0, h, k); box(-64, 0, 4, 124, y0, h, k); box(64, 0, 4, 124, y0, h, k);
+  }
   box(0, -5, 14, 14, 0, 4.5, 'concrete'); box(0, -5, 7, 7, 4.5, 4, 'teal');
   ramp(-3, 3, 2, 12, 'z', -1, 0, 4.5);
   box(-42, -47, 16, 14, 0, 10, 'concrete');
@@ -2409,11 +2573,13 @@ function buildCanyon() {
   box(20, 30, 6, 2.4, 0, 2.6, 'c-cream'); box(-15, -40, 6, 2.4, 0, 2.6, 'c-rust'); box(30, 46, 6, 2.4, 0, 2.6, 'c-teal');
   ramp(8, 12, 30, 34, 'z', -1, 0, 1.3); ramp(-8, -4, 30, 34, 'z', -1, 0, 1.3);
   pad(-22, 0, -47); pad(15, 0, -20); pad(20, 0, 45);
-  VEH_SPAWNS.push([-8, 0, 54, 1.57], [-32, 0, -20, 0]);
+  VEH_SPAWNS.push([-20, 0, 50, 3.14], [-32, 0, -20, 0]);   // véhicule garé sur la route, au sud
   // tyroliennes : du grand bâtiment à la tour centrale, et une verticale contre le bâtiment est
   zipline(-38, 12.3, -44, -2, 10.8, -6.5);
   zipline(35, 2.3, -34.4, 35, 8.4, -37.2);
   zipline(52, 5.8, 5, 18, 2.3, 30);
+  buildCanyonTown();
+  canyonCliffs();
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const mesas = [];
   for (let i = 0; i < 28; i++) {
@@ -2426,7 +2592,7 @@ function buildCanyon() {
     silos.push([new THREE.CylinderGeometry(6, 6, 24, 20), x, 12, z]); silos.push([new THREE.ConeGeometry(6.2, 4, 20), x, 26, z]);
   });
   farDecor(silos, new THREE.MeshLambertMaterial({ color: 0x6f8f92 }), true);
-  scatterGrass(-61, -61, 61, 61, 1600, 0xd8c070);
+  scatterGrass(-61, -61, 61, 61, 1600, 0xd8c070, (x, z) => canyonIndoor(x, z) || (x > -24.6 && x < -15.4));
 }
 
 /* ---------- Carte 2 : Raffinerie (crépuscule, couloirs de wall-jump, half-pipe, passerelles) ---------- */
@@ -3269,7 +3435,7 @@ const MAPS = {
   canyon: {
     build: buildCanyon,
     theme: { top: 0x356a93, mid: 0xa9bfc8, hor: 0xf1c595, fog: 0xe8c7a1, fogFar: 340, hemiSky: 0xcfe0ea, hemiGround: 0xa47e55, hemiI: 0.72, sun: 0xffe6c2, sunI: 0.95, sunDir: [-0.62, 0.40, 0.34], ground: 0xd9c29b },
-    spawns: [[0, 0, 50, 0], [-30, 0, 45, -0.6], [40, 0, 40, 0.7], [-55, 0, 0, -1.57], [55, 0, -10, 1.57], [-20, 0, -55, 3.14], [10, 0, -55, 3.14], [-42, 10, -50, 0], [35, 6, -45, 3.14], [0, 8.5, -5, 0]],
+    spawns: [[7, 0, 50, 0], [-30, 0, 45, -0.6], [40, 0, 40, 0.7], [-55, 0, 0, -1.57], [55, 0, -10, 1.57], [-28, 0, -55, 3.14], [3, 0, -47, 3.14], [-42, 10, -50, 0], [35, 6, -45, 3.14], [0, 8.5, -5, 0]],
     dummies: [
       [28, 0, -6, 'static'], [36, 0, -2, 'strafe', 'x'], [44, 0, 12, 'strafe', 'z'], [40, 2.5, 20, 'strafe', 'x'],
       [52, 3.5, 5, 'static'], [30, 0, 20, 'jump'], [-10, 0, -25, 'strafe', 'x'], [0, 8.5, -5, 'static'],
@@ -4097,7 +4263,8 @@ function makeProps(seed0) {
 }
 const PROP_FNS = {
   canyon() {
-    const { K, rnd, scatter, finish } = makeProps(11), sp = MAPS.canyon.spawns, du = MAPS.canyon.dummies, L = 58;
+    const { K, rnd, scatter: sc0, finish } = makeProps(11), sp = MAPS.canyon.spawns, du = MAPS.canyon.dummies, L = 58;
+    const scatter = (n, x0, z0, x1, z1, r, fn, a, b) => sc0(n, x0, z0, x1, z1, r, (x, z) => { if (!canyonKept(x, z)) fn(x, z); }, a, b);
     scatter(12, -L, -L, L, L, 0.6, (x, z) => K.barrel(x, z, ['rust', 'red', 'blue'][rnd() * 3 | 0]), sp, du);
     scatter(7, -L, -L, L, L, 1.2, (x, z) => K.crates(x, z), sp, du);
     scatter(16, -L, -L, L, L, 1.4, (x, z) => K.rock(x, z), sp, du);
@@ -11808,11 +11975,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.10';
+const GAME_VERSION = '2026.12.11';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Tous les menus passent au nouveau style : lobby, boutique, profil, personnage, armes, quêtes, amis, paramètres, commandes, équipement, admin', 'Noir, rouge et orange brûlé, angles vifs : fini le jaune, le violet et les halos', 'Plus d’animations qui tournent en boucle dans les menus (reflets, pulsations, particules)'],
-  en: ['Every menu gets the new style: lobby, shop, profile, character, weapons, quests, friends, settings, controls, loadout, admin', 'Black, red and burnt orange with sharp corners: no more yellow, purple or glows', 'No more looping animations in menus (shines, pulses, particles)']
+  fr: ['Canyon refait : falaises de grès avec contreforts et crête, route goudronnée, station-service, saloon, maisons en adobe, bus abandonné, rochers', 'On peut entrer dans les bâtiments (vraies portes et fenêtres) et monter sur les toits ; la collision suit exactement ce qu’on voit', 'Couvertures sur la route (blocs béton, sacs de sable), poteaux électriques, lampadaires ; plus d’herbe dans les maisons ni sur la route'],
+  en: ['Canyon rebuilt: sandstone cliffs with buttresses and ridge, asphalt road, gas station, saloon, adobe houses, abandoned bus, rock outcrops', 'You can walk into buildings (real doors and windows) and climb onto roofs; collision matches exactly what you see', 'Cover on the road (jersey barriers, sandbags), power poles, street lamps; no more grass inside houses or on the road']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
