@@ -11015,6 +11015,7 @@ function admApply(act, arg) {
   else if (act === 'kill') { if (!P.dead) hurtSelf(9999, 15); }
   else if (act === 'tp' && Array.isArray(arg)) { if (P.veh) exitVehicle(true); P.pos.set(+arg[0], +arg[1], +arg[2]); P.prev.copy(P.pos); P.vel.set(0, 0, 0); }
   else if (act === 'give' && typeof arg === 'string' && isItem(arg)) { if (SPECIALS[arg] && SP.held) dropSpecial(); equipItem(arg); sfx.pickup(); }
+  else if (act === 'token') { if (SHOP.token) toast(t('shop.tokenOn'), 2.5); else tokenFound(P.pos); }
   else if (act === 'giveall') { for (let i = 0; i < 6; i++) OWN[i] = true; const a6 = WS.ammo[6]; WS.ammo = WEAPONS.map(w => w.mag); if (SP.held) WS.ammo[6] = a6; WS.reloading = false; renderSlots(); sfx.pickup(); toast(t('adm.gotAll'), 2); }
   else if (act === 'freeze') { ADM.freezeT = 5; toast(t('adm.frozen'), 2); }
   else if (act === 'respawn') { spawnPlayer(true); }
@@ -11067,7 +11068,7 @@ function admRender() {
       r.append(Object.assign(document.createElement('b'), { textContent: p.name }));
       if (p.k !== undefined) r.append(Object.assign(document.createElement('em'), { textContent: p.k + ' / ' + p.d }));
       const to = p.self ? null : p.id;
-      r.append(admBtn(t('adm.heal'), () => admAct('heal', to)), admBtn(t('adm.give'), () => admAct('give', to, give.value)), admBtn(t('adm.giveAll'), () => admAct('giveall', to)));
+      r.append(admBtn(t('adm.heal'), () => admAct('heal', to)), admBtn(t('adm.give'), () => admAct('give', to, give.value)), admBtn(t('adm.giveAll'), () => admAct('giveall', to)), admBtn('🪙 ' + t('adm.token'), () => admAct('token', to)));
       if (!p.self) {
         const rp = remotes.get(p.id);
         r.append(admBtn(t('adm.bring'), () => admAct('tp', to, [r2(P.pos.x + 1.5), r2(P.pos.y), r2(P.pos.z)])),
@@ -11428,11 +11429,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.04';
+const GAME_VERSION = '2026.12.05';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Les personnages ont de nouveaux noms : Kenzai, Xyro, Akira, Darken, Vexor, Zephyr, Nyx et Kaizen', 'Les armes aussi : carabine Noctis, mitraillette Erynn, pompe Velkan, sniper Lunaris, pistolet Sylas, couteau Aziel, railgun Aether et fusil à plasma Nythera'],
-  en: ['Characters have new names: Kenzai, Xyro, Akira, Darken, Vexor, Zephyr, Nyx and Kaizen', 'So do weapons: Noctis carbine, Erynn SMG, Velkan shotgun, Lunaris sniper, Sylas pistol, Aziel knife, Aether railgun and Nythera plasma rifle']
+  fr: ['Boutique de skins : les 17 skins légendaires et les 9 skins de quête s’achètent avec des crédits ₵', 'Crédits gagnés en jouant : kill +10, joueur éliminé +15, quête finie +250, niveau gagné +100, coffre ouvert +10, chaque minute +5', 'Le jeton doré est caché dans les coffres (1 sur 20 environ) : si tu le trouves, toute la boutique devient gratuite', 'Connexion avec Discord : ton pseudo et ton avatar Discord dans le jeu'],
+  en: ['Skin shop: the 17 legendary skins and 9 quest skins can be bought with ₵ credits', 'Earn credits by playing: kill +10, player eliminated +15, quest done +250, level up +100, chest opened +10, every minute +5', 'The golden token is hidden in chests (about 1 in 20): find it and the whole shop becomes free', 'Sign in with Discord: your Discord name and avatar in the game']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -12446,7 +12447,12 @@ const QST = Object.assign({}, store.get('quests', {}) || {});
 let qSaveT = 0;
 const qProg = q => { const v = QST[q.id]; return q.set ? (Array.isArray(v) ? v.length : 0) : +v || 0; };
 const qDone = q => qProg(q) >= q.n;
-const skinLocked = id => { if (id === 'celeste') return SKYQ.got.size < PLUME_POS.length && !xUnlocked; const q = QUESTS.find(x => x.sk === id); return !!q && !qDone(q) && !xUnlocked; };
+/* boutique : crédits gagnés en jouant, skins achetés, jeton doré (tout gratuit) */
+const SHOP = { c: Math.max(0, +store.get('credits', 0) || 0), token: !!store.get('goldToken', false), owned: new Set(Array.isArray(store.get('shopOwned', [])) ? store.get('shopOwned', []) : []) };
+// les joueurs qui portaient déjà un skin légendaire avant la boutique le gardent
+if (!store.get('shopInit', false)) { const cur = store.get('skin', 'std'); if (typeof cur === 'string' && cur.startsWith('lg_')) SHOP.owned.add(cur); store.set('shopOwned', [...SHOP.owned]); store.set('shopInit', true); }
+const shopHas = id => SHOP.token || SHOP.owned.has(id);
+const skinLocked = id => { if (id === 'celeste') return SKYQ.got.size < PLUME_POS.length && !xUnlocked; if (/^lg_/.test(id)) return !shopHas(id) && !xUnlocked; const q = QUESTS.find(x => x.sk === id); return !!q && !qDone(q) && !xUnlocked && !shopHas(id); };
 function questEv(ev, v = 1) {
   try { progEv(ev, v); } catch (e) {}
   for (const q of QUESTS) {
@@ -12457,7 +12463,7 @@ function questEv(ev, v = 1) {
     else QST[q.id] = (+QST[q.id] || 0) + v;
     if (qProg(q) === before) continue;
     clearTimeout(qSaveT); qSaveT = setTimeout(() => store.set('quests', QST), 800);
-    if (qDone(q)) { toast(t('q.done', { q: t('q.' + q.id), sk: t('skin.' + q.sk) }), 5); try { sfx.outfit(); } catch (e) {} renderSkinOptions(); renderQuests(); }
+    if (qDone(q)) { toast(t('q.done', { q: t('q.' + q.id), sk: t('skin.' + q.sk) }), 5); try { sfx.outfit(); } catch (e) {} try { credAdd(250, 'quest'); } catch (e) {} renderSkinOptions(); renderQuests(); }
     else if (document.getElementById('questList') && !menu.hidden) renderQuests();
   }
 }
@@ -12514,7 +12520,7 @@ function renderSkinOptions() {
   }
   for (const id of Object.keys(SKINS).filter(k => SKINS[k].legend)) {
     let o = sel.querySelector(`option[value="${id}"]`); if (!o) { o = document.createElement('option'); o.value = id; sel.appendChild(o); }
-    o.textContent = '✦ ' + t('skin.' + id);
+    const lk = skinLocked(id); o.disabled = lk; o.textContent = (lk ? '🔒 ' : '✦ ') + t('skin.' + id);
   }
   if (SKINS.celeste) { let o = sel.querySelector('option[value="celeste"]'); if (!o) { o = document.createElement('option'); o.value = 'celeste'; sel.appendChild(o); } const lk = skinLocked('celeste'); o.disabled = lk; o.textContent = (lk ? '🔒 ' : '☁ ') + t('skin.celeste'); }
   let c = sel.querySelector('option[value="custom"]');
@@ -13071,7 +13077,7 @@ $('loadout').addEventListener('keydown', e => { e.stopPropagation(); if (e.code 
 
 const skinSel = $('skin'); skinSel.value = S.skin;
 renderSkinOptions(); renderQuests();
-skinSel.addEventListener('change', () => { if (skinLocked(skinSel.value)) { skinSel.value = S.skin; toast(t('q.locked'), 3); return; } S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
+skinSel.addEventListener('change', () => { if (skinLocked(skinSel.value)) { skinSel.value = S.skin; toast(t('shop.lockedMsg'), 3); return; } S.skin = skinSel.value; store.set('skin', S.skin); applySkin(S.skin); });
 /* ---------- aperçu 3D des armes dans le menu (onglet Armes) ---------- */
 const WP = { r: null, scene: null, cam: null, piv: null, sel: 0, vm: null, drag: null, rotY: 0.6 };
 const wpList = () => [0, 1, 2, 3, 4, 5].map(i => ({ kind: i })).concat(SPECIAL_IDS.map(id => ({ kind: 6, sp: id })));
@@ -18535,7 +18541,7 @@ function galRender() {
     const sk = knife ? KSKINS[id] : SKINS[id], tag = sk && (sk.legend || sk.lg) ? '✦' : sk && sk.s26 ? t('gal.new') : '';
     const img = GAL.cache[gk + '|' + id];
     b.innerHTML = `<span class="im">${img ? `<img alt="" src="${img}">` : '<span class="ld"></span>'}</span><span>${escapeHtml(name)}</span>` + (tag ? `<span class="tag">${tag}</span>` : '');
-    b.addEventListener('click', () => { if (lock) { toast(t('q.locked'), 2.5); return; } sel.value = id; sel.dispatchEvent(new Event('change')); setTimeout(() => { refreshWeaponPreview(); galMark(); }, 0); });
+    b.addEventListener('click', () => { if (lock) { toast(t(/^lg_/.test(id) || QUESTS.some(q => q.sk === id) ? 'shop.lockedMsg' : 'q.locked'), 3); return; } sel.value = id; sel.dispatchEvent(new Event('change')); setTimeout(() => { refreshWeaponPreview(); galMark(); }, 0); });
     if (!img) GAL.queue.push([gk, id, knife]);
     return b;
   }));
@@ -18863,6 +18869,322 @@ for (const L of ['af', 'zu']) if (I18N[L]) Object.assign(I18N[L], { 'em.moonwalk
   }
   try { applyI18n(); } catch (e) {}
 }
+
+Object.assign(I18N.fr, {
+  'tab.shop': 'Boutique', 'shop.title': 'Boutique de skins', 'shop.hint': 'Gagne des crédits ₵ en jouant : kill +10, joueur éliminé +15, quête finie +250, niveau gagné +100, coffre ouvert +10, chaque minute +5. Le jeton doré, caché dans les coffres, rend toute la boutique gratuite.',
+  'shop.tokOnHint': 'Tu as le jeton doré : toute la boutique est gratuite pour toi. Prends tout ce que tu veux !', 'shop.tokBadge': 'Jeton doré · tout gratuit',
+  'shop.secLg': 'Légendaires', 'shop.secQ': 'Skins de quête', 'shop.rarLg': 'Légendaire', 'shop.rarQ': 'Quête', 'shop.buy': 'Acheter', 'shop.get': 'Obtenir', 'shop.equip': 'Équiper', 'shop.equippedTag': 'Équipé',
+  'shop.owned': 'Possédé ✓', 'shop.questDone': 'Quête finie ✓', 'shop.free': 'GRATUIT', 'shop.orQuest': 'Ou gratuit en finissant la quête : {q}', 'shop.poor': 'Il te manque {n} ₵', 'shop.bought': '{s} acheté !', 'shop.equipped': '{s} équipé',
+  'shop.lockedMsg': 'Skin verrouillé : achète-le dans la Boutique (ou trouve le jeton doré)', 'shop.tokenOn': 'Jeton doré : toute la boutique est gratuite',
+  'shop.tokK': 'COFFRE LÉGENDAIRE', 'shop.tokBig': 'JETON DORÉ !', 'shop.tokSub': 'Toute la boutique est gratuite pour toi',
+  'dcl.login': 'Connexion Discord', 'dcl.logout': 'Se déconnecter', 'dcl.out': 'Déconnecté de Discord', 'dcl.hello': 'Connecté avec Discord : salut {n} !', 'dcl.fail': 'La connexion Discord n’a pas marché, réessaie.', 'dcl.asUser': 'Connecté en tant que {n}', 'dcl.unavail': 'La connexion Discord marche sur le site du jeu, l’appli Windows et l’appli Android.'
+});
+Object.assign(I18N.en, {
+  'tab.shop': 'Shop', 'shop.title': 'Skin shop', 'shop.hint': 'Earn ₵ credits by playing: kill +10, player eliminated +15, quest done +250, level up +100, chest opened +10, every minute +5. The golden token, hidden in chests, makes the whole shop free.',
+  'shop.tokOnHint': 'You have the golden token: the whole shop is free for you. Take everything you want!', 'shop.tokBadge': 'Golden token · all free',
+  'shop.secLg': 'Legendary', 'shop.secQ': 'Quest skins', 'shop.rarLg': 'Legendary', 'shop.rarQ': 'Quest', 'shop.buy': 'Buy', 'shop.get': 'Get', 'shop.equip': 'Equip', 'shop.equippedTag': 'Equipped',
+  'shop.owned': 'Owned ✓', 'shop.questDone': 'Quest done ✓', 'shop.free': 'FREE', 'shop.orQuest': 'Or free by finishing the quest: {q}', 'shop.poor': 'You need {n} more ₵', 'shop.bought': '{s} bought!', 'shop.equipped': '{s} equipped',
+  'shop.lockedMsg': 'Locked skin: buy it in the Shop (or find the golden token)', 'shop.tokenOn': 'Golden token: the whole shop is free',
+  'shop.tokK': 'LEGENDARY CHEST', 'shop.tokBig': 'GOLDEN TOKEN!', 'shop.tokSub': 'The whole shop is free for you',
+  'dcl.login': 'Discord sign-in', 'dcl.logout': 'Sign out', 'dcl.out': 'Signed out of Discord', 'dcl.hello': 'Signed in with Discord: hi {n}!', 'dcl.fail': 'Discord sign-in failed, try again.', 'dcl.asUser': 'Signed in as {n}', 'dcl.unavail': 'Discord sign-in works on the game website, the Windows app and the Android app.'
+});
+for (const L of ['af', 'zu']) if (I18N[L]) Object.assign(I18N[L], { 'tab.shop': L === 'af' ? 'Winkel' : 'Isitolo' });
+Object.assign(I18N.fr, { 'adm.token': 'Jeton doré' }); Object.assign(I18N.en, { 'adm.token': 'Golden token' });
+/* ================= Boutique de skins : crédits gagnés en jouant, jeton doré caché dans les coffres (toute la boutique gratuite) ================= */
+const SHOP_PRICE = id => /^lg_/.test(id) ? 1200 : 800;
+const shopItems = () => [
+  ...Object.keys(SKINS).filter(k => SKINS[k].legend).map(id => ({ id, kind: 'lg' })),
+  ...QUESTS.map(q => ({ id: q.sk, kind: 'q', q }))
+];
+// crédits gagnés : mêmes événements que l'XP
+const CR_EV = { kill: 10, pkill: 15, head: 3, kkill: 10, min: 5, crt: 100, mtr: 80, win: 60, possess: 5, scare: 3, sglide: 2 };
+const TOKEN_P = 0.05; // 1 coffre sur 20 en moyenne
+function shopSave() { store.set('credits', SHOP.c); store.set('goldToken', SHOP.token); store.set('shopOwned', [...SHOP.owned]); }
+const fmtCr = n => Math.round(n).toLocaleString(LANG === 'fr' ? 'fr-FR' : 'en-US');
+let crSum = 0, crT = 0;
+function credAdd(n, why) {
+  if (!(n > 0)) return;
+  SHOP.c += Math.round(n); shopSave(); credChip();
+  const x = $('crPop');
+  if (x && menu.hidden) { crSum = (x.classList.contains('on') ? crSum : 0) + Math.round(n); x.textContent = '+' + crSum + ' ₵'; x.classList.add('on'); clearTimeout(crT); crT = setTimeout(() => x.classList.remove('on'), 1800); }
+  if ($('shopPanel') && !$('shopPanel').hidden) shopRender();
+}
+function credChip() {
+  const c = $('crChip'); if (c) { c.querySelector('b').textContent = fmtCr(SHOP.c); c.classList.toggle('tok', SHOP.token); c.title = SHOP.token ? t('shop.tokenOn') : t('shop.title'); }
+}
+{
+  const _pe = progEv; progEv = function (ev, v) { _pe(ev, v); const n = CR_EV[ev]; if (n) credAdd(n, ev); };
+  const _plu = progLevelUp; progLevelUp = function () { _plu.apply(this, arguments); credAdd(100, 'lvl'); };
+  const _oc = openChest;
+  openChest = function (c) {
+    const could = c && !c.open && !P.dead; _oc(c);
+    if (could && c.open) { credAdd(10, 'chest'); if (!SHOP.token && Math.random() < TOKEN_P) tokenFound(c.pos); }
+  };
+}
+// le jeton doré : une pièce sort du coffre en tournant, puis grande animation à l'écran
+function tokenFound(pos) {
+  if (SHOP.token) return;
+  SHOP.token = true; shopSave(); credChip();
+  try { renderSkinOptions(); } catch (e) {}
+  if (pos && typeof scene !== 'undefined') {
+    const g = new THREE.Group();
+    const mat = new THREE.MeshStandardMaterial({ color: 0xffd23a, metalness: 1, roughness: 0.25, emissive: 0x7a4a00, emissiveIntensity: 0.6 });
+    const coin = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.34, 0.06, 40), mat); coin.rotation.x = Math.PI / 2; g.add(coin);
+    const rim = new THREE.Mesh(new THREE.TorusGeometry(0.34, 0.03, 8, 40), mat); g.add(rim);
+    const glow = new THREE.PointLight(0xffc840, 2.5, 6); g.add(glow);
+    g.position.set(pos.x, pos.y + 0.8, pos.z); scene.add(g);
+    const t0 = performance.now();
+    (function spin() {
+      const k = (performance.now() - t0) / 1000;
+      g.position.y = pos.y + 0.8 + Math.min(1.6, k * 1.2); g.rotation.y = k * 9; glow.intensity = 2.5 * Math.max(0, 1 - k / 2.6);
+      g.scale.setScalar(k < 2 ? 1 : Math.max(0.01, 1 - (k - 2) * 1.6));
+      if (k < 2.6) requestAnimationFrame(spin); else { scene.remove(g); coin.geometry.dispose(); rim.geometry.dispose(); mat.dispose(); }
+    })();
+  }
+  setTimeout(tokenAnim, 450);
+}
+const tokSound = snd(t => {
+  [523, 659, 784, 1047, 1319, 1568].forEach((f, i) => tn(t + i * 0.09, { f, dur: 0.5, type: i % 2 ? 'triangle' : 'square', gain: 0.05 }));
+  tn(t + 0.6, { f: 1047, f2: 2093, dur: 0.9, type: 'sawtooth', gain: 0.03 });
+  nz(t + 0.55, { dur: 1.2, f: 9000, f2: 3000, q: 1.5, gain: 0.06 });
+  tn(t, { f: 110, f2: 55, dur: 0.6, type: 'triangle', gain: 0.3 });
+});
+function tokenAnim() {
+  let el = $('tokFx');
+  if (!el) {
+    el = document.createElement('div'); el.id = 'tokFx'; el.setAttribute('role', 'status');
+    el.innerHTML = '<div class="rays"></div><div class="coin"><div class="face"><span>V</span></div><div class="face back"><span>₵</span></div></div><div class="txt"><div class="k"></div><div class="big"></div><div class="sub"></div></div><i class="sp"></i><i class="sp"></i><i class="sp"></i><i class="sp"></i><i class="sp"></i><i class="sp"></i><i class="sp"></i><i class="sp"></i>';
+    document.body.appendChild(el);
+  }
+  el.querySelector('.k').textContent = t('shop.tokK'); el.querySelector('.big').textContent = t('shop.tokBig'); el.querySelector('.sub').textContent = t('shop.tokSub');
+  el.classList.remove('on'); void el.offsetWidth; el.classList.add('on');
+  try { tokSound(); } catch (e) {}
+  feed(t('shop.tokBig'), t('shop.tokSub'), 'gold');
+  clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove('on'), 4600);
+}
+// vignettes des skins : même moteur que la galerie des armes, sur l'arme choisie dans l'onglet Armes
+const SHOPT = { cache: {}, queue: [] };
+function shopThumbTick() {
+  const pnl = $('shopPanel'); if (!pnl || pnl.hidden || menu.hidden || !SHOPT.queue.length) return;
+  if (!WP.r) { try { refreshWeaponPreview(); } catch (e) { return; } }
+  if (!WP.r || !WP.vm || !WP.vm.src || !WP.vm.src.mats) return;
+  const it = wpList()[WP.sel] || wpList()[0]; if (it.kind === 5) return;
+  const src = WP.vm.src, rot = WP.piv.rotation.y; let n = 0;
+  while (SHOPT.queue.length && n < 2) {
+    const id = SHOPT.queue.shift(); if (SHOPT.cache[id] || !SKINS[id]) continue;
+    try {
+      applySkinVM(src, SKINS[id]); try { kitTick(src, 0.3); } catch (e) {}
+      WP.piv.rotation.set(0.12, 0.55, 0); WP.r.render(WP.scene, WP.cam);
+      const c = document.createElement('canvas'); c.width = 280; c.height = 150;
+      const D = WP.r.domElement, sw = D.width * 0.7, sh = sw * c.height / c.width;
+      c.getContext('2d').drawImage(D, (D.width - sw) / 2, (D.height - sh) / 2, sw, sh, 0, 0, c.width, c.height);
+      SHOPT.cache[id] = c.toDataURL('image/png');
+      const im = document.querySelector(`#shopPanel .shc[data-id="${CSS.escape(id)}"] .im`); if (im) im.innerHTML = `<img alt="" src="${SHOPT.cache[id]}">`;
+    } catch (e) {}
+    n++;
+  }
+  try { applySkinVM(src, it.kind === 6 ? SKINS[S.skin] || SKINS.std : vmSkin(it.kind)); } catch (e) {}
+  WP.piv.rotation.y = rot; WP.r.render(WP.scene, WP.cam);
+}
+setInterval(shopThumbTick, 220);
+function shopEquip(id) {
+  if (skinLocked(id)) return;
+  S.skin = id; store.set('skin', id); try { applySkin(id); } catch (e) {} try { renderSkinOptions(); } catch (e) {}
+  try { galRender(); } catch (e) {}
+  toast(t('shop.equipped', { s: t('skin.' + id) }), 2.5); shopRender();
+}
+function shopBuy(id) {
+  if (shopHas(id) || !skinLocked(id)) { shopEquip(id); return; }
+  const price = SHOP_PRICE(id);
+  if (SHOP.c < price) { toast(t('shop.poor', { n: fmtCr(price - SHOP.c) }), 3); return; }
+  SHOP.c -= price; SHOP.owned.add(id); shopSave(); credChip();
+  try { sfx.outfit(); } catch (e) {}
+  try { renderSkinOptions(); } catch (e) {}
+  toast(t('shop.bought', { s: t('skin.' + id) }), 3); shopRender();
+}
+function shopRender() {
+  const p = $('shopPanel'); if (!p) return;
+  p.querySelector('.shBal b').textContent = fmtCr(SHOP.c);
+  p.querySelector('.shTok').hidden = !SHOP.token;
+  p.querySelector('.shHint').textContent = SHOP.token ? t('shop.tokOnHint') : t('shop.hint');
+  const secs = [['lg', 'shop.secLg'], ['q', 'shop.secQ']];
+  const box = p.querySelector('.shSecs'); box.replaceChildren();
+  for (const [kind, key] of secs) {
+    const items = shopItems().filter(i => i.kind === kind);
+    const sec = document.createElement('section'); sec.className = 'shSec';
+    sec.innerHTML = `<h3>${t(key)} <b>${items.length}</b></h3><div class="shGrid"></div>`;
+    const grid = sec.querySelector('.shGrid');
+    for (const it of items) {
+      const id = it.id, lock = skinLocked(id), eq = S.skin === id, price = SHOP_PRICE(id);
+      const c = document.createElement('div'); c.className = 'shc ' + kind + (eq ? ' eq' : '') + (!lock ? ' own' : ''); c.dataset.id = id;
+      const img = SHOPT.cache[id];
+      const status = eq ? t('shop.equippedTag') : !lock ? (it.kind === 'q' && qDone(it.q) && !SHOP.owned.has(id) && !SHOP.token ? t('shop.questDone') : t('shop.owned')) : SHOP.token ? t('shop.free') : '₵ ' + fmtCr(price);
+      const btn = eq ? t('shop.equippedTag') : !lock ? t('shop.equip') : SHOP.token ? t('shop.get') : t('shop.buy');
+      c.innerHTML = `<div class="im">${img ? `<img alt="" src="${img}">` : '<span class="ld"></span>'}</div>
+<div class="rar">${kind === 'lg' ? '✦ ' + t('shop.rarLg') : '★ ' + t('shop.rarQ')}</div>
+<div class="nm">${escapeHtml(t('skin.' + id).replace(/^(Légendaire|Legendary)\s*:\s*/i, ''))}</div>
+${kind === 'q' && lock ? `<div class="qh">${escapeHtml(t('shop.orQuest', { q: t('q.' + it.q.id) }))}</div>` : ''}
+<div class="ft"><span class="pr${lock && !SHOP.token && SHOP.c < price ? ' poor' : ''}">${status}</span><button type="button" class="shb"${eq ? ' disabled' : ''}>${btn}</button></div>`;
+      c.querySelector('.shb').addEventListener('click', () => (lock ? shopBuy(id) : shopEquip(id)));
+      if (!img) SHOPT.queue.push(id);
+      grid.appendChild(c);
+    }
+    box.appendChild(sec);
+  }
+}
+function shopUI() {
+  if ($('shopPanel')) return;
+  const nav = document.querySelector('#menu .tabs'), main = document.querySelector('#menu .menu-main'); if (!nav || !main) return;
+  const b = document.createElement('button'); b.type = 'button'; b.setAttribute('role', 'tab'); b.dataset.tab = 'shop'; b.dataset.i18n = 'tab.shop'; b.textContent = t('tab.shop');
+  const after = nav.querySelector('[data-tab="online"]') || nav.querySelector('[data-tab="play"]'); if (after) after.after(b); else nav.prepend(b);
+  const p = document.createElement('div'); p.className = 'tabpanel'; p.id = 'shopPanel'; p.dataset.tab = 'shop'; p.setAttribute('role', 'tabpanel'); p.hidden = true;
+  p.innerHTML = `<div class="shHead"><div><h2 data-i18n="shop.title"></h2><p class="shHint"></p></div><div class="shBal"><span>₵</span><b></b></div><div class="shTok" hidden><i></i><span data-i18n="shop.tokBadge"></span></div></div><div class="shSecs"></div>`;
+  const panels = [...main.querySelectorAll('.tabpanel')]; (panels[0] || nav).after(p);
+  p.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  b.addEventListener('click', () => showTab('shop'));
+  const orig = window.showTab;
+  window.showTab = function (id) { orig(id === 'shop' ? '__none' : id); if (id === 'shop') { for (const bb of nav.children) bb.setAttribute('aria-selected', String(bb.dataset.tab === 'shop')); store.set('menuTab', 'shop'); } p.hidden = id !== 'shop'; if (id === 'shop') shopRender(); };
+  if (store.get('menuTab', 'play') === 'shop') showTab('shop');
+}
+{
+  const st = document.createElement('style');
+  st.textContent = `
+#crChip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:rgba(255,210,58,.12);border:1px solid rgba(255,210,58,.45);color:#ffe7a0;font:800 13px/1 var(--f-display);letter-spacing:.06em;cursor:pointer}
+#crChip span{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b0,#ffc21a 55%,#b07600);color:#3a2600;font-size:11px}
+#crChip.tok{box-shadow:0 0 14px rgba(255,200,40,.55);border-color:#ffd23a}
+#crPop{position:fixed;right:24px;top:96px;z-index:30;font:800 20px/1 var(--f-display);color:#ffd23a;text-shadow:0 2px 8px rgba(0,0,0,.6);opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none}
+#crPop.on{opacity:1;transform:none}
+#shopPanel .shHead{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-bottom:8px}
+#shopPanel .shHead>div:first-child{flex:1;min-width:240px}#shopPanel h2{margin:0 0 4px}
+#shopPanel .shHint{margin:0;color:var(--ink-dim);font:500 14px/1.45 var(--f-body)}
+#shopPanel .shBal{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:12px;background:linear-gradient(135deg,rgba(255,210,58,.18),rgba(255,140,20,.08));border:1px solid rgba(255,210,58,.5);font:900 28px/1 var(--f-display);color:#fff}
+#shopPanel .shBal span{display:grid;place-items:center;width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff3b0,#ffc21a 55%,#b07600);color:#3a2600;font-size:17px}
+#shopPanel .shTok{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:12px;background:linear-gradient(120deg,#ffe066,#ffb020 50%,#ff8a00);color:#2a1800;font:900 14px/1.1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;box-shadow:0 0 24px rgba(255,190,40,.45)}
+#shopPanel .shTok i{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fffbe0,#ffd23a 50%,#a86a00);box-shadow:inset 0 0 0 2px rgba(120,70,0,.6);animation:shTokSpin 2.4s linear infinite}
+@keyframes shTokSpin{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}
+#shopPanel .shSec h3{display:flex;align-items:center;gap:10px;font:800 14px/1 var(--f-display);letter-spacing:.2em;text-transform:uppercase;color:var(--ink-dim);margin:18px 0 10px}
+#shopPanel .shSec h3 b{color:var(--amber)}
+#shopPanel .shGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px}
+#shopPanel .shc{position:relative;display:flex;flex-direction:column;gap:6px;padding:10px;border-radius:10px;background:linear-gradient(170deg,rgba(40,48,60,.85),rgba(14,17,22,.92));border:1px solid rgba(244,239,230,.12);overflow:hidden;transition:transform .15s,border-color .15s,box-shadow .15s}
+#shopPanel .shc.lg{background:linear-gradient(170deg,rgba(120,60,200,.55),rgba(30,14,48,.95) 70%)}
+#shopPanel .shc.q{background:linear-gradient(170deg,rgba(40,110,200,.5),rgba(10,22,40,.95) 70%)}
+#shopPanel .shc:hover{transform:translateY(-3px);border-color:rgba(255,210,58,.6);box-shadow:0 10px 24px rgba(0,0,0,.4)}
+#shopPanel .shc.eq{border-color:#ffd23a;box-shadow:inset 0 0 0 1px #ffd23a}
+#shopPanel .shc .im{height:96px;border-radius:6px;background:radial-gradient(circle at 50% 60%,rgba(255,255,255,.12),transparent 70%),rgba(0,0,0,.25);display:grid;place-items:center;overflow:hidden}
+#shopPanel .shc .im img{width:100%;height:100%;object-fit:contain}
+#shopPanel .shc .im .ld{width:20px;height:20px;border:2px solid rgba(244,239,230,.2);border-top-color:var(--amber);border-radius:50%;animation:galSp .8s linear infinite}
+#shopPanel .shc .rar{font:800 10px/1 var(--f-display);letter-spacing:.18em;text-transform:uppercase;color:#d9b8ff}
+#shopPanel .shc.q .rar{color:#9cc8ff}
+#shopPanel .shc .nm{font:800 16px/1.15 var(--f-display);color:#fff}
+#shopPanel .shc .qh{font:500 11.5px/1.35 var(--f-body);color:var(--ink-dim)}
+#shopPanel .shc .ft{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:auto;padding-top:4px}
+#shopPanel .shc .pr{font:800 14px/1 var(--f-display);color:#ffe7a0}#shopPanel .shc .pr.poor{color:#ff8a7a}
+#shopPanel .shc.own .pr{color:#9af0b4}
+#shopPanel .shc .shb{flex:none;padding:8px 12px;border-radius:6px;border:0;background:#ffe03a;color:#1a1406;font:800 13px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+#shopPanel .shc.own .shb{background:rgba(255,255,255,.14);color:#fff}
+#shopPanel .shc .shb:disabled{opacity:.6;cursor:default}
+#tokFx{position:fixed;inset:0;z-index:80;display:none;place-items:center;pointer-events:none;overflow:hidden}
+#tokFx.on{display:grid;animation:tokBg 4.6s ease forwards}
+@keyframes tokBg{0%{background:rgba(40,24,0,0)}10%{background:rgba(40,24,0,.55)}80%{background:rgba(40,24,0,.45)}100%{background:rgba(40,24,0,0)}}
+#tokFx .rays{position:absolute;width:150vmax;height:150vmax;background:repeating-conic-gradient(from 0deg,rgba(255,210,58,0) 0 7deg,rgba(255,210,58,.22) 7deg 12deg);-webkit-mask:radial-gradient(circle,#000 0,#000 25%,transparent 60%);mask:radial-gradient(circle,#000 0,#000 25%,transparent 60%);animation:tokRays 4.6s linear forwards}
+@keyframes tokRays{0%{transform:rotate(0) scale(.3);opacity:0}15%{opacity:1}85%{opacity:1}100%{transform:rotate(80deg) scale(1.1);opacity:0}}
+#tokFx .coin{position:relative;width:200px;height:200px;transform-style:preserve-3d;animation:tokCoin 4.6s cubic-bezier(.2,.9,.2,1) forwards;margin-bottom:150px}
+@keyframes tokCoin{0%{transform:translateY(60vh) rotateY(0) scale(.4)}25%{transform:translateY(0) rotateY(1080deg) scale(1.15)}35%{transform:translateY(0) rotateY(1260deg) scale(1)}85%{transform:translateY(0) rotateY(1620deg) scale(1);opacity:1}100%{transform:translateY(-20px) rotateY(1800deg) scale(.7);opacity:0}}
+#tokFx .face{position:absolute;inset:0;border-radius:50%;display:grid;place-items:center;backface-visibility:hidden;background:radial-gradient(circle at 35% 30%,#fffbe0 0,#ffe066 25%,#ffc21a 55%,#b07600 100%);box-shadow:inset 0 0 0 10px rgba(160,100,0,.55),inset 0 0 0 16px rgba(255,240,170,.55),0 0 60px rgba(255,200,40,.75)}
+#tokFx .face span{font:900 96px/1 var(--f-display);color:#7a4a00;text-shadow:0 2px 0 rgba(255,250,210,.8);transform:skewX(-9deg)}
+#tokFx .face.back{transform:rotateY(180deg)}
+#tokFx .txt{position:absolute;top:calc(50% + 40px);text-align:center;animation:tokTxt 4.6s ease forwards}
+@keyframes tokTxt{0%,22%{opacity:0;transform:translateY(20px)}32%,85%{opacity:1;transform:none}100%{opacity:0}}
+#tokFx .k{font:800 15px/1 var(--f-display);letter-spacing:.5em;color:#ffe7a0}
+#tokFx .big{font:900 clamp(40px,7vw,84px)/1 var(--f-display);font-style:italic;color:#ffd23a;text-shadow:0 4px 0 #7a4a00,0 0 40px rgba(255,200,40,.6);margin:8px 0}
+#tokFx .sub{font:700 18px/1.3 var(--f-body);color:#fff}
+#tokFx .sp{position:absolute;width:10px;height:10px;border-radius:50%;background:#ffe066;box-shadow:0 0 12px #ffd23a;top:50%;left:50%;opacity:0;animation:tokSp 1.6s ease-out .9s forwards}
+#tokFx .sp:nth-child(4){--x:-280px;--y:-180px}#tokFx .sp:nth-child(5){--x:260px;--y:-200px}#tokFx .sp:nth-child(6){--x:-320px;--y:60px}#tokFx .sp:nth-child(7){--x:330px;--y:80px}
+#tokFx .sp:nth-child(8){--x:-140px;--y:-280px}#tokFx .sp:nth-child(9){--x:150px;--y:-290px}#tokFx .sp:nth-child(10){--x:-200px;--y:220px}#tokFx .sp:nth-child(11){--x:210px;--y:230px}
+@keyframes tokSp{0%{opacity:1;transform:translate(-50%,-50%) scale(1.4)}100%{opacity:0;transform:translate(calc(-50% + var(--x)),calc(-50% + var(--y))) scale(.3)}}
+@media (prefers-reduced-motion:reduce){#tokFx .rays,#tokFx .sp{display:none}#tokFx .coin{animation:none}}`;
+  document.head.appendChild(st);
+  const pop = document.createElement('div'); pop.id = 'crPop'; document.body.appendChild(pop);
+  const chip = document.createElement('button'); chip.type = 'button'; chip.id = 'crChip'; chip.innerHTML = '<span>₵</span><b></b>';
+  chip.addEventListener('click', () => { if (window.showTab) showTab('shop'); });
+  const placeChip = () => { const row = document.querySelector('#fnTop .toprow') || document.querySelector('#menu .toprow'); if (row && chip.parentNode !== row) row.prepend(chip); };
+  placeChip(); credChip();
+  setInterval(() => { try { shopUI(); placeChip(); } catch (e) {} }, 1500);
+  try { shopUI(); } catch (e) {}
+}
+
+/* ================= Connexion avec Discord (OAuth2 implicite : le jeton ne sert qu'à lire le pseudo et l'avatar, rien n'est envoyé ailleurs) ================= */
+const DCL_REDIRECTS = {
+  'https://haze15.github.io': 'https://haze15.github.io/velocite/',
+  'http://127.0.0.1:47321': 'http://127.0.0.1:47321/',
+  'https://appassets.androidplatform.net': 'https://appassets.androidplatform.net/assets/www/index.html'
+};
+let DCLU = (() => { const u = store.get('discordUser', null); return u && typeof u === 'object' && u.id ? u : null; })();
+const dclRedirect = () => DCL_REDIRECTS[location.origin] || null;
+function dclLogin() {
+  const r = dclRedirect(); if (!r) { toast(t('dcl.unavail'), 4); return; }
+  const stt = Array.from(crypto.getRandomValues(new Uint8Array(12)), b => b.toString(16).padStart(2, '0')).join('');
+  try { sessionStorage.setItem('dclState', stt); } catch (e) {}
+  location.href = 'https://discord.com/oauth2/authorize?' + new URLSearchParams({ client_id: DC_APP_ID, response_type: 'token', redirect_uri: r, scope: 'identify', state: stt });
+}
+function dclLogout() { DCLU = null; store.set('discordUser', null); dclRender(); toast(t('dcl.out'), 2.5); }
+function dclAvatar(u) {
+  if (u.avatar) return `https://cdn.discordapp.com/avatars/${u.id}/${u.avatar}.png?size=64`;
+  let i = 0; try { i = Number((BigInt(u.id) >> 22n) % 6n); } catch (e) {}
+  return `https://cdn.discordapp.com/embed/avatars/${i}.png`;
+}
+async function dclReturn() {
+  const h = location.hash; if (!h || h.indexOf('access_token=') < 0) return;
+  const q = new URLSearchParams(h.slice(1)); history.replaceState(null, '', location.pathname + location.search);
+  let want = null; try { want = sessionStorage.getItem('dclState'); sessionStorage.removeItem('dclState'); } catch (e) {}
+  if (!want || q.get('state') !== want) { toast(t('dcl.fail'), 4); return; }
+  try {
+    const r = await fetch('https://discord.com/api/v10/users/@me', { headers: { Authorization: 'Bearer ' + q.get('access_token') } });
+    if (!r.ok) throw new Error(r.status);
+    const u = await r.json();
+    DCLU = { id: String(u.id), user: String(u.username || ''), name: String(u.global_name || u.username || 'Discord').slice(0, 32), av: dclAvatar(u) };
+    store.set('discordUser', DCLU);
+    const ps = $('pseudo'); if (ps) { ps.value = DCLU.name.replace(/[^\p{L}\p{N} _.-]/gu, '').slice(0, 14) || ps.value; ps.dispatchEvent(new Event('change')); }
+    toast(t('dcl.hello', { n: DCLU.name }), 4); dclRender();
+  } catch (e) { toast(t('dcl.fail'), 4); }
+}
+function dclRender() {
+  let b = $('dclBtn');
+  const row = document.querySelector('#fnTop .toprow') || document.querySelector('#menu .toprow'); if (!row) return;
+  if (!b) {
+    b = document.createElement('button'); b.type = 'button'; b.id = 'dclBtn';
+    b.addEventListener('click', () => { if (!DCLU) dclLogin(); else { const m = $('dclMenu'); m.hidden = !m.hidden; } });
+    const m = document.createElement('div'); m.id = 'dclMenu'; m.hidden = true;
+    m.innerHTML = '<div class="who"></div><button type="button" class="out"></button>';
+    m.querySelector('.out').addEventListener('click', () => { m.hidden = true; dclLogout(); });
+    document.addEventListener('click', e => { if (!m.hidden && !m.contains(e.target) && e.target !== b && !b.contains(e.target)) m.hidden = true; });
+    document.body.appendChild(m);
+  }
+  if (b.parentNode !== row) { const chip = $('crChip'); if (chip && chip.parentNode === row) chip.after(b); else row.prepend(b); }
+  const logo = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M20.3 4.4A19.8 19.8 0 0 0 15.4 3l-.6 1.2a18.3 18.3 0 0 0-5.5 0L8.7 3a19.7 19.7 0 0 0-4.9 1.5C.7 9.1-.2 13.6.3 18a19.9 19.9 0 0 0 6 3l1.3-2a12.9 12.9 0 0 1-2-1l.5-.4a14.2 14.2 0 0 0 12 0l.5.4c-.6.4-1.3.7-2 1l1.3 2a19.8 19.8 0 0 0 6-3c.5-5.1-.8-9.6-3.6-13.6ZM8 15.3c-1.2 0-2.2-1.1-2.2-2.4S6.8 10.5 8 10.5s2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Zm8 0c-1.2 0-2.2-1.1-2.2-2.4s1-2.4 2.2-2.4 2.2 1.1 2.2 2.4-1 2.4-2.2 2.4Z"/></svg>';
+  if (DCLU) { b.className = 'in'; b.innerHTML = `<img alt="" src="${escapeHtml(DCLU.av)}"><span>${escapeHtml(DCLU.name)}</span>`; b.title = t('dcl.asUser', { n: DCLU.user || DCLU.name }); }
+  else { b.className = 'outb'; b.innerHTML = logo + `<span>${escapeHtml(t('dcl.login'))}</span>`; b.title = dclRedirect() ? t('dcl.login') : t('dcl.unavail'); }
+  const m = $('dclMenu'); if (m) { m.querySelector('.who').textContent = DCLU ? t('dcl.asUser', { n: DCLU.user || DCLU.name }) : ''; m.querySelector('.out').textContent = t('dcl.logout'); }
+  // pastille du lobby : avatar Discord à côté du niveau
+  const tag = document.querySelector('.lbTag');
+  if (tag) { let im = tag.querySelector('img.dav'); if (DCLU) { if (!im) { im = document.createElement('img'); im.className = 'dav'; im.alt = ''; tag.prepend(im); } if (im.src !== DCLU.av) im.src = DCLU.av; } else if (im) im.remove(); }
+}
+{
+  const st = document.createElement('style');
+  st.textContent = `#dclBtn{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:999px;border:1px solid transparent;font:800 12.5px/1 var(--f-display);letter-spacing:.06em;cursor:pointer;white-space:nowrap}
+#dclBtn.outb{background:#5865F2;color:#fff}#dclBtn.outb:hover{background:#4752c4}
+#dclBtn.in{background:rgba(88,101,242,.18);border-color:rgba(88,101,242,.6);color:#fff;padding:3px 11px 3px 3px}
+#dclBtn img{width:24px;height:24px;border-radius:50%}
+#dclBtn.in span{max-width:120px;overflow:hidden;text-overflow:ellipsis}
+#dclMenu{position:fixed;top:60px;right:20px;z-index:40;min-width:200px;padding:12px;border-radius:10px;background:#12161c;border:1px solid rgba(255,255,255,.14);box-shadow:0 12px 30px rgba(0,0,0,.5);display:grid;gap:10px;font:500 13px/1.35 var(--f-body);color:var(--ink)}
+#dclMenu .out{padding:8px 10px;border-radius:6px;border:1px solid rgba(255,120,120,.5);background:rgba(255,90,90,.12);color:#ffb0a8;font:700 13px/1 var(--f-display);cursor:pointer}
+.lbTag img.dav{width:26px;height:26px;border-radius:50%;margin-right:-2px}
+@media (max-width:980px){#dclBtn span{display:none}#dclBtn.outb{padding:6px 8px}}`;
+  document.head.appendChild(st);
+  dclReturn();
+  dclRender(); setInterval(() => { try { dclRender(); } catch (e) {} }, 1500);
+}
+
 
 /* ================= Menu façon Fortnite : barre du haut (logo, onglets, niveau, admin, langue), bouton Jouer sous le personnage ================= */
 (function fnMenu() {
