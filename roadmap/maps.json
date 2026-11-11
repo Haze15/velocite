@@ -1,0 +1,77 @@
+{
+ "title": "Road map · vues de dessus",
+ "maps": [
+  {
+   "file": "01-canyon.jpg",
+   "name": "Canyon",
+   "sub": "Avant-poste du désert — refaite en 2026.12.11",
+   "size": 123
+  },
+  {
+   "file": "02-refinery.jpg",
+   "name": "Raffinerie",
+   "sub": "Crépuscule industriel, passerelles et half-pipe",
+   "size": 123
+  },
+  {
+   "file": "03-forest.jpg",
+   "name": "Forêt",
+   "sub": "Rivière, cabanes et sous-bois",
+   "size": 123
+  },
+  {
+   "file": "04-castle.jpg",
+   "name": "Château",
+   "sub": "Remparts, douves et donjon",
+   "size": 123
+  },
+  {
+   "file": "05-volcano.jpg",
+   "name": "Volcan",
+   "sub": "Cratère de lave et coulées",
+   "size": 410
+  },
+  {
+   "file": "06-mega.jpg",
+   "name": "Fusion",
+   "sub": "Canyon, Raffinerie, Forêt et Château réunis",
+   "size": 255
+  },
+  {
+   "file": "07-ghost.jpg",
+   "name": "Ville fantôme",
+   "sub": "Quartiers en ruine",
+   "size": 319
+  },
+  {
+   "file": "08-ocean.jpg",
+   "name": "Océan",
+   "sub": "Archipel et pontons",
+   "size": 456
+  },
+  {
+   "file": "09-arctic.jpg",
+   "name": "Arctique",
+   "sub": "Banquise, base et sapins",
+   "size": 340
+  },
+  {
+   "file": "10-world.jpg",
+   "name": "Monde",
+   "sub": "Toutes les zones sur une seule carte",
+   "size": 1296
+  },
+  {
+   "file": "11-room.jpg",
+   "name": "Chambre géante",
+   "sub": "Tu fais la taille d’un jouet",
+   "size": 159
+  },
+  {
+   "file": "12-mine.jpg",
+   "name": "Mine",
+   "sub": "Galeries, rails et wagonnets",
+   "size": 139
+  }
+ ]
+}

@@ -1,0 +1,60 @@
+name: Road map Discord
+
+# Poste les vues de dessus des maps (dossier roadmap/) dans le salon « road maps » du Discord.
+# À régler une seule fois : un webhook créé dans ce salon (Paramètres du salon → Intégrations → Webhooks),
+# dont l'URL est rangée dans le secret du dépôt DISCORD_ROADMAP_WEBHOOK. Sans ce secret, rien n'est envoyé.
+# Se lance quand le dossier roadmap/ change, ou à la main (onglet Actions → Road map Discord → Run workflow).
+
+on:
+  push:
+    branches: [main]
+    paths: ['roadmap/**']
+  workflow_dispatch:
+
+jobs:
+  roadmap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Poster les maps
+        env:
+          WEBHOOK: ${{ secrets.DISCORD_ROADMAP_WEBHOOK }}
+        run: |
+          if [ -z "$WEBHOOK" ]; then echo "Secret DISCORD_ROADMAP_WEBHOOK absent : rien n'est posté."; exit 0; fi
+          python3 - <<'PY'
+          import json, os, time, uuid, urllib.request
+          hook = os.environ['WEBHOOK']
+          data = json.load(open('roadmap/maps.json'))
+          RED = 0xE3261B
+          site = 'https://haze15.github.io/velocite/'
+
+          def post(payload, files):
+              # multipart : payload_json + fichiers (les embeds les citent avec attachment://nom)
+              b = uuid.uuid4().hex; parts = []
+              parts.append(f'--{b}\r\nContent-Disposition: form-data; name="payload_json"\r\nContent-Type: application/json\r\n\r\n'.encode() + json.dumps(payload).encode() + b'\r\n')
+              for i, (name, path) in enumerate(files):
+                  parts.append(f'--{b}\r\nContent-Disposition: form-data; name="files[{i}]"; filename="{name}"\r\nContent-Type: image/jpeg\r\n\r\n'.encode() + open(path, 'rb').read() + b'\r\n')
+              parts.append(f'--{b}--\r\n'.encode())
+              req = urllib.request.Request(hook + ('&' if '?' in hook else '?') + 'wait=true', data=b''.join(parts),
+                                           headers={'Content-Type': f'multipart/form-data; boundary={b}', 'User-Agent': 'velocite-roadmap-bot'})
+              with urllib.request.urlopen(req) as r: print('envoyé', r.status)
+              time.sleep(2)
+
+          who = {'username': 'Vélocité', 'avatar_url': site + 'assets/discord-logo.png'}
+          # 1) présentation + planche des 12 maps
+          post(dict(who, embeds=[{
+              'author': {'name': 'ROAD MAP'},
+              'title': '🗺️ Les 12 maps de Vélocité, vues de dessus',
+              'url': site,
+              'description': 'Rendus directement avec le moteur du jeu.\nCanyon vient d’être entièrement refaite ; les autres maps suivent une par une.\n\n🎮 **[Jouer dans le navigateur](' + site + ')**',
+              'color': RED,
+              'image': {'url': 'attachment://00-toutes.jpg'},
+          }]), [('00-toutes.jpg', 'roadmap/maps/00-toutes.jpg')])
+          # 2) chaque map en grand, 4 par message
+          maps = data['maps']
+          for k in range(0, len(maps), 4):
+              chunk = maps[k:k + 4]
+              embeds = [{'title': f"{k + i + 1:02d} · {m['name']}", 'description': f"{m['sub']}\n{m['size']} × {m['size']} m",
+                         'color': RED, 'image': {'url': 'attachment://' + m['file']}} for i, m in enumerate(chunk)]
+              post(dict(who, embeds=embeds), [(m['file'], 'roadmap/maps/' + m['file']) for m in chunk])
+          PY
