@@ -7321,7 +7321,7 @@ function hostRecv(from, m) {
   else if (m.k === 'portal' && vec3Of(m.a) && vec3Of(m.b)) broadcast({ k: 'portal', a: vec3Of(m.a), b: vec3Of(m.b), o: from }, from);
   else if (m.k === 'fx' && typeof m.t === 'string' && FX_OK[m.t] && vec3Of(m.p) && (from === NET.selfId || rateOk(pl, 'fx:' + m.t, now))) broadcast({ k: 'fx', t: m.t, o: from, p: vec3Of(m.p), n: num(m.n, -1000, 1000, 0), c: typeof m.c === 'number' && isFinite(m.c) ? (m.c & 0xffffff) : undefined }, from);
   else if (m.k === 'mvcast' && VOTE.id && m.id === VOTE.id && Number.isInteger(m.i) && m.i >= 0 && m.i < VOTE.opts.length) mvCountHost(from, m.i);
-  else if (m.k === 'hit') { if (from !== NET.selfId && obsHitBad(pl, m, now)) obsHostStrike(from, pl, 'hit'); if (hitOk(pl, from, m, now)) sendTo(m.to, { k: 'hit', from, dmg: Math.round(+m.dmg), head: !!m.head, w: m.w | 0, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
+  else if (m.k === 'hit') { if (from !== NET.selfId && obsHitBad(pl, m, now)) obsHostStrike(from, pl, 'hit'); if (hitOk(pl, from, m, now)) { if (from !== NET.selfId) try { obsAim(from, pl, m, now); } catch (e) {} sendTo(m.to, { k: 'hit', from, dmg: Math.round(+m.dmg), head: !!m.head, w: m.w | 0, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); } }
   else if (m.k === 'dead') {
     // une mort compte pour celui qui a porté le dernier coup relayé par l'hôte (sinon : mort sans crédit, environnement)
     pl.deaths++; pl.deadT = now + 2500;
@@ -11471,11 +11471,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.07';
+const GAME_VERSION = '2026.12.08';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Obsidian, l’anti-triche de Vélocité, vérifie le jeu à chaque démarrage puis pendant toute la partie', 'Détecte la vitesse du jeu modifiée (speedhack), le code trafiqué, les scripts de triche injectés et les crédits modifiés à la main', 'En ligne, l’hôte repère les déplacements et les dégâts impossibles : le tricheur est retiré de la partie et signalé aux admins'],
-  en: ['Obsidian, Vélocité’s anti-cheat, checks the game at every launch and during the whole match', 'Detects modified game speed (speedhack), tampered code, injected cheat scripts and hand-edited credits', 'Online, the host spots impossible movement and damage: the cheater is removed from the match and reported to admins']
+  fr: ['Obsidian détecte maintenant les DLL injectées et les programmes de triche ouverts (Cheat Engine, injecteurs…) dans l’appli PC', 'Aimbot : souris / clavier simulés par un script, visée qui « snappe » pile sur la cible, taux de tirs à la tête anormal', 'Wallhack : joueurs affichés à travers les murs, moteur 3D trafiqué, tirs qui touchent à travers les murs'],
+  en: ['Obsidian now detects injected DLLs and open cheat programs (Cheat Engine, injectors…) in the PC app', 'Aimbot: mouse / keyboard simulated by a script, aim that snaps right onto the target, abnormal headshot rate', 'Wallhack: players drawn through walls, tampered 3D engine, shots that hit through walls']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -19653,10 +19653,11 @@ function obsScriptBad(el) { const src = el.getAttribute && el.getAttribute('src'
 // hors des versions officielles (site, exe, appli, test local), la page peut être enveloppée par un aperçu qui ajoute ses propres scripts
 const OBS_HOME = /(^|\.)github\.io$|^127\.0\.0\.1$|^localhost$|^appassets\.androidplatform\.net$/.test(location.hostname);
 function obsScriptsOk() { if (!OBS_HOME) return ''; for (const el of document.querySelectorAll('script[src]')) if (obsScriptBad(el)) return el.getAttribute('src').slice(0, 60); return ''; }
+const obsWhy = why => { const k = why.split(':')[0], d = why.slice(k.length + 1); return t('obs.w.' + k) + ((k === 'dll' || k === 'tool') && d ? ' — ' + d : ''); };
 function obsFlag(why) {
   if (OBS.flags.includes(why)) return;
   OBS.flags.push(why); OBS.log.push({ at: Date.now(), why });
-  try { toast(t('obs.flag', { why: t('obs.w.' + why.split(':')[0]) }), 6); } catch (e) {}
+  try { toast(t('obs.flag', { why: obsWhy(why) }), 6); } catch (e) {}
   obsEnforce();
 }
 // en ligne avec une triche détectée : on prévient l'hôte puis on quitte (l'hôte s'en charge aussi de son côté)
@@ -19684,10 +19685,41 @@ setInterval(() => {
     if (OBS.flags.length && NET.mode !== 'off') obsEnforce();
   } catch (e) {}
 }, 1000);
+/* --- aimbot / macro : souris et clavier simulés par un script (le jeu n'en crée jamais) --- */
+for (const ev of ['mousemove', 'mousedown', 'mouseup', 'keydown', 'keyup', 'pointerdown', 'pointermove', 'wheel', 'touchstart', 'touchmove'])
+  window.addEventListener(ev, e => { if (!e.isTrusted) obsFlag('input'); }, { capture: true, passive: true });
+/* --- three.js : un aimbot / ESP doit s'accrocher au moteur pour lire la position des joueurs --- */
+const OBS_THREE = [['WebGLRenderer.render', THREE.WebGLRenderer.prototype, 'render'], ['Object3D.updateMatrixWorld', THREE.Object3D.prototype, 'updateMatrixWorld'], ['Object3D.add', THREE.Object3D.prototype, 'add'], ['Raycaster.intersectObjects', THREE.Raycaster.prototype, 'intersectObjects'], ['Mesh.raycast', THREE.Mesh.prototype, 'raycast'], ['Matrix4.multiplyMatrices', THREE.Matrix4.prototype, 'multiplyMatrices'], ['Vector3.project', THREE.Vector3.prototype, 'project']].map(([n, o, k]) => [n, o, k, o[k]]);
+function obsThreeOk() { for (const [n, o, k, f] of OBS_THREE) if (o[k] !== f) return n; return ''; }
+/* --- wallhack : joueurs adverses rendus à travers les murs (hors effets du jeu : scan, lueur des alliés) --- */
+function obsWallOk() {
+  if (xUnlocked) return true;
+  let bad = false;
+  for (const rp of remotes.values()) if (rp.g) rp.g.traverse(o => {
+    if (bad || !o.material || (o.userData && o.userData.glowCopy)) return;
+    for (const mt of Array.isArray(o.material) ? o.material : [o.material]) if (mt && (mt.depthTest === false || mt.depthFunc === THREE.AlwaysDepth)) bad = true;
+  });
+  return !bad;
+}
+/* --- DLL injectées / programmes de triche : seulement dans l'appli Windows (le navigateur ne peut pas voir le PC) --- */
+const OBS_APP = !!window.__VELOCITE_APP && location.hostname === '127.0.0.1';
+async function obsAppScan() {
+  if (!OBS_APP) return null;
+  try { const r = await fetch('/__obs', { cache: 'no-store' }); if (!r.ok) return null; const j = await r.json(); return j && j.done ? j : null; } catch (e) { return null; }
+}
+function obsAppApply(j) { if (!j) return; for (const m of j.mods || []) obsFlag('dll:' + String(m).slice(0, 40)); for (const n of j.tools || []) obsFlag('tool:' + String(n).slice(0, 40)); }
+if (OBS_APP) setInterval(() => { obsAppScan().then(obsAppApply); }, 5000);
+setInterval(() => { try { const n = obsThreeOk(); if (n) obsFlag('native:THREE.' + n); if (!obsWallOk()) obsFlag('wall'); } catch (e) {} }, 1000);
 try { new MutationObserver(ms => { if (!OBS_HOME) return; for (const m of ms) for (const nd of m.addedNodes) if (nd.tagName === 'SCRIPT' && obsScriptBad(nd)) obsFlag('script'); }).observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
 /* --- côté hôte --- */
-function obsHostStrike(from, pl, why, hard) {
+function obsHostStrike(from, pl, why, hard, soft) {
   if (!pl || pl.admin) return;
+  if (soft) {   // soupçon statistique : signalé aux admins (1 fois par minute et par motif), jamais expulsé automatiquement
+    const r = pl.obsSoft || (pl.obsSoft = {}), n = Date.now(); if (r[why] && n - r[why] < 60000) return; r[why] = n;
+    hostReport('obsidian', { from: 'Obsidian', target: pl.name, reason: 'cheat', text: 'Obsidian : ' + t('obs.w.' + why) + ' ' + t('obs.soft') });
+    if (xUnlocked || ADM.granted) toast(t('obs.hostSus', { name: pl.name, why: t('obs.w.' + why) }), 5);
+    return;
+  }
   pl.obsN = (pl.obsN || 0) + 1;
   const now = Date.now(); if (pl.obsLast && now - pl.obsLast < 4000 && !hard) return; pl.obsLast = now;
   hostReport('obsidian', { from: 'Obsidian', target: pl.name, reason: 'cheat', text: 'Obsidian : ' + t('obs.w.' + (why.startsWith('client:') ? why.slice(7).split(':')[0] : why)) });
@@ -19696,6 +19728,7 @@ function obsHostStrike(from, pl, why, hard) {
 }
 // vitesse horizontale > 150 m/s tenue plus de 1,5 s, hors véhicule / passager / mort / spectateur (téléportations ponctuelles ignorées)
 function obsMove(from, pl, s, now) {
+  const yh = pl.obsY || (pl.obsY = []); yh.push({ t: now, y: s.y, pi: s.pi }); if (yh.length > 10) yh.shift();
   const o = pl.st, dtm = now - (pl.obsT || 0); pl.obsT = now;
   if (pl.admin || !o || o.dead || s.dead || s.vh || s.pv || s.spec || o.vh || o.pv || dtm < 25 || dtm > 400) return;
   const sp = Math.hypot(s.p[0] - o.p[0], s.p[2] - o.p[2]) / (dtm / 1000);
@@ -19711,6 +19744,35 @@ function obsHitBad(pl, m, now) {
   if (pl.obsHit >= 12) { pl.obsHit = 0; return true; }
   return false;
 }
+/* aimbot / wallhack vus par l'hôte, sur les coups de feu des armes à balles (0 à 4) :
+   - tirs qui touchent à travers un mur plein (plus de la moitié sur 15 coups) → wallhack
+   - plus de 85 % de coups à la tête sur 40 coups, ou 6 « snaps » (visée qui saute de plus de 45° en ~0,1 s
+     pour tomber pile sur la cible) → aimbot */
+const OBS_RC = new THREE.Raycaster(), _obA = new THREE.Vector3(), _obB = new THREE.Vector3(), _obD = new THREE.Vector3();
+const obsDir = (y, pi, v) => v.set(-Math.sin(y) * Math.cos(pi), Math.sin(pi), -Math.cos(y) * Math.cos(pi));
+const _obV1 = new THREE.Vector3(), _obV2 = new THREE.Vector3();
+function obsAim(from, pl, m, now) {
+  if (pl.admin || m.kt || (m.w | 0) > 4) return;
+  const tg = NET.players.get(m.to), a = pl.st, b = tg && tg.st; if (!a || !b || a.vh || a.pv) return;
+  const A = pl.obsA || (pl.obsA = { hits: 0, heads: 0, los: 0, snaps: 0 });
+  A.hits++; if (m.head) A.heads++;
+  _obA.set(a.p[0], a.p[1] + (a.a === 'crouch' || a.a === 'slide' ? 1.0 : 1.55), a.p[2]);
+  _obB.set(b.p[0], b.p[1] + (m.head ? 1.6 : 1.1), b.p[2]);
+  const dist = _obA.distanceTo(_obB); _obD.subVectors(_obB, _obA).normalize();
+  if (dist > 4 && WORLD.length) {
+    OBS_RC.set(_obA, _obD); OBS_RC.far = dist - 1.2;
+    const h = OBS_RC.intersectObjects(WORLD, false).find(x => x.object.visible !== false && !(x.object.material && x.object.material.transparent));
+    if (h) A.los++;
+  }
+  const yh = pl.obsY || [], old = yh.find(q => now - q.t >= 80 && now - q.t <= 260);
+  if (old && dist > 6) {
+    const turn = obsDir(old.y, old.pi, _obV1).angleTo(obsDir(a.y, a.pi, _obV2));
+    if (turn > 0.785 && _obV2.angleTo(_obD) < 0.07) A.snaps++;
+  }
+  if (A.hits >= 15 && A.los / A.hits > 0.5) { obsHostStrike(from, pl, 'wall', false, true); A.los = 0; }
+  if (A.snaps >= 6) { obsHostStrike(from, pl, 'aim', false, true); A.snaps = 0; }
+  if (A.hits >= 40) { if (A.heads / A.hits > 0.85) obsHostStrike(from, pl, 'aim', false, true); A.hits = A.heads = A.los = 0; A.snaps = Math.max(0, A.snaps - 2); }
+}
 /* --- écran de démarrage --- */
 (function obsBoot() {
   const box = $('obsBoot'); if (!box) return;
@@ -19719,7 +19781,8 @@ function obsHitBad(pl, m, now) {
   const p0 = performance.now(), d0 = Date.now();
   const steps = [
     ['obs.c.code', () => { const n = obsNativeOk(); if (n) { obsFlag('native:' + n); return false; } return true; }],
-    ['obs.c.scripts', () => { if (obsScriptsOk()) { obsFlag('script'); return false; } return true; }],
+    ['obs.c.scripts', () => { if (obsScriptsOk() || obsThreeOk()) { if (obsScriptsOk()) obsFlag('script'); else obsFlag('native:THREE.' + obsThreeOk()); return false; } return true; }],
+    ...(OBS_APP ? [['obs.c.dll', async () => { let j = null; for (let k = 0; k < 8 && !j; k++) { j = await obsAppScan(); if (!j) await new Promise(r => setTimeout(r, 250)); } obsAppApply(j); return !j || (!(j.mods || []).length && !(j.tools || []).length); }]] : []),
     ['obs.c.save', () => { if (OBS.boot.includes('save')) { OBS.log.push({ at: Date.now(), why: 'save' }); return false; } return true; }],
     ['obs.c.clock', () => { const dd = Date.now() - d0, r = dd > 300 ? (performance.now() - p0) / dd : 1; if (r > 1.3) { obsFlag('speed'); return false; } return true; }],
     ['obs.c.net', () => true],
@@ -19727,7 +19790,8 @@ function obsHitBad(pl, m, now) {
   let i = 0, bad = [];
   const next = () => {
     if (i >= steps.length) return done();
-    const [k, fn] = steps[i]; let ok = true; try { ok = fn(); } catch (e) {}
+    const [k, fn] = steps[i]; let ok; try { ok = fn(); } catch (e) { ok = true; }
+    if (ok && typeof ok.then === 'function') { ok.then(v => { steps[i] = [k, () => v]; next(); }, () => { steps[i] = [k, () => true]; next(); }); return; }
     const li = document.createElement('li'); if (!ok) { li.className = 'bad'; bad.push(k); }
     li.innerHTML = `<b>${ok ? '✓' : '✕'}</b><span></span>`; li.querySelector('span').textContent = ok ? t(k) : t(k.replace('obs.c.', 'obs.x.'));
     ul.append(li); i++; bar.style.width = (100 * i / steps.length) + '%';
@@ -19748,6 +19812,7 @@ Object.assign(I18N.fr, {
   'obs.bootBad': 'Obsidian a détecté une triche. Tu peux jouer en solo, mais sans crédits et sans jeu en ligne tant qu’elle est active.', 'obs.saveReset': 'Ta sauvegarde boutique a été modifiée à la main : crédits, skins achetés et jeton ont été remis à zéro.', 'obs.continue': 'Continuer',
   'obs.flag': 'Obsidian : triche détectée ({why}). Crédits et jeu en ligne bloqués.', 'obs.blocked': 'Obsidian : jeu en ligne bloqué (triche détectée).', 'obs.kicked': 'Retiré de la partie par Obsidian (triche détectée).',
   'obs.hostSaw': 'Obsidian : {name} retiré / signalé ({why}).',
+  'obs.c.dll': 'Aucune DLL injectée ni programme de triche', 'obs.x.dll': 'DLL injectée ou programme de triche ouvert', 'obs.w.dll': 'DLL injectée', 'obs.w.tool': 'programme de triche ouvert', 'obs.w.input': 'souris / clavier simulés (aimbot ou macro)', 'obs.w.wall': 'wallhack', 'obs.w.aim': 'aimbot', 'obs.soft': '(soupçon : visée ou tirs anormaux, à vérifier)', 'obs.hostSus': 'Obsidian soupçonne {name} : {why}. Voir les signalements.',
   'obs.w.speed': 'vitesse du jeu modifiée', 'obs.w.native': 'code du jeu modifié', 'obs.w.script': 'script de triche injecté', 'obs.w.save': 'sauvegarde modifiée', 'obs.w.move': 'déplacement impossible', 'obs.w.hit': 'dégâts impossibles',
 });
 Object.assign(I18N.en, {
@@ -19755,6 +19820,7 @@ Object.assign(I18N.en, {
   'obs.bootBad': 'Obsidian detected cheating. You can play solo, but with no credits and no online play while it is active.', 'obs.saveReset': 'Your shop save was edited by hand: credits, bought skins and token were reset.', 'obs.continue': 'Continue',
   'obs.flag': 'Obsidian: cheat detected ({why}). Credits and online play blocked.', 'obs.blocked': 'Obsidian: online play blocked (cheat detected).', 'obs.kicked': 'Removed from the match by Obsidian (cheat detected).',
   'obs.hostSaw': 'Obsidian: {name} removed / reported ({why}).',
+  'obs.c.dll': 'No injected DLL or cheat program', 'obs.x.dll': 'Injected DLL or cheat program open', 'obs.w.dll': 'injected DLL', 'obs.w.tool': 'cheat program open', 'obs.w.input': 'simulated mouse / keyboard (aimbot or macro)', 'obs.w.wall': 'wallhack', 'obs.w.aim': 'aimbot', 'obs.soft': '(suspicion: abnormal aim or shots, to check)', 'obs.hostSus': 'Obsidian suspects {name}: {why}. See reports.',
   'obs.w.speed': 'game speed modified', 'obs.w.native': 'game code modified', 'obs.w.script': 'cheat script injected', 'obs.w.save': 'save edited', 'obs.w.move': 'impossible movement', 'obs.w.hit': 'impossible damage',
 });
 

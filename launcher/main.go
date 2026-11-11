@@ -55,6 +55,9 @@ func main() {
 		w.WriteHeader(http.StatusNoContent)
 	})
 	mux.HandleFunc("/__presence", presenceHandler)
+	mux.HandleFunc("/__obs", obsHandler)
+	go obsRun()
+	cheatRoutes(mux)
 	go rp.run()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" || r.URL.Path == "/index.html" {

@@ -1,4 +1,4 @@
-/* Triche de test pour Obsidian — à coller dans la console (F12 → Console) sur le site de Vélocité.
+/* Triche de test pour Obsidian — intégrée à Velocite-TricheTest.exe, ou à coller dans la console (F12 → Console) sur le site.
    Un petit panneau apparaît en haut à droite : chaque bouton déclenche une triche différente.
    Recharge la page (F5) pour tout annuler (sauf « Crédits », qui est justement remis à zéro par Obsidian). */
 (() => {
@@ -40,6 +40,28 @@
     localStorage.setItem('velocite_goldToken', 'true');
     setTimeout(() => location.reload(), 300);
   });
+
+  // 5. Aimbot : déplace la souris à la place du joueur (événements simulés)
+  btn('Aimbot (souris simulée)', () => {
+    let n = 0; const id = setInterval(() => { window.dispatchEvent(new MouseEvent('mousemove', { movementX: 4, movementY: 0 })); if (++n > 30) clearInterval(id); }, 16);
+  });
+
+  // 6. Wallhack / ESP : s'accroche au moteur 3D pour voir les joueurs à travers les murs
+  btn('Wallhack (ESP)', () => {
+    const r = THREE.WebGLRenderer.prototype.render;
+    THREE.WebGLRenderer.prototype.render = function (scene, cam) {
+      scene.traverse(o => { if (o.isSkinnedMesh && o.material) o.material.depthTest = false; });
+      return r.call(this, scene, cam);
+    };
+  });
+
+  // 7 et 8. Seulement dans Velocite-TricheTest.exe : vraie DLL chargée depuis %TEMP%, faux Cheat Engine ouvert
+  const app = (path, label) => btn(label, () => {
+    if (!window.__VELOCITE_APP) throw new Error('seulement dans l’exe de test');
+    fetch(path, { cache: 'no-store' }).then(r => { if (!r.ok) throw new Error('échec ' + r.status); });
+  });
+  app('/__cheat/dll', 'Injecter une DLL');
+  app('/__cheat/tool', 'Ouvrir « Cheat Engine »');
 
   document.body.append(box);
 })();
