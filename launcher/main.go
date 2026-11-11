@@ -26,6 +26,14 @@ import (
 //go:embed game
 var gameFS embed.FS
 
+// Version « triche de test » pour essayer Obsidian (construite avec -X main.cheatTest=1) :
+// même jeu, avec le panneau de triche injecté, sur un autre port et un autre dossier de données,
+// donc la vraie sauvegarde du joueur n'est jamais touchée.
+var cheatTest = ""
+
+//go:embed cheat/triche.js
+var cheatJS string
+
 // dernier signe de vie envoyé par la page (secondes Unix)
 var lastPing atomic.Int64
 
@@ -59,7 +67,11 @@ func main() {
 	})
 
 	// port fixe pour garder les réglages (le stockage du navigateur dépend du port)
-	ln, err := net.Listen("tcp", "127.0.0.1:47321")
+	port := "47321"
+	if cheatTest == "1" {
+		port = "47399"
+	}
+	ln, err := net.Listen("tcp", "127.0.0.1:"+port)
 	if err != nil {
 		ln, err = net.Listen("tcp", "127.0.0.1:0")
 		if err != nil {
@@ -96,6 +108,10 @@ func patchPage(html string) string {
 	beat := "<script>(function(){function b(){fetch('/__alive',{cache:'no-store'}).catch(function(){})}b();setInterval(b,5000)})();</script>\n</body>"
 	// signale à la page qu'elle tourne dans l'appli (statut Discord disponible)
 	html = strings.Replace(html, "<script>\n(() => {", "<script>window.__VELOCITE_APP=1;</script>\n<script>\n(() => {", 1)
+	if cheatTest == "1" {
+		// le panneau arrive 3 s après le chargement, comme une triche lancée en cours de jeu
+		beat = "<script>setTimeout(function(){\n" + cheatJS + "\n},3000);</script>\n" + beat
+	}
 	return strings.Replace(html, "</body>", beat, 1)
 }
 
@@ -110,13 +126,17 @@ func wantsBrowser() bool {
 
 // Fenêtre propre au jeu, agrandie à l'ouverture ; renvoie false si WebView2 est absent.
 func runWindow(url string) bool {
-	data := filepath.Join(os.Getenv("LOCALAPPDATA"), "Velocite", "webview")
+	dir, title := "webview", "Vélocité"
+	if cheatTest == "1" {
+		dir, title = "webview-triche-test", "Vélocité — TRICHE DE TEST (Obsidian)"
+	}
+	data := filepath.Join(os.Getenv("LOCALAPPDATA"), "Velocite", dir)
 	_ = os.MkdirAll(data, 0o755)
 	w := webview2.NewWithOptions(webview2.WebViewOptions{
 		AutoFocus: true,
 		DataPath:  data,
 		WindowOptions: webview2.WindowOptions{
-			Title: "Vélocité", Width: 1600, Height: 900, Center: true, IconId: iconID(),
+			Title: title, Width: 1600, Height: 900, Center: true, IconId: iconID(),
 		},
 	})
 	if w == nil {
