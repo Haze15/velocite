@@ -19650,7 +19650,9 @@ function obsNativeOk() { for (const [n, f] of OBS_NATIVE()) if (f && !obsIsNativ
 const OBS_HOSTS = [location.host, 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'appassets.androidplatform.net'];
 // les scripts des extensions du navigateur (bloqueurs de pub, gestionnaires de mots de passe…) ne sont jamais signalés
 function obsScriptBad(el) { const src = el.getAttribute && el.getAttribute('src'); if (!src) return false; try { const u = new URL(src, location.href); return !/^(data|blob|chrome-extension|moz-extension|safari-web-extension|edge-extension):$/.test(u.protocol) && !OBS_HOSTS.includes(u.host); } catch (e) { return true; } }
-function obsScriptsOk() { for (const el of document.querySelectorAll('script[src]')) if (obsScriptBad(el)) return el.getAttribute('src').slice(0, 60); return ''; }
+// hors des versions officielles (site, exe, appli, test local), la page peut être enveloppée par un aperçu qui ajoute ses propres scripts
+const OBS_HOME = /(^|\.)github\.io$|^127\.0\.0\.1$|^localhost$|^appassets\.androidplatform\.net$/.test(location.hostname);
+function obsScriptsOk() { if (!OBS_HOME) return ''; for (const el of document.querySelectorAll('script[src]')) if (obsScriptBad(el)) return el.getAttribute('src').slice(0, 60); return ''; }
 function obsFlag(why) {
   if (OBS.flags.includes(why)) return;
   OBS.flags.push(why); OBS.log.push({ at: Date.now(), why });
@@ -19682,7 +19684,7 @@ setInterval(() => {
     if (OBS.flags.length && NET.mode !== 'off') obsEnforce();
   } catch (e) {}
 }, 1000);
-try { new MutationObserver(ms => { for (const m of ms) for (const nd of m.addedNodes) if (nd.tagName === 'SCRIPT' && obsScriptBad(nd)) obsFlag('script'); }).observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
+try { new MutationObserver(ms => { if (!OBS_HOME) return; for (const m of ms) for (const nd of m.addedNodes) if (nd.tagName === 'SCRIPT' && obsScriptBad(nd)) obsFlag('script'); }).observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
 /* --- côté hôte --- */
 function obsHostStrike(from, pl, why, hard) {
   if (!pl || pl.admin) return;
