@@ -585,7 +585,7 @@ body.touch .lo-key{display:none}
   <div id="weapon">
     <div class="slots" id="slots"></div>
     <div class="ammo"><b id="ammo">28</b><span id="mag">/ 28</span></div>
-    <div id="wname">CARABINE K-31</div>
+    <div id="wname">NOCTIS</div>
     <div id="reloadBar"><i></i></div>
   </div>
   <div id="modeBar" hidden></div><div id="zombieFx" hidden></div>
@@ -670,7 +670,7 @@ body.touch .lo-key{display:none}
       <div class="charbox">
         <canvas id="charPrev" width="440" height="620" aria-hidden="true"></canvas>
         <div class="charopts">
-          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Soldat</option><option value="xbot" data-i18n="char.xbot">X-Bot</option><option value="nova" data-i18n="char.nova">Nova</option><option value="spectre" data-i18n="char.spectre">Spectre</option><option value="titan" data-i18n="char.titan">Titan</option><option value="lynx" data-i18n="char.lynx">Lynx</option><option value="raven" data-i18n="char.raven">Corbeau</option><option value="custom" hidden>Mon modèle</option></select></label>
+          <label class="field"><span class="lab" data-i18n="set.char">Personnage</span><select id="charSel"><option value="soldier" data-i18n="char.soldier">Kenzai</option><option value="xbot" data-i18n="char.xbot">Xyro</option><option value="nova" data-i18n="char.nova">Akira</option><option value="spectre" data-i18n="char.spectre">Darken</option><option value="titan" data-i18n="char.titan">Vexor</option><option value="lynx" data-i18n="char.lynx">Zephyr</option><option value="raven" data-i18n="char.raven">Nyx</option><option value="custom" hidden>Mon modèle</option></select></label>
           <label class="field"><span class="lab" data-i18n="set.tint">Couleur</span><select id="tintSel"><option value="auto" data-i18n="tint.auto">Auto (couleur de partie)</option><option value="amber" data-i18n="tint.amber">Ambre</option><option value="cyan" data-i18n="tint.cyan">Cyan</option><option value="red" data-i18n="tint.red">Rouge</option><option value="green" data-i18n="tint.green">Vert</option><option value="violet" data-i18n="tint.violet">Violet</option><option value="pink" data-i18n="tint.pink">Rose</option><option value="white" data-i18n="tint.white">Blanc</option><option value="blue" data-i18n="tint.blue">Bleu</option><option value="black" data-i18n="tint.black">Noir</option><option value="orange" data-i18n="tint.orange">Orange</option><option value="yellow" data-i18n="tint.yellow">Jaune</option><option value="mint" data-i18n="tint.mint">Menthe</option><option value="crimson" data-i18n="tint.crimson">Pourpre</option><option value="gold" data-i18n="tint.gold">Doré</option><option value="navy" data-i18n="tint.navy">Marine</option><option value="lime" data-i18n="tint.lime">Citron vert</option><option value="silver" data-i18n="tint.silver">Argent</option></select></label>
           <p class="hint" data-i18n="char.hint">C’est le personnage que les autres joueurs voient en ligne.</p>
           <div class="cmrow"><label class="btn3 cmfile"><span data-i18n="cm.import">Importer mon modèle (.glb)</span><input type="file" id="cmFile" accept=".glb,model/gltf-binary"></label><span id="cmInfo"></span><label class="check"><input type="checkbox" id="cmFlip"> <span data-i18n="cm.flip">Tourner de 180°</span></label><button class="btn3" id="cmClear" type="button" data-i18n="cm.clear">Retirer</button></div>
@@ -5514,12 +5514,12 @@ function updateDummy(d, dt) {
 
 /* ================= Armes ================= */
 const WEAPONS = [
-  { name: 'CARABINE K-31', short: 'CARABINE', auto: true, rpm: 780, mag: 28, reload: 1.9, dmg: 14, head: 1.75, legs: 0.8, pellets: 1, hip: 0.9, ads: 0.04, bloom: 0.12, rv: 0.30, rh: 0.12, zoom: 0.8, kick: 0.025, kickRot: 0.05, move: 1 },
-  { name: 'MITRAILLETTE VX', short: 'MITRAILL.', auto: true, rpm: 950, mag: 24, reload: 1.8, dmg: 9, head: 1.35, legs: 0.8, pellets: 1, hip: 1.5, ads: 0.2, bloom: 0.09, rv: 0.22, rh: 0.24, zoom: 0.88, kick: 0.016, kickRot: 0.035, move: 0.55 },
-  { name: 'POMPE KS-8', short: 'POMPE', auto: false, rpm: 82, mag: 6, reload: 2.0, dmg: 13, head: 1.6, legs: 0.95, pellets: 9, hip: 3.1, ads: 2.1, bloom: 0, rv: 2.6, rh: 0.6, zoom: 0.88, kick: 0.09, kickRot: 0.22, move: 0.8 },
-  { name: 'ÉPERVIER .50', short: 'SNIPER', auto: false, rpm: 46, mag: 5, reload: 2.6, dmg: 85, head: 2.1, legs: 0.8, pellets: 1, hip: 6, ads: 0.02, bloom: 0, rv: 3.4, rh: 0.4, zoom: 0.27, kick: 0.12, kickRot: 0.3, move: 1.4, scope: true },
-  { name: 'PISTOLET HX', short: 'PISTOLET', auto: false, rpm: 420, mag: 14, reload: 1.2, dmg: 18, head: 1.6, legs: 0.85, pellets: 1, hip: 0.8, ads: 0.12, bloom: 0.25, rv: 0.9, rh: 0.15, zoom: 0.85, kick: 0.03, kickRot: 0.12, move: 0.7 },
-  { name: 'COUTEAU', short: 'COUTEAU', melee: true, auto: true, rpm: 115, mag: 1, reload: 0, dmg: 50, head: 1.5, legs: 1, pellets: 1, hip: 0, ads: 0, bloom: 0, rv: 0, rh: 0, zoom: 1, kick: 0, kickRot: 0, move: 0, range: 2.7 },
+  { name: 'NOCTIS', short: 'CARABINE', auto: true, rpm: 780, mag: 28, reload: 1.9, dmg: 14, head: 1.75, legs: 0.8, pellets: 1, hip: 0.9, ads: 0.04, bloom: 0.12, rv: 0.30, rh: 0.12, zoom: 0.8, kick: 0.025, kickRot: 0.05, move: 1 },
+  { name: 'ERYNN', short: 'MITRAILL.', auto: true, rpm: 950, mag: 24, reload: 1.8, dmg: 9, head: 1.35, legs: 0.8, pellets: 1, hip: 1.5, ads: 0.2, bloom: 0.09, rv: 0.22, rh: 0.24, zoom: 0.88, kick: 0.016, kickRot: 0.035, move: 0.55 },
+  { name: 'VELKAN', short: 'POMPE', auto: false, rpm: 82, mag: 6, reload: 2.0, dmg: 13, head: 1.6, legs: 0.95, pellets: 9, hip: 3.1, ads: 2.1, bloom: 0, rv: 2.6, rh: 0.6, zoom: 0.88, kick: 0.09, kickRot: 0.22, move: 0.8 },
+  { name: 'LUNARIS', short: 'SNIPER', auto: false, rpm: 46, mag: 5, reload: 2.6, dmg: 85, head: 2.1, legs: 0.8, pellets: 1, hip: 6, ads: 0.02, bloom: 0, rv: 3.4, rh: 0.4, zoom: 0.27, kick: 0.12, kickRot: 0.3, move: 1.4, scope: true },
+  { name: 'SYLAS', short: 'PISTOLET', auto: false, rpm: 420, mag: 14, reload: 1.2, dmg: 18, head: 1.6, legs: 0.85, pellets: 1, hip: 0.8, ads: 0.12, bloom: 0.25, rv: 0.9, rh: 0.15, zoom: 0.85, kick: 0.03, kickRot: 0.12, move: 0.7 },
+  { name: 'AZIEL', short: 'COUTEAU', melee: true, auto: true, rpm: 115, mag: 1, reload: 0, dmg: 50, head: 1.5, legs: 1, pellets: 1, hip: 0, ads: 0, bloom: 0, rv: 0, rh: 0, zoom: 1, kick: 0, kickRot: 0, move: 0, range: 2.7 },
   { name: 'SPÉCIALE', short: 'SPÉCIALE', special: null, auto: false, rpm: 60, mag: 1, reload: 0, dmg: 0, head: 1, legs: 1, pellets: 1, hip: 1, ads: 0.1, bloom: 0, rv: 0, rh: 0, zoom: 1, kick: 0, kickRot: 0, move: 1 }
 ];
 // armes spéciales : on les trouve au sol, munitions limitées, pas de rechargement
@@ -11428,11 +11428,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.03';
+const GAME_VERSION = '2026.12.04';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Panneau admin : « Donner » donne bien l’arme choisie (la liste revenait toute seule à la carabine toutes les 2 secondes)'],
-  en: ['Admin panel: « Give » now gives the weapon you picked (the list kept jumping back to the carbine every 2 seconds)']
+  fr: ['Les personnages ont de nouveaux noms : Kenzai, Xyro, Akira, Darken, Vexor, Zephyr, Nyx et Kaizen', 'Les armes aussi : carabine Noctis, mitraillette Erynn, pompe Velkan, sniper Lunaris, pistolet Sylas, couteau Aziel, railgun Aether et fusil à plasma Nythera'],
+  en: ['Characters have new names: Kenzai, Xyro, Akira, Darken, Vexor, Zephyr, Nyx and Kaizen', 'So do weapons: Noctis carbine, Erynn SMG, Velkan shotgun, Lunaris sniper, Sylas pistol, Aziel knife, Aether railgun and Nythera plasma rifle']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -18850,6 +18850,18 @@ for (const L of ['af', 'zu']) if (I18N[L]) Object.assign(I18N[L], { 'em.moonwalk
   const pre = () => { for (const id of MOCAP_IDS) mocapGet(id); };
   new MutationObserver(() => { if (!emoteWheel.hidden) pre(); }).observe(emoteWheel, { attributes: true, attributeFilter: ['hidden'] });
   setTimeout(pre, 10000);
+}
+
+/* ================= Noms des personnages et des armes (choisis par le créateur du jeu) ================= */
+{
+  const CH = { 'char.soldier': 'Kenzai', 'char.xbot': 'Xyro', 'char.nova': 'Akira', 'char.spectre': 'Darken', 'char.titan': 'Vexor', 'char.lynx': 'Zephyr', 'char.raven': 'Nyx', 'char.anchor': 'Kaizen', 'char.robot': 'Zyrox', 'char.skel': 'Ryven' };
+  const WN = { w0: 'NOCTIS', w1: 'ERYNN', w2: 'VELKAN', w3: 'LUNARIS', w4: 'SYLAS', w5: 'AZIEL', 'sp.railgun': 'Aether', 'sp.plasma': 'Nythera' };
+  for (const L of Object.keys(I18N)) {
+    Object.assign(I18N[L], CH, WN);
+    const adm = L === 'fr' ? n => n + ' admin' : n => 'Admin ' + n;
+    Object.assign(I18N[L], { 'char.xadm': adm('Xyro'), 'char.tadm': adm('Vexor'), 'char.sadm': adm('Darken') });
+  }
+  try { applyI18n(); } catch (e) {}
 }
 
 /* ================= Menu façon Fortnite : barre du haut (logo, onglets, niveau, admin, langue), bouton Jouer sous le personnage ================= */
