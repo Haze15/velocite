@@ -536,6 +536,193 @@ body:not(.touch) .lo-key{display:inline}
 body.touch .lo-key{display:none}
 @media (max-width:600px){.lo-box{padding:18px 14px 16px}.lo-box h2{font-size:26px}.lo-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}.lo-foot .btn{width:100%;margin-left:0}}
 </style>
+<style id="vx-theme-css">
+/* ================= Thème « Vélocité » pour tous les menus =================
+   Même direction que le menu principal : noir profond, rouge, orange brûlé ; angles vifs, aplats, typo condensée.
+   Ce bloc ne fait que de l'habillage (aucune mise en page fonctionnelle n'est retirée) et il est placé
+   en dernier dans <head> au démarrage pour passer après les styles des modules. */
+#menu,#loadout,#news,#lobbyUI,#admLogin,#admPanel,#voteBox,#updBar,#specBar{
+  --amber:#E3261B;--amber-hi:#D9571E;--ink:#ECE6DC;--ink-dim:rgba(236,230,220,.62);--ink-faint:rgba(236,230,220,.12);--night:#0D0D0F;
+  --glass:rgba(13,13,15,.9);--glass-b:rgba(236,230,220,.12);
+  --vx-red:#E3261B;--vx-orange:#D9571E;--vx-panel:#0D0D0F;--vx-panel2:#141417;--vx-line:rgba(236,230,220,.12);--vx-mute:#8C867D;--vx-dim:#57534D;--vx-black:#09090A
+}
+/* --- fond du menu : un voile plat, plus de halos animés --- */
+#menu{background:rgba(9,9,10,.86)}
+#menu::before{display:none}
+#menu.lobby{background:rgba(9,9,10,.22)}
+/* --- pas d'animation permanente dans les menus : halos, reflets, pulsations, particules et flottement coupés --- */
+#menuFx{display:none}
+#menu #play{animation:none!important;box-shadow:none!important}
+#menu .streak i,#menu .stage .stagebox{animation:none!important}
+#menu .logo{background:none;-webkit-background-clip:border-box;background-clip:border-box;color:var(--ink);animation:none!important}
+/* --- barre du haut --- */
+#fnTop{background:#0B0B0C;box-shadow:none;border-bottom:1px solid var(--vx-line)}
+#fnTop .fnLogo{font:800 26px/1 var(--f-display);letter-spacing:-.01em;transform:skewX(-7deg);color:var(--ink)}
+#fnTop .fnLogo .streak i{background:var(--vx-red)}#fnTop .fnLogo .streak i:nth-child(2){background:var(--vx-orange)}#fnTop .fnLogo .streak i:nth-child(3){background:var(--vx-dim)}
+#fnTop .fnLogo:hover{color:#fff}
+#fnTop .tabs button{font:700 14px/1 var(--f-display);letter-spacing:.12em;color:var(--vx-mute);background:none}
+#fnTop .tabs button:hover{color:var(--ink);background:none}
+#fnTop .tabs button[aria-selected="true"]{color:var(--ink);background:none}
+#fnTop .tabs button[aria-selected="true"]::after{left:11px;right:11px;height:3px;border-radius:0;background:var(--vx-red)}
+#fnTop #admMenuBtn{border-radius:0;border:1px solid var(--vx-line);background:transparent;color:var(--ink)}
+#fnTop #admMenuBtn:hover{border-color:var(--vx-red);background:transparent}
+#crChip{border-radius:0;background:transparent;border:1px solid var(--vx-line);color:var(--ink)}
+#crChip span{border-radius:0;background:var(--vx-orange);color:var(--vx-black);box-shadow:none}
+#crChip:hover{border-color:var(--vx-orange)}
+#crChip.tok{border-color:var(--vx-orange);background:rgba(217,87,30,.12)}
+#dclBtn{border-radius:0;background:transparent!important;border:1px solid var(--vx-line)!important;color:var(--ink)!important}
+#dclBtn:hover{border-color:#5865F2!important}
+#lvChip{transform:none;border-radius:0;background:transparent;border:1px solid var(--vx-line)}
+#lvChip:hover{border-color:var(--vx-red)}
+#menu .langsel select,#fnTop .langsel select{border-radius:0;background:transparent;border:1px solid var(--vx-line)}
+/* --- boutons --- */
+#menu .btn,#loadout .btn,#news .btn{border-radius:0;transform:none;background:var(--vx-red);color:var(--vx-black);box-shadow:none;letter-spacing:.08em}
+#menu .btn span,#loadout .btn span,#news .btn span{transform:none}
+#menu .btn:hover,#loadout .btn:hover,#news .btn:hover{background:var(--vx-orange);transform:translateX(3px)}
+#menu .btn:active,#loadout .btn:active{transform:translateX(5px)}
+#menu #play::after{display:none}
+#menu .btn2,#loadout .btn2{border-radius:0;transform:none;background:transparent;border:1px solid rgba(236,230,220,.24);color:var(--ink)}
+#menu .btn2 span,#loadout .btn2 span{transform:none}
+#menu .btn2:hover,#loadout .btn2:hover{border-color:var(--vx-red);color:#fff;background:rgba(227,38,27,.08)}
+#menu .btn3,#loadout .btn3{border-radius:0;background:transparent;border:1px solid rgba(236,230,220,.22);color:var(--ink)}
+#menu .btn3:hover,#loadout .btn3:hover{border-color:var(--vx-red);color:#fff}
+#menu .btn:focus-visible,#menu .btn2:focus-visible,#menu .btn3:focus-visible,#loadout button:focus-visible{outline:2px solid var(--vx-orange);outline-offset:2px}
+/* --- champs --- */
+#menu select,#menu input[type=text],#menu input[type=password],#menu input:not([type]),#menu textarea,.mapsel select,.field select,.netrow input{border-radius:0!important;background:#0A0A0B;border:1px solid rgba(236,230,220,.2);color:var(--ink)}
+#menu select:hover,#menu input[type=text]:hover,#menu input[type=password]:hover{border-color:rgba(236,230,220,.36)}
+#menu select:focus-visible,#menu input:focus-visible,#menu textarea:focus-visible{outline:2px solid var(--vx-red);outline-offset:0}
+#menu select option{background:#0D0D0F}
+#menu,#loadout{accent-color:var(--vx-red)}
+#menu input[type=range]{accent-color:var(--vx-red)}
+/* --- panneaux --- */
+#menu .block,#menu .net{border-radius:0;background:rgba(13,13,15,.92);border:1px solid var(--vx-line);backdrop-filter:none;-webkit-backdrop-filter:none;box-shadow:none}
+#menu .block h2{color:var(--ink);letter-spacing:.22em}
+#menu .block h2::before{width:22px;height:3px;background:var(--vx-red);transform:skewX(-24deg)}
+#menu .kicker{color:var(--vx-red)}
+#menu .hint.warn,#bindMsg.warn{color:var(--vx-orange)}
+#menu .tag.adv{border-color:rgba(227,38,27,.6);color:var(--vx-red)}
+#menu .tag.mid{border-color:rgba(217,87,30,.6);color:var(--vx-orange)}
+#menu .techs li{border-color:var(--vx-line)}
+#menu .kb{border-radius:0;background:#0A0A0B}
+#menu .kb:hover{border-color:var(--vx-red)}
+#menu .kb.wait{background:var(--vx-red);border-color:var(--vx-red);color:var(--vx-black)}
+/* --- scène du personnage --- */
+#charPrev{background:none!important;border:0!important}
+#menu .sname{letter-spacing:.01em;transform:skewX(-7deg)}
+#menu .sclass{color:var(--vx-red)}
+#menu .sabil span{border-radius:0;background:rgba(9,9,10,.7);border-color:var(--vx-line)}
+#menu.lobby .stagebox::before{width:56%;height:9%;bottom:2%;background:rgba(0,0,0,.55);box-shadow:none;filter:none;animation:none}
+#menu.lobby .stagebox::after{width:44%;height:5.5%;bottom:3.6%;border:2px solid var(--vx-red);box-shadow:none;opacity:.85;animation:none}
+/* --- lobby --- */
+.lbTag{border-radius:0;background:rgba(9,9,10,.82);border:1px solid var(--vx-line);backdrop-filter:none;font:700 14px/1 var(--f-display);letter-spacing:.08em;text-transform:uppercase}
+.lbTag b{border-radius:0;background:var(--vx-red);color:var(--vx-black)}
+.lbTag img.dav{border-radius:0}
+.lbNews{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line);border-top:3px solid var(--vx-red);box-shadow:none;transition:border-color .12s,transform .16s var(--ease,ease)}
+.lbNews .in{background:none}
+.lbNews small{color:var(--vx-mute);opacity:1}
+.lbNews strong{font:800 20px/1 var(--f-display);transform:skewX(-7deg);transform-origin:0 100%}
+.lbNews span{color:var(--ink-dim);opacity:1}
+.lbNews:hover{transform:translateX(4px);border-color:rgba(236,230,220,.24);border-top-color:var(--vx-orange)}
+.lbMode{border-radius:0;background:rgba(13,13,15,.94);border:1px solid var(--vx-line);border-left:3px solid var(--vx-red);backdrop-filter:none;box-shadow:none}
+.lbMode h3{font:800 30px/.9 var(--f-display);font-style:normal;transform:skewX(-7deg);transform-origin:0 100%;text-shadow:none;color:var(--ink)}
+.lbMode .mapsel{border-radius:0;background:#0A0A0B;border:1px solid var(--vx-line)}
+.lbMode .mapsel>span{color:var(--vx-mute)}
+.lbMode .mapsel select{background:transparent!important;border:0!important}
+.lbMode #loMenuBtn,.lbMode #mvBtn{border-radius:0;background:transparent;border:1px solid rgba(236,230,220,.22);color:var(--ink)}
+.lbMode #loMenuBtn:hover,.lbMode #mvBtn:hover{border-color:var(--vx-red);background:rgba(227,38,27,.08)}
+.lbMode #play{border-radius:0;background:var(--vx-red);color:var(--vx-black);box-shadow:none;font:800 34px/1 var(--f-display);letter-spacing:.04em}
+.lbMode #play:hover{background:var(--vx-orange);transform:translateX(3px)}
+.lbSlot i{border-radius:0;background:rgba(9,9,10,.8);border:1px solid rgba(236,230,220,.4);font-weight:300}
+.lbSlot u{display:none}
+.lbSlot.on i{background:var(--vx-red);border-color:var(--vx-red);color:var(--vx-black)}
+.lbSlot:hover i{border-color:var(--vx-red);transform:none}
+.lbSlot em{font:700 12px/1 var(--f-display);letter-spacing:.1em;text-transform:uppercase}
+.lbSide button{border-radius:0;background:rgba(9,9,10,.82);border:1px solid var(--vx-line)}
+.lbSide button:hover{border-color:var(--vx-red)}
+.lbBot>button{border-radius:0!important;background:rgba(9,9,10,.82)!important;border:1px solid var(--vx-line)!important}
+.lbBot>button:hover{border-color:var(--vx-red)!important}
+/* bouton Jouer sous le personnage (autres onglets) */
+#menu .fnPlay #play{border-radius:0;background:var(--vx-red);color:var(--vx-black);box-shadow:none}
+#menu .fnPlay #play:hover{background:var(--vx-orange)}
+#menu .fnPlay .fnSub>*,#menu .lbBot #specBtn{border-radius:0;background:transparent!important;border:1px solid rgba(236,230,220,.24)!important;color:var(--ink)!important;box-shadow:none!important}
+#menu .fnPlay .fnSub>*:hover{border-color:var(--vx-red)!important;background:rgba(227,38,27,.08)!important}
+/* --- boutique --- */
+#shopPanel .shBal{border-radius:0;background:transparent;border:1px solid var(--vx-line);color:var(--ink)}
+#shopPanel .shBal span{border-radius:0;background:var(--vx-orange);color:var(--vx-black)}
+#shopPanel .shTok{border-radius:0;background:var(--vx-orange);color:var(--vx-black)}
+#shopPanel .shTok i{border-radius:0;background:var(--vx-black);box-shadow:none;animation:none}
+#shopPanel .shc,#shopPanel .shc.lg,#shopPanel .shc.q{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line);box-shadow:none;transition:border-color .12s,transform .16s}
+#shopPanel .shc::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--vx-dim)}
+#shopPanel .shc.lg::before{background:var(--vx-red)}#shopPanel .shc.q::before{background:var(--vx-orange)}
+#shopPanel .shc:hover{transform:translateY(-2px);border-color:rgba(236,230,220,.3);box-shadow:none}
+#shopPanel .shc.eq{border-color:var(--vx-red);box-shadow:inset 0 0 0 1px var(--vx-red)}
+#shopPanel .shc .im{border-radius:0;background:#0A0A0B}
+#shopPanel .shc .rar{color:var(--vx-red)}#shopPanel .shc.q .rar{color:var(--vx-orange)}
+#shopPanel .shc .pr{color:var(--ink)}#shopPanel .shc .pr.poor{color:var(--vx-mute)}#shopPanel .shc.own .pr{color:#79B66A}
+#shopPanel .shc .shb{border-radius:0;background:var(--vx-red);color:var(--vx-black)}
+#shopPanel .shc .shb:hover:not(:disabled){background:var(--vx-orange)}
+#shopPanel .shc.own .shb{background:transparent;border:1px solid var(--vx-line);color:var(--ink)}
+#shopPanel .shSec h3 b{color:var(--vx-red)}
+/* --- armes (galerie), quêtes, amis, profil --- */
+.galc{border-radius:0;background:var(--vx-panel)}
+.galc:hover{border-color:rgba(236,230,220,.3)}
+.galc.on{border-color:var(--vx-red);box-shadow:inset 0 0 0 1px var(--vx-red)}
+.galc .im{border-radius:0}
+.quest{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line)}
+.quest.done{border-color:rgba(121,182,106,.5);background:rgba(121,182,106,.06)}
+.quest .qbar,.quest .qbar i{border-radius:0}
+#friendsList li{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line)}
+#friendsPanel input{border-radius:0}
+.prof .pcard{background:var(--vx-panel);border:1px solid var(--vx-line);border-left:3px solid var(--vx-red)}
+.prof .pcard::after{display:none}
+.prof .xpb{transform:none;background:#0A0A0B}
+.prof .xpb i{background:var(--vx-red)}
+.prof .pstats div,.prof .tr{background:var(--vx-panel);border-color:var(--vx-line)}
+.prof .tr.got{background:var(--vx-panel)}
+html body #profPanel .xfer{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line);border-left:3px solid var(--vx-orange)}
+html body #profPanel .xfer .xb{border-radius:0;background:transparent;border:1px solid rgba(236,230,220,.22)}
+html body #profPanel .xfer .xb:hover{border-color:var(--vx-red)}
+html body #profPanel .xfer .xb.go{background:var(--vx-red);border-color:var(--vx-red);color:var(--vx-black)}
+html body #profPanel .xfer .xb.go:hover{background:var(--vx-orange);border-color:var(--vx-orange)}
+html body #profPanel .xfer textarea{border-radius:0;background:#0A0A0B}
+/* --- fenêtre Équipement --- */
+#loadout{background:rgba(9,9,10,.72);backdrop-filter:none;-webkit-backdrop-filter:none}
+.lo-box{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line);border-top:3px solid var(--vx-red);box-shadow:none}
+.lo-box .kicker{color:var(--vx-red)}
+.lo-x{border-radius:0;background:transparent;border:1px solid var(--vx-line)}
+.lo-x:hover{border-color:var(--vx-red)}
+.lo-card{border-radius:0;background:#111113;border:1px solid var(--vx-line)}
+.lo-card:hover{border-color:rgba(236,230,220,.3);transform:translateY(-1px)}
+.lo-card.on{border-color:var(--vx-red);background:rgba(227,38,27,.1);box-shadow:inset 3px 0 0 var(--vx-red)}
+#loGo{border-radius:0!important;background:var(--vx-red)!important;color:var(--vx-black)!important;transform:none!important;box-shadow:none!important}
+#loGo:hover{background:var(--vx-orange)!important}
+/* --- nouveautés --- */
+#news{background:rgba(9,9,10,.78)}
+#news .newsbox{border-radius:0;background:var(--vx-panel);border:1px solid var(--vx-line);border-top:3px solid var(--vx-red)}
+#news h3,#news #newsH{color:var(--ink)}
+#news #newsH span:first-child{color:var(--ink)}
+#news #newsVer{color:var(--vx-red)}
+#news li::marker{color:var(--vx-red)}
+/* --- armes : onglets d'armes, viseurs --- */
+.wprev{background:#0A0A0B!important;border-radius:0}
+.wpbtn{border-radius:0!important}
+.wpbtn.on{background:var(--vx-red)!important;border-color:var(--vx-red)!important;color:var(--vx-black)!important}
+.wpbtn.sp{border-color:rgba(217,87,30,.5)!important}
+.qbar,.qbar i{border-radius:0!important}
+.qbar i{background:var(--vx-red)!important}
+/* --- panneau admin, vote de carte, barre de mise à jour, spectateur --- */
+#admLogin,#admPanel{border-radius:0!important;border-color:rgba(227,38,27,.5)!important}
+#admLogin b,.admhead b{color:var(--vx-red)!important}
+.admtabs button{border-radius:0!important}
+.admtabs button[aria-selected="true"]{background:var(--vx-red)!important;border-color:var(--vx-red)!important;color:var(--vx-black)!important}
+#voteBox .opt{border-radius:0!important}
+#voteBox .opt:hover{border-color:var(--vx-red)!important}
+#voteBox .opt.mine{border-color:var(--vx-red)!important;background:rgba(227,38,27,.14)!important}
+#updBar{background:var(--vx-red)!important;color:var(--vx-black)!important}
+#updBar .btn3{color:var(--vx-red)!important;background:var(--vx-black)!important;border-color:var(--vx-black)!important}
+#specBar{border-color:rgba(227,38,27,.5)!important;border-radius:0!important}
+#specBar b{color:var(--vx-red)!important}
+</style>
 <style id="vx-home-css">
 /* ================= Menu principal (écran titre) =================
    Grille : panneau de navigation à gauche coupé en biais, zone « univers » à droite (la carte en direct derrière).
@@ -11621,11 +11808,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.09';
+const GAME_VERSION = '2026.12.10';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Nouveau menu principal : Jouer, Équipement, Paramètres, Profil, Quitter, avec la carte en direct en fond', 'Navigation au clavier (flèches + Entrée) ; le logo VÉLOCITÉ en haut du lobby ramène au menu', 'Quitter ferme vraiment le jeu sur PC et sur Android (avec confirmation)', 'Obsidian : le bouton Retour d’Android n’est plus pris pour une triche'],
-  en: ['New main menu: Play, Loadout, Settings, Profile, Quit, with the live map in the background', 'Keyboard navigation (arrows + Enter); the VÉLOCITÉ logo at the top of the lobby brings you back to the menu', 'Quit really closes the game on PC and Android (with confirmation)', 'Obsidian: the Android Back button is no longer mistaken for a cheat']
+  fr: ['Tous les menus passent au nouveau style : lobby, boutique, profil, personnage, armes, quêtes, amis, paramètres, commandes, équipement, admin', 'Noir, rouge et orange brûlé, angles vifs : fini le jaune, le violet et les halos', 'Plus d’animations qui tournent en boucle dans les menus (reflets, pulsations, particules)'],
+  en: ['Every menu gets the new style: lobby, shop, profile, character, weapons, quests, friends, settings, controls, loadout, admin', 'Black, red and burnt orange with sharp corners: no more yellow, purple or glows', 'No more looping animations in menus (shines, pulses, particles)']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -20083,6 +20270,8 @@ Object.assign(I18N.en, {
   'home.qT': 'Session ended', 'home.qP': 'You can close this tab.', 'home.qBack': 'Back to menu',
 });
 try { HOME.refresh && HOME.refresh(); } catch (e) {}
+// le thème passe après tous les styles ajoutés par les modules
+try { const th = $('vx-theme-css'); if (th) document.head.appendChild(th); } catch (e) {}
 
 requestAnimationFrame(frame);
 })();
