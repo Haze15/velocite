@@ -57,6 +57,11 @@ public class MainActivity extends Activity {
         s.setMediaPlaybackRequiresUserGesture(false);
         s.setAllowFileAccess(false);
         s.setUserAgentString(s.getUserAgentString() + " VelociteAndroid");
+        // bouton QUITTER du menu : ferme l'appli
+        web.addJavascriptInterface(new Object() {
+            @android.webkit.JavascriptInterface
+            public void quit() { runOnUiThread(() -> finishAndRemoveTask()); }
+        }, "VelociteAndroid");
         if (b != null) web.restoreState(b);
         else web.loadUrl("https://appassets.androidplatform.net/assets/www/index.html");
     }

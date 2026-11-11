@@ -58,6 +58,16 @@ func main() {
 	mux.HandleFunc("/__obs", obsHandler)
 	go obsRun()
 	cheatRoutes(mux)
+	// bouton QUITTER du menu : ferme l'appli (la fenêtre et le serveur local)
+	mux.HandleFunc("/__quit", func(w http.ResponseWriter, r *http.Request) {
+		// seulement depuis la page du jeu elle-même (un autre site ne peut pas fermer l'appli)
+		if r.Method != http.MethodPost || r.Header.Get("Origin") != "http://"+r.Host {
+			http.Error(w, "refusé", http.StatusForbidden)
+			return
+		}
+		w.WriteHeader(http.StatusNoContent)
+		go func() { time.Sleep(150 * time.Millisecond); os.Exit(0) }()
+	})
 	go rp.run()
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/" || r.URL.Path == "/index.html" {

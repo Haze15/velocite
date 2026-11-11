@@ -536,6 +536,120 @@ body:not(.touch) .lo-key{display:inline}
 body.touch .lo-key{display:none}
 @media (max-width:600px){.lo-box{padding:18px 14px 16px}.lo-box h2{font-size:26px}.lo-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}.lo-foot .btn{width:100%;margin-left:0}}
 </style>
+<style id="vx-home-css">
+/* ================= Menu principal (écran titre) =================
+   Grille : panneau de navigation à gauche coupé en biais, zone « univers » à droite (la carte en direct derrière).
+   Unité de base 8 px. Couleurs : noir profond, rouge, orange brûlé ; aucun dégradé décoratif, aucun coin arrondi. */
+#vxHome{
+  --vx-black:#09090A;--vx-panel:#0D0D0F;--vx-red:#E3261B;--vx-orange:#D9571E;--vx-ink:#ECE6DC;--vx-mute:#8C867D;--vx-dim:#57534D;
+  --vx-ease:cubic-bezier(.16,1,.3,1);--vx-pw:clamp(440px,38vw,620px);--vx-cut:clamp(72px,9vh,120px);--vx-pad:clamp(40px,4.4vw,72px);
+  position:fixed;inset:0;z-index:30;color:var(--vx-ink);font-family:var(--f-body);overflow:hidden;-webkit-user-select:none;user-select:none
+}
+#vxHome[hidden]{display:none}
+body.vxOn #menu{visibility:hidden}
+/* --- zone univers : la carte en direct, assombrie, avec quelques traînées de vitesse --- */
+#vxHome .vxShade{position:absolute;inset:0;background:rgba(8,8,10,.34)}
+#vxHome .vxShade::after{content:"";position:absolute;left:0;right:0;bottom:0;height:42%;background:linear-gradient(180deg,rgba(9,9,10,0),rgba(9,9,10,.78))}
+#vxHome .vxWorld{position:absolute;inset:0 0 0 calc(var(--vx-pw) - var(--vx-cut));overflow:hidden;pointer-events:none}
+#vxHome .vxWorld i{position:absolute;right:-30%;height:1px;background:var(--vx-ink);opacity:0;will-change:transform;animation:vxStreak var(--d) linear var(--w) infinite}
+@keyframes vxStreak{0%{transform:translateX(0);opacity:0}12%{opacity:var(--o)}70%{opacity:var(--o)}100%{transform:translateX(-160vw);opacity:0}}
+/* --- panneau --- */
+#vxHome .vxBg{position:absolute;top:0;bottom:0;left:0;width:var(--vx-pw);pointer-events:none}
+#vxHome .vxBg::before,#vxHome .vxBg::after{content:"";position:absolute;inset:0}
+#vxHome .vxBg::before{background:var(--vx-red);clip-path:polygon(0 0,calc(100% + 0px) 0,calc(100% - var(--vx-cut)) 100%,0 100%);transform:translateX(5px)}
+#vxHome .vxBg::after{background:var(--vx-panel);clip-path:polygon(0 0,100% 0,calc(100% - var(--vx-cut)) 100%,0 100%)}
+#vxHome .vxPanel{position:absolute;top:0;bottom:0;left:0;width:calc(var(--vx-pw) - var(--vx-cut));padding:calc(var(--vx-pad) + env(safe-area-inset-top,0px)) 0 calc(var(--vx-pad) * .8) calc(var(--vx-pad) + env(safe-area-inset-left,0px));display:grid;grid-template-rows:auto 1fr auto;row-gap:clamp(24px,4vh,48px)}
+/* --- titre : élément central de l'identité ; il déborde volontairement sur la zone univers --- */
+#vxHome .vxBrand{position:relative}
+#vxHome .vxMark{display:flex;gap:6px;margin-bottom:clamp(22px,3.4vh,36px)}
+#vxHome .vxMark i{display:block;height:6px;background:var(--vx-red);transform:skewX(-24deg)}
+#vxHome .vxMark i:nth-child(1){width:44px}#vxHome .vxMark i:nth-child(2){width:22px;background:var(--vx-orange)}#vxHome .vxMark i:nth-child(3){width:10px;background:var(--vx-dim)}
+#vxHome .vxTitle{margin:0;white-space:nowrap;font:800 clamp(84px,10.4vw,176px)/.8 var(--f-display);letter-spacing:-.012em;text-transform:uppercase;transform:skewX(-7deg);transform-origin:0 100%;color:var(--vx-ink)}
+#vxHome .vxTitle b{color:var(--vx-red);font-weight:inherit}
+#vxHome .vxTag{display:flex;align-items:center;gap:14px;margin:clamp(14px,2vh,22px) 0 0;font:700 12px/1 var(--f-body);letter-spacing:.26em;text-transform:uppercase;color:var(--vx-mute)}
+#vxHome .vxTag::before{content:"";width:40px;height:2px;background:var(--vx-red)}
+/* --- navigation --- */
+#vxHome .vxNav{align-self:center;display:grid;justify-items:start;row-gap:clamp(2px,.6vh,8px)}
+#vxHome .vxN{position:relative;display:grid;grid-template-columns:40px auto;align-items:center;column-gap:0;padding:0;margin:0;border:0;background:none;color:var(--vx-mute);cursor:pointer;text-align:left;outline:none;-webkit-tap-highlight-color:transparent}
+#vxHome .vxI{font:700 11px/1 var(--f-body);letter-spacing:.14em;color:var(--vx-dim);transition:color .12s}
+#vxHome .vxL{position:relative;display:block;padding:6px 18px 4px 14px;font:700 clamp(32px,3.4vw,46px)/.95 var(--f-display);letter-spacing:.012em;text-transform:uppercase;transition:color .1s,transform .18s var(--vx-ease)}
+#vxHome .vxL::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--vx-red);transform:scaleX(0);transform-origin:0 50%;transition:transform .16s var(--vx-ease),background-color .1s}
+#vxHome .vxL span{position:relative}
+#vxHome .vxS{grid-column:2;padding-left:14px;font:600 12px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--vx-dim);margin-top:8px;transition:color .12s}
+#vxHome .vxN:hover .vxL,#vxHome .vxN:focus-visible .vxL,#vxHome .vxN.sel .vxL{color:var(--vx-black);transform:translateX(12px)}
+#vxHome .vxN:hover .vxL::before,#vxHome .vxN:focus-visible .vxL::before,#vxHome .vxN.sel .vxL::before{transform:scaleX(1)}
+#vxHome .vxN:hover .vxI,#vxHome .vxN:focus-visible .vxI,#vxHome .vxN.sel .vxI{color:var(--vx-orange)}
+#vxHome .vxN:active .vxL{transform:translateX(16px)}
+#vxHome .vxN:active .vxL::before,#vxHome .vxN.go .vxL::before{background:var(--vx-orange)}
+/* JOUER : l'action principale, plus grande et toujours marquée de rouge */
+#vxHome .vxPlay{margin-bottom:clamp(10px,2.2vh,22px)}
+#vxHome .vxPlay .vxL{font-size:clamp(60px,6.2vw,96px);font-weight:800;color:var(--vx-ink);padding:8px 26px 4px 22px}
+#vxHome .vxPlay .vxL::after{content:"";position:absolute;left:0;top:8px;bottom:6px;width:6px;background:var(--vx-red);transition:opacity .1s}
+#vxHome .vxPlay:hover .vxL::after,#vxHome .vxPlay:focus-visible .vxL::after,#vxHome .vxPlay.sel .vxL::after{opacity:0}
+#vxHome .vxPlay .vxS{color:var(--vx-mute);padding-left:22px}
+#vxHome .vxPlay:hover .vxS,#vxHome .vxPlay.sel .vxS{color:var(--vx-ink)}
+/* QUITTER : confirmation en deux temps */
+#vxHome .vxN.arm .vxL{color:var(--vx-black)}
+#vxHome .vxN.arm .vxL::before{transform:scaleX(1);background:var(--vx-orange)}
+/* --- infos secondaires --- */
+#vxHome .vxMeta{display:flex;flex-wrap:wrap;column-gap:clamp(24px,3vw,48px);row-gap:12px}
+#vxHome .vxMeta div{display:grid;row-gap:6px;min-width:0}
+#vxHome .vxMeta small{font:700 10px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--vx-dim)}
+#vxHome .vxMeta b{display:flex;align-items:center;gap:8px;font:600 14px/1.1 var(--f-body);color:var(--vx-ink);white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+#vxHome .vxDot{flex:none;width:7px;height:7px;background:var(--vx-dim)}
+#vxHome .vxDot.on{background:#79B66A}#vxHome .vxDot.host{background:var(--vx-orange)}#vxHome .vxDot.off{background:var(--vx-red)}
+/* --- zone univers : carte en cours, dernière mise à jour, protection --- */
+#vxHome .vxSide{position:absolute;right:calc(var(--vx-pad) + env(safe-area-inset-right,0px));bottom:calc(var(--vx-pad) * .8);left:var(--vx-pw);display:grid;justify-items:end;row-gap:28px;text-align:right;pointer-events:none}
+#vxHome .vxSide>*{pointer-events:auto}
+#vxHome .vxNews{display:grid;justify-items:end;row-gap:8px;max-width:420px;padding:0;border:0;background:none;color:var(--vx-ink);cursor:pointer;text-align:right}
+#vxHome .vxNews small,#vxHome .vxMap small,#vxHome .vxGuard{font:700 10px/1 var(--f-body);letter-spacing:.24em;text-transform:uppercase;color:var(--vx-mute)}
+#vxHome .vxNews span{max-width:100%;font:500 14px/1.35 var(--f-body);color:var(--vx-ink);opacity:.86;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#vxHome .vxNews:hover span,#vxHome .vxNews:focus-visible span{opacity:1;text-decoration:underline;text-decoration-color:var(--vx-red);text-decoration-thickness:2px;text-underline-offset:4px}
+#vxHome .vxNews:focus-visible{outline:none}
+#vxHome .vxMap{display:grid;justify-items:end;row-gap:8px}
+#vxHome .vxMap strong{font:800 clamp(44px,4.6vw,72px)/.86 var(--f-display);text-transform:uppercase;letter-spacing:.005em;transform:skewX(-7deg)}
+#vxHome .vxMap span{font:600 13px/1 var(--f-body);letter-spacing:.16em;text-transform:uppercase;color:var(--vx-mute)}
+#vxHome .vxGuard{position:absolute;top:calc(var(--vx-pad) + env(safe-area-inset-top,0px));right:calc(var(--vx-pad) + env(safe-area-inset-right,0px));display:flex;align-items:center;gap:10px}
+#vxHome .vxGuard svg{width:9px;height:18px}
+/* --- écran « session terminée » (navigateur : l'onglet ne peut pas se fermer tout seul) --- */
+#vxHome .vxQuit{position:absolute;inset:0;z-index:3;background:var(--vx-black);display:grid;align-content:center;justify-items:start;row-gap:20px;padding:0 var(--vx-pad)}
+#vxHome .vxQuit[hidden]{display:none}
+#vxHome .vxQuit h2{margin:0;font:800 clamp(48px,7vw,104px)/.85 var(--f-display);text-transform:uppercase;transform:skewX(-7deg)}
+#vxHome .vxQuit p{margin:0;font:500 16px/1.4 var(--f-body);color:var(--vx-mute)}
+#vxHome .vxQuit button{margin-top:12px;padding:14px 22px 12px;border:0;background:var(--vx-red);color:var(--vx-black);font:800 20px/1 var(--f-display);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+#vxHome .vxQuit button:hover,#vxHome .vxQuit button:focus-visible{background:var(--vx-orange);outline:none}
+/* --- entrée : sobre et rapide ; sortie : le panneau file vers la gauche --- */
+#vxHome.in .vxBg{animation:vxPanelIn .42s var(--vx-ease) both}
+#vxHome.in .vxMark{animation:vxRise .4s var(--vx-ease) .06s both}
+#vxHome.in .vxTitle{animation:vxWipe .56s var(--vx-ease) .1s both}
+#vxHome.in .vxTag{animation:vxRise .4s var(--vx-ease) .26s both}
+#vxHome.in .vxN{animation:vxSlide .38s var(--vx-ease) both;animation-delay:calc(.22s + var(--n) * .045s)}
+#vxHome.in .vxMeta,#vxHome.in .vxGuard{animation:vxFade .5s ease .5s both}
+#vxHome.in .vxSide{animation:vxSideIn .5s var(--vx-ease) .3s both}
+#vxHome.in .vxSweep{animation:vxSweep .62s cubic-bezier(.5,0,.2,1) .05s both}
+#vxHome .vxSweep{position:absolute;left:0;right:0;top:62%;height:2px;background:var(--vx-red);transform:translateX(-101%);pointer-events:none}
+#vxHome.out .vxBg,#vxHome.out .vxPanel{transition:transform .2s cubic-bezier(.5,0,.75,0),opacity .2s;transform:translateX(-48px);opacity:0}
+#vxHome.out .vxSide,#vxHome.out .vxGuard,#vxHome.out .vxShade{transition:opacity .2s;opacity:0}
+@keyframes vxPanelIn{from{transform:translateX(-56px);opacity:0}to{transform:none;opacity:1}}
+@keyframes vxWipe{from{clip-path:inset(-10% 100% -10% 0);transform:skewX(-7deg) translateX(-24px)}to{clip-path:inset(-10% -10% -10% 0);transform:skewX(-7deg)}}
+@keyframes vxRise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes vxSlide{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:none}}
+@keyframes vxFade{from{opacity:0}to{opacity:1}}
+@keyframes vxSideIn{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:none}}
+@keyframes vxSweep{0%{transform:translateX(-101%)}60%{transform:translateX(0)}100%{transform:translateX(101%)}}
+@media (prefers-reduced-motion:reduce){#vxHome .vxWorld{display:none}#vxHome.in *{animation-duration:.01s!important;animation-delay:0s!important}}
+/* --- petits écrans : une colonne, le panneau couvre tout --- */
+@media (max-width:860px){
+  #vxHome{--vx-pw:100vw;--vx-cut:0px;--vx-pad:24px}
+  #vxHome .vxBg::before{display:none}
+  #vxHome .vxBg::after{background:rgba(13,13,15,.9)}
+  #vxHome .vxPanel{width:100%;padding-right:24px;row-gap:24px}
+  #vxHome .vxTitle{font-size:clamp(56px,17vw,120px)}
+  #vxHome .vxSide,#vxHome .vxWorld,#vxHome .vxGuard{display:none}
+  #vxHome .vxL{font-size:30px}#vxHome .vxPlay .vxL{font-size:52px}
+}
+@media (max-height:640px) and (min-width:861px){#vxHome .vxTitle{font-size:clamp(64px,8vw,120px)}#vxHome .vxL{font-size:30px}#vxHome .vxPlay .vxL{font-size:54px}#vxHome .vxPanel{row-gap:16px}}
+</style>
 </head>
 <body>
 <!-- ================= Obsidian : anti-triche, écran de démarrage (affiché avant le chargement du jeu) ================= -->
@@ -683,6 +797,42 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
 <div id="errBar" hidden role="alert"><b id="errTxt"></b><span id="errDet"></span><button type="button" class="btn3" id="errReload">↻</button><button type="button" class="btn3" id="errX" aria-label="Fermer">✕</button></div>
 <div id="updBar" hidden role="status"><b id="updTxt"></b><span id="updNotes"></span><button type="button" class="btn3" id="updGo"></button><button type="button" class="btn3" id="updX" aria-label="Fermer">✕</button></div>
 <div id="news" hidden role="dialog" aria-labelledby="newsH"><div class="newsbox"><h3 id="newsH"><span data-i18n="news.title">Nouveautés</span> · <span id="newsVer"></span></h3><ul id="newsList"></ul><button type="button" class="btn" id="newsOk" data-i18n="news.ok">C’est parti</button></div></div>
+<!-- ================= Menu principal (écran titre) : structure ; style dans #vx-home-css, logique dans le module « Menu principal » ================= -->
+<section id="vxHome" hidden aria-label="Menu principal">
+  <div class="vxShade"></div>
+  <div class="vxWorld" aria-hidden="true">
+    <i style="top:18%;width:180px;--d:2.6s;--w:.2s;--o:.10"></i><i style="top:27%;width:90px;--d:1.9s;--w:1.1s;--o:.07"></i>
+    <i style="top:39%;width:260px;--d:3.2s;--w:.6s;--o:.08"></i><i style="top:51%;width:120px;--d:2.2s;--w:1.7s;--o:.06"></i>
+    <i style="top:66%;width:220px;--d:2.9s;--w:.9s;--o:.08"></i><i style="top:74%;width:70px;--d:1.7s;--w:2.1s;--o:.07"></i>
+  </div>
+  <div class="vxBg"></div>
+  <div class="vxSweep" aria-hidden="true"></div>
+  <div class="vxPanel">
+    <header class="vxBrand">
+      <div class="vxMark" aria-hidden="true"><i></i><i></i><i></i></div>
+      <h1 class="vxTitle">Vélocit<b>é</b></h1>
+      <p class="vxTag" data-vx="tag"></p>
+    </header>
+    <nav class="vxNav" data-vx="nav">
+      <button type="button" class="vxN vxPlay" data-go="play" style="--n:0"><span class="vxI">01</span><span class="vxL"><span></span></span><span class="vxS" data-vx="playSub"></span></button>
+      <button type="button" class="vxN" data-go="loadout" style="--n:1"><span class="vxI">02</span><span class="vxL"><span></span></span></button>
+      <button type="button" class="vxN" data-go="settings" style="--n:2"><span class="vxI">03</span><span class="vxL"><span></span></span></button>
+      <button type="button" class="vxN" data-go="profile" style="--n:3"><span class="vxI">04</span><span class="vxL"><span></span></span></button>
+      <button type="button" class="vxN" data-go="quit" style="--n:4"><span class="vxI">05</span><span class="vxL"><span></span></span></button>
+    </nav>
+    <footer class="vxMeta">
+      <div><small data-vx="lName"></small><b data-vx="name"></b></div>
+      <div><small data-vx="lNet"></small><b><i class="vxDot" data-vx="dot"></i><span data-vx="net"></span></b></div>
+      <div><small data-vx="lVer"></small><b data-vx="ver"></b></div>
+    </footer>
+  </div>
+  <div class="vxGuard"><svg viewBox="-60 -118 120 236" aria-hidden="true"><polygon points="0,-112 50,-30 32,78 0,112 -36,66 -52,-24" fill="#9a82cf"/></svg><span data-vx="guard"></span></div>
+  <aside class="vxSide">
+    <button type="button" class="vxNews" data-vx="news"><small></small><span></span></button>
+    <div class="vxMap"><small data-vx="lMap"></small><strong data-vx="map"></strong><span data-vx="mode"></span></div>
+  </aside>
+  <div class="vxQuit" hidden data-vx="quitScreen"><h2 data-vx="qT"></h2><p data-vx="qP"></p><button type="button" data-vx="qBack"></button></div>
+</section>
 <section id="menu">
   <div class="menu-inner">
     <header>
@@ -11471,11 +11621,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.08';
+const GAME_VERSION = '2026.12.09';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Obsidian détecte maintenant les DLL injectées et les programmes de triche ouverts (Cheat Engine, injecteurs…) dans l’appli PC', 'Aimbot : souris / clavier simulés par un script, visée qui « snappe » pile sur la cible, taux de tirs à la tête anormal', 'Wallhack : joueurs affichés à travers les murs, moteur 3D trafiqué, tirs qui touchent à travers les murs'],
-  en: ['Obsidian now detects injected DLLs and open cheat programs (Cheat Engine, injectors…) in the PC app', 'Aimbot: mouse / keyboard simulated by a script, aim that snaps right onto the target, abnormal headshot rate', 'Wallhack: players drawn through walls, tampered 3D engine, shots that hit through walls']
+  fr: ['Nouveau menu principal : Jouer, Équipement, Paramètres, Profil, Quitter, avec la carte en direct en fond', 'Navigation au clavier (flèches + Entrée) ; le logo VÉLOCITÉ en haut du lobby ramène au menu', 'Quitter ferme vraiment le jeu sur PC et sur Android (avec confirmation)', 'Obsidian : le bouton Retour d’Android n’est plus pris pour une triche'],
+  en: ['New main menu: Play, Loadout, Settings, Profile, Quit, with the live map in the background', 'Keyboard navigation (arrows + Enter); the VÉLOCITÉ logo at the top of the lobby brings you back to the menu', 'Quit really closes the game on PC and Android (with confirmation)', 'Obsidian: the Android Back button is no longer mistaken for a cheat']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -19687,7 +19837,7 @@ setInterval(() => {
 }, 1000);
 /* --- aimbot / macro : souris et clavier simulés par un script (le jeu n'en crée jamais) --- */
 for (const ev of ['mousemove', 'mousedown', 'mouseup', 'keydown', 'keyup', 'pointerdown', 'pointermove', 'wheel', 'touchstart', 'touchmove'])
-  window.addEventListener(ev, e => { if (!e.isTrusted) obsFlag('input'); }, { capture: true, passive: true });
+  window.addEventListener(ev, e => { if (!e.isTrusted && !(e.type === 'keydown' && e.key === 'Escape')) obsFlag('input'); }, { capture: true, passive: true });   // Échap simulé = bouton Retour de l'appli Android
 /* --- three.js : un aimbot / ESP doit s'accrocher au moteur pour lire la position des joueurs --- */
 const OBS_THREE = [['WebGLRenderer.render', THREE.WebGLRenderer.prototype, 'render'], ['Object3D.updateMatrixWorld', THREE.Object3D.prototype, 'updateMatrixWorld'], ['Object3D.add', THREE.Object3D.prototype, 'add'], ['Raycaster.intersectObjects', THREE.Raycaster.prototype, 'intersectObjects'], ['Mesh.raycast', THREE.Mesh.prototype, 'raycast'], ['Matrix4.multiplyMatrices', THREE.Matrix4.prototype, 'multiplyMatrices'], ['Vector3.project', THREE.Vector3.prototype, 'project']].map(([n, o, k]) => [n, o, k, o[k]]);
 function obsThreeOk() { for (const [n, o, k, f] of OBS_THREE) if (o[k] !== f) return n; return ''; }
@@ -19823,6 +19973,116 @@ Object.assign(I18N.en, {
   'obs.c.dll': 'No injected DLL or cheat program', 'obs.x.dll': 'Injected DLL or cheat program open', 'obs.w.dll': 'injected DLL', 'obs.w.tool': 'cheat program open', 'obs.w.input': 'simulated mouse / keyboard (aimbot or macro)', 'obs.w.wall': 'wallhack', 'obs.w.aim': 'aimbot', 'obs.soft': '(suspicion: abnormal aim or shots, to check)', 'obs.hostSus': 'Obsidian suspects {name}: {why}. See reports.',
   'obs.w.speed': 'game speed modified', 'obs.w.native': 'game code modified', 'obs.w.script': 'cheat script injected', 'obs.w.save': 'save edited', 'obs.w.move': 'impossible movement', 'obs.w.hit': 'impossible damage',
 });
+
+/* ================= Menu principal (écran titre) — logique =================
+   Affiché au lancement, au-dessus du lobby. Chaque entrée renvoie vers ce qui existe déjà :
+   JOUER → lobby (choix carte / mode, solo ou en ligne) · ÉQUIPEMENT → fenêtre d'équipement · PARAMÈTRES / PROFIL → onglets
+   · QUITTER → ferme l'appli (Windows / Android) ou termine la session (navigateur). Le logo de la barre du haut y ramène. */
+const HOME = { on: true, shown: false, el: $('vxHome'), quitArm: 0, busy: false };
+(function homeInit() {
+  const el = HOME.el; if (!el) return;
+  const q = k => el.querySelector(`[data-vx="${k}"]`), items = [...el.querySelectorAll('.vxN')];
+  const tick = snd(t => tn(t, { f: 2300, dur: .016, type: 'square', gain: .018 }));
+  const go = snd(t => { nz(t, { dur: .1, f: 1500, f2: 280, q: .8, gain: .11 }); tn(t, { f: 150, f2: 70, dur: .14, type: 'triangle', gain: .2 }); });
+  const opt = id => { const s = $(id), o = s && s.options[s.selectedIndex]; return o ? o.textContent.replace(/^[^\p{L}\p{N}]+/u, '').replace(/\s*\(.*\)\s*$/, '') : ''; };
+  function netInfo() {
+    if (NET.mode === 'host') return ['host', t('home.netHost', { code: NET.code || '' })];
+    if (NET.mode === 'client') return ['on', t('home.netClient')];
+    return navigator.onLine === false ? ['off', t('home.netOffline')] : ['on', t('home.netOnline')];
+  }
+  function refresh() {
+    const lbl = { play: 'home.play', loadout: 'home.loadout', settings: 'home.settings', profile: 'home.profile', quit: HOME.quitArm ? 'home.quitSure' : 'home.quit' };
+    for (const b of items) b.querySelector('.vxL span').textContent = t(lbl[b.dataset.go]);
+    q('playSub').textContent = (everPlayed && NET.mode === 'off' ? t('home.resume') + ' · ' : '') + opt('mapSel') + ' · ' + opt('modeSel');
+    q('tag').textContent = t('home.tag');
+    q('lName').textContent = t('home.pilot'); q('lNet').textContent = t('home.net'); q('lVer').textContent = t('home.build'); q('lMap').textContent = t('home.map');
+    q('name').textContent = S.name || '—'; q('ver').textContent = GAME_VERSION;
+    const [cls, txt] = netInfo(); q('dot').className = 'vxDot ' + cls; q('net').textContent = txt;
+    q('map').textContent = opt('mapSel'); q('mode').textContent = opt('modeSel');
+    const nw = q('news'); nw.querySelector('small').textContent = t('home.update', { v: GAME_VERSION }); nw.querySelector('span').textContent = (CHANGES[LANG] || CHANGES.en)[0] || '';
+    q('guard').textContent = OBS.flags.length ? t('home.guardBad') : t('home.guard');
+    q('qT').textContent = t('home.qT'); q('qP').textContent = t('home.qP'); q('qBack').textContent = t('home.qBack');
+  }
+  // visible = demandé ET menu ouvert (en partie, le menu est caché : l'écran titre aussi)
+  function sync() {
+    const vis = HOME.on && !menu.hidden && !TOUCH.edit;
+    if (vis === HOME.shown) return;
+    HOME.shown = vis; el.hidden = !vis; document.body.classList.toggle('vxOn', vis);
+    if (vis) {
+      refresh(); el.classList.remove('out', 'in'); void el.offsetWidth; el.classList.add('in');
+      for (const b of items) b.classList.remove('go', 'sel');
+      setTimeout(() => { if (HOME.shown && !document.activeElement?.closest?.('#news,#loadout')) items[0].focus({ preventScroll: true }); }, 60);
+    }
+  }
+  HOME.sync = sync; HOME.refresh = refresh;
+  function leave(then) {
+    if (HOME.busy) return; HOME.busy = true;
+    el.classList.add('out');
+    setTimeout(() => { HOME.on = false; HOME.busy = false; el.classList.remove('out'); sync(); then && then(); }, 200);
+  }
+  HOME.open = () => { if (playing) return; HOME.on = true; sync(); };
+  function quit() {
+    if (!HOME.quitArm) { HOME.quitArm = setTimeout(() => { HOME.quitArm = 0; items[4].classList.remove('arm'); refresh(); }, 3000); items[4].classList.add('arm'); refresh(); return; }
+    clearTimeout(HOME.quitArm); HOME.quitArm = 0; items[4].classList.remove('arm');
+    try { if (NET.mode !== 'off') leaveNet(); } catch (e) {}
+    if (window.VelociteAndroid && typeof window.VelociteAndroid.quit === 'function') { window.VelociteAndroid.quit(); return; }
+    if (window.__VELOCITE_APP) { fetch('/__quit', { method: 'POST' }).catch(() => {}); }
+    try { window.close(); } catch (e) {}
+    setTimeout(() => { q('quitScreen').hidden = false; refresh(); q('qBack').focus(); }, 260);
+  }
+  const ACT = {
+    play: () => leave(() => showTab('play')),
+    loadout: () => leave(() => { showTab('play'); loShow(true); }),
+    settings: () => leave(() => showTab('settings')),
+    profile: () => leave(() => showTab('prof')),
+    quit,
+  };
+  items.forEach((b, i) => {
+    b.addEventListener('pointerenter', () => { if (!HOME.busy) { tick(); b.focus({ preventScroll: true }); } });
+    b.addEventListener('focus', () => items.forEach(x => x.classList.toggle('sel', x === b)));
+    b.addEventListener('click', () => {
+      if (HOME.busy) return; audioInit(); go();
+      const a = b.dataset.go; if (a !== 'quit') { b.classList.add('go'); if (HOME.quitArm) { clearTimeout(HOME.quitArm); HOME.quitArm = 0; items[4].classList.remove('arm'); } }
+      ACT[a]();
+    });
+  });
+  q('news').addEventListener('click', () => { audioInit(); showNews(true); });
+  q('qBack').addEventListener('click', () => { q('quitScreen').hidden = true; items[0].focus(); });
+  // clavier : flèches haut / bas entre les entrées (Entrée / Espace activent le bouton)
+  window.addEventListener('keydown', e => {
+    if (!HOME.shown || e.defaultPrevented || !q('quitScreen').hidden) return;
+    if ($('news') && !$('news').hidden) return;
+    if (LO.open) return;
+    const i = items.indexOf(document.activeElement);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault(); e.stopPropagation();
+      const n = i < 0 ? 0 : (i + (e.key === 'ArrowDown' ? 1 : items.length - 1)) % items.length; items[n].focus(); tick();
+    } else if (e.key === 'Escape' && HOME.quitArm) { e.stopPropagation(); clearTimeout(HOME.quitArm); HOME.quitArm = 0; items[4].classList.remove('arm'); refresh(); }
+  }, true);
+  // retour à l'écran titre : le logo VÉLOCITÉ de la barre du haut
+  const logo = document.querySelector('#fnTop .fnLogo');
+  if (logo) logo.addEventListener('click', e => { e.stopImmediatePropagation(); audioInit(); HOME.open(); }, true);
+  new MutationObserver(sync).observe(menu, { attributes: true, attributeFilter: ['hidden'] });
+  for (const id of ['mapSel', 'modeSel']) { const s = $(id); if (s) s.addEventListener('change', refresh); }
+  addEventListener('velLang', refresh); addEventListener('online', refresh); addEventListener('offline', refresh);
+  setInterval(() => { if (HOME.shown) refresh(); }, 2000);
+  sync();
+})();
+Object.assign(I18N.fr, {
+  'home.play': 'Jouer', 'home.loadout': 'Équipement', 'home.settings': 'Paramètres', 'home.profile': 'Profil', 'home.quit': 'Quitter', 'home.quitSure': 'Confirmer',
+  'home.tag': 'FPS de mouvement', 'home.resume': 'Reprendre', 'home.pilot': 'Joueur', 'home.net': 'Réseau', 'home.build': 'Version', 'home.map': 'Carte sélectionnée',
+  'home.netOnline': 'En ligne', 'home.netOffline': 'Hors ligne', 'home.netHost': 'Hôte · {code}', 'home.netClient': 'En partie',
+  'home.update': 'Mise à jour {v}', 'home.guard': 'Protégé par Obsidian', 'home.guardBad': 'Obsidian : triche détectée',
+  'home.qT': 'Session terminée', 'home.qP': 'Tu peux fermer cet onglet.', 'home.qBack': 'Revenir au menu',
+});
+Object.assign(I18N.en, {
+  'home.play': 'Play', 'home.loadout': 'Loadout', 'home.settings': 'Settings', 'home.profile': 'Profile', 'home.quit': 'Quit', 'home.quitSure': 'Confirm',
+  'home.tag': 'Movement shooter', 'home.resume': 'Resume', 'home.pilot': 'Player', 'home.net': 'Network', 'home.build': 'Build', 'home.map': 'Selected map',
+  'home.netOnline': 'Online', 'home.netOffline': 'Offline', 'home.netHost': 'Host · {code}', 'home.netClient': 'In a match',
+  'home.update': 'Update {v}', 'home.guard': 'Protected by Obsidian', 'home.guardBad': 'Obsidian: cheat detected',
+  'home.qT': 'Session ended', 'home.qP': 'You can close this tab.', 'home.qBack': 'Back to menu',
+});
+try { HOME.refresh && HOME.refresh(); } catch (e) {}
 
 requestAnimationFrame(frame);
 })();
