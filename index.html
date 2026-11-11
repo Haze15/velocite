@@ -14,7 +14,7 @@
 <meta name="description" content="FPS navigateur au mouvement nerveux : glissade, bhop, tap-strafe, superglide, multijoueur en pair-à-pair.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Saira+Condensed:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Inter:wght@500;800&family=Saira+Condensed:wght@500;600;700;800&display=swap">
 <style>
 /* Plein écran : la scène 3D occupe tout, le HUD tient les coins, le menu est une colonne à gauche sur un voile dégradé */
 :root{
@@ -538,6 +538,47 @@ body.touch .lo-key{display:none}
 </style>
 </head>
 <body>
+<!-- ================= Obsidian : anti-triche, écran de démarrage (affiché avant le chargement du jeu) ================= -->
+<style>
+#obsBoot{position:fixed;inset:0;z-index:100000;background:#0b0a0f;color:#f4f2f8;display:flex;align-items:center;justify-content:center;font-family:Inter,'Segoe UI',system-ui,sans-serif;transition:opacity .45s ease}
+#obsBoot.out{opacity:0;pointer-events:none}
+#obsBoot .ob-in{display:flex;flex-direction:column;align-items:flex-start;gap:30px;padding:0 16px}
+#obsBoot .ob-lock{display:flex;align-items:center;gap:22px}
+#obsBoot .ob-lock svg{width:64px;height:126px;animation:obsIn .7s cubic-bezier(.2,.8,.2,1) both}
+#obsBoot .ob-wm{font-weight:800;font-size:62px;line-height:.9;letter-spacing:-.035em;animation:obsIn .7s .08s cubic-bezier(.2,.8,.2,1) both}
+#obsBoot .ob-ds{font-weight:500;font-size:14px;color:#8d879c;margin-top:8px;padding-left:3px;animation:obsIn .7s .16s cubic-bezier(.2,.8,.2,1) both}
+#obsBoot .ob-bar{width:100%;height:2px;background:#1d1928;overflow:hidden}
+#obsBoot .ob-bar i{display:block;height:100%;width:0;background:#9a82cf;transition:width .3s ease}
+#obsBoot ul{list-style:none;margin:0;padding:0;font-size:13px;display:flex;flex-direction:column;gap:7px;min-height:118px}
+#obsBoot li{display:flex;gap:10px;align-items:center;color:#cfcadb;animation:obsIn .3s both}
+#obsBoot li b{width:14px;font-weight:800;color:#9a82cf}
+#obsBoot li.bad{color:#ff8a9a}#obsBoot li.bad b{color:#ff4a62}
+#obsBoot .ob-msg{font-size:13px;color:#ff8a9a;max-width:420px;line-height:1.45}
+#obsBoot .ob-go{margin-top:4px;padding:9px 16px;border-radius:8px;border:1px solid #3a2f52;background:#17131f;color:#f4f2f8;font:600 13px Inter,sans-serif;cursor:pointer}
+@keyframes obsIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:520px){#obsBoot .ob-wm{font-size:44px}#obsBoot .ob-lock svg{width:46px;height:90px}}
+</style>
+<div id="obsBoot" role="status" aria-live="polite"><div class="ob-in">
+  <div class="ob-lock">
+    <svg viewBox="-60 -118 120 236" aria-hidden="true">
+      <polygon points="0,-112 50,-30 32,78 0,112 -36,66 -52,-24" fill="#120e1a"/>
+      <polygon points="0,-112 -52,-24 -8,-4" fill="#4a3870"/>
+      <polygon points="0,-112 50,-30 -8,-4" fill="#9a82cf"/>
+      <polygon points="-52,-24 -8,-4 -36,66" fill="#241c35"/>
+      <polygon points="-8,-4 50,-30 32,78" fill="#2e2346"/>
+      <polygon points="-8,-4 32,78 0,112 -36,66" fill="#15111f"/>
+      <polygon points="0,-112 50,-30 32,78 0,112 -36,66 -52,-24" fill="none" stroke="#5d4c84" stroke-width="2" stroke-linejoin="round"/>
+      <polyline points="0,-112 -8,-4 0,112" fill="none" stroke="#e9e0ff" stroke-width="1.6" opacity=".7"/>
+    </svg>
+    <div><div class="ob-wm">Obsidian</div><div class="ob-ds">Anti-cheat · Vélocité</div></div>
+  </div>
+  <div class="ob-bar"><i></i></div>
+  <ul></ul>
+</div></div>
+<script>
+// filet de sécurité : si le jeu plante avant qu'Obsidian ait fini, l'écran ne reste jamais bloqué
+setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b.dataset.held) { b.classList.add('out'); setTimeout(function () { b.remove(); }, 600); } }, 15000);
+</script>
 <canvas id="c"></canvas>
 
 <div id="loadout" hidden><div class="lo-box" role="dialog" aria-labelledby="loTitle">
@@ -7260,7 +7301,8 @@ function hostRecv(from, m) {
   if (m.k === 'ping') { broadcast(Object.assign({}, m, { from }), from); pingRecv(m, from); return; }
   if (m.k === 'chat') { chatHostRecv(from, m); return; }
   if (m.k === 'report') { hostReport(from, m.r || {}); return; }
-  if (m.k === 'st') { const s = cleanState(m.s); if (s) pl.st = s; }
+  if (m.k === 'obs') { if (from !== NET.selfId) obsHostStrike(from, pl, 'client:' + String(m.why || '?').slice(0, 24), true); return; }
+  if (m.k === 'st') { const s = cleanState(m.s); if (s) { if (from !== NET.selfId) obsMove(from, pl, s, now); pl.st = s; } }
   else if (m.k === 'shot') broadcast({ k: 'shot', from, w: m.w | 0, sp: typeof m.sp === 'string' ? m.sp.slice(0, 12) : undefined, bl: !!m.bl, a: vec3Of(m.a), e: Array.isArray(m.e) ? m.e.slice(0, 24).map(vec3Of).filter(Boolean) : [] }, from);
   else if (m.k === 'adm') admHost(from, m);
   else if ((m.k === 'vspawn' || m.k === 'vreset' || m.k === 'chestfill') && (NET.players.get(from) || {}).admin) broadcast(m.k === 'vspawn' ? { k: 'vspawn', t: String(m.t).slice(0, 16), p: vec3Of(m.p) || [0, 0, 0], y: num(m.y, -10, 10) } : { k: m.k }, from);
@@ -7279,7 +7321,7 @@ function hostRecv(from, m) {
   else if (m.k === 'portal' && vec3Of(m.a) && vec3Of(m.b)) broadcast({ k: 'portal', a: vec3Of(m.a), b: vec3Of(m.b), o: from }, from);
   else if (m.k === 'fx' && typeof m.t === 'string' && FX_OK[m.t] && vec3Of(m.p) && (from === NET.selfId || rateOk(pl, 'fx:' + m.t, now))) broadcast({ k: 'fx', t: m.t, o: from, p: vec3Of(m.p), n: num(m.n, -1000, 1000, 0), c: typeof m.c === 'number' && isFinite(m.c) ? (m.c & 0xffffff) : undefined }, from);
   else if (m.k === 'mvcast' && VOTE.id && m.id === VOTE.id && Number.isInteger(m.i) && m.i >= 0 && m.i < VOTE.opts.length) mvCountHost(from, m.i);
-  else if (m.k === 'hit') { if (hitOk(pl, from, m, now)) sendTo(m.to, { k: 'hit', from, dmg: Math.round(+m.dmg), head: !!m.head, w: m.w | 0, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
+  else if (m.k === 'hit') { if (from !== NET.selfId && obsHitBad(pl, m, now)) obsHostStrike(from, pl, 'hit'); if (hitOk(pl, from, m, now)) sendTo(m.to, { k: 'hit', from, dmg: Math.round(+m.dmg), head: !!m.head, w: m.w | 0, kt: typeof m.kt === 'string' ? m.kt.slice(0, 12) : undefined }); }
   else if (m.k === 'dead') {
     // une mort compte pour celui qui a porté le dernier coup relayé par l'hôte (sinon : mort sans crédit, environnement)
     pl.deaths++; pl.deadT = now + 2500;
@@ -7436,7 +7478,7 @@ function clientRecv(m) {
   if (m.k === 'gren') { if (GREN_TYPES.includes(m.t) || GREN_IMPACT.includes(m.t)) { if (m.t === 'rocket') sfx.rocket(0.5); spawnGrenade(m.t, m.p, m.v, m.o, false); } return; }
   if (m.k === 'push') { if (!P.dead && !P.veh) { P.vel.x += m.v[0]; P.vel.y += m.v[1]; P.vel.z += m.v[2]; P.grounded = false; P.zip = null; } return; }
   if (m.k === 'portal') { SND_OWNER = m.o || null; spawnPortal(m.a, m.b); SND_OWNER = null; return; }
-  if (m.k === 'kick') { const why = ['banned', 'needpw', 'badpw'].includes(m.reason) ? t('login.' + m.reason) : t('net.kicked'); leaveNet(); setNetStatus(why, 'err'); toast(why, 5); if (playing) pause(); return; }
+  if (m.k === 'kick') { const why = m.reason === 'obsidian' ? t('obs.kicked') : ['banned', 'needpw', 'badpw'].includes(m.reason) ? t('login.' + m.reason) : t('net.kicked'); leaveNet(); setNetStatus(why, 'err'); toast(why, 5); if (playing) pause(); return; }
   if (m.k === 'kf') {
     const nameOf = id => id === NET.selfId ? S.name : (remotes.get(id) ? remotes.get(id).name : '?');
     killfeed(nameOf(m.by), wLabel(m.w | 0), nameOf(m.victim), m.by === NET.selfId || m.victim === NET.selfId);
@@ -11429,11 +11471,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.06';
+const GAME_VERSION = '2026.12.07';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Transfert de progression : dans Profil, « Copier mon code » sur le site puis « Importer » sur le PC (ou l’inverse) pour garder niveau, crédits, skins, jeton et quêtes'],
-  en: ['Progress transfer: in Profile, “Copy my code” on the website then “Import” on the PC (or the other way) to keep level, credits, skins, token and quests']
+  fr: ['Obsidian, l’anti-triche de Vélocité, vérifie le jeu à chaque démarrage puis pendant toute la partie', 'Détecte la vitesse du jeu modifiée (speedhack), le code trafiqué, les scripts de triche injectés et les crédits modifiés à la main', 'En ligne, l’hôte repère les déplacements et les dégâts impossibles : le tricheur est retiré de la partie et signalé aux admins'],
+  en: ['Obsidian, Vélocité’s anti-cheat, checks the game at every launch and during the whole match', 'Detects modified game speed (speedhack), tampered code, injected cheat scripts and hand-edited credits', 'Online, the host spots impossible movement and damage: the cheater is removed from the match and reported to admins']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -12447,10 +12489,15 @@ const QST = Object.assign({}, store.get('quests', {}) || {});
 let qSaveT = 0;
 const qProg = q => { const v = QST[q.id]; return q.set ? (Array.isArray(v) ? v.length : 0) : +v || 0; };
 const qDone = q => qProg(q) >= q.n;
+/* Obsidian (anti-triche) : état partagé ; le reste est en bas du script */
+const OBS = { flags: [], boot: [], log: [] };
+const obsSig = () => { const str = 'obs1|' + SHOP.c + '|' + (SHOP.token ? 1 : 0) + '|' + [...SHOP.owned].sort().join(','); let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); h ^= h >>> 13; } return (h >>> 0).toString(36); };
 /* boutique : crédits gagnés en jouant, skins achetés, jeton doré (tout gratuit) */
 const SHOP = { c: Math.max(0, +store.get('credits', 0) || 0), token: !!store.get('goldToken', false), owned: new Set(Array.isArray(store.get('shopOwned', [])) ? store.get('shopOwned', []) : []) };
 // les joueurs qui portaient déjà un skin légendaire avant la boutique le gardent
 if (!store.get('shopInit', false)) { const cur = store.get('skin', 'std'); if (typeof cur === 'string' && cur.startsWith('lg_')) SHOP.owned.add(cur); store.set('shopOwned', [...SHOP.owned]); store.set('shopInit', true); }
+// Obsidian : la sauvegarde boutique est signée ; si on modifie les crédits / le jeton à la main, ils sont remis à zéro
+{ const sig = store.get('shopSig', ''); if (!sig) store.set('shopSig', obsSig()); else if (sig !== obsSig()) { OBS.boot.push('save'); SHOP.c = 0; SHOP.token = false; SHOP.owned = new Set(); store.set('credits', 0); store.set('goldToken', false); store.set('shopOwned', []); store.set('shopSig', obsSig()); } }
 const shopHas = id => SHOP.token || SHOP.owned.has(id);
 const skinLocked = id => { if (id === 'celeste') return SKYQ.got.size < PLUME_POS.length && !xUnlocked; if (/^lg_/.test(id)) return !shopHas(id) && !xUnlocked; const q = QUESTS.find(x => x.sk === id); return !!q && !qDone(q) && !xUnlocked && !shopHas(id); };
 function questEv(ev, v = 1) {
@@ -18945,11 +18992,11 @@ const shopItems = () => [
 // crédits gagnés : mêmes événements que l'XP
 const CR_EV = { kill: 10, pkill: 15, head: 3, kkill: 10, min: 5, crt: 100, mtr: 80, win: 60, possess: 5, scare: 3, sglide: 2 };
 const TOKEN_P = 0.05; // 1 coffre sur 20 en moyenne
-function shopSave() { store.set('credits', SHOP.c); store.set('goldToken', SHOP.token); store.set('shopOwned', [...SHOP.owned]); }
+function shopSave() { store.set('credits', SHOP.c); store.set('goldToken', SHOP.token); store.set('shopOwned', [...SHOP.owned]); store.set('shopSig', obsSig()); }
 const fmtCr = n => Math.round(n).toLocaleString(LANG === 'fr' ? 'fr-FR' : 'en-US');
 let crSum = 0, crT = 0;
 function credAdd(n, why) {
-  if (!(n > 0)) return;
+  if (!(n > 0) || OBS.flags.length) return;   // Obsidian : pas de crédits pendant une triche détectée
   SHOP.c += Math.round(n); shopSave(); credChip();
   const x = $('crPop');
   if (x && menu.hidden) { crSum = (x.classList.contains('on') ? crSum : 0) + Math.round(n); x.textContent = '+' + crSum + ' ₵'; x.classList.add('on'); clearTimeout(crT); crT = setTimeout(() => x.classList.remove('on'), 1800); }
@@ -19591,6 +19638,123 @@ function friendsRender() {
 setInterval(() => { try { friendsUI(); } catch (e) {} }, 2500);
 Object.assign(I18N.fr, { 'tab.friends': 'Amis', 'fr.title': 'Amis', 'fr.hint': 'Liste gardée sur cet appareil. Si un ami est dans la partie que tu rejoins ou héberges, il apparaît en vert ici.', 'fr.ph': 'Pseudo exact de ton ami', 'fr.add': 'Ajouter', 'fr.inMatch': 'dans ta partie', 'fr.empty': 'Aucun ami pour l’instant.' });
 Object.assign(I18N.en, { 'tab.friends': 'Friends', 'fr.title': 'Friends', 'fr.hint': 'Kept on this device. If a friend is in the match you join or host, they show up green here.', 'fr.ph': 'Your friend’s exact name', 'fr.add': 'Add', 'fr.inMatch': 'in your match', 'fr.empty': 'No friends yet.' });
+
+/* ================= Obsidian — anti-triche =================
+   Au démarrage : intégrité des fonctions du navigateur, horloge (speedhack), scripts injectés, sauvegarde signée.
+   Pendant le jeu : les mêmes contrôles chaque seconde. Une triche détectée = plus de crédits, et pas de jeu en ligne
+   (l'hôte est prévenu, le joueur est retiré de la partie et signalé dans le panneau admin).
+   Côté hôte : vitesse impossible tenue dans la durée, coups impossibles. Les admins / le propriétaire ne sont jamais contrôlés. */
+const OBS_NATIVE = () => [['requestAnimationFrame', window.requestAnimationFrame], ['performance.now', performance.now], ['Date.now', Date.now], ['setTimeout', window.setTimeout], ['setInterval', window.setInterval], ['Math.random', Math.random], ['WebSocket.send', window.WebSocket && WebSocket.prototype.send], ['RTCDataChannel.send', window.RTCDataChannel && RTCDataChannel.prototype.send], ['Function.toString', Function.prototype.toString]];
+const obsIsNative = f => { try { return typeof f === 'function' && /\{\s*\[native code\]\s*\}\s*$/.test(Function.prototype.toString.call(f)); } catch (e) { return false; } };
+function obsNativeOk() { for (const [n, f] of OBS_NATIVE()) if (f && !obsIsNative(f)) return n; return ''; }
+const OBS_HOSTS = [location.host, 'cdnjs.cloudflare.com', 'cdn.jsdelivr.net', 'unpkg.com', 'fonts.googleapis.com', 'fonts.gstatic.com', 'appassets.androidplatform.net'];
+// les scripts des extensions du navigateur (bloqueurs de pub, gestionnaires de mots de passe…) ne sont jamais signalés
+function obsScriptBad(el) { const src = el.getAttribute && el.getAttribute('src'); if (!src) return false; try { const u = new URL(src, location.href); return !/^(data|blob|chrome-extension|moz-extension|safari-web-extension|edge-extension):$/.test(u.protocol) && !OBS_HOSTS.includes(u.host); } catch (e) { return true; } }
+function obsScriptsOk() { for (const el of document.querySelectorAll('script[src]')) if (obsScriptBad(el)) return el.getAttribute('src').slice(0, 60); return ''; }
+function obsFlag(why) {
+  if (OBS.flags.includes(why)) return;
+  OBS.flags.push(why); OBS.log.push({ at: Date.now(), why });
+  try { toast(t('obs.flag', { why: t('obs.w.' + why.split(':')[0]) }), 6); } catch (e) {}
+  obsEnforce();
+}
+// en ligne avec une triche détectée : on prévient l'hôte puis on quitte (l'hôte s'en charge aussi de son côté)
+function obsEnforce() {
+  if (!OBS.flags.length || NET.mode === 'off') return;
+  if (NET.mode === 'client') { try { netSend({ k: 'obs', why: OBS.flags[0] }); } catch (e) {} }
+  setTimeout(() => { try { leaveNet(); setNetStatus(t('obs.blocked'), 'err'); toast(t('obs.blocked'), 6); } catch (e) {} }, 250);
+}
+// speedhack : performance.now / requestAnimationFrame accélérés alors que l'horloge système, elle, avance normalement
+const OBS_CLK = { p: performance.now(), d: Date.now(), hi: 0, frames: 0 };
+(function obsFrames() { OBS_CLK.frames++; requestAnimationFrame(obsFrames); })();
+function obsClock() {
+  const p = performance.now(), d = Date.now(), dp = p - OBS_CLK.p, dd = d - OBS_CLK.d;
+  if (dd < 4000) return;
+  const r = dd > 0 ? dp / dd : 99;
+  OBS_CLK.hi = r > 1.25 && dd < 30000 ? OBS_CLK.hi + 1 : 0;   // fenêtres de 4 s ; 2 d'affilée trop rapides = triche
+  OBS_CLK.p = p; OBS_CLK.d = d;
+  if (OBS_CLK.hi >= 2) obsFlag('speed');
+}
+setInterval(() => {
+  try {
+    obsClock();
+    const n = obsNativeOk(); if (n) obsFlag('native:' + n);
+    const sc = obsScriptsOk(); if (sc) obsFlag('script');
+    if (OBS.flags.length && NET.mode !== 'off') obsEnforce();
+  } catch (e) {}
+}, 1000);
+try { new MutationObserver(ms => { for (const m of ms) for (const nd of m.addedNodes) if (nd.tagName === 'SCRIPT' && obsScriptBad(nd)) obsFlag('script'); }).observe(document.documentElement, { childList: true, subtree: true }); } catch (e) {}
+/* --- côté hôte --- */
+function obsHostStrike(from, pl, why, hard) {
+  if (!pl || pl.admin) return;
+  pl.obsN = (pl.obsN || 0) + 1;
+  const now = Date.now(); if (pl.obsLast && now - pl.obsLast < 4000 && !hard) return; pl.obsLast = now;
+  hostReport('obsidian', { from: 'Obsidian', target: pl.name, reason: 'cheat', text: 'Obsidian : ' + t('obs.w.' + (why.startsWith('client:') ? why.slice(7).split(':')[0] : why)) });
+  if (xUnlocked || ADM.granted) toast(t('obs.hostSaw', { name: pl.name, why: t('obs.w.' + (why.startsWith('client:') ? why.slice(7).split(':')[0] : why)) }), 5);
+  if (hard || pl.obsN >= 2) { broadcast({ k: 'sys', t: 'leave', name: pl.name }); accKick(from, 'obsidian'); }
+}
+// vitesse horizontale > 150 m/s tenue plus de 1,5 s, hors véhicule / passager / mort / spectateur (téléportations ponctuelles ignorées)
+function obsMove(from, pl, s, now) {
+  const o = pl.st, dtm = now - (pl.obsT || 0); pl.obsT = now;
+  if (pl.admin || !o || o.dead || s.dead || s.vh || s.pv || s.spec || o.vh || o.pv || dtm < 25 || dtm > 400) return;
+  const sp = Math.hypot(s.p[0] - o.p[0], s.p[2] - o.p[2]) / (dtm / 1000);
+  pl.obsFast = sp > 150 ? (pl.obsFast || 0) + dtm : Math.max(0, (pl.obsFast || 0) - dtm * 0.5);
+  if (pl.obsFast > 1500) { pl.obsFast = 0; obsHostStrike(from, pl, 'move'); }
+}
+// coups impossibles (dégâts hors limites) ou rafale qui dépasse ce qu'aucune arme ne peut faire
+function obsHitBad(pl, m, now) {
+  const dmg = +m.dmg; let add = 0;
+  if (!Number.isFinite(dmg) || dmg > MAX_HIT) add = 3;
+  else { const b = pl.rl && pl.rl['d:' + m.to]; if (b && b.n + (now - b.t) / 1000 * 350 < dmg) add = 1; }
+  pl.obsHit = Math.max(0, (pl.obsHit || 0) - (now - (pl.obsHitT || now)) / 2000) + add; pl.obsHitT = now;
+  if (pl.obsHit >= 12) { pl.obsHit = 0; return true; }
+  return false;
+}
+/* --- écran de démarrage --- */
+(function obsBoot() {
+  const box = $('obsBoot'); if (!box) return;
+  box.dataset.held = '1';
+  const ul = box.querySelector('ul'), bar = box.querySelector('.ob-bar i');
+  const p0 = performance.now(), d0 = Date.now();
+  const steps = [
+    ['obs.c.code', () => { const n = obsNativeOk(); if (n) { obsFlag('native:' + n); return false; } return true; }],
+    ['obs.c.scripts', () => { if (obsScriptsOk()) { obsFlag('script'); return false; } return true; }],
+    ['obs.c.save', () => { if (OBS.boot.includes('save')) { OBS.log.push({ at: Date.now(), why: 'save' }); return false; } return true; }],
+    ['obs.c.clock', () => { const dd = Date.now() - d0, r = dd > 300 ? (performance.now() - p0) / dd : 1; if (r > 1.3) { obsFlag('speed'); return false; } return true; }],
+    ['obs.c.net', () => true],
+  ];
+  let i = 0, bad = [];
+  const next = () => {
+    if (i >= steps.length) return done();
+    const [k, fn] = steps[i]; let ok = true; try { ok = fn(); } catch (e) {}
+    const li = document.createElement('li'); if (!ok) { li.className = 'bad'; bad.push(k); }
+    li.innerHTML = `<b>${ok ? '✓' : '✕'}</b><span></span>`; li.querySelector('span').textContent = ok ? t(k) : t(k.replace('obs.c.', 'obs.x.'));
+    ul.append(li); i++; bar.style.width = (100 * i / steps.length) + '%';
+    setTimeout(next, 260);
+  };
+  const close = () => { box.classList.add('out'); setTimeout(() => box.remove(), 500); };
+  const done = () => {
+    if (!bad.length) { setTimeout(close, 450); return; }
+    const msg = document.createElement('div'); msg.className = 'ob-msg';
+    msg.textContent = bad.includes('obs.c.save') && bad.length === 1 ? t('obs.saveReset') : t('obs.bootBad');
+    const go = document.createElement('button'); go.type = 'button'; go.className = 'ob-go'; go.textContent = t('obs.continue'); go.addEventListener('click', close);
+    box.querySelector('.ob-in').append(msg, go);
+  };
+  setTimeout(next, 500);
+})();
+Object.assign(I18N.fr, {
+  'obs.c.code': 'Intégrité du jeu', 'obs.c.scripts': 'Aucun script injecté', 'obs.c.save': 'Sauvegarde non modifiée', 'obs.c.clock': 'Horloge du jeu', 'obs.c.net': 'Protection en ligne active', 'obs.x.code': 'Code du jeu modifié', 'obs.x.scripts': 'Script de triche injecté', 'obs.x.save': 'Sauvegarde modifiée à la main', 'obs.x.clock': 'Vitesse du jeu modifiée', 'obs.x.net': 'Protection en ligne indisponible',
+  'obs.bootBad': 'Obsidian a détecté une triche. Tu peux jouer en solo, mais sans crédits et sans jeu en ligne tant qu’elle est active.', 'obs.saveReset': 'Ta sauvegarde boutique a été modifiée à la main : crédits, skins achetés et jeton ont été remis à zéro.', 'obs.continue': 'Continuer',
+  'obs.flag': 'Obsidian : triche détectée ({why}). Crédits et jeu en ligne bloqués.', 'obs.blocked': 'Obsidian : jeu en ligne bloqué (triche détectée).', 'obs.kicked': 'Retiré de la partie par Obsidian (triche détectée).',
+  'obs.hostSaw': 'Obsidian : {name} retiré / signalé ({why}).',
+  'obs.w.speed': 'vitesse du jeu modifiée', 'obs.w.native': 'code du jeu modifié', 'obs.w.script': 'script de triche injecté', 'obs.w.save': 'sauvegarde modifiée', 'obs.w.move': 'déplacement impossible', 'obs.w.hit': 'dégâts impossibles',
+});
+Object.assign(I18N.en, {
+  'obs.c.code': 'Game integrity', 'obs.c.scripts': 'No injected script', 'obs.c.save': 'Save untouched', 'obs.c.clock': 'Game clock', 'obs.c.net': 'Online protection active', 'obs.x.code': 'Game code modified', 'obs.x.scripts': 'Cheat script injected', 'obs.x.save': 'Save edited by hand', 'obs.x.clock': 'Game speed modified', 'obs.x.net': 'Online protection unavailable',
+  'obs.bootBad': 'Obsidian detected cheating. You can play solo, but with no credits and no online play while it is active.', 'obs.saveReset': 'Your shop save was edited by hand: credits, bought skins and token were reset.', 'obs.continue': 'Continue',
+  'obs.flag': 'Obsidian: cheat detected ({why}). Credits and online play blocked.', 'obs.blocked': 'Obsidian: online play blocked (cheat detected).', 'obs.kicked': 'Removed from the match by Obsidian (cheat detected).',
+  'obs.hostSaw': 'Obsidian: {name} removed / reported ({why}).',
+  'obs.w.speed': 'game speed modified', 'obs.w.native': 'game code modified', 'obs.w.script': 'cheat script injected', 'obs.w.save': 'save edited', 'obs.w.move': 'impossible movement', 'obs.w.hit': 'impossible damage',
+});
 
 requestAnimationFrame(frame);
 })();
