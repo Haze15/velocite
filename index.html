@@ -14,7 +14,7 @@
 <meta name="description" content="FPS navigateur au mouvement nerveux : glissade, bhop, tap-strafe, superglide, multijoueur en pair-à-pair.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Inter:wght@500;800&family=Saira+Condensed:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Inter:wght@500;800&family=Share+Tech+Mono&family=Saira+Condensed:wght@500;600;700;800&display=swap">
 <style>
 /* Plein écran : la scène 3D occupe tout, le HUD tient les coins, le menu est une colonne à gauche sur un voile dégradé */
 :root{
@@ -536,6 +536,144 @@ body:not(.touch) .lo-key{display:inline}
 body.touch .lo-key{display:none}
 @media (max-width:600px){.lo-box{padding:18px 14px 16px}.lo-box h2{font-size:26px}.lo-grid{grid-template-columns:repeat(auto-fill,minmax(104px,1fr))}.lo-foot .btn{width:100%;margin-left:0}}
 </style>
+<style id="vx-hud-css">
+/* ================= HUD « Rouge combat » =================
+   Rouge #ff1010 sur noir #050505, blanc et gris métal. Habille le HUD existant (mêmes éléments, mêmes données)
+   et ajoute : panneau de vie, score + combo, bannières de série, balles du chargeur, flashs de bord, battement de cœur.
+   Tout est rangé sous body.vxRed : décocher « HUD Rouge combat » dans les paramètres rend le HUD classique. */
+body.vxRed #hud{--vr:#ff1010;--vr-g:rgba(255,16,16,.55);--vk:#050505;--vw:#f4f2f0;--vm:#8e949b;--vmd:#3b3f45;--vmono:'Share Tech Mono',ui-monospace,monospace;--vkick:cubic-bezier(.12,.9,.2,1.25);--vsnap:cubic-bezier(.2,1,.3,1)}
+body.vxRed #hud .vxLbl{font:600 11px/1 var(--vmono);letter-spacing:.18em;color:var(--vm);text-transform:uppercase}
+/* --- haut gauche : stats + radar --- */
+body.vxRed #stats{gap:18px}
+body.vxRed #stats .lbl{font:600 10px/1 var(--vmono);letter-spacing:.16em;color:var(--vm)}
+body.vxRed #stats b{font:800 22px/1.05 var(--f-display);color:var(--vw)}
+body.vxRed #minimap{box-shadow:0 0 0 2px rgba(255,16,16,.55),0 0 0 6px rgba(5,5,5,.5),0 0 18px rgba(255,16,16,.25)}
+body.vxRed #fps{font:600 11px/1 var(--vmono);letter-spacing:.12em;color:var(--vm)}
+/* --- kill feed --- */
+body.vxRed .kf{font:700 15px/1 var(--f-display);letter-spacing:.05em;padding:6px 12px 5px;background:rgba(5,5,5,.74);border-right:3px solid var(--vmd);transform:skewX(-14deg);animation:vxKf .2s var(--vsnap) both}
+body.vxRed .kf>*{transform:skewX(14deg)}
+body.vxRed .kf em{color:var(--vm);font:600 11px/1 var(--vmono);letter-spacing:.1em}
+body.vxRed .kf.me{background:rgba(255,16,16,.88);border-right-color:#fff;box-shadow:none;color:#fff}
+body.vxRed .kf.me em{color:rgba(255,255,255,.8)}
+@keyframes vxKf{0%{opacity:0;transform:skewX(-14deg) translateX(60px)}60%{opacity:1;transform:skewX(-14deg) translateX(-6px)}100%{transform:skewX(-14deg)}}
+/* --- arme / munitions (bas droite) --- */
+body.vxRed #weapon{bottom:calc(20px + env(safe-area-inset-bottom,0px));right:calc(24px + env(safe-area-inset-right,0px))}
+body.vxRed #ammo{font:900 78px/.76 var(--f-display);letter-spacing:-.03em;transform:none;color:var(--vw);text-shadow:0 0 22px rgba(255,16,16,.35);transform-origin:100% 100%}
+body.vxRed #ammo.low,body.vxRed #ammo.empty{color:var(--vr)}
+body.vxRed #ammo.vxKick{animation:vxKick .09s var(--vkick)}
+@keyframes vxKick{0%{transform:translate(4px,3px) scale(1.06);color:#fff}100%{transform:none}}
+body.vxRed #mag{font:700 24px/1 var(--f-display);color:var(--vm);margin-left:6px}
+body.vxRed #wname{font:800 15px/1 var(--f-display);letter-spacing:.14em;color:var(--vw);margin-top:8px}
+body.vxRed #reloadBar{height:4px;margin-top:8px;background:rgba(255,255,255,.08);transform:skewX(-22deg)}
+body.vxRed #reloadBar i{background:var(--vw)}
+body.vxRed #reloadBar.on::before{content:"RECHARGEMENT";position:absolute;right:0;bottom:10px;font:800 13px/1 var(--f-display);letter-spacing:.3em;color:var(--vr);animation:vxBlink .26s steps(2) infinite}
+body.vxRed #reloadBar{position:relative}
+#vxPips{display:none}
+body.vxRed #vxPips{display:flex;justify-content:flex-end;gap:2px;height:13px;margin-top:9px}
+body.vxRed #vxPips i{width:5px;background:var(--vw);transform:skewX(-22deg);transition:opacity .12s,transform .12s}
+body.vxRed #vxPips i.off{opacity:.12;transform:skewX(-22deg) scaleY(.55)}
+body.vxRed #vxPips i.pop{background:var(--vr);animation:vxPip .16s ease-out forwards}
+@keyframes vxPip{0%{opacity:1;transform:skewX(-22deg)}100%{opacity:.12;transform:skewX(-22deg) translateY(-8px) scaleY(.55)}}
+body.vxRed .slots{gap:4px}
+/* --- capacités (bas centre) --- */
+body.vxRed #abil{bottom:calc(22px + env(safe-area-inset-bottom,0px))}
+body.vxRed .ab{background:rgba(5,5,5,.74);transform:skewX(-12deg);border-left:2px solid var(--vmd)}
+body.vxRed .ab>*{transform:skewX(12deg)}
+body.vxRed .ab i{background:var(--vr);transform:none}
+body.vxRed .ab kbd{background:rgba(255,16,16,.18);border-color:var(--vr);color:#fff}
+/* --- vitesse (bas gauche, au-dessus de la vie) --- */
+body.vxRed #speed{bottom:calc(128px + env(safe-area-inset-bottom,0px))}
+body.vxRed #speed .chip{border-radius:0;background:rgba(255,16,16,.12);border-color:transparent;border-left:2px solid var(--vr)}
+body.vxRed #kmh{color:var(--vr)}
+/* --- panneau de vie (bas gauche) --- */
+#vxVital,#vxScore,#vxBanner,#vxEdges,#vxHeart,#vxScan{display:none}
+body.vxRed #vxVital{display:block;position:absolute;left:calc(20px + env(safe-area-inset-left,0px));bottom:calc(20px + env(safe-area-inset-bottom,0px));width:300px}
+body.vxRed #me{display:none!important}
+#vxVital .vh{display:flex;align-items:flex-end;gap:8px;margin-bottom:7px}
+#vxVital .hp{font:900 56px/.78 var(--f-display);letter-spacing:-.02em;color:var(--vw);text-shadow:0 0 18px rgba(255,16,16,.45);transform-origin:0 100%;display:inline-block}
+#vxVital .hp.hit{animation:vxHp .28s var(--vkick)}
+@keyframes vxHp{0%{transform:scale(1.18) translateX(-4px);color:var(--vr)}100%{transform:none}}
+#vxVital .pct{font:800 18px/1 var(--f-display);color:var(--vr);margin-bottom:2px}
+#vxVital .vs{margin-left:auto;display:grid;gap:5px;justify-items:end}
+#vxVital .vbar{position:relative;height:15px;transform:skewX(-22deg);background:rgba(255,255,255,.06);overflow:hidden;outline:1px solid rgba(255,16,16,.28)}
+#vxVital .vbar i{position:absolute;inset:0;transform-origin:0 50%;will-change:transform}
+#vxVital .ghost{background:#fff;opacity:.85;transition:transform .55s cubic-bezier(.6,0,.2,1) .18s}
+#vxVital .fill{background:var(--vr);box-shadow:0 0 14px var(--vr-g);transition:transform .09s linear}
+#vxVital .seg{position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 calc(5% - 2px),var(--vk) calc(5% - 2px) 5%)}
+#vxVital .shbar{height:6px;margin-top:5px;outline-color:rgba(142,148,155,.35)}
+#vxVital .shbar i{background:var(--vm);transition:transform .2s linear}
+#vxVital .vf{display:flex;justify-content:space-between;margin-top:7px}
+#vxVital .alert{position:absolute;left:0;bottom:calc(100% + 8px);padding:4px 8px;font:600 11px/1 var(--vmono);letter-spacing:.16em;background:rgba(255,16,16,.16);border-left:2px solid var(--vr);color:#fff;opacity:0}
+body.vxLow #vxVital .alert{opacity:1;animation:vxBlink .39s steps(2) infinite}
+body.vxLow #vxVital .fill{animation:vxLowbar .39s ease-in-out infinite alternate}
+@keyframes vxLowbar{to{filter:brightness(1.9);box-shadow:0 0 26px var(--vr)}}
+@keyframes vxBlink{50%{opacity:.25}}
+/* --- score + combo (haut centre) --- */
+body.vxRed #vxScore{display:block;position:absolute;left:50%;top:calc(12px + env(safe-area-inset-top,0px));transform:translateX(-50%);text-align:center;min-width:260px;pointer-events:none}
+#vxScore .sr{display:flex;justify-content:center;gap:14px;margin-bottom:5px}
+#vxScore .sr b{color:var(--vw);font-weight:400}
+#vxScore .sn{font:900 44px/.85 var(--f-display);letter-spacing:.02em;color:var(--vw);display:inline-block}
+#vxScore .sn.pop{animation:vxSc .3s var(--vkick)}
+@keyframes vxSc{0%{transform:scale(1.28);color:var(--vr);text-shadow:0 0 24px var(--vr)}100%{transform:none}}
+#vxScore .cb{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:6px;opacity:.25;transition:opacity .15s}
+#vxScore .cb.on{opacity:1}
+#vxScore .cx{font:900 22px/1 var(--f-display);color:var(--vr);display:inline-block;min-width:2.2em}
+#vxScore .cx.pop{animation:vxCx .28s var(--vkick)}
+@keyframes vxCx{0%{transform:scale(1.7) rotate(-6deg)}100%{transform:none}}
+#vxScore .cbar{width:110px;height:4px;transform:skewX(-22deg);background:rgba(255,255,255,.08);overflow:hidden}
+#vxScore .cbar i{display:block;height:100%;background:var(--vr);transform-origin:0 50%;box-shadow:0 0 8px var(--vr)}
+#vxScore .plus{position:absolute;left:50%;top:100%;font:800 20px/1 var(--f-display);color:var(--vw);opacity:0;white-space:nowrap}
+#vxScore .plus.go{animation:vxPlus .7s var(--vsnap) forwards}
+@keyframes vxPlus{0%{opacity:0;transform:translate(-50%,-6px) scale(1.4)}15%{opacity:1;transform:translate(-50%,6px) scale(1)}100%{opacity:0;transform:translate(-50%,26px)}}
+body.vxRed #modeBar{top:calc(112px + env(safe-area-inset-top,0px));border-radius:0;border-color:rgba(255,16,16,.4)}
+body.vxRed #target{top:calc(150px + env(safe-area-inset-top,0px))}
+body.vxRed #target .bar.hp i{background:var(--vr)}
+/* --- bannière de série --- */
+body.vxRed #vxBanner{display:block;position:absolute;left:50%;top:26%;transform:translateX(-50%);text-align:center;pointer-events:none;opacity:0}
+#vxBanner b{display:block;font:900 54px/.9 var(--f-display);letter-spacing:.04em;font-style:italic;text-transform:uppercase;color:#fff;text-shadow:0 0 30px var(--vr),4px 0 0 var(--vr)}
+#vxBanner small{display:inline-block;margin-top:8px;padding:4px 10px;font:700 12px/1 var(--vmono);letter-spacing:.3em;background:var(--vr);color:#fff}
+#vxBanner.go{animation:vxBan 1.15s var(--vsnap) forwards}
+@keyframes vxBan{0%{opacity:0;transform:translateX(-50%) scaleX(1.8) skewX(-30deg);filter:blur(6px)}10%{opacity:1;transform:translateX(-50%) skewX(-8deg);filter:none}16%{transform:translateX(-50%) skewX(0)}80%{opacity:1;transform:translateX(-50%)}100%{opacity:0;transform:translateX(calc(-50% + 60px)) skewX(-12deg)}}
+/* --- touché / kill --- */
+body.vxRed #hm i{background:#fff;box-shadow:0 0 0 1px rgba(0,0,0,.5)}
+body.vxRed #hm.crit i{background:#ffd0d0}
+body.vxRed #hm.kill i{background:var(--vr);width:3px;height:12px;box-shadow:0 0 8px var(--vr)}
+/* --- dégâts : vignette rouge, arc de direction, flash du bord touché, battement de cœur --- */
+body.vxRed #hurt{background:radial-gradient(ellipse at center,transparent 48%,rgba(255,16,16,.5) 100%)}
+body.vxRed #hurtDir i{left:-80px;top:-235px;width:160px;height:42px;background:radial-gradient(ellipse at 50% 0,var(--vr) 0,rgba(255,16,16,.6) 35%,transparent 70%);clip-path:polygon(0 0,100% 0,78% 100%,22% 100%);filter:drop-shadow(0 0 10px var(--vr))}
+body.vxRed #vxEdges{display:block;position:absolute;inset:0;pointer-events:none}
+#vxEdges i{position:absolute;inset:0;opacity:0;transition:opacity .45s ease-out}
+#vxEdges .l{background:linear-gradient(90deg,rgba(255,16,16,.55),transparent 22%)}#vxEdges .r{background:linear-gradient(270deg,rgba(255,16,16,.55),transparent 22%)}
+#vxEdges .t{background:linear-gradient(180deg,rgba(255,16,16,.5),transparent 24%)}#vxEdges .b{background:linear-gradient(0deg,rgba(255,16,16,.5),transparent 24%)}
+#vxEdges i.on{opacity:1;transition:none}
+#vxEdges .k{background:var(--vr);mix-blend-mode:screen}
+#vxEdges .k.go{animation:vxFlash .22s ease-out}
+@keyframes vxFlash{0%{opacity:.28}100%{opacity:0}}
+body.vxRed.vxLow #vxHeart{display:block;position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,transparent 40%,rgba(255,16,16,.28) 100%);animation:vxBeat .78s infinite}
+@keyframes vxBeat{0%,100%{transform:scale(1);filter:brightness(1)}12%{transform:scale(1.015);filter:brightness(1.8)}24%{transform:scale(1)}36%{transform:scale(1.01);filter:brightness(1.4)}}
+body.vxRed #vxScan{display:block;position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(180deg,rgba(255,255,255,.03) 0 1px,transparent 1px 3px);mix-blend-mode:overlay}
+.vxGlitch{animation:vxGl .26s steps(2,end)}
+@keyframes vxGl{0%{transform:translate(0);text-shadow:2px 0 #ff1010,-2px 0 #fff;clip-path:inset(0 0 0 0)}20%{transform:translate(-3px,1px);clip-path:inset(12% 0 58% 0)}40%{transform:translate(3px,-1px);text-shadow:-3px 0 #ff1010,3px 0 #fff;clip-path:inset(54% 0 8% 0)}60%{transform:translate(-2px,0);clip-path:inset(30% 0 30% 0)}80%{transform:translate(2px,1px);clip-path:inset(0 0 72% 0)}100%{transform:translate(0);text-shadow:none;clip-path:inset(0 0 0 0)}}
+/* --- mort, messages --- */
+body.vxRed #death{background:rgba(5,5,5,.6)}
+body.vxRed #death b{font:900 76px/.85 var(--f-display);font-style:italic;letter-spacing:.04em;color:var(--vr);text-shadow:0 0 34px var(--vr);transform:none}
+body.vxRed #death span{font:600 13px/1 var(--vmono);letter-spacing:.3em;text-transform:uppercase}
+body.vxRed #toast{border-radius:0;background:rgba(5,5,5,.8);border-left-color:var(--vr)}
+/* --- lisibilité sur les cartes claires : plaques sombres derrière les blocs, ombre portée sur les textes --- */
+body.vxRed #vxVital,body.vxRed #weapon,body.vxRed #vxScore{background:rgba(5,5,5,.58);clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,14px 100%,0 calc(100% - 14px))}
+body.vxRed #vxVital{padding:12px 16px 10px 14px;left:calc(12px + env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+body.vxRed #weapon{padding:10px 16px 12px 22px;right:calc(12px + env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+body.vxRed #vxScore{padding:8px 22px 10px}
+body.vxRed #stats,body.vxRed #speed .srow{text-shadow:0 1px 2px rgba(0,0,0,.85)}
+body.vxRed #hud .vxLbl,body.vxRed #stats .lbl{color:#b4b9bf;text-shadow:0 1px 2px rgba(0,0,0,.9)}
+body.vxRed #speed{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+/* --- tactile : la vie passe en haut, le score se fait petit --- */
+body.vxRed.touch #vxVital{left:50%;bottom:auto;top:calc(8px + env(safe-area-inset-top,0px));transform:translateX(-50%) scale(.72);transform-origin:50% 0}
+body.vxRed.touch #vxScore{top:auto;bottom:calc(8px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) scale(.6);transform-origin:50% 100%}
+body.vxRed.touch #speed{bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+@media (max-width:640px){body.vxRed #ammo{font-size:52px}body.vxRed #vxVital{width:220px}body.vxRed #vxVital .hp{font-size:40px}body.vxRed #vxScore .sn{font-size:32px}}
+@media (prefers-reduced-motion:reduce){body.vxRed #vxScan{display:none}body.vxRed.vxLow #vxHeart{animation:none}}
+</style>
 <style id="vx-theme-css">
 /* ================= Thème « Vélocité » pour tous les menus =================
    Même direction que le menu principal : noir profond, rouge, orange brûlé ; angles vifs, aplats, typo condensée.
@@ -891,6 +1029,11 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
 </div></div>
 <div id="hud" hidden>
   <div id="hurt"></div>
+  <div id="vxScan"></div><div id="vxHeart"></div>
+  <div id="vxEdges"><i class="l"></i><i class="r"></i><i class="t"></i><i class="b"></i><i class="k"></i></div>
+  <div id="vxScore"><div class="sr"><span class="vxLbl" data-vxs="lKills"></span><b class="vxLbl" data-vxs="kills">0</b><span class="vxLbl" data-vxs="lTime"></span><b class="vxLbl" data-vxs="time">0:00</b></div><div class="sn" data-vxs="score">000000</div><div class="cb"><span class="cx">×1</span><span class="cbar"><i></i></span><span class="vxLbl">COMBO</span></div><div class="plus">+100</div></div>
+  <div id="vxBanner"><b>DOUBLE KILL</b><small>+250</small></div>
+  <div id="vxVital"><span class="alert" data-vxs="alert"></span><div class="vh"><span class="hp">100</span><span class="pct">%</span><div class="vs"><span class="vxLbl" data-vxs="lInt"></span><span class="vxLbl" data-vxs="sh"></span></div></div><div class="vbar hpbar"><i class="ghost"></i><i class="fill"></i><span class="seg"></span></div><div class="vbar shbar"><i></i></div><div class="vf"><span class="vxLbl" data-vxs="who"></span><span class="vxLbl" data-vxs="state"></span></div></div>
   <div id="hurtDir"><i></i></div>
   <div id="scope" hidden><i></i></div>
   <canvas id="minimap" width="170" height="170"></canvas>
@@ -927,6 +1070,7 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
   <div id="weapon">
     <div class="slots" id="slots"></div>
     <div class="ammo"><b id="ammo">28</b><span id="mag">/ 28</span></div>
+    <div id="vxPips"></div>
     <div id="wname">NOCTIS</div>
     <div id="reloadBar"><i></i></div>
   </div>
@@ -1142,6 +1286,7 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
         <label class="field" id="kskinField"><span class="lab" data-i18n="set.kskin">Skin de mêlée (toutes les lames)</span><select id="kskinSel"><option value="follow" data-i18n="ks.follow">Comme les armes</option><option value="tamahagane" data-i18n="ks.tamahagane">Tamahagane</option><option value="damascus" data-i18n="ks.damascus">Damas</option><option value="blood" data-i18n="ks.blood">Lame de sang</option><option value="dragon" data-i18n="ks.dragon">Dragon (animé)</option><option value="energy" data-i18n="ks.energy">Énergie (animé)</option><option value="sakura" data-i18n="ks.sakura">Sakura</option><option value="obsidian" data-i18n="ks.obsidian">Obsidienne</option><option value="thunder" data-i18n="ks.thunder">Éclair (animé)</option><option value="void" data-i18n="ks.void">Néant (animé)</option><option value="ultra" data-i18n="ks.ultra">★ Lame céleste (ultra)</option></select></label>
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
+        <label class="check"><input type="checkbox" id="hudRedOn"> <span data-i18n="set.hudRed">HUD Rouge combat</span></label>
         <label class="check"><input type="checkbox" id="lootOn"> <span data-i18n="set.loot">Départ au pistolet, armes dans les coffres</span></label>
         <label class="check"><input type="checkbox" id="fpLegsOn"> <span data-i18n="set.fpLegs">Voir mes jambes (superglide)</span></label>
         <label class="field"><span class="lab"><span data-i18n="set.camFx">Effets de caméra</span> <output id="oCamFx"></output></span><input type="range" id="camFx" min="0" max="1.5" step="0.05"></label>
@@ -8205,6 +8350,23 @@ const mmEl = $('minimap'), mmCtx = mmEl.getContext('2d');
 const MM_RANGE = 55;
 let MM_BOXES = [];
 function refreshMinimapBoxes() { if (CITY.on) { MM_BOXES = []; return; } MM_BOXES = BOXES.filter(b => !b.ground).map(b => ({ x: b.min.x, z: b.min.z, w: b.max.x - b.min.x, d: b.max.z - b.min.z, h: b.max.y, y0: b.min.y })); }
+// couleurs de la mini-carte (le HUD Rouge combat les change et ajoute un balayage radar)
+const MMC = { acc: '#FFB020', zip: 'rgba(255,176,32,.85)', sweep: false, a: 0 };
+function mmSweep(c, half) {
+  const r = half - 2; MMC.a = (MMC.a + 0.06) % (Math.PI * 2);
+  c.save(); c.translate(half, half);
+  c.strokeStyle = 'rgba(255,16,16,.22)'; c.lineWidth = 1;
+  for (const f of [0.36, 0.7]) { c.beginPath(); c.arc(0, 0, r * f, 0, Math.PI * 2); c.stroke(); }
+  if (c.createConicGradient) {
+    const g = c.createConicGradient(MMC.a - Math.PI / 2 - 1.1, 0, 0);
+    g.addColorStop(0, 'rgba(255,16,16,0)'); g.addColorStop(0.17, 'rgba(255,16,16,.32)'); g.addColorStop(0.175, 'rgba(255,16,16,0)'); g.addColorStop(1, 'rgba(255,16,16,0)');
+    c.fillStyle = g; c.beginPath(); c.arc(0, 0, r, 0, Math.PI * 2); c.fill();
+  }
+  c.strokeStyle = 'rgba(255,70,70,.85)'; c.lineWidth = 1.4; c.beginPath(); c.moveTo(0, 0); c.lineTo(Math.sin(MMC.a) * r, -Math.cos(MMC.a) * r); c.stroke();
+  for (let i = 0; i < 48; i++) { const a = i / 48 * Math.PI * 2, l = i % 12 === 0 ? 6 : 3; c.strokeStyle = i % 12 === 0 ? 'rgba(244,242,240,.8)' : 'rgba(255,16,16,.45)';
+    c.beginPath(); c.moveTo(Math.sin(a) * (r - 1), -Math.cos(a) * (r - 1)); c.lineTo(Math.sin(a) * (r - 1 - l), -Math.cos(a) * (r - 1 - l)); c.stroke(); }
+  c.restore();
+}
 let mmAcc = 0;
 function syncMinimap() { mmEl.hidden = !S.minimap; const c = $('minimapOn'); if (c) c.checked = S.minimap; }
 function sizeMinimap() {
@@ -8225,9 +8387,9 @@ function drawMinimap() {
   }
   c.fillStyle = 'rgba(244,239,230,.12)';
   for (const r of RAMPS) c.fillRect(r.x0, r.z0, r.x1 - r.x0, r.z1 - r.z0);
-  c.strokeStyle = 'rgba(255,176,32,.85)'; c.lineWidth = 1.3;
+  c.strokeStyle = MMC.zip; c.lineWidth = 1.3;
   for (const z of ZIPS) { c.beginPath(); c.moveTo(z.a.x, z.a.z); c.lineTo(z.b.x, z.b.z); c.stroke(); }
-  c.fillStyle = '#FFB020';
+  c.fillStyle = MMC.acc;
   for (const pd of PADS) { c.beginPath(); c.arc(pd.x, pd.z, 1.4, 0, Math.PI * 2); c.fill(); }
   c.fillStyle = '#E88A4A';
   for (const d of dummies) if (d.alive && RULES.bots) { c.beginPath(); c.arc(d.g.position.x, d.g.position.z, 1.1, 0, Math.PI * 2); c.fill(); }
@@ -8242,7 +8404,8 @@ function drawMinimap() {
   // nord
   const nx = half + (half - 10) * Math.sin(P.yaw), ny = half - (half - 10) * Math.cos(P.yaw);
   c.font = '700 11px "Saira Condensed", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle';
-  c.fillStyle = '#FFB020'; c.fillText('N', nx, ny);
+  c.fillStyle = MMC.acc; c.fillText('N', nx, ny);
+  if (MMC.sweep) mmSweep(c, half);
 }
 /* ================= Mode secret : aimbot, triggerbot, ESP, vol, téléportation ================= */
 function flyStep(dt) {
@@ -11975,11 +12138,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.11';
+const GAME_VERSION = '2026.12.12';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Canyon refait : falaises de grès avec contreforts et crête, route goudronnée, station-service, saloon, maisons en adobe, bus abandonné, rochers', 'On peut entrer dans les bâtiments (vraies portes et fenêtres) et monter sur les toits ; la collision suit exactement ce qu’on voit', 'Couvertures sur la route (blocs béton, sacs de sable), poteaux électriques, lampadaires ; plus d’herbe dans les maisons ni sur la route'],
-  en: ['Canyon rebuilt: sandstone cliffs with buttresses and ridge, asphalt road, gas station, saloon, adobe houses, abandoned bus, rock outcrops', 'You can walk into buildings (real doors and windows) and climb onto roofs; collision matches exactly what you see', 'Cover on the road (jersey barriers, sandbags), power poles, street lamps; no more grass inside houses or on the road']
+  fr: ['Nouveau HUD Rouge combat : panneau de vie avec traînée de dégâts et alerte « vie critique », barre par balle dans le chargeur, recul du compteur à chaque tir', 'Score de la partie avec combo ×1 à ×8 et bannières DOUBLE KILL, TRIPLE KILL, HEADSHOT…', 'Radar avec balayage rouge, flash sur le bord de l’écran du côté où on te tire dessus, kill feed incliné', 'Tu préfères l’ancien ? Paramètres → décoche « HUD Rouge combat »'],
+  en: ['New Red combat HUD: health panel with damage trail and “critical health” alert, one bar per bullet in the magazine, ammo counter kick on every shot', 'Match score with ×1 to ×8 combo and DOUBLE KILL, TRIPLE KILL, HEADSHOT banners…', 'Radar with a red sweep, screen-edge flash on the side you are shot from, slanted kill feed', 'Prefer the old one? Settings → untick “Red combat HUD”']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -20439,6 +20602,103 @@ Object.assign(I18N.en, {
 try { HOME.refresh && HOME.refresh(); } catch (e) {}
 // le thème passe après tous les styles ajoutés par les modules
 try { const th = $('vx-theme-css'); if (th) document.head.appendChild(th); } catch (e) {}
+
+/* ================= HUD « Rouge combat » — logique =================
+   Lit les vraies valeurs du jeu (P.hp / P.sh, WS.ammo, stats, hurtAngle, hmT) et ne touche au DOM que si elles changent.
+   Score de la partie : +10 par touche, +100 par élimination (+50 à la tête) × combo (×1 à ×8, fenêtre de 4 s). */
+const VXH = { on: store.get('hudRed', true) !== false, score: 0, shown: 0, combo: 1, comboT: 0, streak: 0, kills: 0, lastHp: -1, lastSh: -1, lastTot: -1,
+  wcur: -1, wmag: -1, am: -1, pips: [], per: 1, headT: 0, hmPrev: 0, time: 0, map: '', lastSv: -1, lastCombo: -1, lastTime: -1, lastK: -1 };
+(function vxHudInit() {
+  const q = (root, k) => root.querySelector(`[data-vxs="${k}"]`);
+  const V = $('vxVital'), SC = $('vxScore'), BN = $('vxBanner'), ED = $('vxEdges'), PIPS = $('vxPips');
+  const hpEl = V.querySelector('.hp'), fill = V.querySelector('.fill'), ghost = V.querySelector('.ghost'), shI = V.querySelector('.shbar i');
+  const sn = q(SC, 'score'), cx = SC.querySelector('.cx'), cb = SC.querySelector('.cb'), cbar = SC.querySelector('.cbar i'), plus = SC.querySelector('.plus');
+  const edge = { l: ED.querySelector('.l'), r: ED.querySelector('.r'), t: ED.querySelector('.t'), b: ED.querySelector('.b'), k: ED.querySelector('.k') };
+  const re = (n, c) => { n.classList.remove(c); void n.offsetWidth; n.classList.add(c); };
+  function apply() {
+    document.body.classList.toggle('vxRed', VXH.on);
+    MMC.sweep = VXH.on; MMC.acc = VXH.on ? '#ff1010' : '#FFB020'; MMC.zip = VXH.on ? 'rgba(255,16,16,.8)' : 'rgba(255,176,32,.85)';
+    const c = $('hudRedOn'); if (c) c.checked = VXH.on;
+    texts();
+  }
+  function texts() {
+    q(SC, 'lKills').textContent = t('vxh.kills'); q(SC, 'lTime').textContent = t('vxh.time');
+    q(V, 'lInt').textContent = t('vxh.integrity'); q(V, 'alert').textContent = '⚠ ' + t('vxh.critical');
+    q(V, 'who').textContent = (S.name || '—') + ' // ' + (I18N[LANG] && I18N[LANG]['char.' + S.char] || I18N.fr['char.' + S.char] || '');
+  }
+  const box = $('hudRedOn');
+  if (box) box.addEventListener('change', () => { VXH.on = box.checked; store.set('hudRed', VXH.on); apply(); });
+  addEventListener('velLang', texts);
+  // la tête : questEv('head') arrive juste avant l'élimination
+  const _qe = questEv; questEv = function (ev, v) { if (ev === 'head') VXH.headT = performance.now(); return _qe.apply(this, arguments); };
+  function addScore(n, big) { VXH.score += n; plus.textContent = '+' + n; re(plus, 'go'); if (big) re(sn, 'pop'); }
+  function banner(title, sub) { BN.querySelector('b').textContent = title; BN.querySelector('small').textContent = sub; re(BN, 'go'); }
+  function onKill() {
+    const head = performance.now() - VXH.headT < 400;
+    VXH.streak = VXH.comboT > 0 ? VXH.streak + 1 : 1;
+    VXH.combo = Math.min(8, VXH.combo + (VXH.comboT > 0 ? 1 : 0)); VXH.comboT = 4;
+    const pts = (100 + (head ? 50 : 0)) * VXH.combo; addScore(pts, true); re(cx, 'pop'); re(edge.k, 'go');
+    const tl = { 2: 'vxh.double', 3: 'vxh.triple', 4: 'vxh.quadra', 5: 'vxh.carnage' };
+    if (VXH.streak >= 2) banner(t(tl[Math.min(VXH.streak, 5)] || 'vxh.unstop'), '+' + pts);
+    else if (head) banner(t('vxh.head'), '+' + pts);
+  }
+  function flashSide() {
+    const rel = Math.atan2(Math.sin(hurtAngle - Math.atan2(-Math.sin(P.yaw), -Math.cos(P.yaw))), Math.cos(hurtAngle - Math.atan2(-Math.sin(P.yaw), -Math.cos(P.yaw))));
+    const n = Math.abs(rel) < Math.PI / 4 ? edge.t : Math.abs(rel) > Math.PI * 3 / 4 ? edge.b : rel > 0 ? edge.l : edge.r;
+    n.classList.add('on'); setTimeout(() => n.classList.remove('on'), 120);
+  }
+  let last = performance.now();
+  function loop(now) {
+    requestAnimationFrame(loop);
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (!VXH.on || hud.hidden) return;
+    // nouvelle partie / nouvelle carte : score remis à zéro
+    if (S.map !== VXH.map || stats.time < VXH.time - 1 || stats.kills < VXH.kills) { VXH.map = S.map; VXH.score = VXH.shown = 0; VXH.combo = 1; VXH.comboT = 0; VXH.streak = 0; VXH.kills = stats.kills; VXH.lastHp = VXH.lastSh = -1; }
+    VXH.time = stats.time;
+    // vie + bouclier
+    const hp = Math.max(0, Math.round(P.hp)), sh = Math.max(0, Math.round(P.sh)), tot = hp + sh;
+    if (hp !== VXH.lastHp || sh !== VXH.lastSh) {
+      const hit = VXH.lastTot >= 0 && tot < VXH.lastTot - 0.5;
+      hpEl.textContent = hp; fill.style.transform = ghost.style.transform = `scaleX(${hp / MAX_HP})`; shI.style.transform = `scaleX(${sh / MAX_SH})`;
+      q(V, 'sh').textContent = t('vxh.shield') + ' ' + sh;
+      if (hit) { re(hpEl, 'hit'); flashSide(); if (VXH.lastTot - tot >= 25) { re(hpEl, 'vxGlitch'); re(sn, 'vxGlitch'); } }
+      document.body.classList.toggle('vxLow', hp > 0 && hp <= 30 && !P.dead);
+      VXH.lastHp = hp; VXH.lastSh = sh; VXH.lastTot = tot;
+    }
+    if (P.dead !== VXH.dead) { VXH.dead = P.dead; q(V, 'state').textContent = P.dead ? t('vxh.down') : t('vxh.active'); texts(); }
+    // munitions : une barre par balle (40 au plus), recul du compteur à chaque tir
+    const W = WEAPONS[WS.cur], am = WS.ammo[WS.cur];
+    if (WS.cur !== VXH.wcur || W.mag !== VXH.wmag) {
+      VXH.wcur = WS.cur; VXH.wmag = W.mag; PIPS.textContent = ''; VXH.pips = [];
+      const n = W.melee ? 0 : Math.min(40, W.mag); VXH.per = n ? W.mag / n : 1;
+      for (let i = 0; i < n; i++) { const p = document.createElement('i'); PIPS.appendChild(p); VXH.pips.push(p); }
+      VXH.am = -1;
+    }
+    if (am !== VXH.am) {
+      if (VXH.am >= 0 && am < VXH.am && !W.melee) { re(hudEls.ammo, 'vxKick'); const p = VXH.pips[Math.floor(am / VXH.per)]; if (p) re(p, 'pop'); }
+      const lit = Math.ceil(am / VXH.per);
+      VXH.pips.forEach((p, i) => { if (!p.classList.contains('pop') || i < lit) { p.classList.remove('pop'); p.classList.toggle('off', i >= lit); } });
+      VXH.am = am;
+    }
+    // touches (+10) et éliminations (score × combo)
+    if (hmT > VXH.hmPrev + 0.05 && hmEl.className !== 'kill') addScore(10, false);
+    VXH.hmPrev = hmT;
+    if (stats.kills > VXH.kills) { for (let i = VXH.kills; i < stats.kills; i++) onKill(); VXH.kills = stats.kills; }
+    if (VXH.comboT > 0) { VXH.comboT -= dt; if (VXH.comboT <= 0) { VXH.combo = 1; VXH.streak = 0; } }
+    cbar.style.transform = `scaleX(${Math.max(0, VXH.comboT / 4)})`;
+    if (VXH.combo !== VXH.lastCombo) { cx.textContent = '×' + VXH.combo; cb.classList.toggle('on', VXH.combo > 1); VXH.lastCombo = VXH.combo; }
+    VXH.shown += (VXH.score - VXH.shown) * Math.min(1, dt * 12);
+    const sv = Math.round(VXH.shown >= VXH.score - 0.5 ? VXH.score : VXH.shown);
+    if (sv !== VXH.lastSv) { sn.textContent = String(sv).padStart(6, '0'); VXH.lastSv = sv; }
+    if (stats.kills !== VXH.lastK) { q(SC, 'kills').textContent = stats.kills; VXH.lastK = stats.kills; }
+    const ts = Math.floor(stats.time); if (ts !== VXH.lastTime) { q(SC, 'time').textContent = Math.floor(ts / 60) + ':' + String(ts % 60).padStart(2, '0'); VXH.lastTime = ts; }
+  }
+  apply(); requestAnimationFrame(loop);
+})();
+Object.assign(I18N.fr, { 'set.hudRed': 'HUD Rouge combat', 'vxh.kills': 'Élim.', 'vxh.time': 'Temps', 'vxh.integrity': 'Intégrité', 'vxh.shield': 'Bouclier', 'vxh.critical': 'Vie critique',
+  'vxh.active': 'Actif', 'vxh.down': 'Hors combat', 'vxh.double': 'Double kill', 'vxh.triple': 'Triple kill', 'vxh.quadra': 'Quadra kill', 'vxh.carnage': 'Carnage', 'vxh.unstop': 'Inarrêtable', 'vxh.head': 'Headshot' });
+Object.assign(I18N.en, { 'set.hudRed': 'Red combat HUD', 'vxh.kills': 'Kills', 'vxh.time': 'Time', 'vxh.integrity': 'Integrity', 'vxh.shield': 'Shield', 'vxh.critical': 'Critical health',
+  'vxh.active': 'Active', 'vxh.down': 'Down', 'vxh.double': 'Double kill', 'vxh.triple': 'Triple kill', 'vxh.quadra': 'Quadra kill', 'vxh.carnage': 'Carnage', 'vxh.unstop': 'Unstoppable', 'vxh.head': 'Headshot' });
 
 requestAnimationFrame(frame);
 })();
