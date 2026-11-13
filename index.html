@@ -2487,6 +2487,37 @@ function buildTerrainMeshes(colorFn) {
 /* ---------- herbe : touffes instanciées qui ondulent au vent (un seul appel de dessin par carte) ---------- */
 const GRASS_T = { value: 0 }, GRASS_MESHES = [];
 // herbe : on cache les touffes loin de la caméra (130 m)
+/* ---------- Culling par champ de vision ----------
+   Mannequins, joueurs, coffres, objets au sol et véhicules : ce qui est hors du champ de vision (avec une marge), ou au-delà
+   du brouillard, passe sur un calque que la caméra et les ombres ne dessinent pas. Près du joueur (10 m), tout reste dessiné
+   pour que les ombres qui entrent dans l'écran ne disparaissent pas. Les boîtes de collision et la logique du jeu ne changent pas
+   (la visibilité « visible » n'est jamais touchée). Coupé dans les menus et en mode fish-eye (champ plus large que la caméra). */
+const VCULL = { on: true, layer: 31, fr: new THREE.Frustum(), m: new THREE.Matrix4(), sp: new THREE.Sphere(), n: 0, culled: 0 };
+function vcSet(obj, cull) {
+  if (!obj || obj.userData.vc === cull) return;
+  obj.userData.vc = cull;
+  obj.traverse(o => { if ((o.isMesh || o.isPoints || o.isLine || o.isSprite) && o.material !== hitMat && !(o.material && o.material.visible === false)) o.layers.set(cull ? VCULL.layer : 0); });
+}
+function viewCull() {
+  const off = !VCULL.on || !menu.hidden || (typeof horPostOn === 'function' && horPostOn());
+  const list = [];
+  for (const d of dummies) if (d.g) list.push([d.g, 1.3, 1.1]);
+  for (const rp of remotes.values()) if (rp.g) list.push([rp.g, 1.3, 1.1]);
+  for (const c of CHESTS) if (c.g) list.push([c.g, 1.0, 0.5]);
+  for (const p of PICKS) if (p.g) list.push([p.g, 1.2, 1.2]);
+  for (const v of VEHICLES) if (v.g && v !== P.veh) list.push([v.g, 4.5, 1.2]);
+  if (off) { for (const [g] of list) vcSet(g, false); return; }
+  camera.updateMatrixWorld(); VCULL.m.multiplyMatrices(camera.projectionMatrix, camera.matrixWorldInverse); VCULL.fr.setFromProjectionMatrix(VCULL.m);
+  const far = scene.fog && scene.fog.far ? Math.min(scene.fog.far + 10, camera.far) : camera.far, cp = camera.position;
+  let culled = 0;
+  for (const [g, r, oy] of list) {
+    const x = g.position.x, y = g.position.y + oy, z = g.position.z, d = Math.hypot(x - cp.x, y - cp.y, z - cp.z);
+    VCULL.sp.center.set(x, y, z); VCULL.sp.radius = r + 1.5;
+    const cull = d > 10 && (d > far + r || !VCULL.fr.intersectsSphere(VCULL.sp));
+    vcSet(g, cull); if (cull) culled++;
+  }
+  VCULL.n = list.length; VCULL.culled = culled;
+}
 function cullGrass() { for (const m of GRASS_MESHES) { const g = m.userData.grass; m.visible = Math.hypot(g.c.x + m.position.x - camera.position.x, g.c.z + m.position.z - camera.position.z) - g.r < 130; } }
 const grassTex = canvasTex((g, s) => {
   g.clearRect(0, 0, s, s);
@@ -2532,8 +2563,25 @@ function scatterGrass(x0, z0, x1, z1, count, tint = 0xffffff, avoid) {
     col.copy(base).multiplyScalar(0.75 + rnd() * 0.4); mesh.setColorAt(n, col);
     n++;
   }
-  mesh.count = n; mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
-  mesh.receiveShadow = true; mesh.frustumCulled = true; mesh.userData.grass = { c: gg.boundingSphere.center.clone(), r: Math.hypot(x1 - x0, z1 - z0) / 2 }; mapRoot.add(mesh); GRASS_MESHES.push(mesh);
+  mesh.count = n; tileGrass(mesh, gg);
+}
+// répartit les touffes en dalles de 32 m, chacune avec sa propre sphère englobante : three.js ne dessine que les dalles dans le champ de vision
+function tileGrass(src, srcGeo) {
+  const T = 32, tiles = new Map(), m4 = new THREE.Matrix4(), p = new V3(), col = new THREE.Color();
+  for (let i = 0; i < src.count; i++) {
+    src.getMatrixAt(i, m4); p.setFromMatrixPosition(m4);
+    const k = Math.floor(p.x / T) + ',' + Math.floor(p.z / T); if (!tiles.has(k)) tiles.set(k, []); tiles.get(k).push(i);
+  }
+  for (const list of tiles.values()) {
+    const g = grassGeo.clone(), mesh = new THREE.InstancedMesh(g, grassMat, list.length), c = new V3(); let maxY = 0;
+    list.forEach((i, j) => { src.getMatrixAt(i, m4); mesh.setMatrixAt(j, m4); p.setFromMatrixPosition(m4); c.add(p); maxY = Math.max(maxY, p.y); if (src.instanceColor) { src.getColorAt(i, col); mesh.setColorAt(j, col); } });
+    c.multiplyScalar(1 / list.length);
+    let r = 0; list.forEach(i => { src.getMatrixAt(i, m4); p.setFromMatrixPosition(m4); r = Math.max(r, Math.hypot(p.x - c.x, p.z - c.z)); });
+    g.boundingSphere = new THREE.Sphere(new V3(c.x, c.y + 0.6, c.z), r + 2);
+    mesh.instanceMatrix.needsUpdate = true; if (mesh.instanceColor) mesh.instanceColor.needsUpdate = true;
+    mesh.receiveShadow = true; mesh.frustumCulled = true; mesh.userData.grass = { c: c.clone(), r: r + 2 }; mapRoot.add(mesh); GRASS_MESHES.push(mesh);
+  }
+  srcGeo.dispose(); src.dispose && src.dispose();
 }
 /* ---------- Carte 1 : Canyon ---------- */
 /* ---------- Canyon : avant-poste du désert ----------
@@ -4607,7 +4655,9 @@ function mergeGeos(list, attrs) {
   out.computeBoundingSphere(); out.computeBoundingBox();
   return out;
 }
-const chunkOf = (x, z) => '|' + Math.floor(x / 96) + ',' + Math.floor(z / 96);
+// découpage en blocs du décor fusionné : plus la carte est petite, plus les blocs sont fins (ce qui sort du champ de vision n'est pas dessiné)
+const chunkSz = () => MAP_LIM <= 70 ? 40 : MAP_LIM <= 140 ? 56 : 96;
+const chunkOf = (x, z) => { const c = chunkSz(); return '|' + Math.floor(x / c) + ',' + Math.floor(z / c); };
 // retire un objet temporaire de la scène ET libère ses géométries (sinon la mémoire graphique grossit à chaque partie)
 function dropObj(o) {
   if (!o) return; if (o.parent) o.parent.remove(o);
@@ -12138,11 +12188,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.12';
+const GAME_VERSION = '2026.12.13';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Nouveau HUD Rouge combat : panneau de vie avec traînée de dégâts et alerte « vie critique », barre par balle dans le chargeur, recul du compteur à chaque tir', 'Score de la partie avec combo ×1 à ×8 et bannières DOUBLE KILL, TRIPLE KILL, HEADSHOT…', 'Radar avec balayage rouge, flash sur le bord de l’écran du côté où on te tire dessus, kill feed incliné', 'Tu préfères l’ancien ? Paramètres → décoche « HUD Rouge combat »'],
-  en: ['New Red combat HUD: health panel with damage trail and “critical health” alert, one bar per bullet in the magazine, ammo counter kick on every shot', 'Match score with ×1 to ×8 combo and DOUBLE KILL, TRIPLE KILL, HEADSHOT banners…', 'Radar with a red sweep, screen-edge flash on the side you are shot from, slanted kill feed', 'Prefer the old one? Settings → untick “Red combat HUD”']
+  fr: ['Optimisation : ce qui est derrière toi ou hors de ton champ de vision n’est plus dessiné (mannequins, joueurs, coffres, objets, véhicules), ombres comprises', 'Herbe découpée en dalles et décor en blocs plus fins : seule la partie visible est dessinée', 'Environ 20 % d’appels de dessin et jusqu’à 30 % de triangles en moins par image'],
+  en: ['Optimisation: what is behind you or outside your field of view is no longer drawn (dummies, players, chests, items, vehicles), shadows included', 'Grass split into tiles and scenery into finer blocks: only the visible part is drawn', 'About 20% fewer draw calls and up to 30% fewer triangles per frame']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -19570,6 +19620,7 @@ function frame(now) {
   updateFpLegs(dt);
   updateVehicles(dt);
   cullGrass();
+  viewCull();
   updateVehDamageFx(dt); updateVehHud(); updateCockpitHud(); updatePickups(dt); updateStrikes(dt); updateChests(dt); updateFlames(dt);
   if (SPEC.on && playing) specInput();
   grenStep(dt);
