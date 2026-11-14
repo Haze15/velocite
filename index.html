@@ -1963,7 +1963,7 @@ const wName = i => i === 5 ? t('knife.' + (S.knife || 'combat')).toUpperCase() :
 // qui ne quitte jamais l'appareil ; en ligne, on prouve qu'on l'a en signant un nonce émis par l'hôte. Une empreinte SHA-256
 // visible dans le code suffisait à n'importe qui pour se faire passer pour le propriétaire (claim rejoué tel quel).
 const X_PUB = 'G7cJJp6LCd2z3MUNtl3CPuj8ZuWEuQZUpgBqVFhXjT4';
-const ADM_PUB = '8m6ievJFRFlngA2axIQ1KjZS1ObTYASbO4uk_w5NmVE';
+const ADM_PUB = 'K57fImMSEyDNtPHKWWPylegULc2moIyffY172EnXtrg';
 const ED = { pkcs8: new Uint8Array([0x30, 0x2e, 0x02, 0x01, 0x00, 0x30, 0x05, 0x06, 0x03, 0x2b, 0x65, 0x70, 0x04, 0x22, 0x04, 0x20]), ok: null };
 const b64u = u8 => btoa(String.fromCharCode(...u8)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 const unb64u = s => { s = String(s || '').replace(/-/g, '+').replace(/_/g, '/'); while (s.length % 4) s += '='; return Uint8Array.from(atob(s), c => c.charCodeAt(0)); };
@@ -12188,11 +12188,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.13';
+const GAME_VERSION = '2026.12.14';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Optimisation : ce qui est derrière toi ou hors de ton champ de vision n’est plus dessiné (mannequins, joueurs, coffres, objets, véhicules), ombres comprises', 'Herbe découpée en dalles et décor en blocs plus fins : seule la partie visible est dessinée', 'Environ 20 % d’appels de dessin et jusqu’à 30 % de triangles en moins par image'],
-  en: ['Optimisation: what is behind you or outside your field of view is no longer drawn (dummies, players, chests, items, vehicles), shadows included', 'Grass split into tiles and scenery into finer blocks: only the visible part is drawn', 'About 20% fewer draw calls and up to 30% fewer triangles per frame']
+  fr: ['Sécurité : nouveau mot de passe du panneau admin (l’ancien ne marche plus)'],
+  en: ['Security: new admin panel password (the old one no longer works)']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
