@@ -12,8 +12,11 @@ func TestObsModules(t *testing.T) {
 		`C:\ProgramData\obs-studio-hook\graphics-hook64.dll`,
 		`C:\Users\H\AppData\Local\Medal\recorder\hook64.dll`,
 		`C:\Users\H\Desktop\Velocite.exe`,
+		`C:\Users\H\AppData\Local\Programs\Grammarly\gx64.dll`,
+		`C:\Users\H\AppData\Roaming\Corsair\hook.dll`,
+		`C:\ProgramData\Kaspersky Lab\inject64.dll`,
 	}
-	bad := []string{`C:\Users\H\Desktop\aimbot.dll`, `C:\Users\H\Downloads\cheat\esp.dll`, `C:\Users\H\AppData\Local\Temp\x.dll`, `D:\hacks\wall.dll`}
+	bad := []string{`C:\Users\H\Desktop\aimbot.dll`, `C:\Users\H\Downloads\cheat\esp.dll`, `C:\Users\H\AppData\Local\Temp\x.dll`, `D:\hacks\wall.dll`, `C:\Users\H\AppData\Local\Temp\inj\aim.dll`}
 	for _, p := range ok {
 		if obsSuspiciousModule(p, env) {
 			t.Errorf("faux positif : %s", p)
@@ -27,7 +30,7 @@ func TestObsModules(t *testing.T) {
 	if obsSuspiciousProcess("cheatengine-x86_64-SSE4-AVX2.exe") == "" || obsSuspiciousProcess("Extreme Injector v3.exe") == "" {
 		t.Error("outil non détecté")
 	}
-	if obsSuspiciousProcess("Discord.exe") != "" || obsSuspiciousProcess("chrome.exe") != "" || obsSuspiciousProcess("SystemInformer.exe") != "" {
+	if obsSuspiciousProcess("Discord.exe") != "" || obsSuspiciousProcess("chrome.exe") != "" || obsSuspiciousProcess("SystemInformer.exe") != "" || obsSuspiciousProcess("WeMod.exe") != "" {
 		t.Error("faux positif programme")
 	}
 }
