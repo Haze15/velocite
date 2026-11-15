@@ -70,7 +70,7 @@ final class GameVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
                 ' storage=' + (function(){ try { localStorage.setItem('velocite_iosProbe', '1'); return localStorage.getItem('velocite_iosProbe') === '1'; } catch(_) { return false; } })() +
                 ' three=' + (typeof THREE !== 'undefined') + ' size=' + innerWidth + 'x' + innerHeight +
                 ' obsBoot=' + (ob ? 'visible bad=' + ob.querySelectorAll('.bad').length : 'gone') +
-                ' text=' + (ob ? ob.innerText : (document.body.innerText || '')).replace(/\s+/g, ' ').slice(0, 220));
+                ' text=' + (ob ? ob.innerText : (document.body.innerText || '')).replace(/\\s+/g, ' ').slice(0, 220));
             });
           } catch(e) { h.postMessage('STATE error ' + e); } }
           setTimeout(function(){ probe('t15'); }, 15000);
