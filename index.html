@@ -12188,11 +12188,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.14';
+const GAME_VERSION = '2026.12.15';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Sécurité : nouveau mot de passe du panneau admin (l’ancien ne marche plus)'],
-  en: ['Security: new admin panel password (the old one no longer works)']
+  fr: ['Obsidian moins strict : une extension du navigateur, un antivirus, un adversaire qui tient un sniper ou un gestionnaire de mots de passe ne font plus bannir personne', 'Triche prouvée (vitesse du jeu, wallhack, DLL injectée, souris pilotée par un script) : crédits et jeu en ligne bloqués, comme avant', 'Simple soupçon (script extérieur, code modifié, programme de triche ouvert) : signalé aux admins pour vérification, sans sanction ; un programme de triche ouvert empêche seulement de jouer en ligne tant qu’il n’est pas fermé', 'Appli iPhone / iPad (Velocite.ipa) pour LiveContainer, SideStore et AltStore'],
+  en: ['Obsidian is less strict: a browser extension, an antivirus, an opponent holding a sniper or a password manager no longer get anyone banned', 'Proven cheating (game speed, wallhack, injected DLL, mouse driven by a script): credits and online play blocked, as before', 'Mere suspicion (outside script, modified code, cheat program open): reported to admins to check, no penalty; an open cheat program only stops online play until it is closed', 'iPhone / iPad app (Velocite.ipa) for LiveContainer, SideStore and AltStore']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
