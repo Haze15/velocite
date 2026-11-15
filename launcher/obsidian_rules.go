@@ -51,12 +51,22 @@ func obsSuspiciousModule(path string, env obsEnv) bool {
 			return false
 		}
 	}
+	// programmes installés pour l'utilisateur seul (AppData, ProgramData) : souris, claviers, enregistreurs, outils
+	// d'accessibilité, antivirus… y rangent les DLL qu'ils glissent dans chaque fenêtre. Seul le dossier Temp, où les
+	// injecteurs déposent leur DLL juste avant de l'injecter, reste suspect.
+	if strings.Contains(p, `\appdata\local\temp\`) {
+		return true
+	}
+	if strings.Contains(p, `\appdata\`) || strings.Contains(p, `:\programdata\`) {
+		return false
+	}
 	// une DLL posée à côté de Velocite.exe n'en fait pas partie (le jeu n'en livre aucune) : suspecte
 	return true
 }
 
-// Programmes de triche connus ouverts en même temps que le jeu
-var obsTools = []string{"cheatengine", "cheat engine", "extremeinjector", "extreme injector", "xenos", "ghinjector", "gh injector", "dllinjector", "dll injector", "injector.exe", "artmoney", "wemod", "speedhack", "ce-x86", "ce-x64"}
+// Programmes de triche connus ouverts en même temps que le jeu (WeMod retiré : souvent lancé avec Windows pour d'autres jeux).
+// Un programme ouvert n'est jamais une sanction : le jeu en ligne attend seulement qu'il soit fermé.
+var obsTools = []string{"cheatengine", "cheat engine", "extremeinjector", "extreme injector", "xenos", "ghinjector", "gh injector", "dllinjector", "dll injector", "injector.exe", "artmoney", "speedhack", "ce-x86", "ce-x64"}
 
 func obsSuspiciousProcess(name string) string {
 	n := strings.ToLower(name)
