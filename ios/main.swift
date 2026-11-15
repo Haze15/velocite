@@ -63,12 +63,18 @@ final class GameVC: UIViewController, WKNavigationDelegate, WKUIDelegate, WKScri
         (function(){ var h = window.webkit && webkit.messageHandlers && webkit.messageHandlers.log; if (!h) return;
           window.addEventListener('error', function(e){ try { h.postMessage('ERR ' + e.message + ' @' + (e.filename||'') + ':' + (e.lineno||0)); } catch(_){} });
           window.addEventListener('unhandledrejection', function(e){ try { h.postMessage('REJ ' + String(e.reason && (e.reason.stack || e.reason))); } catch(_){} });
-          setTimeout(function(){ try { var c = document.createElement('canvas');
-            h.postMessage('STATE version=' + (typeof GAME_VERSION !== 'undefined' ? GAME_VERSION : '?') + ' secure=' + window.isSecureContext +
-              ' subtle=' + !!(window.crypto && crypto.subtle) + ' webgl=' + !!(c.getContext('webgl2') || c.getContext('webgl')) +
-              ' storage=' + (function(){ try { localStorage.setItem('velocite_iosProbe', '1'); return localStorage.getItem('velocite_iosProbe') === '1'; } catch(_) { return false; } })() +
-              ' three=' + (typeof THREE !== 'undefined') + ' obsBoot=' + !!document.getElementById('obsBoot') + ' size=' + innerWidth + 'x' + innerHeight);
-          } catch(e) { h.postMessage('STATE error ' + e); } }, 15000);
+          function probe(tag){ try { var c = document.createElement('canvas'), ob = document.getElementById('obsBoot');
+            fetch('version.json', { cache: 'no-store' }).then(function(r){ return r.json(); }).catch(function(){ return {}; }).then(function(j){
+              h.postMessage('STATE ' + tag + ' version=' + (j.v || '?') + ' secure=' + window.isSecureContext +
+                ' subtle=' + !!(window.crypto && crypto.subtle) + ' webgl=' + !!(c.getContext('webgl2') || c.getContext('webgl')) +
+                ' storage=' + (function(){ try { localStorage.setItem('velocite_iosProbe', '1'); return localStorage.getItem('velocite_iosProbe') === '1'; } catch(_) { return false; } })() +
+                ' three=' + (typeof THREE !== 'undefined') + ' size=' + innerWidth + 'x' + innerHeight +
+                ' obsBoot=' + (ob ? 'visible bad=' + ob.querySelectorAll('.bad').length : 'gone') +
+                ' text=' + (ob ? ob.innerText : (document.body.innerText || '')).replace(/\s+/g, ' ').slice(0, 220));
+            });
+          } catch(e) { h.postMessage('STATE error ' + e); } }
+          setTimeout(function(){ probe('t15'); }, 15000);
+          setTimeout(function(){ probe('t40'); }, 40000);
         })();
         """
         cfg.userContentController.addUserScript(WKUserScript(source: js, injectionTime: .atDocumentStart, forMainFrameOnly: true))
