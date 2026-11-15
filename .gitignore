@@ -5,3 +5,8 @@ dist/*
 android/app/build/
 android/.gradle/
 android/app/src/main/assets/
+
+# appli iOS (construite par GitHub Actions)
+build-ios/
+build-sim/
+Velocite.ipa

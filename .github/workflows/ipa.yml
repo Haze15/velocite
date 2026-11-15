@@ -1,0 +1,47 @@
+name: IPA iPhone
+
+# Construit l'appli iPhone / iPad (Velocite.ipa, non signée : à installer avec LiveContainer, SideStore ou AltStore),
+# la lance dans un simulateur iPhone pour vérifier que le jeu démarre, puis la publie dans la release « ipa ».
+
+on:
+  push:
+    branches: [main]
+    paths: ['index.html', 'version.json', 'assets/**', 'ios/**', '.github/workflows/ipa.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  ipa:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Construire l'IPA (+ version simulateur)
+        run: |
+          bash ios/build-ipa.sh sim
+          echo "GAME_VERSION=$(python3 -c "import json;print(json.load(open('version.json'))['v'])")" >> $GITHUB_ENV
+      - name: Tester dans le simulateur iPhone
+        run: |
+          UDID=$(xcrun simctl list devices available -j | python3 -c "import json,sys;d=json.load(sys.stdin)['devices'];print(next(x['udid'] for k,v in sorted(d.items(),reverse=True) if 'iOS' in k for x in v if x['name'].startswith('iPhone')))")
+          echo "simulateur $UDID"
+          xcrun simctl boot "$UDID"; xcrun simctl bootstatus "$UDID" -b
+          xcrun simctl install "$UDID" build-sim/Payload/Velocite.app
+          xcrun simctl spawn "$UDID" log stream --style compact --predicate 'eventMessage CONTAINS "[Velocite]"' > sim.log 2>&1 &
+          sleep 3
+          xcrun simctl launch "$UDID" fr.velocite.app
+          sleep 12; xcrun simctl io "$UDID" screenshot sim-1.png
+          sleep 25; xcrun simctl io "$UDID" screenshot sim-2.png
+          kill %1 || true
+          cat sim.log
+          grep -q "STATE version=$GAME_VERSION" sim.log || { echo "::error::le jeu n'a pas démarré dans le simulateur"; exit 1; }
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with: { name: Velocite-ios-test, path: "sim-*.png\nsim.log" }
+      - uses: actions/upload-artifact@v4
+        with: { name: Velocite-ipa, path: Velocite.ipa }
+      - name: Publier l'IPA (release « ipa »)
+        env: { GH_TOKEN: '${{ secrets.GITHUB_TOKEN }}' }
+        run: |
+          gh release delete ipa -y --cleanup-tag || true
+          gh release create ipa Velocite.ipa --title "Vélocité iPhone $GAME_VERSION" --notes "Appli iPhone / iPad de Vélocité $GAME_VERSION (non signée). À installer avec LiveContainer, SideStore ou AltStore." --latest=false

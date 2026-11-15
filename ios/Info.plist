@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key><string>fr</string>
+	<key>CFBundleDisplayName</key><string>Vélocité</string>
+	<key>CFBundleName</key><string>Vélocité</string>
+	<key>CFBundleExecutable</key><string>Velocite</string>
+	<key>CFBundleIdentifier</key><string>fr.velocite.app</string>
+	<key>CFBundleInfoDictionaryVersion</key><string>6.0</string>
+	<key>CFBundlePackageType</key><string>APPL</string>
+	<key>CFBundleShortVersionString</key><string>__VERSION__</string>
+	<key>CFBundleVersion</key><string>__BUILD__</string>
+	<key>CFBundleSupportedPlatforms</key><array><string>__PLATFORM__</string></array>
+	<key>DTPlatformName</key><string>__PLATFORM_LC__</string>
+	<key>MinimumOSVersion</key><string>15.0</string>
+	<key>LSRequiresIPhoneOS</key><true/>
+	<key>UIDeviceFamily</key><array><integer>1</integer><integer>2</integer></array>
+	<key>UIRequiresFullScreen</key><true/>
+	<key>UIStatusBarHidden</key><true/>
+	<key>UIViewControllerBasedStatusBarAppearance</key><true/>
+	<key>UILaunchScreen</key><dict/>
+	<key>UISupportedInterfaceOrientations</key><array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
+	<key>UISupportedInterfaceOrientations~ipad</key><array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
+	<key>NSMicrophoneUsageDescription</key><string>Le micro sert au chat vocal pendant les parties en ligne.</string>
+	<key>ITSAppUsesNonExemptEncryption</key><false/>
+	<key>CFBundleIcons</key><dict><key>CFBundlePrimaryIcon</key><dict>
+		<key>CFBundleIconFiles</key><array><string>AppIcon60x60</string></array></dict></dict>
+	<key>CFBundleIcons~ipad</key><dict><key>CFBundlePrimaryIcon</key><dict>
+		<key>CFBundleIconFiles</key><array><string>AppIcon60x60</string><string>AppIcon76x76</string><string>AppIcon83.5x83.5</string></array></dict></dict>
+</dict>
+</plist>
