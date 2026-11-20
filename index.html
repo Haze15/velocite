@@ -1018,6 +1018,57 @@ body.vxOn #menu{visibility:hidden}
 // filet de sécurité : si le jeu plante avant qu'Obsidian ait fini, l'écran ne reste jamais bloqué
 setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b.dataset.held) { b.classList.add('out'); setTimeout(function () { b.remove(); }, 600); } }, 15000);
 </script>
+<style id="vx-intro-css">
+/* Intro de lancement : jouée une fois, après Obsidian, avant le menu. Se passe d'un clic ou d'une touche. */
+#vxIntro{position:fixed;inset:0;z-index:99000;background:#060607;overflow:hidden;color:#ECE6DC;--r:#E3261B;--o:#D9571E;font-family:var(--f-display);cursor:pointer;user-select:none;-webkit-user-select:none;clip-path:polygon(0 0,100% 0,100% 100%,0 100%)}
+#vxIntro[hidden]{display:none}
+#vxIntro.out{clip-path:polygon(0 0,0 0,-22% 100%,0 100%);transition:clip-path .55s cubic-bezier(.75,0,.25,1);pointer-events:none}
+#vxIntro.out.fast{transition-duration:.28s}
+#vxIntro .vi-vig{position:absolute;inset:0;opacity:0;animation:viFade .9s .45s forwards;background:radial-gradient(ellipse at 50% 52%,rgba(227,38,27,.17),transparent 58%),radial-gradient(ellipse at center,transparent 42%,rgba(0,0,0,.88))}
+#vxIntro .vi-scan{position:absolute;inset:0;opacity:.55;background:repeating-linear-gradient(0deg,rgba(236,230,220,.03) 0 1px,transparent 1px 4px)}
+#vxIntro .vi-line{position:absolute;left:0;top:50%;width:100%;height:2px;margin-top:-1px;transform:scaleX(0);background:linear-gradient(90deg,transparent,var(--r) 28%,var(--o) 72%,transparent);animation:viLine .55s .1s cubic-bezier(.2,.7,.2,1) forwards,viLineOut .3s 1.3s forwards}
+#vxIntro .vi-streaks{position:absolute;inset:0}
+#vxIntro .vi-streaks i{position:absolute;left:0;top:var(--y);width:var(--w);height:var(--h);background:linear-gradient(90deg,transparent,var(--c));opacity:0;transform:translateX(-45vw);animation:viStreak var(--d) var(--dl) cubic-bezier(.3,.1,.2,1) forwards}
+#vxIntro .vi-stage{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:clamp(10px,2.2vh,24px);animation:viShake .34s 1.3s}
+#vxIntro .vi-lock{display:inline-flex;flex-direction:column;align-items:stretch;gap:clamp(8px,1.6vh,18px);max-width:94vw}
+#vxIntro .vi-word{position:relative;margin:0;white-space:nowrap;font-weight:800;font-size:clamp(46px,15.5vw,230px);line-height:.86;letter-spacing:.015em;text-transform:uppercase;transform:skewX(-10deg);text-align:center}
+#vxIntro .vi-word .l{display:inline-block;opacity:0;animation:viLetter .5s cubic-bezier(.16,1,.3,1) calc(.7s + var(--i) * .05s) both}
+#vxIntro .vi-word .l:first-child{color:var(--r)}#vxIntro .vi-word .l:last-child{color:var(--o)}
+#vxIntro .vi-word::before,#vxIntro .vi-word::after{content:attr(data-t);position:absolute;left:0;top:0;width:100%;opacity:0;pointer-events:none;mix-blend-mode:screen;animation:viGlitch .42s 1.3s steps(1,end) both}
+#vxIntro .vi-word::before{color:var(--r);clip-path:inset(16% 0 56% 0)}#vxIntro .vi-word::after{color:var(--o);clip-path:inset(58% 0 12% 0);animation-delay:1.36s}
+#vxIntro .vi-under{height:clamp(4px,.7vw,9px);background:linear-gradient(90deg,var(--r),var(--o) 65%,rgba(217,87,30,0));transform:skewX(-24deg) scaleX(0);transform-origin:left;animation:viUnder .5s 1.3s cubic-bezier(.2,.8,.2,1) forwards}
+#vxIntro .vi-tag{margin:0;font-weight:600;font-size:clamp(12px,1.7vw,24px);letter-spacing:.5em;text-transform:uppercase;color:#8C867D;opacity:0;animation:viTag .8s 1.75s cubic-bezier(.2,.8,.2,1) both;padding-left:.5em}
+#vxIntro .vi-flash{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(255,205,160,.6),rgba(227,38,27,.26) 40%,transparent 70%);animation:viFlash .45s 1.3s ease-out}
+#vxIntro .vi-ver,#vxIntro .vi-skip{position:absolute;bottom:clamp(12px,2.6vh,30px);font:600 12px/1 var(--f-display);letter-spacing:.3em;text-transform:uppercase;color:#57534D;opacity:0;animation:viFade .5s 1.9s forwards}
+#vxIntro .vi-ver{left:clamp(14px,2.4vw,36px)}#vxIntro .vi-skip{right:clamp(14px,2.4vw,36px);animation-delay:.9s}
+#vxIntro .vi-prog{position:absolute;left:0;bottom:0;width:100%;height:3px;transform:scaleX(0);transform-origin:left;background:linear-gradient(90deg,var(--r),var(--o));animation:viProg 3.4s linear forwards}
+@keyframes viFade{to{opacity:1}}
+@keyframes viLine{to{transform:scaleX(1)}}
+@keyframes viLineOut{to{opacity:0;transform:scaleX(1) scaleY(6)}}
+@keyframes viStreak{0%{opacity:0;transform:translateX(-45vw)}14%{opacity:var(--a)}100%{opacity:0;transform:translateX(125vw)}}
+@keyframes viBar{to{transform:scaleX(1)}}
+@keyframes viLetter{0%{opacity:0;transform:translateX(-1.4em) scaleX(1.9);filter:blur(16px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:none;filter:blur(0)}}
+@keyframes viGlitch{0%{opacity:.95;transform:translateX(-10px)}22%{opacity:0}40%{opacity:.85;transform:translateX(7px)}62%{opacity:0}78%{opacity:.6;transform:translateX(-4px)}100%{opacity:0}}
+@keyframes viUnder{to{transform:skewX(-24deg) scaleX(1)}}
+@keyframes viTag{from{opacity:0;letter-spacing:.95em}to{opacity:1;letter-spacing:.5em}}
+@keyframes viFlash{0%{opacity:0}12%{opacity:1}100%{opacity:0}}
+@keyframes viShake{0%,100%{transform:none}18%{transform:translate(-7px,3px)}36%{transform:translate(6px,-4px)}54%{transform:translate(-4px,2px)}72%{transform:translate(3px,-1px)}}
+@keyframes viProg{to{transform:scaleX(1)}}
+@media (max-width:560px){#vxIntro .vi-tag{letter-spacing:.3em}#vxIntro .vi-ver{display:none}}
+@media (prefers-reduced-motion:reduce){
+  #vxIntro *,#vxIntro *::before,#vxIntro *::after{animation-duration:.01s!important;animation-delay:0s!important}
+  #vxIntro .vi-streaks,#vxIntro .vi-flash,#vxIntro .vi-line,#vxIntro .vi-word::before,#vxIntro .vi-word::after{display:none}
+  #vxIntro.out{transition-duration:.01s}}
+</style>
+<div id="vxIntro" hidden aria-hidden="true">
+  <div class="vi-vig"></div><div class="vi-scan"></div><div class="vi-line"></div><div class="vi-streaks"></div>
+  <div class="vi-stage">
+    <div class="vi-lock"><h1 class="vi-word" data-t="VÉLOCITÉ"></h1><div class="vi-under"></div></div>
+    <p class="vi-tag"></p>
+  </div>
+  <div class="vi-flash"></div>
+  <div class="vi-ver"></div><div class="vi-skip"></div><div class="vi-prog"></div>
+</div>
 <canvas id="c"></canvas>
 
 <div id="loadout" hidden><div class="lo-box" role="dialog" aria-labelledby="loTitle">
@@ -1287,6 +1338,7 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
         <label class="check"><input type="checkbox" id="hudRedOn"> <span data-i18n="set.hudRed">HUD Rouge combat</span></label>
+        <label class="check"><input type="checkbox" id="introOn"> <span data-i18n="set.intro">Intro au lancement</span></label>
         <label class="check"><input type="checkbox" id="lootOn"> <span data-i18n="set.loot">Départ au pistolet, armes dans les coffres</span></label>
         <label class="check"><input type="checkbox" id="fpLegsOn"> <span data-i18n="set.fpLegs">Voir mes jambes (superglide)</span></label>
         <label class="field"><span class="lab"><span data-i18n="set.camFx">Effets de caméra</span> <output id="oCamFx"></output></span><input type="range" id="camFx" min="0" max="1.5" step="0.05"></label>
@@ -12188,11 +12240,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.15';
+const GAME_VERSION = '2026.12.16';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ['Obsidian moins strict : une extension du navigateur, un antivirus, un adversaire qui tient un sniper ou un gestionnaire de mots de passe ne font plus bannir personne', 'Triche prouvée (vitesse du jeu, wallhack, DLL injectée, souris pilotée par un script) : crédits et jeu en ligne bloqués, comme avant', 'Simple soupçon (script extérieur, code modifié, programme de triche ouvert) : signalé aux admins pour vérification, sans sanction ; un programme de triche ouvert empêche seulement de jouer en ligne tant qu’il n’est pas fermé', 'Appli iPhone / iPad (Velocite.ipa) pour LiveContainer, SideStore et AltStore'],
-  en: ['Obsidian is less strict: a browser extension, an antivirus, an opponent holding a sniper or a password manager no longer get anyone banned', 'Proven cheating (game speed, wallhack, injected DLL, mouse driven by a script): credits and online play blocked, as before', 'Mere suspicion (outside script, modified code, cheat program open): reported to admins to check, no penalty; an open cheat program only stops online play until it is closed', 'iPhone / iPad app (Velocite.ipa) for LiveContainer, SideStore and AltStore']
+  fr: ['Nouvelle intro de lancement : le logo VÉLOCITÉ déboule à pleine vitesse, impact, puis le menu se dévoile (3,5 s)', 'On la passe d’un clic, d’une touche ou d’un toucher ; case « Intro au lancement » dans Paramètres pour la couper (aussi coupée si ton système demande moins d’animations)'],
+  en: ['New launch intro: the VÉLOCITÉ logo rushes in at full speed, impact, then the menu is revealed (3.5 s)', 'Skip it with a click, a key or a tap; “Intro on launch” checkbox in Settings to turn it off (also off if your system asks for less motion)']
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -20561,7 +20613,7 @@ function obsAim(from, pl, m, now) {
     ul.append(li); i++; bar.style.width = (100 * i / steps.length) + '%';
     setTimeout(next, 260);
   };
-  const close = () => { box.classList.add('out'); setTimeout(() => box.remove(), 500); };
+  const close = () => { box.classList.add('out'); setTimeout(() => box.remove(), 500); try { window.vxIntroPlay && window.vxIntroPlay(); } catch (e) {} };
   const done = () => {
     if (!bad.length) { setTimeout(close, 450); return; }
     const msg = document.createElement('div'); msg.className = 'ob-msg';
@@ -20797,6 +20849,61 @@ Object.assign(I18N.fr, { 'set.hudRed': 'HUD Rouge combat', 'vxh.kills': 'Élim.'
 Object.assign(I18N.en, { 'set.hudRed': 'Red combat HUD', 'vxh.kills': 'Kills', 'vxh.time': 'Time', 'vxh.integrity': 'Integrity', 'vxh.shield': 'Shield', 'vxh.critical': 'Critical health',
   'vxh.active': 'Active', 'vxh.down': 'Down', 'vxh.double': 'Double kill', 'vxh.triple': 'Triple kill', 'vxh.quadra': 'Quadra kill', 'vxh.carnage': 'Carnage', 'vxh.unstop': 'Unstoppable', 'vxh.head': 'Headshot' });
 
+/* ================= Intro de lancement =================
+   Jouée une fois par lancement, juste après l'écran Obsidian (qui l'appelle) et avant le menu principal.
+   Pure CSS (rien à charger) + quelques sons synthétisés si l'audio est déjà actif. Un clic, une touche ou un toucher la passe.
+   Réglage « Intro au lancement » dans Paramètres ; coupée aussi si le système demande moins d'animations. */
+(function vxIntro() {
+  const el = $('vxIntro'); if (!el) return;
+  const chk = $('introOn'); if (chk) { chk.checked = store.get('intro', true) !== false; chk.addEventListener('change', () => store.set('intro', chk.checked)); }
+  const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const WORD = 'VÉLOCITÉ';
+  el.querySelector('.vi-word').innerHTML = [...WORD].map((c, i) => `<span class="l" style="--i:${i}">${c}</span>`).join('');
+  // traînées de vitesse : positions fixes (le même rendu à chaque lancement), 26 avant l'impact + 12 plus lentes après
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const cols = ['#E3261B', '#D9571E', '#ECE6DC', '#E3261B', '#D9571E'];
+  let sh = '';
+  for (let k = 0; k < 38; k++) {
+    const late = k >= 26;
+    sh += `<i style="--y:${(4 + rnd() * 92).toFixed(1)}%;--w:${(late ? 8 + rnd() * 16 : 10 + rnd() * 34).toFixed(0)}vw;--h:${(1 + rnd() * 2.2).toFixed(1)}px;--c:${cols[Math.floor(rnd() * cols.length)]};--a:${(late ? .25 : .5 + rnd() * .4).toFixed(2)};--d:${(late ? 1 + rnd() * .8 : .5 + rnd() * .7).toFixed(2)}s;--dl:${(late ? 1.35 + rnd() * .8 : .12 + rnd() * .95).toFixed(2)}s"></i>`;
+  }
+  el.querySelector('.vi-streaks').innerHTML = sh;
+  const sRise = snd(t => { nz(t, { dur: .95, f: 300, f2: 5200, q: .7, gain: .1, attack: .6 }); tn(t, { f: 70, f2: 240, dur: .95, type: 'sawtooth', gain: .05, attack: .7 }); });
+  const sHit = snd(t => { tn(t, { f: 120, f2: 36, dur: .55, type: 'triangle', gain: .45 }); nz(t, { dur: .35, f: 2600, f2: 300, q: .6, gain: .28, type: 'lowpass' }); });
+  const sTing = snd(t => { tn(t, { f: 1760, dur: .55, gain: .05 }); tn(t, { f: 2640, dur: .45, gain: .025 }); });
+  const sOut = snd(t => nz(t, { dur: .4, f: 600, f2: 3400, q: .8, gain: .12 }));
+  let played = false, done = false, timers = [];
+  const later = (fn, ms) => timers.push(setTimeout(fn, ms));
+  function onSkip(e) {
+    if (e.type === 'keydown' && (e.repeat || ['Shift', 'Control', 'Alt', 'Meta'].includes(e.key))) return;
+    e.stopImmediatePropagation(); if (e.cancelable) e.preventDefault(); end(true);
+  }
+  function end(fast) {
+    if (done) return; done = true; timers.forEach(clearTimeout);
+    removeEventListener('keydown', onSkip, true); el.removeEventListener('pointerdown', onSkip, true);
+    el.classList.toggle('fast', !!fast); el.classList.add('out'); try { sOut(); } catch (e) {}
+    if (HOME.el) { HOME.el.classList.remove('in'); void HOME.el.offsetWidth; HOME.el.classList.add('in'); }   // le menu se met en place pendant que l'intro s'efface
+    setTimeout(() => { el.hidden = true; document.body.classList.remove('vxIntroOn'); window.VXINTRO.state = 'done'; dispatchEvent(new Event('vxIntroEnd')); }, fast ? 330 : 600);
+  }
+  window.VXINTRO = { state: 'idle', skip: () => end(true) };
+  window.vxIntroPlay = () => {
+    if (played) return; played = true;
+    if (navigator.webdriver && location.hash !== '#intro') return;   // les tests automatiques n'attendent pas l'intro
+    if (store.get('intro', true) === false) return;
+    el.querySelector('.vi-tag').textContent = t('home.tag');
+    el.querySelector('.vi-ver').textContent = t('home.build') + ' ' + GAME_VERSION;
+    el.querySelector('.vi-skip').textContent = t(matchMedia('(pointer:coarse)').matches ? 'intro.skipTouch' : 'intro.skip');
+    el.querySelector('.vi-prog').style.animationDuration = (reduce ? 1.4 : 3.4) + 's';
+    window.VXINTRO.state = 'playing';
+    document.body.classList.add('vxIntroOn'); el.hidden = false;
+    addEventListener('keydown', onSkip, true); el.addEventListener('pointerdown', onSkip, true);
+    later(sRise, 280); later(sHit, 1300); later(sTing, 1850);
+    later(() => end(false), reduce ? 1400 : 3400);
+  };
+})();
+Object.assign(I18N.fr, { 'set.intro': 'Intro au lancement', 'intro.skip': 'Touche ou clic : passer', 'intro.skipTouch': 'Touche l’écran : passer' });
+Object.assign(I18N.en, { 'set.intro': 'Intro on launch', 'intro.skip': 'Key or click: skip', 'intro.skipTouch': 'Tap the screen: skip' });
+try { applyI18n(); } catch (e) {}
 requestAnimationFrame(frame);
 })();
 </script>
