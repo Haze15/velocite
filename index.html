@@ -1849,13 +1849,13 @@ const I18N_ADD5 = {
     'cls.label': 'Classe :', 'cls.assault': 'Assaut', 'cls.scout': 'Éclaireur', 'cls.sentinel': 'Sentinelle',
     'abd.stim': '+35 % de vitesse pendant 6 s', 'abd.dome': 'bulle de 5 m qui arrête les balles 12 s', 'abd.portal': 'deux portails reliés pendant 40 s', 'abd.grapple': 'accroche un point à 45 m et te tire vers lui', 'abd.scan': 'révèle robots et joueurs à travers les murs 7 s', 'abd.launchpad': 'pose un pad violet pour tout le monde (30 s)',
     'cs.title': 'Sons personnalisés', 'cs.reset': 'Son d’origine', 'cs.share': 'Les autres joueurs entendent mes sons', 'cs.hear': 'Entendre les sons perso des autres', 'cs.shot': 'Tir : {w}', 'cs.jump': 'Saut', 'cs.land': 'Atterrissage', 'cs.kill': 'Élimination', 'cs.hit': 'Touché', 'cs.superglide': 'Superglide', 'cs.stim': 'Stim', 'cs.dome': 'Dôme', 'cs.portal': 'Portail', 'cs.grapple': 'Grappin',
-    'cs.tooBig': 'Fichier trop lourd : {kb} Ko maximum (un son court en MP3 ou OGG).', 'cs.tooLong': 'Son trop long : 4 secondes maximum.', 'cs.saved': 'Son « {name} » enregistré. En ligne, les autres l’entendent aussi.', 'cs.session': 'Son « {name} » chargé pour cette session (stockage plein).', 'cs.resetDone': 'Son d’origine remis.', 'dc.editor': 'Construit une carte' },
+    'cs.tooBig': 'Fichier trop lourd : {kb} Ko maximum (un son court en MP3 ou OGG).', 'cs.tooLong': 'Son trop long : 4 secondes maximum (30 s pour la musique Nextbot).', 'cs.saved': 'Son « {name} » enregistré. En ligne, les autres l’entendent aussi.', 'cs.session': 'Son « {name} » chargé pour cette session (stockage plein).', 'cs.resetDone': 'Son d’origine remis.', 'dc.editor': 'Construit une carte' },
   en: { 'set.camFx': 'Camera effects', 'set.off': 'off', 'act.tactical': 'Tactical ability', 'act.ultimate': 'Ultimate ability',
     'ab.grapple': 'GRAPPLE', 'ab.scan': 'SCAN', 'ab.launchpad': 'LAUNCH PAD', 'ab.grappleMiss': 'Nothing to hook within 45 m.', 'ab.needGround': 'Place the pad on the ground.',
     'cls.label': 'Class:', 'cls.assault': 'Assault', 'cls.scout': 'Scout', 'cls.sentinel': 'Sentinel',
     'abd.stim': '+35% speed for 6 s', 'abd.dome': '5 m bubble that stops bullets for 12 s', 'abd.portal': 'two linked portals for 40 s', 'abd.grapple': 'hooks a point up to 45 m away and pulls you in', 'abd.scan': 'reveals bots and players through walls for 7 s', 'abd.launchpad': 'drops a purple jump pad anyone can use (30 s)',
     'cs.title': 'Custom sounds', 'cs.reset': 'Original sound', 'cs.share': 'Other players hear my sounds', 'cs.hear': 'Hear other players’ custom sounds', 'cs.shot': 'Shot: {w}', 'cs.jump': 'Jump', 'cs.land': 'Landing', 'cs.kill': 'Elimination', 'cs.hit': 'Hit', 'cs.superglide': 'Superglide', 'cs.stim': 'Stim', 'cs.dome': 'Dome', 'cs.portal': 'Portal', 'cs.grapple': 'Grapple',
-    'cs.tooBig': 'File too large: {kb} KB max (a short MP3 or OGG sound).', 'cs.tooLong': 'Sound too long: 4 seconds max.', 'cs.saved': 'Sound “{name}” saved. Online, other players hear it too.', 'cs.session': 'Sound “{name}” loaded for this session (storage full).', 'cs.resetDone': 'Original sound restored.', 'dc.editor': 'Building a map' },
+    'cs.tooBig': 'File too large: {kb} KB max (a short MP3 or OGG sound).', 'cs.tooLong': 'Sound too long: 4 seconds max (30 s for Nextbot music).', 'cs.saved': 'Sound “{name}” saved. Online, other players hear it too.', 'cs.session': 'Sound “{name}” loaded for this session (storage full).', 'cs.resetDone': 'Original sound restored.', 'dc.editor': 'Building a map' },
   af: { 'set.camFx': 'Kamera-effekte', 'set.off': 'af', 'act.tactical': 'Taktiese vermoë', 'act.ultimate': 'Uiterste vermoë',
     'ab.grapple': 'GRYPHAAK', 'ab.scan': 'SKANDEER', 'ab.launchpad': 'LANSEERBLAD', 'ab.grappleMiss': 'Niks om binne 45 m aan te haak nie.', 'ab.needGround': 'Plaas die blad op die grond.',
     'cls.label': 'Klas:', 'cls.assault': 'Aanval', 'cls.scout': 'Verkenner', 'cls.sentinel': 'Wag',
@@ -5743,7 +5743,7 @@ function gunSample(k, vol = 1) {
   sfx.gunK = (k, vol = 1, fb = 0) => { if (!gunSample(k, vol)) shot0(fb, vol); };
 }
 /* ================= Sons personnalisés : chaque joueur peut remplacer ses sons (tirs compris), les autres les entendent ================= */
-const CS_SLOTS = ['shot0', 'shot1', 'shot2', 'shot3', 'shot4', 'shot5', 'jump', 'land', 'kill', 'hit', 'superglide', 'stim', 'dome', 'portal', 'grapple'];
+const CS_SLOTS = ['shot0', 'shot1', 'shot2', 'shot3', 'shot4', 'shot5', 'jump', 'land', 'kill', 'hit', 'superglide', 'stim', 'dome', 'portal', 'grapple', 'nbMusic', 'nbBeat', 'nbStep', 'nbBlink', 'nbCatch'];
 const CS_MAX = 300 * 1024, CS_CHUNK = 15000;
 const CS = { data: {}, mine: {}, remote: new Map(), host: new Map() };
 let SND_OWNER = null;
@@ -5794,7 +5794,7 @@ function csChunks(o, slot, d, send) {
   for (let i = 0; i < n; i++) send({ k: 'snd', o, slot, id, i, n, d: d.slice(i * CS_CHUNK, (i + 1) * CS_CHUNK) });
 }
 function csShareSlot(slot, toId) {
-  if (NET.mode === 'off') return;
+  if (NET.mode === 'off' || slot.startsWith('nb')) return;
   const d = S.csShare ? CS.data[slot] || '' : '';
   if (NET.mode === 'client') csChunks(undefined, slot, d, m => netSend(m));
   else csChunks(NET.selfId, slot, d, m => toId ? sendTo(toId, m) : broadcast(m, NET.selfId));
@@ -7458,8 +7458,8 @@ function updateWeapon(dt) {
   if (WS.reloading) { WS.reloadT -= dt; if (WS.reloadT <= 0) { WS.reloading = false; WS.ammo[WS.cur] = W.mag; } }
   if (W.spin) { const was = WS.spin || 0; WS.spin = approach(was, mouse.left && !P.dead ? 1 : 0, dt * (mouse.left ? 2.2 : 1.2)); if (mouse.left && was === 0) sfx.spinUp(); } else WS.spin = 0;
   if (WS.burstLeft > 0 && WS.cur === 6) { WS.burstT -= dt; if (WS.burstT <= 0) { if (WS.ammo[6] > 0 && !P.dead) { WS.inBurst = true; fire(); WS.inBurst = false; WS.burstLeft--; WS.burstT = 60 / W.rpm; } else WS.burstLeft = 0; } }
-  if (WS.cur === 6 && W.blast && mouse.right && !WS.rightPrev && WS.ammo[6] > 0 && WS.cool <= 0 && WS.swapT <= 0 && !P.dead && !P.veh && !P.passHide) { fire(true); WS.cool = 60 / W.blast.rpm; }
-  if (mouse.left && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !P.passHide && !EDIT.on && !(WS.cur === 5 && TRI.state !== 'hand') && (!W.spin || WS.spin >= 1)) {
+  if (RULES.mode !== 'nextbot' && WS.cur === 6 && W.blast && mouse.right && !WS.rightPrev && WS.ammo[6] > 0 && WS.cool <= 0 && WS.swapT <= 0 && !P.dead && !P.veh && !P.passHide) { fire(true); WS.cool = 60 / W.blast.rpm; }
+  if (mouse.left && RULES.mode !== 'nextbot' && WS.cool <= 0 && !WS.reloading && WS.swapT <= 0 && !P.dead && !P.veh && !P.passHide && !EDIT.on && !(WS.cur === 5 && TRI.state !== 'hand') && (!W.spin || WS.spin >= 1)) {
     if (WS.ammo[WS.cur] > 0 || W.melee) { if (W.auto || !WS.trigger) fire(); }
     else if (!WS.trigger) { sfx.empty(); startReload(); }
   }
@@ -7842,7 +7842,7 @@ function updateViewmodel(dt) {
   let swingP = -1, viewSpin = 0;
   const scoped = WEAPONS[WS.cur].scope && WS.ads > 0.85 && !vm.g.userData.lens;
   adsDot.classList.toggle('on', !!vm.g.userData.lowAds && WS.ads > 0.6 && playing && !P.dead && !thirdOn());
-  g.visible = !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on && !SPEC.on && !thirdOn() && !(vm.kind === 5 && TRI.state !== 'hand');
+  g.visible = RULES.mode !== 'nextbot' && !scoped && !P.dead && !EMOTE.on && !P.veh && !EDIT.on && !SPEC.on && !thirdOn() && !(vm.kind === 5 && TRI.state !== 'hand');
   WS.sprintK = approach(WS.sprintK, P.sprinting && P.grounded && !mouse.left && !WS.reloading ? 1 : 0, dt * 6);
   WS.slideK = approach(WS.slideK, P.sliding ? 1 : 0, dt * 6);
   WS.swayX *= Math.exp(-10 * dt); WS.swayY *= Math.exp(-10 * dt);
@@ -12197,11 +12197,35 @@ function nbBlink(tg, near) {
   NB.pos.set(best[0], best[1], best[2]); NB.vy = 0; NB.path.length = 0; NB.stuck = 0; NB.far = 0; NB.unreach = 0; NB.flick = 0.5; sNbBlink(); return true;
 }
 // ---------- sons ----------
-const sNbStep = snd((t, v) => { tn(t, { f: 95, f2: 42, dur: .2, type: 'triangle', gain: .34 }, v); nz(t, { dur: .09, f: 700, f2: 200, q: .7, gain: .1, type: 'lowpass' }, v); });
-const sNbBeat = snd((t, v) => { tn(t, { f: 62, f2: 40, dur: .16, gain: .55 }, v); tn(t + .17, { f: 56, f2: 38, dur: .15, gain: .4 }, v); });
-const sNbBlink = snd(t => { nz(t, { dur: .5, f: 4200, f2: 300, q: .9, gain: .2 }); tn(t, { f: 880, f2: 110, dur: .45, type: 'sawtooth', gain: .08 }); });
-const sNbCatch = snd(t => { nz(t, { dur: .9, f: 3800, f2: 260, q: .6, gain: .5 }); tn(t, { f: 440, f2: 60, dur: .9, type: 'sawtooth', gain: .22 }); tn(t, { f: 880, f2: 90, dur: .7, type: 'square', gain: .08 }); });
+let sNbStep = snd((t, v) => { tn(t, { f: 95, f2: 42, dur: .2, type: 'triangle', gain: .34 }, v); nz(t, { dur: .09, f: 700, f2: 200, q: .7, gain: .1, type: 'lowpass' }, v); });
+let sNbBeat = snd((t, v) => { tn(t, { f: 62, f2: 40, dur: .16, gain: .55 }, v); tn(t + .17, { f: 56, f2: 38, dur: .15, gain: .4 }, v); });
+let sNbBlink = snd(t => { nz(t, { dur: .5, f: 4200, f2: 300, q: .9, gain: .2 }); tn(t, { f: 880, f2: 110, dur: .45, type: 'sawtooth', gain: .08 }); });
+let sNbCatch = snd(t => { nz(t, { dur: .9, f: 3800, f2: 260, q: .6, gain: .5 }); tn(t, { f: 440, f2: 60, dur: .9, type: 'sawtooth', gain: .22 }); tn(t, { f: 880, f2: 90, dur: .7, type: 'square', gain: .08 }); });
 const sNbHit = snd(t => { tn(t, { f: 220, f2: 80, dur: .14, type: 'square', gain: .1 }); });
+// sons perso (Paramètres › Sons personnalisés) : ils remplacent les sons d’origine du mode
+{
+  const wrap = (slot, orig) => (...a) => {
+    if (AC && AC.state === 'running') {
+      if (CS.data[slot] && !CS.mine[slot]) csEnsure();
+      const b = CS.mine[slot];
+      if (b && b !== 'pending') { csPlay(b, typeof a[0] === 'number' ? a[0] : 1, master); return; }
+    }
+    orig(...a);
+  };
+  sNbStep = wrap('nbStep', sNbStep); sNbBeat = wrap('nbBeat', sNbBeat); sNbBlink = wrap('nbBlink', sNbBlink); sNbCatch = wrap('nbCatch', sNbCatch);
+}
+const NB_TEST = { nbStep: () => sNbStep(1), nbBeat: () => sNbBeat(1), nbBlink: () => sNbBlink(), nbCatch: () => sNbCatch() };
+function nbMusicTick(on, k) {
+  const b = AC && AC.state === 'running' && CS.mine.nbMusic;
+  if (!on || !b || b === 'pending') {
+    if (NB.mus) { try { NB.mus.s.stop(); } catch (e) {} NB.mus = null; }
+    if (on && CS.data.nbMusic && !CS.mine.nbMusic) csEnsure();
+    return;
+  }
+  if (NB.mus && NB.mus.b !== b) { try { NB.mus.s.stop(); } catch (e) {} NB.mus = null; }
+  if (!NB.mus) { const s = AC.createBufferSource(); s.buffer = b; s.loop = true; const g = AC.createGain(); g.gain.value = 0; s.connect(g); g.connect(master); s.start(); NB.mus = { s, g, b }; }
+  NB.mus.g.gain.value = 0.2 + 0.8 * k;
+}
 // ---------- tirs sur le Traqueur : on le ralentit, on ne le tue pas ----------
 function nbApplyHit(head) {
   if (NB.slowCd > 0 || NB.wait > 0) return;
@@ -12285,7 +12309,7 @@ function nbOnSpawn() {
   if (!NB.on) return; toast(t('nb.start'), 4);
 }
 function nbStop() {
-  NB.on = false; if (NB.g) NB.g.visible = false; $('nbHud').hidden = true; $('nbVig').style.opacity = 0;
+  NB.on = false; nbMusicTick(false); if (NB.g) NB.g.visible = false; $('nbHud').hidden = true; $('nbVig').style.opacity = 0;
   if (NB.parts.length) rebuildShootable();
 }
 function nbBar() {
@@ -12346,13 +12370,13 @@ function nbVisual(dt) {
   pp.eyes.forEach(e => e.material.opacity = clamp(pulse, .2, 1)); pp.halo.material.opacity = .18 + pulse * .08;
   // ressenti : distance, vignette rouge, battements, pas
   const hud = $('nbHud'), vig = $('nbVig');
-  if (P.dead || !vis) { hud.hidden = true; vig.style.opacity = 0; return; }
+  if (P.dead || !vis) { hud.hidden = true; vig.style.opacity = 0; nbMusicTick(false); return; }
   const dx = NB.pos.x - P.pos.x, dz = NB.pos.z - P.pos.z, d3 = Math.hypot(dx, dz, NB.pos.y - P.pos.y), k = clamp(1 - d3 / 45, 0, 1);
   hud.hidden = !playing && NET.mode === 'off'; hud.classList.toggle('near', d3 < 18);
   $('nbDist').textContent = Math.round(d3) + ' m';
   const bearing = Math.atan2(dx, dz), heading = Math.atan2(-Math.sin(P.yaw), -Math.cos(P.yaw));
   $('nbArrow').style.transform = `rotate(${(-(bearing - heading)).toFixed(3)}rad)`;
-  vig.style.opacity = (Math.pow(k, 1.6) * 0.9).toFixed(3);
+  vig.style.opacity = (Math.pow(k, 1.6) * 0.9).toFixed(3); nbMusicTick(playing || NET.mode !== 'off', k);
   if (k > 0.04) { NB.beatT -= dt; if (NB.beatT <= 0) { NB.beatT = lerp(1.25, 0.4, k); sNbBeat(0.35 + 0.65 * k); if (k > .5) camShake(0.04 * k); } }
   NB.stepT -= dt * Math.max(0, sp) / 2.2;
   if (NB.stepT <= 0) { NB.stepT = 1; const v = clamp(1 - d3 / 70, 0, 1); if (v > 0.03) sNbStep(v); }
@@ -12554,11 +12578,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.17';
+const GAME_VERSION = '2026.12.18';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ["Nouveau mode de jeu : NEXTBOT. Un Traqueur te poursuit sur toute la carte, de plus en plus vite : survis le plus longtemps possible", "Solo : chrono de survie avec record par carte. En ligne : manches de 3 min, les derniers survivants gagnent contre le Traqueur", "Tu peux le ralentir en lui tirant dessus (tête = plus long), mais jamais le tuer. Ton rythme cardiaque, une flèche et une vignette rouge t’indiquent où il est", "Il contourne les murs, et s’il te perd il se téléporte près de toi"],
-  en: ["New game mode: NEXTBOT. A Stalker chases you across the whole map, getting faster and faster: survive as long as you can", "Solo: survival timer with a record per map. Online: 3-minute rounds, survivors win against the Stalker", "Shoot it to slow it down (headshot = longer), but you can never kill it. A heartbeat, an arrow and a red vignette show where it is", "It paths around walls, and if you lose it, it teleports close to you"]
+  fr: ["Nextbot : plus d’armes, on court seulement (arme et tirs désactivés dans ce mode)", "Sons Nextbot au choix : musique de poursuite (jusqu’à 30 s, en boucle, plus forte quand il approche), battements, pas du Traqueur, téléportation et capture", "À importer dans Paramètres › Sons personnalisés (ils restent sur ton appareil, non partagés en ligne)"],
+  en: ["Nextbot: no more weapons, you just run (weapon and shooting disabled in this mode)", "Choose your own Nextbot sounds: chase music (up to 30 s, looped, louder as it gets close), heartbeat, Stalker footsteps, teleport and catch", "Import them in Settings › Custom sounds (kept on your device, not shared online)"]
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -14325,13 +14349,14 @@ qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quali
   $('csTest').addEventListener('click', () => {
     audioInit(); csEnsure();
     const sl = sel.value;
-    setTimeout(() => { const b = csBuf(sl); if (b) csPlay(b, 1, sl.startsWith('shot') ? gunBus : master); else if (sl.startsWith('shot')) sfx.shot(+sl[4]); else if (sfx[sl]) sfx[sl](1); }, 60);
+    setTimeout(() => { const b = csBuf(sl); if (b) csPlay(b, 1, sl.startsWith('shot') ? gunBus : master); else if (sl.startsWith('shot')) sfx.shot(+sl[4]); else if (NB_TEST[sl]) NB_TEST[sl](); else if (sfx[sl]) sfx[sl](1); }, 60);
   });
   $('csReset').addEventListener('click', () => { csSet(sel.value, null); fill(); csMsg(t('cs.resetDone')); });
   $('csFile').addEventListener('change', e => {
     const f = e.target.files && e.target.files[0]; e.target.value = '';
     if (!f) return;
-    if (f.size > CS_MAX) { csMsg(t('cs.tooBig', { kb: Math.round(CS_MAX / 1024) }), 'err'); return; }
+    const nbs = sel.value.startsWith('nb'), maxB = nbs ? 1500 * 1024 : CS_MAX;
+    if (f.size > maxB) { csMsg(t('cs.tooBig', { kb: Math.round(maxB / 1024) }), 'err'); return; }
     const rd = new FileReader();
     rd.onload = () => {
       const url = String(rd.result || '');
@@ -14340,7 +14365,7 @@ qSel.addEventListener('change', () => { S.quality = qSel.value; store.set('quali
       const fixed = url.startsWith('data:audio') ? url : url.replace(/^data:[^;]*/, 'data:audio/mpeg');
       csDecode(fixed).then(b => {
         if (!b) { csMsg(t('snd.bad'), 'err'); return; }
-        if (b.duration > 4) { csMsg(t('cs.tooLong'), 'err'); return; }
+        if (b.duration > (sel.value.startsWith('nb') ? 30 : 4)) { csMsg(t('cs.tooLong'), 'err'); return; }
         const ok = csSet(sel.value, fixed); fill();
         csMsg(t(ok ? 'cs.saved' : 'cs.session', { name: f.name.slice(0, 40) }), ok ? 'ok' : '');
         csPlay(b, 1, sel.value.startsWith('shot') ? gunBus : master);
@@ -21215,8 +21240,10 @@ Object.assign(I18N.en, { 'set.hudRed': 'Red combat HUD', 'vxh.kills': 'Kills', '
     later(() => end(false), reduce ? 1400 : 3400);
   };
 })();
-Object.assign(I18N.fr, { 'set.intro': 'Intro au lancement', 'intro.skip': 'Touche ou clic : passer', 'intro.skipTouch': 'Touche l’écran : passer', 'mode.nextbot': 'Nextbot', 'nb.caught': 'le Traqueur t’a eu · {time}', 'nb.record': 'NOUVEAU RECORD', 'nb.best': 'record', 'nb.coming': 'il arrive dans {n}', 'nb.start': 'Le Traqueur arrive. Il ne s’arrête jamais : bouge, glisse, tire pour le ralentir.', 'nb.blink': 'Il s’est téléporté, il te voit !', 'nb.humWin': 'Les survivants gagnent', 'nb.botWin': 'Le Traqueur a gagné' });
-Object.assign(I18N.en, { 'set.intro': 'Intro on launch', 'intro.skip': 'Key or click: skip', 'intro.skipTouch': 'Tap the screen: skip', 'mode.nextbot': 'Nextbot', 'nb.caught': 'the Stalker got you · {time}', 'nb.record': 'NEW RECORD', 'nb.best': 'best', 'nb.coming': 'it arrives in {n}', 'nb.start': 'The Stalker is coming. It never stops: move, slide, shoot to slow it down.', 'nb.blink': 'It teleported, it sees you!', 'nb.humWin': 'Survivors win', 'nb.botWin': 'The Stalker wins' });
+Object.assign(I18N.fr, { 'cs.nbMusic': 'Nextbot : musique de poursuite', 'cs.nbBeat': 'Nextbot : battements', 'cs.nbStep': 'Nextbot : pas du Traqueur', 'cs.nbBlink': 'Nextbot : téléportation', 'cs.nbCatch': 'Nextbot : capture' });
+Object.assign(I18N.en, { 'cs.nbMusic': 'Nextbot: chase music', 'cs.nbBeat': 'Nextbot: heartbeat', 'cs.nbStep': 'Nextbot: Stalker footsteps', 'cs.nbBlink': 'Nextbot: teleport', 'cs.nbCatch': 'Nextbot: catch' });
+Object.assign(I18N.fr, { 'set.intro': 'Intro au lancement', 'intro.skip': 'Touche ou clic : passer', 'intro.skipTouch': 'Touche l’écran : passer', 'mode.nextbot': 'Nextbot', 'nb.caught': 'le Traqueur t’a eu · {time}', 'nb.record': 'NOUVEAU RECORD', 'nb.best': 'record', 'nb.coming': 'il arrive dans {n}', 'nb.start': 'Le Traqueur arrive. Il ne s’arrête jamais : bouge, glisse, saute, ne t’arrête pas.', 'nb.blink': 'Il s’est téléporté, il te voit !', 'nb.humWin': 'Les survivants gagnent', 'nb.botWin': 'Le Traqueur a gagné' });
+Object.assign(I18N.en, { 'set.intro': 'Intro on launch', 'intro.skip': 'Key or click: skip', 'intro.skipTouch': 'Tap the screen: skip', 'mode.nextbot': 'Nextbot', 'nb.caught': 'the Stalker got you · {time}', 'nb.record': 'NEW RECORD', 'nb.best': 'best', 'nb.coming': 'it arrives in {n}', 'nb.start': 'The Stalker is coming. It never stops: move, slide, jump, keep going.', 'nb.blink': 'It teleported, it sees you!', 'nb.humWin': 'Survivors win', 'nb.botWin': 'The Stalker wins' });
 try { applyI18n(); } catch (e) {}
 requestAnimationFrame(frame);
 })();
