@@ -212,7 +212,7 @@ kbd{font:600 13px/1 var(--f-display);letter-spacing:.04em;display:inline-flex;al
 .check{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
 #dcId{font:600 14px/1 var(--f-body);letter-spacing:.04em;color:var(--ink);background:rgba(10,13,16,.7);border:1px solid rgba(244,239,230,.25);border-radius:3px;padding:8px 9px 7px;width:100%;box-sizing:border-box}
 #dcId:focus-visible{outline:2px solid var(--amber);outline-offset:1px}
-.csfield,.padfield{grid-column:1/-1}.padfield{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 26px;align-items:end}.padfield>.lab,.padfield>.hint{grid-column:1/-1;max-width:none}.csfield .sndrow{display:flex;flex-wrap:wrap;gap:8px}#csMsg{font-size:12.5px;color:var(--ink-dim)}#csMsg.ok{color:var(--shield)}#csMsg.err{color:var(--hostile)}
+.nbthumb{position:relative;display:inline-block;width:56px;height:56px;margin:4px 6px 0 0;border-radius:8px;background:#111 center/cover no-repeat;border:1px solid var(--line,#444)}.nbthumb button{position:absolute;top:-6px;right:-6px;width:20px;height:20px;border-radius:50%;border:0;background:#E3261B;color:#fff;cursor:pointer;line-height:1;padding:0}#nbSkinMsg{font-size:12.5px;color:var(--ink-dim)}.csfield,.padfield{grid-column:1/-1}.padfield{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px 26px;align-items:end}.padfield>.lab,.padfield>.hint{grid-column:1/-1;max-width:none}.csfield .sndrow{display:flex;flex-wrap:wrap;gap:8px}#csMsg{font-size:12.5px;color:var(--ink-dim)}#csMsg.ok{color:var(--shield)}#csMsg.err{color:var(--hostile)}
 .dcmsg{font-size:12.5px;line-height:1.35;color:var(--ink-dim)}
 .dcmsg.ok{color:var(--shield)}.dcmsg.err{color:var(--hostile)}
 .check input{accent-color:var(--amber);width:17px;height:17px}
@@ -1344,6 +1344,7 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
         <label class="check"><input type="checkbox" id="autoSprint"> <span data-i18n="set.autosprint">Sprint automatique</span></label>
         <label class="check"><input type="checkbox" id="minimapOn"> <span data-i18n="set.minimap">Mini-carte</span></label>
         <label class="check"><input type="checkbox" id="hudRedOn"> <span data-i18n="set.hudRed">HUD Rouge combat</span></label>
+        <label class="field"><span class="lab"><span data-i18n="set.nbSpeed">Vitesse du Traqueur (Nextbot)</span> <output id="oNbSpeed"></output></span><input type="range" id="nbSpeed" min="0.5" max="3" step="0.1"></label>
         <label class="check"><input type="checkbox" id="introOn"> <span data-i18n="set.intro">Intro au lancement</span></label>
         <label class="check"><input type="checkbox" id="lootOn"> <span data-i18n="set.loot">Départ au pistolet, armes dans les coffres</span></label>
         <label class="check"><input type="checkbox" id="fpLegsOn"> <span data-i18n="set.fpLegs">Voir mes jambes (superglide)</span></label>
@@ -1364,6 +1365,9 @@ setTimeout(function () { var b = document.getElementById('obsBoot'); if (b && !b
           <label class="check"><input type="checkbox" id="csShare"> <span data-i18n="cs.share">Les autres joueurs entendent mes sons</span></label>
           <label class="check"><input type="checkbox" id="csHear"> <span data-i18n="cs.hear">Entendre les sons perso des autres</span></label>
           <span id="csMsg"></span></div>
+        <div class="field csfield"><span class="lab" data-i18n="nbs.title">Nextbot : images du Traqueur</span>
+          <div class="sndrow"><select id="nbSkinSel"></select><button class="btn3" id="nbSkinAdd" type="button" data-i18n="nbs.add">Ajouter des images</button><input type="file" id="nbSkinFile" accept="image/*" multiple hidden></div>
+          <div id="nbSkinList"></div><span id="nbSkinMsg"></span><p class="hint" data-i18n="nbs.hint">Toutes les images ajoutées servent de visage au Traqueur (une au hasard à chaque apparition, ou celle que tu choisis). Elles restent sur ton appareil.</p></div>
         <div class="field dcfield"><span class="lab" data-i18n="dc.title">Statut Discord</span>
           <label class="check"><input type="checkbox" id="dcOn"> <span data-i18n="dc.on">Afficher mon jeu sur Discord</span></label>
           <input id="dcId" inputmode="numeric" maxlength="22" autocomplete="off" spellcheck="false" data-i18n-ph="dc.idPh" placeholder="ID d’application Discord">
@@ -2060,6 +2064,7 @@ if (S.quality === 'auto' && LOWEND) S.quality = 'low';
 S.invY = store.get('invY', false) === true; S.invX = store.get('invX', false) === true;
 S.skin = store.get('skin', 'std');
 S.slideSnd = store.get('slideSnd', 'gravel');
+S.nbSpeed = clamp(+store.get('nbSpeed', 1) || 1, 0.5, 3);
 S.minimap = store.get('minimap', true);
 S.camFx = clamp(+store.get('camFx', 1), 0, 1.5);
 S.map = store.get('map', 'canyon');
@@ -12096,7 +12101,7 @@ function nbBuild() {
   const armL = limb(.12, 1.6, -.42, 2.2), armR = limb(.12, 1.6, .42, 2.2);
   const headG = new THREE.Group(); headG.position.set(0, 2.5, 0); body.add(headG);
   const skull = new THREE.Mesh(new THREE.SphereGeometry(.3, 14, 12), bone); skull.scale.set(.88, 1.18, .92); skull.position.y = .1; headG.add(skull);
-  const mask = new THREE.Mesh(new THREE.PlaneGeometry(.66, .66), face); mask.position.set(0, .08, .275); headG.add(mask);
+  const mask = new THREE.Mesh(new THREE.PlaneGeometry(.66, .66), face); NB.mask = mask; NB.face = face; NB.skull = skull; mask.position.set(0, .08, .275); headG.add(mask);
   const neck = box(.12, .3, .12, dark, 0, -.14, 0); headG.add(neck);
   const eyes = [];
   for (const sx of [-1, 1]) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: 0xff2a1a, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, fog: false })); sp.scale.set(.42, .42, 1); sp.position.set(sx * .11, .1, .3); headG.add(sp); eyes.push(sp); }
@@ -12183,6 +12188,7 @@ function nbSpawnFar(tg) {
   }
   if (!best) best = [SPAWNS[0][0], SPAWNS[0][1], SPAWNS[0][2]];
   NB.pos.set(best[0], best[1], best[2]); NB.vy = 0; NB.path.length = 0; NB.stuck = 0; NB.far = 0; NB.unreach = 0;
+  nbApplySkin();
 }
 function nbBlink(tg, near) {
   const G = nbGrid(); if (!tg) return; let best = null;
@@ -12215,6 +12221,59 @@ const sNbHit = snd(t => { tn(t, { f: 220, f2: 80, dur: .14, type: 'square', gain
   sNbStep = wrap('nbStep', sNbStep); sNbBeat = wrap('nbBeat', sNbBeat); sNbBlink = wrap('nbBlink', sNbBlink); sNbCatch = wrap('nbCatch', sNbCatch);
 }
 const NB_TEST = { nbStep: () => sNbStep(1), nbBeat: () => sNbBeat(1), nbBlink: () => sNbBlink(), nbCatch: () => sNbCatch() };
+// ---------- images du Traqueur (choisies par le joueur, gardées sur son appareil) ----------
+function nbSkinList() { const l = store.get('nbSkins', []); return Array.isArray(l) ? l.filter(x => typeof x === 'string' && x.startsWith('data:image')) : []; }
+function nbApplySkin() {
+  if (!NB.mask) return;
+  const l = nbSkinList(), sel = store.get('nbSkinSel', 'def');
+  let url = null;
+  if (l.length && sel === 'auto') url = l[(Math.random() * l.length) | 0]; else if (l.length && /^\d+$/.test(String(sel)) && l[+sel]) url = l[+sel];
+  const off = () => { NB.skinOn = false; NB.skinUrl = null; NB.mask.material = NB.face; NB.mask.scale.set(1, 1, 1); NB.skull.visible = true; NB.parts2.eyes.forEach(e => e.visible = true); };
+  if (!url) { off(); return; }
+  NB.skinUrl = url;
+  const im = new Image();
+  im.onload = () => {
+    if (NB.skinUrl !== url) return;
+    const tx = new THREE.Texture(im); tx.needsUpdate = true;
+    if (NB.skinMat) { if (NB.skinMat.map) NB.skinMat.map.dispose(); NB.skinMat.dispose(); }
+    NB.skinMat = new THREE.MeshBasicMaterial({ map: tx, transparent: true, side: THREE.DoubleSide, fog: false });
+    const a = im.width / im.height, k = 1.9;
+    NB.mask.material = NB.skinMat; NB.mask.scale.set(a >= 1 ? k : k * a, a >= 1 ? k / a : k, 1); NB.skull.visible = false; NB.parts2.eyes.forEach(e => e.visible = false); NB.skinOn = true;
+  };
+  im.onerror = () => off();
+  im.src = url;
+}
+function nbSkinUI() {
+  const sel = $('nbSkinSel'), box = $('nbSkinList'); if (!sel) return;
+  const fill = () => {
+    const l = nbSkinList(), cur = String(store.get('nbSkinSel', 'def'));
+    sel.replaceChildren(...[['def', t('nbs.def')], ['auto', t('nbs.auto')], ...l.map((u, i) => [String(i), t('nbs.img', { n: i + 1 })])].map(([v, tx]) => { const o = document.createElement('option'); o.value = v; o.textContent = tx; return o; }));
+    sel.value = [...sel.options].some(o => o.value === cur) ? cur : 'def';
+    box.replaceChildren(...l.map((u, i) => { const d = document.createElement('div'); d.className = 'nbthumb'; d.style.backgroundImage = 'url(' + u + ')'; const x = document.createElement('button'); x.type = 'button'; x.textContent = '×'; x.addEventListener('click', () => { const a = nbSkinList(); a.splice(i, 1); store.set('nbSkins', a); const c = String(store.get('nbSkinSel', 'def')); if (/^\d+$/.test(c) && +c >= a.length) store.set('nbSkinSel', 'def'); fill(); nbApplySkin(); }); d.appendChild(x); return d; }));
+  };
+  const msg = m => { $('nbSkinMsg').textContent = m; };
+  sel.addEventListener('change', () => { store.set('nbSkinSel', sel.value); nbApplySkin(); });
+  $('nbSkinAdd').addEventListener('click', () => $('nbSkinFile').click());
+  $('nbSkinFile').addEventListener('change', async e => {
+    const files = Array.from(e.target.files || []); e.target.value = '';
+    let added = 0, bad = 0;
+    for (const f of files) {
+      if (nbSkinList().length >= 12) { msg(t('nbs.full')); break; }
+      try {
+        const url = await new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result)); r.onerror = rej; r.readAsDataURL(f); });
+        const im = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+        const sc = Math.min(1, 384 / Math.max(im.width, im.height)), c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.width * sc)); c.height = Math.max(1, Math.round(im.height * sc));
+        c.getContext('2d').drawImage(im, 0, 0, c.width, c.height);
+        let out = c.toDataURL('image/webp', 0.85); if (!out.startsWith('data:image/webp')) out = c.toDataURL('image/png');
+        const a = nbSkinList(); a.push(out);
+        try { localStorage.setItem('velocite_nbSkins', JSON.stringify(a)); store.set('nbSkins', a); added++; } catch (er) { msg(t('nbs.tooBig')); break; }
+      } catch (er) { bad++; }
+    }
+    if (added) { if (store.get('nbSkinSel', 'def') === 'def') store.set('nbSkinSel', 'auto'); fill(); nbApplySkin(); msg(t('nbs.added', { n: added })); } else if (bad) msg(t('nbs.bad'));
+  });
+  fill();
+}
+setTimeout(nbSkinUI, 0);
 function nbMusicTick(on, k) {
   const b = AC && AC.state === 'running' && CS.mine.nbMusic;
   if (!on || !b || b === 'pending') {
@@ -12262,7 +12321,7 @@ function nbMove(dt, ax, az, v) {
   if (gy >= p.y) { p.y = gy; NB.vy = 0; } else { NB.vy -= G * dt; p.y = Math.max(gy, p.y + NB.vy * dt); if (p.y === gy) NB.vy = 0; }
   NB.yaw = Math.atan2(ux, uz);
 }
-function nbDifficulty() { return 5.4 + 3.6 * clamp(NB.t / 240, 0, 1); }
+function nbDifficulty() { return (7.4 + 4.6 * clamp(NB.t / 200, 0, 1)) * S.nbSpeed; }
 function nbAI(dt, tg) {
   const p = NB.pos, d2 = Math.hypot(tg.x - p.x, tg.z - p.z), dy = tg.y - p.y;
   NB.speed = nbDifficulty() * (NB.slowT > 0 ? 0.35 : 1);
@@ -12365,7 +12424,8 @@ function nbVisual(dt) {
   pp.armL.rotation.x = -Math.sin(ph) * .5 - .3; pp.armR.rotation.x = Math.sin(ph) * .5 - .3;
   pp.armL.rotation.z = .08; pp.armR.rotation.z = -.08;
   pp.body.rotation.x = .12 + Math.min(.12, sp * .012); pp.body.position.y = Math.abs(Math.sin(ph)) * .07;
-  pp.headG.rotation.z = Math.sin(performance.now() * .004) * .1; pp.headG.rotation.y = Math.sin(performance.now() * .0023) * .12;
+  pp.headG.rotation.z = Math.sin(performance.now() * .004) * .1;
+  if (NB.skinOn) { const a = Math.atan2(camera.position.x - NB.pos.x, camera.position.z - NB.pos.z) - NB.yaw; pp.headG.rotation.y = Math.atan2(Math.sin(a), Math.cos(a)); } else pp.headG.rotation.y = Math.sin(performance.now() * .0023) * .12;
   const pulse = .8 + Math.sin(performance.now() * .012) * .2 + (NB.slowT > 0 ? -.3 : 0);
   pp.eyes.forEach(e => e.material.opacity = clamp(pulse, .2, 1)); pp.halo.material.opacity = .18 + pulse * .08;
   // ressenti : distance, vignette rouge, battements, pas
@@ -12578,11 +12638,11 @@ $('cmFlip').addEventListener('change', async e => { CM.flip = e.target.checked; 
 $('cmClear').addEventListener('click', async () => { CM.b64 = null; CM.name = ''; cmSave(null); if (S.char === 'custom') { S.char = 'soldier'; store.set('char', 'soldier'); refreshPreview(); } cmSyncUi(); });
 
 /* ================= Mises à jour : bandeau quand une nouvelle version sort + nouveautés ================= */
-const GAME_VERSION = '2026.12.18';
+const GAME_VERSION = '2026.12.19';
 // Nouveautés : seulement celles de la dernière mise à jour (on remplace la liste à chaque version, on n'empile pas)
 const CHANGES = {
-  fr: ["Nextbot : plus d’armes, on court seulement (arme et tirs désactivés dans ce mode)", "Sons Nextbot au choix : musique de poursuite (jusqu’à 30 s, en boucle, plus forte quand il approche), battements, pas du Traqueur, téléportation et capture", "À importer dans Paramètres › Sons personnalisés (ils restent sur ton appareil, non partagés en ligne)"],
-  en: ["Nextbot: no more weapons, you just run (weapon and shooting disabled in this mode)", "Choose your own Nextbot sounds: chase music (up to 30 s, looped, louder as it gets close), heartbeat, Stalker footsteps, teleport and catch", "Import them in Settings › Custom sounds (kept on your device, not shared online)"]
+  fr: ["Nextbot : le Traqueur est beaucoup plus rapide par défaut", "Nextbot : tu choisis les images du Traqueur (Paramètres › Nextbot : images, jusqu’à 12, au hasard ou une précise)", "Nouveau réglage « Vitesse du Traqueur » (de ×0,5 à ×3) dans Paramètres : tu choisis toi-même (en ligne, c’est le réglage de l’hôte qui compte)"],
+  en: ["Nextbot: the Stalker is much faster by default", "Nextbot: pick the Stalker’s images (Settings › Nextbot: images, up to 12, random or a specific one)", "New “Stalker speed” setting (×0.5 to ×3) in Settings: you pick it yourself (online, the host’s setting applies)"]
 };
 const UPD = { url: 'https://haze15.github.io/velocite/version.json', exe: 'https://github.com/Haze15/velocite/raw/main/dist/Velocite.exe', shown: '' };
 const isExe = () => location.hostname === '127.0.0.1' && location.port === '47321';
@@ -21194,6 +21254,7 @@ Object.assign(I18N.en, { 'set.hudRed': 'Red combat HUD', 'vxh.kills': 'Kills', '
    Réglage « Intro au lancement » dans Paramètres ; coupée aussi si le système demande moins d'animations. */
 (function vxIntro() {
   const el = $('vxIntro'); if (!el) return;
+  { const r = $('nbSpeed'), o = $('oNbSpeed'); r.value = S.nbSpeed; const sy = () => { o.textContent = '×' + (+S.nbSpeed).toFixed(1); }; sy(); r.addEventListener('input', () => { S.nbSpeed = +r.value; store.set('nbSpeed', S.nbSpeed); sy(); }); }
   const chk = $('introOn'); if (chk) { chk.checked = store.get('intro', true) !== false; chk.addEventListener('change', () => store.set('intro', chk.checked)); }
   const reduce = matchMedia('(prefers-reduced-motion:reduce)').matches;
   const WORD = 'VÉLOCITÉ';
@@ -21242,6 +21303,10 @@ Object.assign(I18N.en, { 'set.hudRed': 'Red combat HUD', 'vxh.kills': 'Kills', '
 })();
 Object.assign(I18N.fr, { 'cs.nbMusic': 'Nextbot : musique de poursuite', 'cs.nbBeat': 'Nextbot : battements', 'cs.nbStep': 'Nextbot : pas du Traqueur', 'cs.nbBlink': 'Nextbot : téléportation', 'cs.nbCatch': 'Nextbot : capture' });
 Object.assign(I18N.en, { 'cs.nbMusic': 'Nextbot: chase music', 'cs.nbBeat': 'Nextbot: heartbeat', 'cs.nbStep': 'Nextbot: Stalker footsteps', 'cs.nbBlink': 'Nextbot: teleport', 'cs.nbCatch': 'Nextbot: catch' });
+Object.assign(I18N.fr, { 'nbs.title': 'Nextbot : images du Traqueur', 'nbs.add': 'Ajouter des images', 'nbs.def': 'Crâne d’origine', 'nbs.auto': 'Au hasard parmi mes images', 'nbs.img': 'Image {n}', 'nbs.full': '12 images maximum.', 'nbs.tooBig': 'Plus de place sur l’appareil : supprime une image.', 'nbs.added': '{n} image(s) ajoutée(s).', 'nbs.bad': 'Ce fichier n’est pas une image lisible.', 'nbs.hint': 'Toutes les images ajoutées servent de visage au Traqueur (une au hasard à chaque apparition, ou celle que tu choisis). Elles restent sur ton appareil.' });
+Object.assign(I18N.en, { 'nbs.title': 'Nextbot: Stalker images', 'nbs.add': 'Add images', 'nbs.def': 'Original skull', 'nbs.auto': 'Random from my images', 'nbs.img': 'Image {n}', 'nbs.full': '12 images max.', 'nbs.tooBig': 'No more room on this device: delete an image.', 'nbs.added': '{n} image(s) added.', 'nbs.bad': 'That file isn’t a readable image.', 'nbs.hint': 'Every image you add can be the Stalker’s face (a random one each time it appears, or the one you pick). They stay on your device.' });
+Object.assign(I18N.fr, { 'set.nbSpeed': 'Vitesse du Traqueur (Nextbot)' });
+Object.assign(I18N.en, { 'set.nbSpeed': 'Stalker speed (Nextbot)' });
 Object.assign(I18N.fr, { 'set.intro': 'Intro au lancement', 'intro.skip': 'Touche ou clic : passer', 'intro.skipTouch': 'Touche l’écran : passer', 'mode.nextbot': 'Nextbot', 'nb.caught': 'le Traqueur t’a eu · {time}', 'nb.record': 'NOUVEAU RECORD', 'nb.best': 'record', 'nb.coming': 'il arrive dans {n}', 'nb.start': 'Le Traqueur arrive. Il ne s’arrête jamais : bouge, glisse, saute, ne t’arrête pas.', 'nb.blink': 'Il s’est téléporté, il te voit !', 'nb.humWin': 'Les survivants gagnent', 'nb.botWin': 'Le Traqueur a gagné' });
 Object.assign(I18N.en, { 'set.intro': 'Intro on launch', 'intro.skip': 'Key or click: skip', 'intro.skipTouch': 'Tap the screen: skip', 'mode.nextbot': 'Nextbot', 'nb.caught': 'the Stalker got you · {time}', 'nb.record': 'NEW RECORD', 'nb.best': 'best', 'nb.coming': 'it arrives in {n}', 'nb.start': 'The Stalker is coming. It never stops: move, slide, jump, keep going.', 'nb.blink': 'It teleported, it sees you!', 'nb.humWin': 'Survivors win', 'nb.botWin': 'The Stalker wins' });
 try { applyI18n(); } catch (e) {}
